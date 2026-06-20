@@ -1,154 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>$TEDDY | Arcade Investigation</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>$TEDDY | Insert Coin</title>
+
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-  <div class="crt"></div>
-  <div class="stars"></div>
-  <div class="grid-floor"></div>
 
-  <nav class="nav">
-    <div class="brand">🐻 $TEDDY</div>
-    <div class="nav-links">
-      <a href="#board">BOARD</a>
-      <a href="#timeline">TIMELINE</a>
-      <a href="#token">TOKEN</a>
-    </div>
-  </nav>
+  <!-- CRT Scanlines -->
+  <div class="scanlines"></div>
 
-  <section class="arcade-room">
+  <!-- HERO IMAGE -->
+  <section class="hero">
 
-    <div class="cabinet cab-left">
-      <div class="marquee">GAMESTOP QUEST</div>
-      <div class="screen">
-        <div class="scan-game"></div>
-        <div class="sprite">👾</div>
-        <div class="score">HIGH SCORE<br>KITTY 74100</div>
-      </div>
-      <div class="controls">
-        <span></span><span></span><span></span>
-      </div>
-    </div>
+    <img
+      src="arcade-home.png"
+      alt="$TEDDY Arcade"
+      class="hero-image"
+    />
 
-    <div class="cabinet cab-right">
-      <div class="marquee">GMEBAY 2087</div>
-      <div class="screen">
-        <div class="scan-game"></div>
-        <div class="sprite rocket">🚀</div>
-        <div class="score">PLAYER<br>TEDDY</div>
-      </div>
-      <div class="controls">
-        <span></span><span></span><span></span>
-      </div>
+    <!-- ENTER BUTTON -->
+    <button
+      class="enter-button"
+      onclick="scrollToBoard()"
+    >
+      ENTER THE INVESTIGATION
+    </button>
+
+    <!-- INSERT COIN -->
+    <div class="insert-coin">
+      INSERT COIN TO PLAY
     </div>
 
-    <div class="hero-panel">
-      <div class="top-label">COMMUNITY MEME TOKEN • SOLANA</div>
-      <h1><span>$</span>TEDDY</h1>
-      <h2>INSERT COIN<br>TO ENTER THE MYSTERY</h2>
-      <p>
-        A retro arcade rabbit hole of GameStop lore, emoji clues,
-        tinfoil theories, GMEBAY dreams, and community chaos.
-      </p>
-      <a href="#board" class="play-btn">PRESS START</a>
-      <div class="coin">INSERT COIN TO PLAY</div>
-    </div>
+    <!-- TWINKLE STARS -->
+    <div class="stars"></div>
+
   </section>
 
-  <main>
-    <section id="board" class="board-section">
-      <h2>🧵 THE INVESTIGATION BOARD</h2>
+  <!-- LORE SECTION -->
+  <section id="board" class="lore-section">
 
-      <div class="board">
-        <div class="laser l1"></div>
-        <div class="laser l2"></div>
-        <div class="laser l3"></div>
+    <h2>🧵 THE INVESTIGATION CONTINUES</h2>
 
-        <button class="card pink" data-title="📚 TEDDY" data-text="The books, the company name, the mystery, and the wholesome storybook energy that inspired the community theme.">
-          <span class="pin"></span>
-          <div class="emoji">📚</div>
-          <h3>TEDDY</h3>
-          <p>The books. The name. The mystery.</p>
-        </button>
+    <p>
+      Welcome to the rabbit hole.
+      Follow the strings.
+      Explore the theories.
+      Build the lore.
+    </p>
 
-        <button class="card cyan" data-title="🎮 GameStop Transformation" data-text="A community clue wall for GameStop transformation theories, digital marketplace speculation, collectibles, nostalgia, and turnaround lore.">
-          <span class="pin"></span>
-          <div class="emoji">🎮</div>
-          <h3>GAMESTOP</h3>
-          <p>Transformation theory mode.</p>
-        </button>
+    <div class="cards">
 
-        <button class="card yellow" data-title="📦 GMEBAY" data-text="GMEBAY: GameStop + eBay = GMEBAY. A catchphrase for marketplace dreams and community tinfoil fuel.">
-          <span class="pin"></span>
-          <div class="emoji">📦</div>
-          <h3>GMEBAY</h3>
-          <p>GAMESTOP + EBAY = GMEBAY</p>
-        </button>
+      <button class="card">
+        📚 TEDDY
+      </button>
 
-        <button class="card blue" data-title="🐱 Roaring Kitty Tinfoil" data-text="Charts, cats, callbacks, tweets, emojis, hidden messages, and all the tinfoil that keeps the board alive.">
-          <span class="pin"></span>
-          <div class="emoji">🐱</div>
-          <h3>KITTY FILES</h3>
-          <p>Charts. Tweets. Clues.</p>
-        </button>
-      </div>
-    </section>
+      <button class="card">
+        🎮 GAMESTOP
+      </button>
 
-    <section id="timeline" class="timeline">
-      <h2>📈 EMOJI TIMELINE</h2>
-      <div class="emoji-row">
-        <button data-title="🐸 Frog" data-text="Community interpretation file coming soon.">🐸</button>
-        <button data-title="🍦 Ice Cream" data-text="The ice cream chapter of the timeline.">🍦</button>
-        <button data-title="💀 Skull" data-text="Dead or revived? Meme archaeology mode.">💀</button>
-        <button data-title="🇺🇸 Flag" data-text="The flag chapter.">🇺🇸</button>
-        <button data-title="🎤 Mic" data-text="Somebody is about to speak.">🎤</button>
-        <button data-title="👀 Eyes" data-text="Everybody is watching.">👀</button>
-        <button data-title="🔥 Fire" data-text="Things are heating up.">🔥</button>
-        <button data-title="💥 Boom" data-text="The board lights up.">💥</button>
-        <button data-title="🍻 Cheers" data-text="The celebration file.">🍻</button>
-      </div>
-    </section>
+      <button class="card">
+        📦 GMEBAY
+      </button>
 
-    <section id="token" class="token-grid">
-      <div class="info-box">
-        <h3>SECRET LEVEL</h3>
-        <p>↑ ↑ ↓ ↓ ← → ← → B A</p>
-        <div class="loading"><span></span></div>
-        <p>Konami code may unlock something later.</p>
-      </div>
+      <button class="card">
+        🐱 KITTY FILES
+      </button>
 
-      <div class="info-box">
-        <h3>LATEST TRANSMISSION</h3>
-        <p>The game is not over. The story is not over. The board keeps growing.</p>
-      </div>
+      <button class="card">
+        📈 EMOJI TIMELINE
+      </button>
 
-      <div class="info-box">
-        <h3>TOKEN INFO</h3>
-        <p>$TEDDY is a community meme token on Solana.</p>
-        <p>Contract address coming soon.</p>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    $TEDDY is a community meme token. It is not affiliated with, endorsed by,
-    or officially connected to Ryan Cohen, Teddy Holdings LLC, GameStop, eBay,
-    Roaring Kitty, or any related company or individual.
-  </footer>
-
-  <div id="modal" class="modal">
-    <div class="modal-box">
-      <button id="closeModal">×</button>
-      <h2 id="modalTitle"></h2>
-      <p id="modalText"></p>
     </div>
-  </div>
+
+  </section>
 
   <script src="script.js"></script>
+
 </body>
 </html>
