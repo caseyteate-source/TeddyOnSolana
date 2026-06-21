@@ -11,21 +11,11 @@ document.querySelectorAll("[data-title]").forEach((item) => {
   });
 });
 
-closeModal.addEventListener("click", () => {
-  modal.classList.remove("active");
-});
+closeModal.addEventListener("click", () => modal.classList.remove("active"));
 
 modal.addEventListener("click", (event) => {
-  if (event.target === modal) {
-    modal.classList.remove("active");
-  }
+  if (event.target === modal) modal.classList.remove("active");
 });
-
-function scrollToBoard() {
-  document.getElementById("board").scrollIntoView({
-    behavior: "smooth"
-  });
-}
 
 const konami = [
   "ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown",
@@ -44,20 +34,4 @@ window.addEventListener("keydown", (event) => {
     modalText.textContent = "GMEBAY.exe loaded. The board is alive.";
     modal.classList.add("active");
   }
-
-  const scores = [
-  "KITTY 74100",
-  "TEDDY 42069",
-  "GMEBAY 99999",
-  "APES 80085"
-];
-
-setInterval(() => {
-  const board = document.querySelector(".left-score");
-
-  if (!board) return;
-
-  board.innerHTML =
-    scores[Math.floor(Math.random() * scores.length)];
-}, 2500);
 });
