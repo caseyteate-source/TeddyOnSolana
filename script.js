@@ -26,6 +26,12 @@ let lives = 3;
 let gameRunning = false;
 let keys = {};
 
+let blink = true;
+
+setInterval(() => {
+  blink = !blink;
+}, 500);
+
 function enterSite() {
   startScreen.classList.add("hidden");
   siteContent.classList.remove("hidden");
@@ -108,14 +114,43 @@ function drawBackground() {
   ctx.fillStyle = "rgba(255,42,163,.16)";
   ctx.fillRect(0, 0, canvas.width, 48);
 }
-
 function drawHUD() {
+  // Top information bar
+  ctx.fillStyle = "rgba(255,42,163,.18)";
+  ctx.fillRect(0, 0, canvas.width, 58);
+
+  // Emoji progress
   ctx.font = "16px monospace";
   ctx.fillStyle = "#00f5ff";
-  ctx.fillText(`EMOJIS ${collected}/${timelineEmojis.length}`, 14, 30);
+  ctx.fillText(
+    `EMOJIS ${collected}/${timelineEmojis.length}`,
+    14,
+    24
+  );
 
+  // Lives
   ctx.fillStyle = "#ff2aa3";
-  ctx.fillText(`LIVES ${lives}`, canvas.width - 95, 30);
+  ctx.fillText(
+    `LIVES ${lives}`,
+    canvas.width - 95,
+    24
+  );
+
+  // Blinking instructions
+  if (blink) {
+    ctx.font = "14px monospace";
+    ctx.fillStyle = "#ffffff";
+    ctx.textAlign = "center";
+
+    ctx.fillText(
+      "← → MOVE • COLLECT EMOJIS • AVOID THE FUD ☠️",
+      canvas.width / 2,
+      48
+    );
+
+    ctx.textAlign = "left";
+  }
+}
 }
 
 function drawPlayer() {
