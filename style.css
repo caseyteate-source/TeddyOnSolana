@@ -1,13 +1,11 @@
-.hidden {
-  display: none;
-}
+@import url('https://fonts.googleapis.com/css2?family=Bungee+Shade&family=Press+Start+2P&display=swap');
 
 .start-screen {
   min-height: 100vh;
   background:
-    radial-gradient(circle at top, rgba(255,42,163,.25), transparent 35%),
-    radial-gradient(circle at bottom, rgba(0,245,255,.18), transparent 35%),
-    #050510;
+    radial-gradient(circle at top, rgba(255,42,163,.28), transparent 35%),
+    radial-gradient(circle at bottom, rgba(0,245,255,.2), transparent 35%),
+    linear-gradient(180deg, #12001f, #050510);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -15,89 +13,92 @@
 }
 
 .arcade-machine {
-  width: min(620px, 100%);
-  border: 4px solid #00f5ff;
-  border-radius: 28px;
-  padding: 30px;
+  width: min(680px, 100%);
+  padding: 26px;
   text-align: center;
-  background: linear-gradient(180deg, #130024, #050510);
-  box-shadow: 0 0 35px #00f5ff, inset 0 0 30px rgba(255,42,163,.25);
+  background:
+    linear-gradient(90deg, #111 0 6%, #23103b 6% 94%, #111 94% 100%);
+  border: 8px solid #080808;
+  border-radius: 36px 36px 24px 24px;
+  box-shadow:
+    0 0 45px rgba(0,245,255,.65),
+    inset 0 0 35px rgba(255,42,163,.28);
+  position: relative;
+}
+
+.arcade-machine::before {
+  content: "$TEDDY  ROARING  KITTY  EMOJI  QUEST";
+  display: block;
+  font-family: "Bungee Shade", Arial, sans-serif;
+  color: #ff2aa3;
+  font-size: clamp(24px, 5vw, 46px);
+  line-height: 1.05;
+  padding: 16px 12px 20px;
+  margin-bottom: 18px;
+  background: linear-gradient(90deg, #200034, #071b33, #200034);
+  border: 4px solid #00f5ff;
+  border-radius: 18px;
+  text-shadow: 0 0 18px #ff2aa3, 0 0 24px #00f5ff;
 }
 
 .arcade-machine h1 {
-  color: #ff2aa3;
-  font-size: clamp(38px, 8vw, 72px);
-  margin: 0;
-  text-shadow: 0 0 18px #ff2aa3, 0 0 32px #00f5ff;
+  display: none;
 }
 
 .blink-text {
+  font-family: "Press Start 2P", monospace;
   color: #00f5ff;
-  font-size: 28px;
-  font-weight: 900;
+  font-size: 18px;
   animation: blink 1s infinite;
+  margin: 12px 0;
 }
 
 .start-subtitle,
 .mobile-tip {
-  color: #ddd;
+  font-family: "Press Start 2P", monospace;
+  color: #eee;
+  font-size: 10px;
+  line-height: 1.7;
 }
 
 #gameCanvas {
   width: 100%;
-  max-width: 420px;
-  background: #050510;
-  border: 3px solid #ff2aa3;
+  max-width: 500px;
+  height: auto;
+  background: #020208;
+  border: 14px solid #050505;
   border-radius: 18px;
-  box-shadow: inset 0 0 24px rgba(0,245,255,.25);
+  box-shadow:
+    0 0 0 4px #ff2aa3,
+    0 0 28px rgba(0,245,255,.8),
+    inset 0 0 28px rgba(0,245,255,.25);
 }
 
-.game-controls,
-.action-buttons {
+.game-controls {
   display: flex;
   flex-wrap: wrap;
   gap: 14px;
   justify-content: center;
   margin-top: 22px;
+  padding: 18px;
+  background: #111;
+  border-radius: 0 0 22px 22px;
+  border-top: 4px solid #333;
 }
 
-.game-controls button,
-.action-buttons a,
-.action-buttons button {
-  background: transparent;
+.game-controls button {
+  font-family: "Press Start 2P", monospace;
+  background: #140027;
   color: white;
-  border: 2px solid #00f5ff;
-  border-radius: 14px;
-  padding: 14px 20px;
-  font-weight: 900;
+  border: 3px solid #00f5ff;
+  border-radius: 999px;
+  padding: 16px 18px;
+  font-size: 11px;
   cursor: pointer;
-  text-decoration: none;
   box-shadow: 0 0 18px rgba(0,245,255,.7);
 }
 
-.game-controls button:hover,
-.action-buttons a:hover,
-.action-buttons button:hover {
+.game-controls button:hover {
   border-color: #ff2aa3;
-  box-shadow: 0 0 22px rgba(255,42,163,.85);
-}
-
-.quick-actions {
-  padding: 70px 5%;
-  text-align: center;
-  background: #050510;
-}
-
-.quick-actions h2 {
-  color: #00f5ff;
-  font-size: clamp(30px, 5vw, 58px);
-  margin: 0 0 18px;
-  text-shadow: 0 0 20px #00f5ff;
-}
-
-.quick-actions p {
-  max-width: 800px;
-  margin: 0 auto;
-  font-size: 20px;
-  line-height: 1.6;
+  box-shadow: 0 0 24px rgba(255,42,163,.9);
 }
