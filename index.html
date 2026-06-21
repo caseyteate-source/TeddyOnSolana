@@ -3,39 +3,62 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>$TEDDY | Insert Coin</title>
-  <link rel="stylesheet" href="style.css">
+  <title>$TEDDY Arcade Test</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background:
+        radial-gradient(circle at top,
+          rgba(255,42,163,.3),
+          transparent 35%),
+        radial-gradient(circle at bottom,
+          rgba(0,245,255,.25),
+          transparent 45%),
+        #050510;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      width: min(1200px, 95vw);
+      text-align: center;
+    }
+
+    img {
+      width: 100%;
+      display: block;
+      margin: 0 auto;
+      border-radius: 20px;
+      box-shadow:
+        0 0 40px rgba(255,42,163,.4),
+        0 0 80px rgba(0,245,255,.25);
+    }
+
+    h1 {
+      color: white;
+      margin-bottom: 30px;
+    }
+  </style>
 </head>
 
 <body>
 
-  <section class="start-screen">
+  <div class="container">
+    <h1>$TEDDY ARCADE TEST</h1>
 
-    <div class="arcade-container">
-
-      <img
-        class="arcade-cabinet"
-        src="https://raw.githubusercontent.com/caseyteate-source/TeddyOnSolana/main/teddy-arcade-cabinet.png"
-        alt="$TEDDY Arcade Cabinet"
-      >
-
-      <div class="game-screen">
-        <canvas id="gameCanvas" width="520" height="360"></canvas>
-      </div>
-
-      <button id="startGame" class="arcade-btn start-btn">
-        START GAME
-      </button>
-
-      <button id="enterSite" class="arcade-btn enter-btn">
-        ENTER SITE
-      </button>
-
-    </div>
-
-  </section>
-
-  <script src="script.js"></script>
+    <img
+      src="https://raw.githubusercontent.com/caseyteate-source/TeddyOnSolana/main/teddy-arcade-cabinet.png"
+      alt="$TEDDY Arcade Cabinet"
+    >
+  </div>
 
 </body>
 </html>
