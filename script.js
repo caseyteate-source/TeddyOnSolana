@@ -18,6 +18,8 @@ const timelineEmojis = [
   "👑", "🪄", "🌀", "⚡", "🏴‍☠️"
 ];
 
+const fudEmojis = ["☠️", "📉", "🩸", "😱", "🙈", "🤡", "📰"];
+
 let player = { x: 240, y: 305, w: 44, h: 36, speed: 7 };
 let falling = [];
 let fud = [];
@@ -25,7 +27,6 @@ let collected = 0;
 let lives = 3;
 let gameRunning = false;
 let keys = {};
-
 let blink = true;
 
 setInterval(() => {
@@ -70,103 +71,101 @@ canvas.addEventListener("touchend", () => {
 });
 
 function spawnItems() {
-  if (Math.random() < 0.045 && collected < timelineEmojis.length) {
+  if (Math.random() < 0.065 && collected < timelineEmojis.length) {
     falling.push({
       emoji: timelineEmojis[collected],
-      x: Math.random() * (canvas.width - 34),
-      y: -34,
-      size: 32,
-      speed: 2.2 + Math.random() * 1.8
+      x: Math.random() * (canvas.width - 52),
+      y: -52,
+      size: 46,
+      speed: 2.1 + Math.random() * 1.6
     });
   }
 
-  if (Math.random() < 0.022) {
+  if (Math.random() < 0.018) {
     fud.push({
-      emoji: "☠️",
-      x: Math.random() * (canvas.width - 34),
-      y: -34,
-      size: 32,
-      speed: 2.8 + Math.random() * 2
+      emoji: fudEmojis[Math.floor(Math.random() * fudEmojis.length)],
+      x: Math.random() * (canvas.width - 48),
+      y: -48,
+      size: 42,
+      speed: 2.6 + Math.random() * 1.8
     });
   }
 }
 
 function drawBackground() {
+  ctx.shadowBlur = 0;
+  ctx.textAlign = "left";
+
   ctx.fillStyle = "#020208";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  ctx.strokeStyle = "rgba(0,245,255,.13)";
-  for (let y = 50; y < canvas.height; y += 28) {
+  ctx.strokeStyle = "rgba(0,245,255,.16)";
+  for (let y = 62; y < canvas.height; y += 28) {
     ctx.beginPath();
     ctx.moveTo(0, y);
     ctx.lineTo(canvas.width, y);
     ctx.stroke();
   }
 
-  ctx.strokeStyle = "rgba(255,42,163,.2)";
+  ctx.strokeStyle = "rgba(255,42,163,.22)";
   for (let x = 0; x < canvas.width; x += 40) {
     ctx.beginPath();
     ctx.moveTo(x, canvas.height);
     ctx.lineTo(canvas.width / 2, 190);
     ctx.stroke();
   }
-
-  ctx.fillStyle = "rgba(255,42,163,.16)";
-  ctx.fillRect(0, 0, canvas.width, 48);
 }
-function drawHUD() {
-  // Top information bar
-  ctx.fillStyle = "rgba(255,42,163,.18)";
-  ctx.fillRect(0, 0, canvas.width, 58);
 
-  // Emoji progress
+function drawHUD() {
+  ctx.shadowBlur = 0;
+  ctx.textAlign = "left";
+
+  ctx.fillStyle = "rgba(255,42,163,.22)";
+  ctx.fillRect(0, 0, canvas.width, 62);
+
   ctx.font = "16px monospace";
   ctx.fillStyle = "#00f5ff";
-  ctx.fillText(
-    `EMOJIS ${collected}/${timelineEmojis.length}`,
-    14,
-    24
-  );
+  ctx.fillText(`EMOJIS ${collected}/${timelineEmojis.length}`, 14, 24);
 
-  // Lives
   ctx.fillStyle = "#ff2aa3";
-  ctx.fillText(
-    `LIVES ${lives}`,
-    canvas.width - 95,
-    24
-  );
+  ctx.fillText(`LIVES ${lives}`, canvas.width - 95, 24);
 
-  // Blinking instructions
   if (blink) {
     ctx.font = "14px monospace";
     ctx.fillStyle = "#ffffff";
     ctx.textAlign = "center";
-
     ctx.fillText(
       "← → MOVE • COLLECT EMOJIS • AVOID THE FUD ☠️",
       canvas.width / 2,
-      48
+      50
     );
-
     ctx.textAlign = "left";
   }
 }
-}
 
 function drawPlayer() {
-  ctx.font = "40px Arial";
+  ctx.font = "44px Arial";
+  ctx.shadowColor = "#00f5ff";
+  ctx.shadowBlur = 16;
   ctx.fillText("🧸", player.x, player.y + 36);
+  ctx.shadowBlur = 0;
 }
 
 function drawItems() {
   falling.forEach(item => {
-    ctx.font = "32px Arial";
+    ctx.font = "48px Arial";
+    ctx.shadowColor = "#00f5ff";
+    ctx.shadowBlur = 18;
     ctx.fillText(item.emoji, item.x, item.y);
+    ctx.shadowBlur = 0;
   });
 
   fud.forEach(item => {
-    ctx.font = "32px Arial";
+    ctx.font = "44px Arial";
+    ctx.shadowColor = "#ff2aa3";
+    ctx.shadowBlur = 18;
     ctx.fillText(item.emoji, item.x, item.y);
+    ctx.shadowBlur = 0;
   });
 }
 
@@ -199,7 +198,7 @@ function gameLoop() {
       collected++;
       return false;
     }
-    return item.y < canvas.height + 40;
+    return item.y < canvas.height + 60;
   });
 
   fud = fud.filter(item => {
@@ -207,7 +206,7 @@ function gameLoop() {
       lives--;
       return false;
     }
-    return item.y < canvas.height + 40;
+    return item.y < canvas.height + 60;
   });
 
   drawItems();
@@ -235,8 +234,8 @@ function gameLoop() {
 }
 
 drawBackground();
-drawHUD();
 drawPlayer();
+drawHUD();
 
 document.querySelectorAll("[data-title]").forEach((item) => {
   item.addEventListener("click", () => {
