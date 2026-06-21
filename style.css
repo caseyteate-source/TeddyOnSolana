@@ -21,8 +21,8 @@ body {
   z-index: 999;
   background: repeating-linear-gradient(
     to bottom,
-    rgba(255,255,255,.045) 0,
-    rgba(255,255,255,.045) 1px,
+    rgba(255,255,255,.035) 0,
+    rgba(255,255,255,.035) 1px,
     transparent 2px,
     transparent 5px
   );
@@ -49,7 +49,7 @@ body {
   width: 100%;
   height: auto;
   display: block;
-  animation: posterFlicker 7s infinite;
+  animation: posterFlicker 8s infinite;
 }
 
 .hotspot {
@@ -106,8 +106,8 @@ body {
 .hotspot:hover {
   border-radius: 14px;
   box-shadow:
-    0 0 36px rgba(0,245,255,.85),
-    inset 0 0 38px rgba(255,42,163,.28);
+    0 0 22px rgba(0,245,255,.45),
+    inset 0 0 18px rgba(255,42,163,.18);
 }
 
 .sparkles {
@@ -119,49 +119,9 @@ body {
     radial-gradient(white 1px, transparent 1px),
     radial-gradient(#00f5ff 1px, transparent 1px),
     radial-gradient(#ff2aa3 1px, transparent 1px);
-  background-size: 95px 95px, 150px 150px, 230px 230px;
-  opacity: .16;
-  animation: sparkDrift 14s linear infinite;
-}
-
-.neon-pulse {
-  position: absolute;
-  z-index: 18;
-  pointer-events: none;
-  border-radius: 12px;
-  mix-blend-mode: screen;
-  animation: neonPulse 1.8s infinite;
-}
-
-.pulse-enter {
-  left: 33.5%;
-  top: 23.6%;
-  width: 33%;
-  height: 5.2%;
-  box-shadow: 0 0 26px #00f5ff, inset 0 0 20px #ff2aa3;
-}
-
-.pulse-teddy {
-  left: 33%;
-  top: 7%;
-  width: 34%;
-  height: 12%;
-  box-shadow: 0 0 45px #00f5ff;
-}
-
-.pulse-insert {
-  left: 79.5%;
-  top: 13%;
-  width: 9%;
-  height: 11%;
-  box-shadow: 0 0 30px #00f5ff;
-}
-
-@keyframes neonPulse {
-  50% {
-    opacity: .28;
-    filter: blur(2px);
-  }
+  background-size: 110px 110px, 170px 170px, 260px 260px;
+  opacity: .08;
+  animation: sparkDrift 18s linear infinite;
 }
 
 @keyframes sparkDrift {
@@ -171,20 +131,16 @@ body {
 }
 
 @keyframes posterFlicker {
-  0%, 93%, 100% {
-    filter: brightness(1) contrast(1.03);
+  0%, 96%, 100% {
+    filter: brightness(1) contrast(1.02);
   }
 
-  94% {
-    filter: brightness(.9) contrast(1.08);
+  97% {
+    filter: brightness(.94) contrast(1.05);
   }
 
-  95% {
-    filter: brightness(1.13) contrast(1.08);
-  }
-
-  96% {
-    filter: brightness(.96) contrast(1.1);
+  98% {
+    filter: brightness(1.06) contrast(1.04);
   }
 }
 
