@@ -106,14 +106,15 @@ body {
   height: 20.8%;
 }
 
-.hotspot:hover {
-  border-radius: 14px;
-  background: rgba(255,255,255,.045);
-  backdrop-filter: brightness(1.15);
-  box-shadow:
-    0 0 18px rgba(0,245,255,.25),
-    inset 0 0 14px rgba(255,42,163,.12);
-}
+.hotspot {
+  position: absolute;
+  z-index: 40;
+  border: 2px solid lime;
+  background: rgba(0, 255, 0, 0.15);
+  cursor: pointer;
+  padding: 0;
+};
+
 
 .sparkles {
   position: absolute;
