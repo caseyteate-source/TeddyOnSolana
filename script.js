@@ -11,13 +11,21 @@ const closeModal = document.getElementById("closeModal");
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-let player = { x: 190, y: 300, w: 42, h: 28, speed: 7 };
-let clues = [];
+const timelineEmojis = [
+  "🐸", "🍦", "💀", "🥴", "🤝", "👌", "💜", "🫡", "😳", "😵‍💫",
+  "👀", "🦍", "🚀", "🌕", "💎", "🙌", "🎮", "🧸", "📚", "📦",
+  "🇺🇸", "🎤", "🔥", "💥", "🍻", "⏰", "🧩", "🧵", "🕹️", "🎯",
+  "👑", "🪄", "🌀", "⚡", "🏴‍☠️"
+];
+
+let player = { x: 230, y: 305, w: 42, h: 34, speed: 7 };
+let falling = [];
 let fud = [];
-let score = 0;
+let collected = 0;
 let lives = 3;
 let gameRunning = false;
 let keys = {};
+let frame = 0;
 
 function enterSite() {
   startScreen.classList.add("hidden");
@@ -28,10 +36,12 @@ function enterSite() {
 enterSiteBtn.addEventListener("click", enterSite);
 
 startGameBtn.addEventListener("click", () => {
-  score = 0;
+  collected = 0;
   lives = 3;
-  clues = [];
+  falling = [];
   fud = [];
+  frame = 0;
+  player.x = 230;
   gameRunning = true;
   requestAnimationFrame(gameLoop);
 });
@@ -46,8 +56,8 @@ window.addEventListener("keyup", (e) => {
 
 canvas.addEventListener("touchstart", (e) => {
   const touchX = e.touches[0].clientX;
-  const canvasMiddle = canvas.getBoundingClientRect().left + canvas.offsetWidth / 2;
-  keys[touchX < canvasMiddle ? "ArrowLeft" : "ArrowRight"] = true;
+  const middle = canvas.getBoundingClientRect().left + canvas.offsetWidth / 2;
+  keys[touchX < middle ? "ArrowLeft" : "ArrowRight"] = true;
 });
 
 canvas.addEventListener("touchend", () => {
@@ -56,41 +66,67 @@ canvas.addEventListener("touchend", () => {
 });
 
 function spawnItems() {
-  if (Math.random() < 0.035) {
-    clues.push({
-      x: Math.random() * (canvas.width - 28),
-      y: -30,
-      size: 26,
-      speed: 2 + Math.random() * 2
-    });
-  }
-
-  if (Math.random() < 0.025) {
-    fud.push({
-      x: Math.random() * (canvas.width - 32),
-      y: -30,
+  if (Math.random() < 0.045 && collected < timelineEmojis.length) {
+    falling.push({
+      emoji: timelineEmojis[collected],
+      x: Math.random() * (canvas.width - 34),
+      y: -34,
       size: 30,
-      speed: 2.5 + Math.random() * 2.5
+      speed: 2.2 + Math.random() * 1.8
+    });
+  }
+
+  if (Math.random() < 0.022) {
+    fud.push({
+      emoji: "☠️",
+      x: Math.random() * (canvas.width - 34),
+      y: -34,
+      size: 30,
+      speed: 2.8 + Math.random() * 2
     });
   }
 }
 
-function drawPlayer() {
-  ctx.font = "34px Arial";
-  ctx.fillText("🐻", player.x, player.y + 28);
-}
+function drawArcadeBackground() {
+  ctx.fillStyle = "#020208";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-function drawItems() {
-  ctx.font = "26px Arial";
-  clues.forEach(item => ctx.fillText("🧩", item.x, item.y));
-  fud.forEach(item => ctx.fillText("☠️", item.x, item.y));
+  ctx.strokeStyle = "rgba(0,245,255,.15)";
+  for (let y = 42; y < canvas.height; y += 30) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(canvas.width, y);
+    ctx.stroke();
+  }
+
+  ctx.fillStyle = "rgba(255,42,163,.15)";
+  ctx.fillRect(0, 0, canvas.width, 42);
 }
 
 function drawHUD() {
+  ctx.font = "14px monospace";
   ctx.fillStyle = "#00f5ff";
-  ctx.font = "18px Arial";
-  ctx.fillText(`CLUES: ${score}`, 14, 26);
-  ctx.fillText(`LIVES: ${lives}`, 320, 26);
+  ctx.fillText(`EMOJIS ${collected}/${timelineEmojis.length}`, 12, 26);
+
+  ctx.fillStyle = "#ff2aa3";
+  ctx.fillText(`LIVES ${lives}`, 375, 26);
+}
+
+function drawPlayer() {
+  ctx.font = "36px Arial";
+  ctx.fillText("🧸", player.x, player.y + 34);
+}
+
+function drawItems() {
+  falling.forEach(item => {
+    ctx.font = "30px Arial";
+    ctx.fillText(item.emoji, item.x, item.y);
+  });
+
+  fud.forEach(item => {
+    ctx.font = "30px Arial";
+    ctx.fillText(item.emoji, item.x, item.y);
+  });
 }
 
 function collide(a, b) {
@@ -105,18 +141,8 @@ function collide(a, b) {
 function gameLoop() {
   if (!gameRunning) return;
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  ctx.fillStyle = "#050510";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  ctx.strokeStyle = "rgba(0,245,255,.15)";
-  for (let i = 0; i < canvas.height; i += 28) {
-    ctx.beginPath();
-    ctx.moveTo(0, i);
-    ctx.lineTo(canvas.width, i);
-    ctx.stroke();
-  }
+  frame++;
+  drawArcadeBackground();
 
   if (keys["ArrowLeft"]) player.x -= player.speed;
   if (keys["ArrowRight"]) player.x += player.speed;
@@ -125,12 +151,12 @@ function gameLoop() {
 
   spawnItems();
 
-  clues.forEach(item => item.y += item.speed);
+  falling.forEach(item => item.y += item.speed);
   fud.forEach(item => item.y += item.speed);
 
-  clues = clues.filter(item => {
+  falling = falling.filter(item => {
     if (collide(player, item)) {
-      score++;
+      collected++;
       return false;
     }
     return item.y < canvas.height + 40;
@@ -148,12 +174,12 @@ function gameLoop() {
   drawPlayer();
   drawHUD();
 
-  if (score >= 10) {
+  if (collected >= timelineEmojis.length) {
     gameRunning = false;
-    modalTitle.textContent = "🎮 LEVEL CLEARED";
-    modalText.textContent = "You collected the clues. Welcome to the $TEDDY board.";
+    modalTitle.textContent = "🎮 EMOJI TIMELINE COMPLETE";
+    modalText.textContent = "You collected the full Roaring Kitty emoji quest. Welcome to the $TEDDY board.";
     modal.classList.add("active");
-    setTimeout(enterSite, 1200);
+    setTimeout(enterSite, 1400);
     return;
   }
 
