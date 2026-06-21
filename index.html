@@ -11,32 +11,17 @@
   <div class="scanlines"></div>
 
   <section id="startScreen" class="start-screen">
+    <div class="arcade-container">
+      <img src="teddy-arcade-cabinet.png" alt="$TEDDY Arcade Cabinet" class="arcade-cabinet" />
 
-  <div class="arcade-container">
+      <div class="game-screen">
+        <canvas id="gameCanvas" width="520" height="360"></canvas>
+      </div>
 
-    <img
-      src="teddy-arcade-cabinet.png"
-      alt="$TEDDY Arcade"
-      class="arcade-cabinet"
-    >
-
-    <canvas
-      id="gameCanvas"
-      width="420"
-      height="360"
-    ></canvas>
-
-    <button id="startGame">
-      START GAME
-    </button>
-
-    <button id="enterSite">
-      ENTER SITE
-    </button>
-
-  </div>
-
-</section>
+      <button id="startGame" class="cabinet-button start-btn">START</button>
+      <button id="enterSite" class="cabinet-button enter-btn">ENTER SITE</button>
+    </div>
+  </section>
 
   <main id="siteContent" class="site-content hidden">
     <section class="hero">
