@@ -62,48 +62,12 @@ body {
   padding: 0;
 }
 
-.investigation {
-  left: 33.5%;
-  top: 23.6%;
-  width: 33%;
-  height: 5.2%;
-}
-
-/* thumbtacked cards */
-.teddy {
-  left: 10.8%;
-  top: 49%;
-  width: 14%;
-  height: 24%;
-}
-
-.gamestop {
-  left: 28%;
-  top: 49%;
-  width: 14%;
-  height: 24%;
-}
-
-.gmebay {
-  left: 44.8%;
-  top: 49%;
-  width: 14%;
-  height: 24%;
-}
-
-.kitty {
-  left: 61.7%;
-  top: 49%;
-  width: 14%;
-  height: 24%;
-}
-
-.timeline-card {
-  left: 78.5%;
-  top: 49%;
-  width: 14%;
-  height: 24%;
-} }
+.investigation { left: 33.5%; top: 23.6%; width: 33%; height: 5.2%; }
+.teddy { left: 9.8%; top: 50.4%; width: 16.5%; height: 23%; }
+.gamestop { left: 28.2%; top: 50.4%; width: 16%; height: 23%; }
+.gmebay { left: 45.6%; top: 50.4%; width: 13.3%; height: 23%; }
+.kitty { left: 61.2%; top: 50.4%; width: 15.3%; height: 23%; }
+.timeline-card { left: 78.2%; top: 50.4%; width: 15%; height: 23%; }
 
 .hotspot:hover {
   border-radius: 18px;
@@ -111,7 +75,6 @@ body {
   backdrop-filter: brightness(1.15);
   box-shadow:
     0 0 18px rgba(0,245,255,.25);
-
 }
 
 .sparkles {
