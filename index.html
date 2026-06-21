@@ -11,21 +11,32 @@
   <div class="scanlines"></div>
 
   <section id="startScreen" class="start-screen">
-    <div class="arcade-machine">
-      <h1>$TEDDY ARCADE</h1>
-      <p class="blink-text">INSERT COIN</p>
-      <p class="start-subtitle">Dodge the FUD. Collect the clues.</p>
 
-      <canvas id="gameCanvas" width="420" height="360"></canvas>
+  <div class="arcade-container">
 
-      <div class="game-controls">
-        <button id="startGame">▶ START GAME</button>
-        <button id="enterSite">ENTER SITE</button>
-      </div>
+    <img
+      src="teddy-arcade-cabinet.png"
+      alt="$TEDDY Arcade"
+      class="arcade-cabinet"
+    >
 
-      <p class="mobile-tip">Use ← → keys on desktop or tap left/right side on mobile.</p>
-    </div>
-  </section>
+    <canvas
+      id="gameCanvas"
+      width="420"
+      height="360"
+    ></canvas>
+
+    <button id="startGame">
+      START GAME
+    </button>
+
+    <button id="enterSite">
+      ENTER SITE
+    </button>
+
+  </div>
+
+</section>
 
   <main id="siteContent" class="site-content hidden">
     <section class="hero">
