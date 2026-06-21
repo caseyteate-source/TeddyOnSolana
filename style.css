@@ -351,3 +351,111 @@ body {
     max-width: 330px;
   }
 }
+.arcade-screen {
+  position: absolute;
+  overflow: hidden;
+  border-radius: 6px;
+  pointer-events: none;
+  z-index: 15;
+  mix-blend-mode: screen;
+}
+
+/* approximate positions from your artwork */
+
+.alien-screen {
+  left: 18.5%;
+  top: 24%;
+  width: 4%;
+  height: 4%;
+}
+
+.rocket-screen {
+  left: 30%;
+  top: 25%;
+  width: 4%;
+  height: 4%;
+}
+
+.kitty-screen {
+  left: 79%;
+  top: 27%;
+  width: 5%;
+  height: 5%;
+}
+
+.explosion-screen {
+  left: 66%;
+  top: 29%;
+  width: 4%;
+  height: 4%;
+}
+
+.candle-screen {
+  left: 73%;
+  top: 29%;
+  width: 4%;
+  height: 4%;
+}
+
+.alien,
+.rocket,
+.kitty-pixel,
+.explosion,
+.candle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  font-size: clamp(10px, 1vw, 20px);
+  transform: translate(-50%, -50%);
+}
+
+.alien {
+  animation: alienBounce 1s infinite steps(2);
+}
+
+.rocket {
+  animation: rocketFly 1.8s infinite;
+}
+
+.kitty-pixel {
+  animation: kittyHop 1.4s infinite;
+}
+
+.explosion {
+  animation: boom 0.9s infinite;
+}
+
+.candle {
+  animation: candleGrow 1.4s infinite;
+}
+
+@keyframes alienBounce {
+  50% {
+    transform: translate(-50%, -80%);
+  }
+}
+
+@keyframes rocketFly {
+  50% {
+    transform: translate(-20%, -80%) rotate(-20deg);
+  }
+}
+
+@keyframes kittyHop {
+  50% {
+    transform: translate(-50%, -70%);
+  }
+}
+
+@keyframes boom {
+  50% {
+    transform: translate(-50%, -50%) scale(1.4);
+    filter: brightness(1.5);
+  }
+}
+
+@keyframes candleGrow {
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+}
