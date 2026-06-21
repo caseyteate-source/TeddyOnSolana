@@ -1,6 +1,10 @@
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+}
 
 body {
   margin: 0;
@@ -57,18 +61,53 @@ body {
   padding: 0;
 }
 
-.investigation { left: 33.5%; top: 23.6%; width: 33%; height: 5.2%; }
-.teddy { left: 9.8%; top: 50.4%; width: 16.5%; height: 23%; }
-.gamestop { left: 28.2%; top: 50.4%; width: 16%; height: 23%; }
-.gmebay { left: 45.6%; top: 50.4%; width: 13.3%; height: 23%; }
-.kitty { left: 61.2%; top: 50.4%; width: 15.3%; height: 23%; }
-.timeline-card { left: 78.2%; top: 50.4%; width: 15%; height: 23%; }
+.investigation {
+  left: 33.5%;
+  top: 23.6%;
+  width: 33%;
+  height: 5.2%;
+}
+
+.teddy {
+  left: 9.8%;
+  top: 50.4%;
+  width: 16.5%;
+  height: 23%;
+}
+
+.gamestop {
+  left: 28.2%;
+  top: 50.4%;
+  width: 16%;
+  height: 23%;
+}
+
+.gmebay {
+  left: 45.6%;
+  top: 50.4%;
+  width: 13.3%;
+  height: 23%;
+}
+
+.kitty {
+  left: 61.2%;
+  top: 50.4%;
+  width: 15.3%;
+  height: 23%;
+}
+
+.timeline-card {
+  left: 78.2%;
+  top: 50.4%;
+  width: 15%;
+  height: 23%;
+}
 
 .hotspot:hover {
   border-radius: 14px;
   box-shadow:
     0 0 36px rgba(0,245,255,.85),
-    inset 0 0 38px rgba(255,42,163,.35);
+    inset 0 0 38px rgba(255,42,163,.28);
 }
 
 .sparkles {
@@ -81,60 +120,9 @@ body {
     radial-gradient(#00f5ff 1px, transparent 1px),
     radial-gradient(#ff2aa3 1px, transparent 1px);
   background-size: 95px 95px, 150px 150px, 230px 230px;
-  opacity: .22;
+  opacity: .16;
   animation: sparkDrift 14s linear infinite;
 }
-
-.arcade-anim {
-  position: absolute;
-  z-index: 25;
-  pointer-events: none;
-  overflow: hidden;
-  border-radius: 6px;
-  background:
-    radial-gradient(circle, rgba(0,245,255,.22), transparent 62%),
-    rgba(0,0,0,.08);
-  box-shadow:
-    inset 0 0 20px rgba(0,245,255,.65),
-    0 0 16px rgba(255,42,163,.45);
-  mix-blend-mode: screen;
-}
-
-.arcade-anim::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    to bottom,
-    transparent 0,
-    transparent 4px,
-    rgba(255,255,255,.16) 5px
-  );
-}
-
-.arcade-anim span {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  font-size: clamp(10px, 1.3vw, 22px);
-  transform: translate(-50%, -50%);
-  filter: drop-shadow(0 0 10px #00f5ff);
-}
-
-/* screen placement over your artwork */
-.screen-left-main { left: 5.8%; top: 20.7%; width: 9.2%; height: 15.4%; }
-.screen-left-small { left: 17.9%; top: 24.7%; width: 5.2%; height: 7.4%; }
-.screen-mid-left { left: 27.2%; top: 25.4%; width: 5.4%; height: 6.8%; }
-.screen-mid-right { left: 65.8%; top: 25.4%; width: 5.7%; height: 6.8%; }
-.screen-right-small { left: 74.2%; top: 25.7%; width: 5.4%; height: 6.8%; }
-.screen-right-main { left: 84.3%; top: 20.6%; width: 9.6%; height: 15.8%; }
-
-.screen-left-main span { animation: alienBounce 1.2s infinite steps(2); }
-.screen-left-small span { animation: chartMove 1.6s infinite; }
-.screen-mid-left span { animation: rocketFly 1.7s infinite; }
-.screen-mid-right span { animation: boom 1s infinite; }
-.screen-right-main span { animation: kittyHop 1.4s infinite; }
-.screen-right-small span { animation: flamePulse 1.1s infinite; }
 
 .neon-pulse {
   position: absolute;
@@ -142,7 +130,7 @@ body {
   pointer-events: none;
   border-radius: 12px;
   mix-blend-mode: screen;
-  animation: neonPulse 1.5s infinite;
+  animation: neonPulse 1.8s infinite;
 }
 
 .pulse-enter {
@@ -169,43 +157,35 @@ body {
   box-shadow: 0 0 30px #00f5ff;
 }
 
-@keyframes alienBounce {
-  50% { transform: translate(-50%, -72%) scale(1.1); }
-}
-
-@keyframes rocketFly {
-  50% { transform: translate(-25%, -72%) rotate(-18deg); }
-}
-
-@keyframes kittyHop {
-  50% { transform: translate(-50%, -70%) rotate(4deg); }
-}
-
-@keyframes boom {
-  50% { transform: translate(-50%, -50%) scale(1.45); filter: brightness(1.8); }
-}
-
-@keyframes chartMove {
-  50% { transform: translate(-50%, -62%) scale(1.22); }
-}
-
-@keyframes flamePulse {
-  50% { transform: translate(-50%, -50%) scale(1.3); }
-}
-
 @keyframes neonPulse {
-  50% { opacity: .35; filter: blur(2px); }
+  50% {
+    opacity: .28;
+    filter: blur(2px);
+  }
 }
 
 @keyframes sparkDrift {
-  to { transform: translateY(120px); }
+  to {
+    transform: translateY(120px);
+  }
 }
 
 @keyframes posterFlicker {
-  0%, 93%, 100% { filter: brightness(1) contrast(1.03); }
-  94% { filter: brightness(.88) contrast(1.08); }
-  95% { filter: brightness(1.18) contrast(1.08); }
-  96% { filter: brightness(.95) contrast(1.12); }
+  0%, 93%, 100% {
+    filter: brightness(1) contrast(1.03);
+  }
+
+  94% {
+    filter: brightness(.9) contrast(1.08);
+  }
+
+  95% {
+    filter: brightness(1.13) contrast(1.08);
+  }
+
+  96% {
+    filter: brightness(.96) contrast(1.1);
+  }
 }
 
 .lore-section {
@@ -306,7 +286,9 @@ body {
   padding: 24px;
 }
 
-.modal.active { display: flex; }
+.modal.active {
+  display: flex;
+}
 
 .modal-box {
   width: min(620px, 100%);
@@ -340,7 +322,9 @@ body {
 }
 
 @media (max-width: 700px) {
-  .lore-section h2 { font-size: 28px; }
+  .lore-section h2 {
+    font-size: 28px;
+  }
 
   .lore-section p,
   .token-box p,
