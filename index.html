@@ -14,9 +14,11 @@
     <div class="arcade-container">
 
       <img
-        src="teddy-arcade-cabinet.pngpng.png"
+        id="cabinetImage"
+        src="./teddy-arcade-cabinet.pngpng.png"
         alt="$TEDDY Arcade Cabinet"
         class="arcade-cabinet"
+        onerror="this.onerror=null; this.src='./teddy-arcade-cabinet.png';"
       />
 
       <div class="game-screen">
@@ -33,18 +35,14 @@
 
     <section class="hero">
       <div class="hero-frame">
-        <img src="arcade-home.png" alt="$TEDDY Arcade" class="hero-image" />
+        <img src="./arcade-home.png" alt="$TEDDY Arcade" class="hero-image" />
 
         <a href="#board" class="hotspot investigation"></a>
 
         <button class="hotspot teddy" data-title="📚 TEDDY" data-text="The books. The company. The mystery."></button>
-
         <button class="hotspot gamestop" data-title="🎮 GameStop" data-text="From retail to reinvention. The greatest turnaround story?"></button>
-
         <button class="hotspot gmebay" data-title="📦 GMEBAY" data-text="GameStop + eBay = GMEBAY. The catchphrase lives here."></button>
-
         <button class="hotspot kitty" data-title="🐱 Roaring Kitty Tinfoil" data-text="Charts. Tweets. Emojis. Clues. We connect the dots."></button>
-
         <button class="hotspot timeline-card" data-title="📈 Emoji Timeline" data-text="🐸 🍦 💀 🇺🇸 🎤 👀 🔥 💥 🍻"></button>
 
         <div class="sparkles"></div>
@@ -59,47 +57,22 @@
       </p>
 
       <div class="action-buttons">
-        <a href="https://dexscreener.com/solana/4k73kxhcsswhkybc9dxm3tyr8a2jrgv4nqm5tmzq69vx" target="_blank">
-          📈 VIEW CHART
-        </a>
-
-        <a href="https://x.com/teddy0n_sol" target="_blank">
-          🐦 FOLLOW ON X
-        </a>
-
-        <button id="copyContractTop">
-          📋 COPY CONTRACT
-        </button>
+        <a href="https://dexscreener.com/solana/4k73kxhcsswhkybc9dxm3tyr8a2jrgv4nqm5tmzq69vx" target="_blank">📈 VIEW CHART</a>
+        <a href="https://x.com/teddy0n_sol" target="_blank">🐦 FOLLOW ON X</a>
+        <button id="copyContractTop">📋 COPY CONTRACT</button>
       </div>
     </section>
 
     <section id="board" class="lore-section">
       <h2>🧵 THE INVESTIGATION CONTINUES</h2>
-      <p>
-        Follow the strings. Click the cards. Build the lore.
-        The arcade is only the entrance.
-      </p>
+      <p>Follow the strings. Click the cards. Build the lore. The arcade is only the entrance.</p>
 
       <div class="cards">
-        <button class="card" data-title="📚 TEDDY" data-text="The children’s books. The company. The mystery. The wholesome layer of the $TEDDY universe.">
-          📚 TEDDY
-        </button>
-
-        <button class="card" data-title="🎮 GAMESTOP" data-text="From retail to reinvention. Transformation theories, marketplace dreams, and community speculation.">
-          🎮 GAMESTOP
-        </button>
-
-        <button class="card" data-title="📦 GMEBAY" data-text="GameStop + eBay = GMEBAY. A legendary community catchphrase turned into part of the lore.">
-          📦 GMEBAY
-        </button>
-
-        <button class="card" data-title="🐱 KITTY FILES" data-text="Tweets, charts, memes, emojis, callbacks, and tinfoil theories.">
-          🐱 KITTY FILES
-        </button>
-
-        <button class="card" data-title="📈 EMOJI TIMELINE" data-text="🐸 🍦 💀 🇺🇸 🎤 👀 🔥 💥 🍻">
-          📈 EMOJI TIMELINE
-        </button>
+        <button class="card" data-title="📚 TEDDY" data-text="The children’s books. The company. The mystery.">📚 TEDDY</button>
+        <button class="card" data-title="🎮 GAMESTOP" data-text="From retail to reinvention. Transformation theories and community speculation.">🎮 GAMESTOP</button>
+        <button class="card" data-title="📦 GMEBAY" data-text="GameStop + eBay = GMEBAY. A legendary community catchphrase.">📦 GMEBAY</button>
+        <button class="card" data-title="🐱 KITTY FILES" data-text="Tweets, charts, memes, emojis, callbacks, and tinfoil theories.">🐱 KITTY FILES</button>
+        <button class="card" data-title="📈 EMOJI TIMELINE" data-text="🐸 🍦 💀 🇺🇸 🎤 👀 🔥 💥 🍻">📈 EMOJI TIMELINE</button>
       </div>
     </section>
 
@@ -119,22 +92,12 @@
           <code id="contractAddress">8KJEWtuq1c1699nAup7WatZfgodS3YFnadBq46FDpump</code>
         </div>
 
-        <p class="terminal-line">
-          >>> INSERT COIN TO CONTINUE <span class="cursor">█</span>
-        </p>
+        <p class="terminal-line">>>> INSERT COIN TO CONTINUE <span class="cursor">█</span></p>
 
         <div class="terminal-buttons">
-          <a href="https://dexscreener.com/solana/4k73kxhcsswhkybc9dxm3tyr8a2jrgv4nqm5tmzq69vx" target="_blank">
-            📈 VIEW CHART
-          </a>
-
-          <a href="https://x.com/teddy0n_sol" target="_blank">
-            🐦 FOLLOW ON X
-          </a>
-
-          <button id="copyContract">
-            📋 COPY CONTRACT
-          </button>
+          <a href="https://dexscreener.com/solana/4k73kxhcsswhkybc9dxm3tyr8a2jrgv4nqm5tmzq69vx" target="_blank">📈 VIEW CHART</a>
+          <a href="https://x.com/teddy0n_sol" target="_blank">🐦 FOLLOW ON X</a>
+          <button id="copyContract">📋 COPY CONTRACT</button>
         </div>
 
         <p class="disclaimer">
