@@ -2,108 +2,217 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   background: #050510;
   color: white;
-  font-family: Arial, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   overflow-x: hidden;
 }
 
-.hero {
-  position: relative;
-  width: 100%;
-  min-height: 100vh;
-  background: #050510;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.hero-image {
-.hero-image {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-}
-
+/* CRT scanline overlay */
 .scanlines {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 50;
+  z-index: 999;
   background: repeating-linear-gradient(
     to bottom,
-    rgba(255,255,255,.04) 0,
-    rgba(255,255,255,.04) 1px,
+    rgba(255,255,255,.045) 0,
+    rgba(255,255,255,.045) 1px,
     transparent 2px,
     transparent 5px
   );
+  mix-blend-mode: overlay;
 }
 
-.enter-button {
+/* HERO ARTWORK */
+.hero {
+  width: 100%;
+  background: #050510;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow: hidden;
+}
+
+.hero-frame {
+  position: relative;
+  width: min(100%, 1400px);
+  margin: 0 auto;
+  background: #050510;
+}
+
+.hero-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  animation: posterFlicker 7s infinite;
+}
+
+/* clickable invisible areas */
+.hotspot {
   position: absolute;
-  left: 50%;
-  bottom: 13%;
-  transform: translateX(-50%);
-  z-index: 10;
-  background: linear-gradient(90deg, #00f5ff, #ff2aa3, #ffe96b);
-  color: #050510;
-  border: 3px solid white;
-  border-radius: 14px;
-  padding: 18px 26px;
-  font-weight: 900;
-  font-size: 16px;
+  z-index: 20;
+  border: 0;
+  background: transparent;
   cursor: pointer;
-  box-shadow: 0 0 25px #ff2aa3, 0 0 55px #00f5ff;
-  animation: pulse 1.6s infinite;
+  padding: 0;
 }
 
-.insert-coin {
-  position: absolute;
-  left: 50%;
-  bottom: 8%;
-  transform: translateX(-50%);
-  color: #00f5ff;
-  font-weight: 900;
-  text-shadow: 0 0 15px #00f5ff;
-  animation: blink 1s infinite;
-  z-index: 10;
+/* These percentages are based on the artwork itself */
+.investigation {
+  left: 33.5%;
+  top: 23.6%;
+  width: 33%;
+  height: 5.2%;
 }
 
-.stars {
+.teddy {
+  left: 9.8%;
+  top: 50.4%;
+  width: 16.5%;
+  height: 23%;
+}
+
+.gamestop {
+  left: 28.2%;
+  top: 50.4%;
+  width: 16%;
+  height: 23%;
+}
+
+.gmebay {
+  left: 45.6%;
+  top: 50.4%;
+  width: 13.3%;
+  height: 23%;
+}
+
+.kitty {
+  left: 61.2%;
+  top: 50.4%;
+  width: 15.3%;
+  height: 23%;
+}
+
+.timeline-card {
+  left: 78.2%;
+  top: 50.4%;
+  width: 15%;
+  height: 23%;
+}
+
+.hotspot:hover {
+  border-radius: 14px;
+  box-shadow:
+    0 0 36px rgba(0,245,255,.85),
+    inset 0 0 38px rgba(255,42,163,.35);
+}
+
+/* animated glow layers */
+.sparkles {
   position: absolute;
   inset: 0;
   pointer-events: none;
+  z-index: 6;
   background-image:
     radial-gradient(white 1px, transparent 1px),
     radial-gradient(#00f5ff 1px, transparent 1px),
     radial-gradient(#ff2aa3 1px, transparent 1px);
-  background-size: 120px 120px, 180px 180px, 250px 250px;
-  animation: drift 18s linear infinite;
-  opacity: .25;
-  z-index: 5;
+  background-size: 95px 95px, 150px 150px, 230px 230px;
+  opacity: .22;
+  animation: sparkDrift 14s linear infinite;
 }
 
+.screen-glow {
+  position: absolute;
+  pointer-events: none;
+  z-index: 7;
+  border-radius: 18px;
+  mix-blend-mode: screen;
+  background:
+    radial-gradient(circle, rgba(0,245,255,.38), transparent 58%),
+    radial-gradient(circle, rgba(255,42,163,.28), transparent 68%);
+  filter: blur(3px);
+  animation: screenPulse 1.35s infinite steps(2);
+}
+
+.left-screen {
+  left: 3%;
+  top: 20%;
+  width: 15%;
+  height: 18%;
+}
+
+.center-screen {
+  left: 39%;
+  top: 20%;
+  width: 22%;
+  height: 6%;
+}
+
+.right-screen {
+  right: 3%;
+  top: 19%;
+  width: 15%;
+  height: 18%;
+}
+
+@keyframes sparkDrift {
+  to {
+    transform: translateY(120px);
+  }
+}
+
+@keyframes screenPulse {
+  50% {
+    opacity: .35;
+    filter: blur(7px);
+  }
+}
+
+@keyframes posterFlicker {
+  0%, 93%, 100% {
+    filter: brightness(1) contrast(1.03);
+  }
+
+  94% {
+    filter: brightness(.88) contrast(1.08);
+  }
+
+  95% {
+    filter: brightness(1.18) contrast(1.08);
+  }
+
+  96% {
+    filter: brightness(.95) contrast(1.12);
+  }
+}
+
+/* CONTENT BELOW ARTWORK */
 .lore-section {
-  padding: 80px 5%;
+  padding: 90px 5%;
   text-align: center;
   background:
-    radial-gradient(circle at top, rgba(255,42,163,.22), transparent 35%),
-    #050510;
+    radial-gradient(circle at top, rgba(255,42,163,.24), transparent 35%),
+    linear-gradient(180deg, #050510, #0a0014);
 }
 
 .lore-section h2 {
   color: #ff2aa3;
-  text-shadow: 0 0 18px #ff2aa3;
+  text-shadow: 0 0 18px #ff2aa3, 0 0 34px #00f5ff;
   font-size: clamp(28px, 4vw, 54px);
+  margin: 0 0 24px;
 }
 
 .lore-section p {
-  max-width: 800px;
-  margin: 20px auto 40px;
+  max-width: 850px;
+  margin: 0 auto 42px;
   font-size: 20px;
   line-height: 1.6;
 }
@@ -116,114 +225,129 @@ body {
 }
 
 .card {
-  width: 220px;
-  min-height: 140px;
-  background: #111;
+  width: 230px;
+  min-height: 145px;
+  background:
+    linear-gradient(180deg, rgba(0,245,255,.18), rgba(255,42,163,.12)),
+    #090914;
   color: white;
   border: 2px solid #00f5ff;
   border-radius: 18px;
-  font-size: 20px;
+  font-size: 19px;
   font-weight: 900;
   cursor: pointer;
-  box-shadow: 0 0 22px #00f5ff;
+  box-shadow:
+    0 0 22px rgba(0,245,255,.8),
+    inset 0 0 22px rgba(255,42,163,.18);
+  transition: .25s;
 }
 
 .card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 0 32px #ff2aa3;
+  border-color: #ff2aa3;
+  box-shadow:
+    0 0 32px rgba(255,42,163,.9),
+    inset 0 0 26px rgba(0,245,255,.22);
 }
 
-@keyframes pulse {
-  50% {
-    transform: translateX(-50%) scale(1.05);
-    filter: brightness(1.25);
-  }
+.token-section {
+  padding: 80px 5%;
+  background: #050510;
 }
 
-@keyframes blink {
-  50% {
-    opacity: .25;
-  }
+.token-box {
+  max-width: 900px;
+  margin: 0 auto;
+  border: 2px solid #00f5ff;
+  border-radius: 22px;
+  padding: 36px;
+  text-align: center;
+  box-shadow:
+    0 0 28px rgba(0,245,255,.8),
+    inset 0 0 24px rgba(255,42,163,.2);
 }
 
-@keyframes drift {
-  to {
-    transform: translateY(120px);
-  }
+.token-box h2 {
+  color: #00f5ff;
+  text-shadow: 0 0 18px #00f5ff;
 }
 
-@media (max-width: 700px) {
-  .hero-image {
-    object-fit: cover;
-    object-position: center;
-  }
-
-  .enter-button {
-    font-size: 12px;
-    padding: 14px 18px;
-  }
+.token-box p {
+  font-size: 18px;
+  line-height: 1.6;
 }
-.hero {
+
+.disclaimer {
+  color: #aaa;
+  font-size: 13px !important;
+}
+
+/* MODAL */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.84);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.modal.active {
+  display: flex;
+}
+
+.modal-box {
+  width: min(620px, 100%);
+  padding: 34px;
+  border: 3px solid #ff2aa3;
+  border-radius: 24px;
+  background: linear-gradient(180deg, #140027, #060610);
+  box-shadow:
+    0 0 35px #ff2aa3,
+    0 0 70px #00f5ff;
   position: relative;
 }
 
-.hotspot {
+#closeModal {
   position: absolute;
+  top: 12px;
+  right: 16px;
+  border: 0;
+  background: transparent;
+  color: white;
+  font-size: 34px;
   cursor: pointer;
 }
 
-/* ENTER THE INVESTIGATION button */
-.investigation {
-  left: 39%;
-  top: 18%;
-  width: 24%;
-  height: 5%;
+.modal-box h2 {
+  color: #00f5ff;
+  line-height: 1.4;
 }
 
-/* TEDDY card */
-.teddy {
-  left: 14%;
-  top: 39%;
-  width: 12%;
-  height: 26%;
+.modal-box p {
+  font-size: 18px;
+  line-height: 1.6;
 }
 
-/* GAMESTOP card */
-.gamestop {
-  left: 31%;
-  top: 39%;
-  width: 12%;
-  height: 26%;
-}
+@media (max-width: 700px) {
+  .hero-frame {
+    width: 100%;
+  }
 
-/* GMEBAY card */
-.gmebay {
-  left: 47%;
-  top: 39%;
-  width: 12%;
-  height: 26%;
-}
+  .lore-section h2 {
+    font-size: 28px;
+  }
 
-/* KITTY */
-.kitty {
-  left: 62%;
-  top: 39%;
-  width: 12%;
-  height: 26%;
-}
+  .lore-section p,
+  .token-box p,
+  .modal-box p {
+    font-size: 16px;
+  }
 
-/* EMOJI TIMELINE */
-.timeline {
-  left: 77%;
-  top: 39%;
-  width: 12%;
-  height: 26%;
-}
-
-/* subtle glow so you know things are alive */
-.hotspot:hover {
-  box-shadow:
-    0 0 35px rgba(0,245,255,.7),
-    inset 0 0 35px rgba(255,42,163,.35);
-  border-radius: 12px;
+  .card {
+    width: 100%;
+    max-width: 330px;
+  }
 }
