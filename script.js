@@ -1,12 +1,47 @@
-const button = document.getElementById("enterBoard");
-const cards = document.querySelectorAll(".card");
+const modal = document.getElementById("modal");
+const modalTitle = document.getElementById("modalTitle");
+const modalText = document.getElementById("modalText");
+const closeModal = document.getElementById("closeModal");
 
-button.addEventListener("click", () => {
-  document.querySelector(".board").scrollIntoView({ behavior: "smooth" });
+document.querySelectorAll("[data-title]").forEach((item) => {
+  item.addEventListener("click", () => {
+    modalTitle.textContent = item.dataset.title;
+    modalText.textContent = item.dataset.text;
+    modal.classList.add("active");
+  });
 });
 
-cards.forEach(card => {
-  card.addEventListener("click", () => {
-    alert(card.innerText + "\n\nEvidence file opening soon...");
+closeModal.addEventListener("click", () => {
+  modal.classList.remove("active");
+});
+
+modal.addEventListener("click", (event) => {
+  if (event.target === modal) {
+    modal.classList.remove("active");
+  }
+});
+
+function scrollToBoard() {
+  document.getElementById("board").scrollIntoView({
+    behavior: "smooth"
   });
+}
+
+const konami = [
+  "ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown",
+  "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight",
+  "b", "a"
+];
+
+let input = [];
+
+window.addEventListener("keydown", (event) => {
+  input.push(event.key);
+  input = input.slice(-konami.length);
+
+  if (input.join("") === konami.join("")) {
+    modalTitle.textContent = "🎮 SECRET LEVEL UNLOCKED";
+    modalText.textContent = "GMEBAY.exe loaded. The board is alive.";
+    modal.classList.add("active");
+  }
 });
