@@ -18,13 +18,11 @@ const timelineEmojis = [
   "👑", "🪄", "🌀", "⚡", "🏴‍☠️"
 ];
 
-const fudEmojis = ["☠️", "📉", "🩸", "😱", "🙈", "🤡", "📰"];
-
-let player = { x: 240, y: 305, w: 44, h: 36, speed: 7 };
+let player = { x: 240, y: 305, w: 34, h: 28, speed: 7 };
 let falling = [];
 let fud = [];
 let collected = 0;
-let lives = 3;
+let lives = 5;
 let gameRunning = false;
 let keys = {};
 let blink = true;
@@ -43,7 +41,7 @@ enterSiteBtn.addEventListener("click", enterSite);
 
 startGameBtn.addEventListener("click", () => {
   collected = 0;
-  lives = 3;
+  lives = 5;
   falling = [];
   fud = [];
   player.x = 240;
@@ -71,23 +69,23 @@ canvas.addEventListener("touchend", () => {
 });
 
 function spawnItems() {
-  if (Math.random() < 0.065 && collected < timelineEmojis.length) {
+  if (Math.random() < 0.075 && collected < timelineEmojis.length) {
     falling.push({
       emoji: timelineEmojis[collected],
       x: Math.random() * (canvas.width - 52),
       y: -52,
-      size: 46,
-      speed: 2.1 + Math.random() * 1.6
+      size: 30,
+      speed: 2.1 + Math.random() * 1.4
     });
   }
 
-  if (Math.random() < 0.018) {
+  if (Math.random() < 0.012) {
     fud.push({
-      emoji: fudEmojis[Math.floor(Math.random() * fudEmojis.length)],
+      emoji: "☠️",
       x: Math.random() * (canvas.width - 48),
       y: -48,
-      size: 42,
-      speed: 2.6 + Math.random() * 1.8
+      size: 26,
+      speed: 2.4 + Math.random() * 1.4
     });
   }
 }
@@ -169,12 +167,26 @@ function drawItems() {
   });
 }
 
-function collide(a, b) {
+function hitPlayerWithItem(item, itemSize) {
+  const playerBox = {
+    x: player.x + 10,
+    y: player.y + 12,
+    w: player.w,
+    h: player.h
+  };
+
+  const itemBox = {
+    x: item.x + 12,
+    y: item.y - itemSize + 12,
+    w: itemSize - 18,
+    h: itemSize - 18
+  };
+
   return (
-    a.x < b.x + b.size &&
-    a.x + a.w > b.x &&
-    a.y < b.y + b.size &&
-    a.y + a.h > b.y
+    playerBox.x < itemBox.x + itemBox.w &&
+    playerBox.x + playerBox.w > itemBox.x &&
+    playerBox.y < itemBox.y + itemBox.h &&
+    playerBox.y + playerBox.h > itemBox.y
   );
 }
 
@@ -186,7 +198,7 @@ function gameLoop() {
   if (keys["ArrowLeft"]) player.x -= player.speed;
   if (keys["ArrowRight"]) player.x += player.speed;
 
-  player.x = Math.max(0, Math.min(canvas.width - player.w, player.x));
+  player.x = Math.max(0, Math.min(canvas.width - 44, player.x));
 
   spawnItems();
 
@@ -194,7 +206,7 @@ function gameLoop() {
   fud.forEach(item => item.y += item.speed);
 
   falling = falling.filter(item => {
-    if (collide(player, item)) {
+    if (hitPlayerWithItem(item, 48)) {
       collected++;
       return false;
     }
@@ -202,7 +214,7 @@ function gameLoop() {
   });
 
   fud = fud.filter(item => {
-    if (collide(player, item)) {
+    if (hitPlayerWithItem(item, 44)) {
       lives--;
       return false;
     }
@@ -225,7 +237,7 @@ function gameLoop() {
   if (lives <= 0) {
     gameRunning = false;
     modalTitle.textContent = "☠️ FUD GOT YOU";
-    modalText.textContent = "Try again or enter the site.";
+    modalText.textContent = "The FUD skulls got too close. Try again or enter the site.";
     modal.classList.add("active");
     return;
   }
