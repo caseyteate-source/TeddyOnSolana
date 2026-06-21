@@ -1,4 +1,3 @@
-
 const modal = document.getElementById("wikiModal");
 const close = document.getElementById("closeWiki");
 const title = document.getElementById("wikiTitle");
