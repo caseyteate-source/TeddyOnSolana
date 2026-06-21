@@ -11,10 +11,14 @@ document.querySelectorAll("[data-title]").forEach((item) => {
   });
 });
 
-closeModal.addEventListener("click", () => modal.classList.remove("active"));
+closeModal.addEventListener("click", () => {
+  modal.classList.remove("active");
+});
 
 modal.addEventListener("click", (event) => {
-  if (event.target === modal) modal.classList.remove("active");
+  if (event.target === modal) {
+    modal.classList.remove("active");
+  }
 });
 
 const konami = [
