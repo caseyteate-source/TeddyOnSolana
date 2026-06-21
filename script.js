@@ -44,4 +44,20 @@ window.addEventListener("keydown", (event) => {
     modalText.textContent = "GMEBAY.exe loaded. The board is alive.";
     modal.classList.add("active");
   }
+
+  const scores = [
+  "KITTY 74100",
+  "TEDDY 42069",
+  "GMEBAY 99999",
+  "APES 80085"
+];
+
+setInterval(() => {
+  const board = document.querySelector(".left-score");
+
+  if (!board) return;
+
+  board.innerHTML =
+    scores[Math.floor(Math.random() * scores.length)];
+}, 2500);
 });
