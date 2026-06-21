@@ -18,14 +18,13 @@ const timelineEmojis = [
   "👑", "🪄", "🌀", "⚡", "🏴‍☠️"
 ];
 
-let player = { x: 230, y: 305, w: 42, h: 34, speed: 7 };
+let player = { x: 240, y: 305, w: 44, h: 36, speed: 7 };
 let falling = [];
 let fud = [];
 let collected = 0;
 let lives = 3;
 let gameRunning = false;
 let keys = {};
-let frame = 0;
 
 function enterSite() {
   startScreen.classList.add("hidden");
@@ -40,8 +39,7 @@ startGameBtn.addEventListener("click", () => {
   lives = 3;
   falling = [];
   fud = [];
-  frame = 0;
-  player.x = 230;
+  player.x = 240;
   gameRunning = true;
   requestAnimationFrame(gameLoop);
 });
@@ -71,7 +69,7 @@ function spawnItems() {
       emoji: timelineEmojis[collected],
       x: Math.random() * (canvas.width - 34),
       y: -34,
-      size: 30,
+      size: 32,
       speed: 2.2 + Math.random() * 1.8
     });
   }
@@ -81,50 +79,58 @@ function spawnItems() {
       emoji: "☠️",
       x: Math.random() * (canvas.width - 34),
       y: -34,
-      size: 30,
+      size: 32,
       speed: 2.8 + Math.random() * 2
     });
   }
 }
 
-function drawArcadeBackground() {
+function drawBackground() {
   ctx.fillStyle = "#020208";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  ctx.strokeStyle = "rgba(0,245,255,.15)";
-  for (let y = 42; y < canvas.height; y += 30) {
+  ctx.strokeStyle = "rgba(0,245,255,.13)";
+  for (let y = 50; y < canvas.height; y += 28) {
     ctx.beginPath();
     ctx.moveTo(0, y);
     ctx.lineTo(canvas.width, y);
     ctx.stroke();
   }
 
-  ctx.fillStyle = "rgba(255,42,163,.15)";
-  ctx.fillRect(0, 0, canvas.width, 42);
+  ctx.strokeStyle = "rgba(255,42,163,.2)";
+  for (let x = 0; x < canvas.width; x += 40) {
+    ctx.beginPath();
+    ctx.moveTo(x, canvas.height);
+    ctx.lineTo(canvas.width / 2, 190);
+    ctx.stroke();
+  }
+
+  ctx.fillStyle = "rgba(255,42,163,.16)";
+  ctx.fillRect(0, 0, canvas.width, 48);
 }
 
 function drawHUD() {
-  ctx.font = "14px monospace";
+  ctx.font = "16px monospace";
   ctx.fillStyle = "#00f5ff";
-  ctx.fillText(`EMOJIS ${collected}/${timelineEmojis.length}`, 12, 26);
+  ctx.fillText(`EMOJIS ${collected}/${timelineEmojis.length}`, 14, 30);
 
   ctx.fillStyle = "#ff2aa3";
-  ctx.fillText(`LIVES ${lives}`, 375, 26);
+  ctx.fillText(`LIVES ${lives}`, canvas.width - 95, 30);
 }
 
 function drawPlayer() {
-  ctx.font = "36px Arial";
-  ctx.fillText("🧸", player.x, player.y + 34);
+  ctx.font = "40px Arial";
+  ctx.fillText("🧸", player.x, player.y + 36);
 }
 
 function drawItems() {
   falling.forEach(item => {
-    ctx.font = "30px Arial";
+    ctx.font = "32px Arial";
     ctx.fillText(item.emoji, item.x, item.y);
   });
 
   fud.forEach(item => {
-    ctx.font = "30px Arial";
+    ctx.font = "32px Arial";
     ctx.fillText(item.emoji, item.x, item.y);
   });
 }
@@ -141,8 +147,7 @@ function collide(a, b) {
 function gameLoop() {
   if (!gameRunning) return;
 
-  frame++;
-  drawArcadeBackground();
+  drawBackground();
 
   if (keys["ArrowLeft"]) player.x -= player.speed;
   if (keys["ArrowRight"]) player.x += player.speed;
@@ -193,6 +198,10 @@ function gameLoop() {
 
   requestAnimationFrame(gameLoop);
 }
+
+drawBackground();
+drawHUD();
+drawPlayer();
 
 document.querySelectorAll("[data-title]").forEach((item) => {
   item.addEventListener("click", () => {
