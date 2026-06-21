@@ -1,360 +1,56 @@
-* {
-  box-sizing: border-box;
-}
+const modal = document.getElementById("modal");
+const modalTitle = document.getElementById("modalTitle");
+const modalText = document.getElementById("modalText");
+const closeModal = document.getElementById("closeModal");
 
-html {
-  scroll-behavior: smooth;
-}
+document.querySelectorAll("[data-title]").forEach((item) => {
+  item.addEventListener("click", () => {
+    modalTitle.textContent = item.dataset.title;
+    modalText.textContent = item.dataset.text;
+    modal.classList.add("active");
+  });
+});
 
-body {
-  margin: 0;
-  background: #050510;
-  color: white;
-  font-family: Arial, Helvetica, sans-serif;
-  overflow-x: hidden;
-  padding-bottom: 48px;
-}
+closeModal.addEventListener("click", () => {
+  modal.classList.remove("active");
+});
 
-.scanlines {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 999;
-  background: repeating-linear-gradient(
-    to bottom,
-    rgba(255,255,255,.035) 0,
-    rgba(255,255,255,.035) 1px,
-    transparent 2px,
-    transparent 5px
-  );
-  mix-blend-mode: overlay;
-}
-
-.hero {
-  width: 100%;
-  background: #050510;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  overflow: hidden;
-}
-
-.hero-frame {
-  position: relative;
-  width: min(100%, 1400px);
-  margin: 0 auto;
-  background: #050510;
-}
-
-.hero-image {
-  width: 100%;
-  height: auto;
-  display: block;
-  animation: posterFlicker 8s infinite;
-}
-
-.hotspot {
-  position: absolute;
-  z-index: 40;
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-  padding: 0;
-}
-
-.investigation { left: 33.5%; top: 23.6%; width: 33%; height: 5.2%; }
-.teddy { left: 9.8%; top: 50.4%; width: 16.5%; height: 23%; }
-.gamestop { left: 28.2%; top: 50.4%; width: 16%; height: 23%; }
-.gmebay { left: 45.6%; top: 50.4%; width: 13.3%; height: 23%; }
-.kitty { left: 61.2%; top: 50.4%; width: 15.3%; height: 23%; }
-.timeline-card { left: 78.2%; top: 50.4%; width: 15%; height: 23%; }
-
-.hotspot:hover {
-  border-radius: 18px;
-  background: rgba(255,255,255,.05);
-  backdrop-filter: brightness(1.15);
-  box-shadow:
-    0 0 18px rgba(0,245,255,.25);
-}
-
-.sparkles {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 8;
-  background-image:
-    radial-gradient(white 1px, transparent 1px),
-    radial-gradient(#00f5ff 1px, transparent 1px),
-    radial-gradient(#ff2aa3 1px, transparent 1px);
-  background-size: 110px 110px, 170px 170px, 260px 260px;
-  opacity: .08;
-  animation: sparkDrift 18s linear infinite;
-}
-
-@keyframes sparkDrift {
-  to { transform: translateY(120px); }
-}
-
-@keyframes posterFlicker {
-  0%, 96%, 100% { filter: brightness(1) contrast(1.02); }
-  97% { filter: brightness(.94) contrast(1.05); }
-  98% { filter: brightness(1.06) contrast(1.04); }
-}
-
-.lore-section {
-  padding: 90px 5%;
-  text-align: center;
-  background:
-    radial-gradient(circle at top, rgba(255,42,163,.24), transparent 35%),
-    linear-gradient(180deg, #050510, #0a0014);
-}
-
-.lore-section h2,
-.terminal-box h2 {
-  color: #ff2aa3;
-  text-shadow: 0 0 18px #ff2aa3, 0 0 34px #00f5ff;
-  font-size: clamp(28px, 4vw, 54px);
-  margin: 0 0 24px;
-}
-
-.lore-section p {
-  max-width: 850px;
-  margin: 0 auto 42px;
-  font-size: 20px;
-  line-height: 1.6;
-}
-
-.cards {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 22px;
-  justify-content: center;
-}
-
-.card {
-  width: 230px;
-  min-height: 145px;
-  background:
-    linear-gradient(180deg, rgba(0,245,255,.18), rgba(255,42,163,.12)),
-    #090914;
-  color: white;
-  border: 2px solid #00f5ff;
-  border-radius: 18px;
-  font-size: 19px;
-  font-weight: 900;
-  cursor: pointer;
-  box-shadow:
-    0 0 22px rgba(0,245,255,.8),
-    inset 0 0 22px rgba(255,42,163,.18);
-  transition: .25s;
-}
-
-.card:hover {
-  transform: translateY(-8px);
-  border-color: #ff2aa3;
-  box-shadow:
-    0 0 32px rgba(255,42,163,.9),
-    inset 0 0 26px rgba(0,245,255,.22);
-}
-
-.terminal-section {
-  padding: 80px 5%;
-  background:
-    radial-gradient(circle at bottom, rgba(0,245,255,.18), transparent 35%),
-    #050510;
-}
-
-.terminal-box {
-  max-width: 1000px;
-  margin: 0 auto;
-  border: 2px solid #00f5ff;
-  border-radius: 22px;
-  padding: 36px;
-  text-align: center;
-  box-shadow:
-    0 0 28px rgba(0,245,255,.8),
-    inset 0 0 24px rgba(255,42,163,.2);
-  background:
-    linear-gradient(180deg, rgba(0,245,255,.08), rgba(255,42,163,.08)),
-    #070712;
-}
-
-.terminal-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 18px;
-  margin: 30px 0;
-}
-
-.terminal-grid p,
-.contract-box,
-.terminal-line {
-  font-size: 18px;
-  line-height: 1.6;
-}
-
-.terminal-grid span,
-.contract-box span {
-  color: #00f5ff;
-  font-weight: 900;
-}
-
-.contract-box {
-  border: 1px solid rgba(0,245,255,.5);
-  border-radius: 16px;
-  padding: 18px;
-  word-break: break-all;
-  margin: 30px 0;
-  background: rgba(0,0,0,.35);
-}
-
-code {
-  color: #ff2aa3;
-  font-size: 16px;
-}
-
-.cursor {
-  color: #00f5ff;
-  animation: blink 1s infinite;
-}
-
-@keyframes blink {
-  50% { opacity: 0; }
-}
-
-.terminal-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  justify-content: center;
-  margin: 28px 0;
-}
-
-.terminal-buttons a,
-.terminal-buttons button {
-  background: transparent;
-  color: white;
-  border: 2px solid #ff2aa3;
-  border-radius: 14px;
-  padding: 16px 20px;
-  font-size: 16px;
-  font-weight: 900;
-  text-decoration: none;
-  cursor: pointer;
-  box-shadow: 0 0 18px rgba(255,42,163,.8);
-}
-
-.terminal-buttons a:hover,
-.terminal-buttons button:hover {
-  border-color: #00f5ff;
-  box-shadow: 0 0 24px rgba(0,245,255,.9);
-}
-
-.disclaimer {
-  color: #aaa;
-  font-size: 13px !important;
-  line-height: 1.6;
-}
-
-.ticker {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 48px;
-  background: #070712;
-  border-top: 2px solid #00f5ff;
-  z-index: 998;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-}
-
-.ticker-track {
-  white-space: nowrap;
-  color: #00f5ff;
-  font-weight: 900;
-  font-size: 16px;
-  text-shadow: 0 0 12px #00f5ff;
-  animation: tickerMove 18s linear infinite;
-}
-
-@keyframes tickerMove {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-
-.modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.84);
-  z-index: 1000;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-}
-
-.modal.active {
-  display: flex;
-}
-
-.modal-box {
-  width: min(620px, 100%);
-  padding: 34px;
-  border: 3px solid #ff2aa3;
-  border-radius: 24px;
-  background: linear-gradient(180deg, #140027, #060610);
-  box-shadow: 0 0 35px #ff2aa3, 0 0 70px #00f5ff;
-  position: relative;
-}
-
-#closeModal {
-  position: absolute;
-  top: 12px;
-  right: 16px;
-  border: 0;
-  background: transparent;
-  color: white;
-  font-size: 34px;
-  cursor: pointer;
-}
-
-.modal-box h2 {
-  color: #00f5ff;
-  line-height: 1.4;
-}
-
-.modal-box p {
-  font-size: 18px;
-  line-height: 1.6;
-}
-
-@media (max-width: 700px) {
-  .lore-section h2,
-  .terminal-box h2 {
-    font-size: 28px;
+modal.addEventListener("click", (event) => {
+  if (event.target === modal) {
+    modal.classList.remove("active");
   }
+});
 
-  .lore-section p,
-  .terminal-grid p,
-  .contract-box,
-  .terminal-line,
-  .modal-box p {
-    font-size: 16px;
-  }
+document.getElementById("copyContract").addEventListener("click", async () => {
+  const contract = document.getElementById("contractAddress").textContent;
 
-  .card {
-    width: 100%;
-    max-width: 330px;
+  try {
+    await navigator.clipboard.writeText(contract);
+    modalTitle.textContent = "📋 CONTRACT COPIED";
+    modalText.textContent = contract;
+    modal.classList.add("active");
+  } catch {
+    modalTitle.textContent = "COPY THIS CONTRACT";
+    modalText.textContent = contract;
+    modal.classList.add("active");
   }
+});
 
-  .terminal-buttons a,
-  .terminal-buttons button {
-    width: 100%;
-  }
+const konami = [
+  "ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown",
+  "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight",
+  "b", "a"
+];
 
-  code {
-    font-size: 13px;
+let input = [];
+
+window.addEventListener("keydown", (event) => {
+  input.push(event.key);
+  input = input.slice(-konami.length);
+
+  if (input.join("") === konami.join("")) {
+    modalTitle.textContent = "🎮 SECRET LEVEL UNLOCKED";
+    modalText.textContent = "GMEBAY.exe loaded. The board is alive.";
+    modal.classList.add("active");
   }
-}
+});
