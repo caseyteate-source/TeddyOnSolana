@@ -1,1 +1,84 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>$TEDDY | Kitty Files</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="wiki-body">
+
+<div class="wiki-header">
+  <a href="index.html" class="back-button">← RETURN TO ARCADE</a>
+  <h1>🐱 KITTY FILES</h1>
+  <p>Connect the clues. Follow the strings. Build the lore.</p>
+</div>
+
+<div class="board">
+
+  <div class="string s1"></div>
+  <div class="string s2"></div>
+  <div class="string s3"></div>
+  <div class="string s4"></div>
+  <div class="string s5"></div>
+
+  <button class="pin" data-page="tweet1">
+    🎥 Movie Clip
+  </button>
+
+  <button class="pin" data-page="tweet2">
+    🇺🇸 Flag Tweet
+  </button>
+
+  <button class="pin" data-page="tweet3">
+    👀 Looking Eyes
+  </button>
+
+  <button class="pin" data-page="tweet4">
+    🔥 Fire Tweet
+  </button>
+
+  <button class="pin" data-page="tweet5">
+    💥 Boom Tweet
+  </button>
+
+  <button class="pin center-pin">
+    🐱 ROARING KITTY
+  </button>
+
+</div>
+
+<div id="wikiModal" class="wiki-modal">
+  <div class="wiki-box">
+
+    <button id="closeWiki">✕</button>
+
+    <h2 id="wikiTitle"></h2>
+
+    <h3>STATUS</h3>
+    <p>Community Investigation Ongoing</p>
+
+    <h3>POSSIBLE THEORIES</h3>
+
+    <ul id="wikiTheoryList">
+    </ul>
+
+    <h3>COMMUNITY NOTES</h3>
+
+    <textarea
+      id="communityNotes"
+      placeholder="Add your tinfoil theory..."
+    ></textarea>
+
+    <button id="saveTheory">
+      SAVE THEORY
+    </button>
+
+  </div>
+</div>
+
+<script src="wiki.js"></script>
+
+</body>
+</html>
