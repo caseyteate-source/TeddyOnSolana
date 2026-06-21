@@ -163,3 +163,67 @@ body {
     padding: 14px 18px;
   }
 }
+.hero {
+  position: relative;
+}
+
+.hotspot {
+  position: absolute;
+  cursor: pointer;
+}
+
+/* ENTER THE INVESTIGATION button */
+.investigation {
+  left: 39%;
+  top: 18%;
+  width: 24%;
+  height: 5%;
+}
+
+/* TEDDY card */
+.teddy {
+  left: 14%;
+  top: 39%;
+  width: 12%;
+  height: 26%;
+}
+
+/* GAMESTOP card */
+.gamestop {
+  left: 31%;
+  top: 39%;
+  width: 12%;
+  height: 26%;
+}
+
+/* GMEBAY card */
+.gmebay {
+  left: 47%;
+  top: 39%;
+  width: 12%;
+  height: 26%;
+}
+
+/* KITTY */
+.kitty {
+  left: 62%;
+  top: 39%;
+  width: 12%;
+  height: 26%;
+}
+
+/* EMOJI TIMELINE */
+.timeline {
+  left: 77%;
+  top: 39%;
+  width: 12%;
+  height: 26%;
+}
+
+/* subtle glow so you know things are alive */
+.hotspot:hover {
+  box-shadow:
+    0 0 35px rgba(0,245,255,.7),
+    inset 0 0 35px rgba(255,42,163,.35);
+  border-radius: 12px;
+}
