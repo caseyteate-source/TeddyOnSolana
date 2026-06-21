@@ -21,6 +21,21 @@ modal.addEventListener("click", (event) => {
   }
 });
 
+document.getElementById("copyContract").addEventListener("click", async () => {
+  const contract = document.getElementById("contractAddress").textContent;
+
+  try {
+    await navigator.clipboard.writeText(contract);
+    modalTitle.textContent = "📋 CONTRACT COPIED";
+    modalText.textContent = contract;
+    modal.classList.add("active");
+  } catch {
+    modalTitle.textContent = "COPY THIS CONTRACT";
+    modalText.textContent = contract;
+    modal.classList.add("active");
+  }
+});
+
 const konami = [
   "ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown",
   "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight",
