@@ -1,1 +1,60 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>$TEDDY | Emoji Timeline</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="wiki-body">
+
+<div class="wiki-header">
+  <a href="index.html" class="back-button">← RETURN TO ARCADE</a>
+  <h1>📈 EMOJI TIMELINE</h1>
+  <p>Every emoji is a clue.</p>
+</div>
+
+<div class="emoji-board">
+
+  <button class="emoji-pin">🐸</button>
+  <button class="emoji-pin">🍦</button>
+  <button class="emoji-pin">💀</button>
+  <button class="emoji-pin">🇺🇸</button>
+  <button class="emoji-pin">🎤</button>
+  <button class="emoji-pin">👀</button>
+  <button class="emoji-pin">🔥</button>
+  <button class="emoji-pin">💥</button>
+  <button class="emoji-pin">🍻</button>
+
+</div>
+
+<div id="wikiModal" class="wiki-modal">
+  <div class="wiki-box">
+
+    <button id="closeWiki">✕</button>
+
+    <h2 id="wikiTitle"></h2>
+
+    <h3>COMMON INTERPRETATIONS</h3>
+
+    <ul id="wikiTheoryList"></ul>
+
+    <h3>COMMUNITY NOTES</h3>
+
+    <textarea
+      id="communityNotes"
+      placeholder="What could this emoji mean?"
+    ></textarea>
+
+    <button id="saveTheory">
+      SAVE THEORY
+    </button>
+
+  </div>
+</div>
+
+<script src="wiki.js"></script>
+
+</body>
+</html>
