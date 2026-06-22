@@ -66,8 +66,8 @@
     .emoji-zone {
       position: absolute;
       z-index: 35;
-      width: 5.6%;
-      height: 9.6%;
+      width: 5.4%;
+      height: 9.2%;
       border: 0;
       background: transparent;
       padding: 0;
@@ -99,7 +99,7 @@
       top: 50%;
       transform: translate(-50%, -50%);
       color: white;
-      background: rgba(0,0,0,.75);
+      background: rgba(0,0,0,.78);
       padding: 3px 6px;
       border-radius: 8px;
       font-weight: 900;
@@ -262,43 +262,43 @@
     }
 
     const emojis = [
-      { e:"😳", name:"Shock", x:13.4, y:32.4, text:"The opening signal. Surprise, confusion, and attention. It may represent the moment the audience is supposed to realize something unusual is happening." },
-      { e:"💩", name:"Mess", x:19.2, y:32.4, text:"Chaos, ugliness, or everything looking like a disaster before the next turn." },
-      { e:"😿", name:"Sad Cat", x:25.1, y:32.4, text:"The cat appears wounded or discouraged, but this may be a fake-out rather than the end of the story." },
-      { e:"🥜", name:"Peanuts", x:31.0, y:32.4, text:"Something small, overlooked, or dismissed as insignificant that may matter later." },
-      { e:"🐸", name:"Frog", x:36.9, y:32.4, text:"A leap, transformation, meme signal, or jump from one phase to another." },
-      { e:"🍦", name:"Ice Cream", x:42.8, y:32.4, text:"Often read by the community as a Cohen-coded clue, sweetness, reward, or callback." },
-      { e:"🤢", name:"Sick", x:48.8, y:32.4, text:"A rough market moment, nausea, discomfort, or emotional pressure before the pivot." },
-      { e:"👍", name:"Thumbs Up", x:54.7, y:32.4, text:"Approval, confirmation, or a signal that something checks out." },
-      { e:"👊", name:"Fist", x:60.6, y:32.4, text:"Resolve, solidarity, locked-in conviction, or community strength." },
-      { e:"💀", name:"Skull", x:66.5, y:32.4, text:"Danger, death of an old thesis, shorts getting wrecked, or FUD entering the board." },
-      { e:"🤓", name:"Nerd", x:72.5, y:32.4, text:"Research mode. This may be a signal to study the details instead of reacting emotionally." },
-      { e:"👀", name:"Eyes", x:78.4, y:32.4, text:"Watch closely. Something hidden in plain sight may be developing." },
-      { e:"😁", name:"Grin", x:84.3, y:32.4, text:"Confidence, mischief, or the feeling that the reveal is getting closer." },
-      { e:"⚡", name:"Lightning", x:90.1, y:32.4, text:"Sudden energy, speed, volatility, or an electric move." },
+      { e:"😳", name:"Shock", x:12.7, y:31.6, text:"The opening signal. Surprise, confusion, and attention. It may represent the moment the audience is supposed to realize something unusual is happening." },
+      { e:"💩", name:"Mess", x:18.7, y:31.6, text:"Chaos, ugliness, or everything looking like a disaster before the next turn." },
+      { e:"😿", name:"Sad Cat", x:24.7, y:31.6, text:"The cat appears wounded or discouraged, but this may be a fake-out rather than the end of the story." },
+      { e:"🥜", name:"Peanuts", x:30.7, y:31.6, text:"Something small, overlooked, or dismissed as insignificant that may matter later." },
+      { e:"🐸", name:"Frog", x:36.7, y:31.6, text:"A leap, transformation, meme signal, or jump from one phase to another." },
+      { e:"🍦", name:"Ice Cream", x:42.7, y:31.6, text:"Often read by the community as a Cohen-coded clue, sweetness, reward, or callback." },
+      { e:"🤢", name:"Sick", x:48.7, y:31.6, text:"A rough market moment, nausea, discomfort, or emotional pressure before the pivot." },
+      { e:"👍", name:"Thumbs Up", x:54.7, y:31.6, text:"Approval, confirmation, or a signal that something checks out." },
+      { e:"👊", name:"Fist", x:60.7, y:31.6, text:"Resolve, solidarity, locked-in conviction, or community strength." },
+      { e:"💀", name:"Skull", x:66.8, y:31.6, text:"Danger, death of an old thesis, shorts getting wrecked, or FUD entering the board." },
+      { e:"🤓", name:"Nerd", x:72.8, y:31.6, text:"Research mode. This may be a signal to study the details instead of reacting emotionally." },
+      { e:"👀", name:"Eyes", x:78.8, y:31.6, text:"Watch closely. Something hidden in plain sight may be developing." },
+      { e:"😁", name:"Grin", x:84.8, y:31.6, text:"Confidence, mischief, or the feeling that the reveal is getting closer." },
+      { e:"⚡", name:"Lightning", x:90.8, y:31.6, text:"Sudden energy, speed, volatility, or an electric move." },
 
-      { e:"🎮", name:"Game", x:13.4, y:52.3, text:"GameStop energy. The game continues. Could also represent the site itself as a playable mystery." },
-      { e:"🚀", name:"Rocket", x:19.2, y:52.3, text:"Launch imagery. The classic meme-market symbol for upward movement." },
-      { e:"🍄", name:"Mushroom", x:25.1, y:52.3, text:"Power-up mode, video game transformation, or entering another level." },
-      { e:"💥", name:"Explosion", x:31.0, y:52.3, text:"A boom, impact event, or sudden break in the timeline." },
-      { e:"🍏", name:"Apple", x:36.9, y:52.3, text:"Could suggest a clean bite, temptation, technology, a company clue, or a garden-path clue." },
-      { e:"🤔", name:"Thinking", x:42.8, y:52.3, text:"Question everything. The sequence may require interpretation rather than a surface reading." },
-      { e:"🥴", name:"Dizzy", x:48.8, y:52.3, text:"Confusion, disorientation, or the audience being thrown off before the reveal." },
-      { e:"💜", name:"Purple Heart", x:54.7, y:52.3, text:"Community loyalty, purple DRS associations, or love for the thesis." },
-      { e:"👥", name:"People", x:60.6, y:52.3, text:"The crowd, the community, the players, or collective attention." },
-      { e:"👌", name:"OK", x:66.5, y:52.3, text:"Signal accepted. A small confirmation marker." },
-      { e:"🤝", name:"Handshake", x:72.5, y:52.3, text:"Deal, agreement, partnership, merger speculation, or two parties connecting." },
-      { e:"⛺", name:"Tent", x:78.4, y:52.3, text:"Camping, waiting, setting up, gathering, or holding position." },
-      { e:"😼", name:"Smirking Cat", x:84.3, y:52.3, text:"The cat knows something. Confidence with a hidden card." },
-      { e:"🎯", name:"Target", x:90.1, y:52.3, text:"The thesis narrows. A target has been identified." },
+      { e:"🎮", name:"Game", x:13.1, y:51.1, text:"GameStop energy. The game continues. Could also represent the site itself as a playable mystery." },
+      { e:"🚀", name:"Rocket", x:19.2, y:51.1, text:"Launch imagery. The classic meme-market symbol for upward movement." },
+      { e:"🍄", name:"Mushroom", x:25.3, y:51.1, text:"Power-up mode, video game transformation, or entering another level." },
+      { e:"💥", name:"Explosion", x:31.4, y:51.1, text:"A boom, impact event, or sudden break in the timeline." },
+      { e:"🍏", name:"Apple", x:37.5, y:51.1, text:"Could suggest a clean bite, temptation, technology, a company clue, or a garden-path clue." },
+      { e:"🤔", name:"Thinking", x:43.6, y:51.1, text:"Question everything. The sequence may require interpretation rather than a surface reading." },
+      { e:"🥴", name:"Dizzy", x:49.7, y:51.1, text:"Confusion, disorientation, or the audience being thrown off before the reveal." },
+      { e:"💜", name:"Purple Heart", x:55.8, y:51.1, text:"Community loyalty, purple DRS associations, or love for the thesis." },
+      { e:"👥", name:"People", x:61.9, y:51.1, text:"The crowd, the community, the players, or collective attention." },
+      { e:"👌", name:"OK", x:68.0, y:51.1, text:"Signal accepted. A small confirmation marker." },
+      { e:"🤝", name:"Handshake", x:74.1, y:51.1, text:"Deal, agreement, partnership, merger speculation, or two parties connecting." },
+      { e:"⛺", name:"Tent", x:80.2, y:51.1, text:"Camping, waiting, setting up, gathering, or holding position." },
+      { e:"😼", name:"Smirking Cat", x:86.3, y:51.1, text:"The cat knows something. Confidence with a hidden card." },
+      { e:"🎯", name:"Target", x:91.8, y:51.1, text:"The thesis narrows. A target has been identified." },
 
-      { e:"👀", name:"Eyes Again", x:29.0, y:72.6, text:"A repeated watch signal. The viewer is being told to look again." },
-      { e:"🐶", name:"Dog", x:35.4, y:72.6, text:"Loyalty, pet-related clue, company reference, or a faithful companion signal." },
-      { e:"🇺🇸", name:"Flag", x:41.8, y:72.6, text:"America, timing, market structure, celebration, or an announcement window." },
-      { e:"👀", name:"Eyes Again", x:48.2, y:72.6, text:"The pattern repeats again. Pay attention to what changed between the first eyes and now." },
-      { e:"🔥", name:"Fire", x:54.6, y:72.6, text:"Heat, momentum, attention, or everything starting to catch fire." },
-      { e:"💥", name:"Explosion Again", x:61.0, y:72.6, text:"Second boom. A larger impact or follow-up event." },
-      { e:"🍻", name:"Beers", x:67.4, y:72.6, text:"Beer = Friday. Celebration, timing, or the end-of-week signal." }
+      { e:"👀", name:"Eyes Again", x:25.1, y:66.0, text:"A repeated watch signal. The viewer is being told to look again." },
+      { e:"🐶", name:"Dog", x:32.2, y:66.0, text:"Loyalty, pet-related clue, company reference, or a faithful companion signal." },
+      { e:"🇺🇸", name:"Flag", x:38.9, y:66.0, text:"America, timing, market structure, celebration, or an announcement window." },
+      { e:"👀", name:"Eyes Again", x:45.6, y:66.0, text:"The pattern repeats again. Pay attention to what changed between the first eyes and now." },
+      { e:"🔥", name:"Fire", x:52.4, y:66.0, text:"Heat, momentum, attention, or everything starting to catch fire." },
+      { e:"💥", name:"Explosion Again", x:59.2, y:66.0, text:"Second boom. A larger impact or follow-up event." },
+      { e:"🍻", name:"Beers", x:66.1, y:66.0, text:"Beer = Friday. Celebration, timing, or the end-of-week signal." }
     ];
 
     const emojiZones = document.getElementById("emojiZones");
