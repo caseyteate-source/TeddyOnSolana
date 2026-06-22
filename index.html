@@ -10,39 +10,58 @@
 <body>
   <div class="scanlines"></div>
 
-  <main class="home">
-    <section class="hero">
-      <h1>$TEDDY</h1>
-      <p class="tagline">Insert Coin. Follow the clues. Unlock the tinfoil.</p>
+  <main class="arcade-home">
+    <section class="arcade-stage">
 
-      <div class="arcade-card">
-        <h2>🧸 Teddy On Solana</h2>
-        <p>
-          A retro conspiracy arcade for Teddy lore, emojis, timelines,
-          cats, rockets, books, games, and pure imagination.
-        </p>
+      <img src="arcade-home.png" alt="$TEDDY Arcade" class="arcade-image" />
+
+      <!-- HOTSPOTS ON THE ARCADE IMAGE -->
+      <a href="emoji-timeline.html" class="hotspot emoji-hotspot" title="Emoji Timeline">
+        🧩
+      </a>
+
+      <a href="retro-room.html" class="hotspot tv-hotspot" title="Pure Imagination Room">
+        📺
+      </a>
+
+      <a href="kitty-files.html" class="hotspot kitty-hotspot" title="Kitty Files">
+        🐱
+      </a>
+
+      <button class="hotspot teddy-hotspot" data-title="📚 TEDDY" data-text="The books. The company. The father. The mystery.">
+        🧸
+      </button>
+
+      <button class="hotspot game-hotspot" data-title="🎮 GameStop" data-text="The game never stopped. The controller is still plugged in.">
+        🎮
+      </button>
+
+    </section>
+
+    <section class="arcade-panel">
+      <h1>$TEDDY</h1>
+      <p>Insert coin. Follow the clues. Unlock the timeline.</p>
+
+      <div class="contract-box">
+        <span>Contract Address</span>
+        <strong>PASTE_CONTRACT_ADDRESS_HERE</strong>
       </div>
 
-      <nav class="main-links">
+      <nav class="arcade-links">
         <a href="emoji-timeline.html">🧩 Emoji Timeline</a>
-        <a href="retro-room.html">📺 80s Living Room</a>
-        <a href="#kitty">🐱 Kitty Files</a>
+        <a href="kitty-files.html">🐱 Kitty Files</a>
+        <a href="retro-room.html">📺 Pure Imagination Room</a>
       </nav>
     </section>
-
-    <section id="kitty" class="kitty-preview">
-      <h2>🐱 Kitty Files</h2>
-      <p>Charts. Tweets. Emojis. Clues. Strings everywhere.</p>
-      <div class="mini-board">
-        <span>🎮</span>
-        <span>🧸</span>
-        <span>🚀</span>
-        <span>🍦</span>
-        <span>💎</span>
-        <span>🔥</span>
-      </div>
-    </section>
   </main>
+
+  <div id="popup" class="popup hidden">
+    <div class="popup-card">
+      <button id="closePopup" class="close-popup">×</button>
+      <h2 id="popupTitle"></h2>
+      <p id="popupText"></p>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
