@@ -32,12 +32,12 @@
       <div class="hero-frame">
         <img src="arcade-home.png" alt="$TEDDY Arcade" class="hero-image" />
 
-        <a href="#board" class="hotspot investigation"></a>
+        <a href="#caseFiles" class="hotspot investigation"></a>
         <button class="hotspot teddy" data-title="📚 TEDDY" data-text="The books. The company. The mystery."></button>
-        <button class="hotspot gamestop" data-title="🎮 GameStop" data-text="From retail to reinvention. Transformation theories, marketplace dreams, and community lore."></button>
+        <button class="hotspot gamestop" data-title="🎮 GameStop" data-text="Transformation theories, marketplace dreams, and community lore."></button>
         <button class="hotspot gmebay" data-title="📦 GMEBAY" data-text="GameStop + eBay = GMEBAY. The catchphrase lives here."></button>
-        <button class="hotspot kitty" data-title="🐱 Kitty Files" data-text="Charts. Tweets. Emojis. Clues."></button>
-        <button class="hotspot timeline-card" data-title="📈 Emoji Timeline" data-text="🐸 🍦 💀 🇺🇸 🎤 👀 🔥 💥 🍻"></button>
+        <a href="kitty.html" class="hotspot kitty" aria-label="Open Kitty Files"></a>
+        <a href="emoji.html" class="hotspot timeline-card" aria-label="Open Emoji Timeline"></a>
 
         <div class="sparkles"></div>
       </div>
@@ -57,20 +57,44 @@
       </div>
     </section>
 
-    <section id="board" class="lore-section">
-      <h2>🧵 THE INVESTIGATION CONTINUES</h2>
-      <p>Follow the strings. Click the cards. Build the lore. The arcade is only the entrance.</p>
+    <section id="caseFiles" class="case-files-section">
+      <h2>🧵 CHOOSE YOUR RABBIT HOLE</h2>
+      <p>The board is open. Pick a case file, connect the clues, and help build the lore.</p>
 
-      <div class="cards">
-        <button class="card" data-title="📚 TEDDY" data-text="The children’s books. The company. The mystery.">📚 TEDDY</button>
-        <button class="card" data-title="🎮 GAMESTOP" data-text="From retail to reinvention. Transformation theories and community speculation.">🎮 GAMESTOP</button>
-        <button class="card" data-title="📦 GMEBAY" data-text="GameStop + eBay = GMEBAY. A legendary community catchphrase.">📦 GMEBAY</button>
-        <button class="card" data-title="🐱 KITTY FILES" data-text="Tweets, charts, memes, emojis, callbacks, and tinfoil theories.">🐱 KITTY FILES</button>
-        <button class="card" data-title="📈 EMOJI TIMELINE" data-text="🐸 🍦 💀 🇺🇸 🎤 👀 🔥 💥 🍻">📈 EMOJI TIMELINE</button>
+      <div class="case-grid">
+        <a href="kitty.html" class="case-card">
+          <span>🐱</span>
+          <h3>Kitty Files</h3>
+          <p>Roaring Kitty tinfoil, tweet clues, theories, and community notes.</p>
+        </a>
+
+        <a href="emoji.html" class="case-card">
+          <span>📈</span>
+          <h3>Emoji Timeline</h3>
+          <p>Every emoji becomes a clue with possible meanings and editable theories.</p>
+        </a>
+
+        <button class="case-card" data-title="📦 GMEBAY THEORY" data-text="GameStop + eBay = GMEBAY. One of the strongest community catchphrases in the lore.">
+          <span>📦</span>
+          <h3>GMEBAY Theory</h3>
+          <p>The marketplace dream, community theory, and meme-layer connection.</p>
+        </button>
+
+        <button class="case-card" data-title="🎮 GAMESTOP LORE" data-text="Transformation theories, marketplace speculation, and the community story around the stock.">
+          <span>🎮</span>
+          <h3>GameStop Lore</h3>
+          <p>The transformation story, speculation, memes, and market mystery.</p>
+        </button>
+
+        <a href="#terminal" class="case-card">
+          <span>🧸</span>
+          <h3>$TEDDY Terminal</h3>
+          <p>Contract, chart, X account, and token details.</p>
+        </a>
       </div>
     </section>
 
-    <section class="terminal-section">
+    <section id="terminal" class="terminal-section">
       <div class="terminal-box">
         <h2>████ TOKEN TERMINAL ████</h2>
 
