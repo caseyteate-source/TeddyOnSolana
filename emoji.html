@@ -6,7 +6,9 @@
   <title>The Emoji Timeline</title>
 
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
@@ -52,7 +54,7 @@
       position: absolute;
       left: 2%;
       top: 2%;
-      z-index: 20;
+      z-index: 40;
       color: #00f5ff;
       text-decoration: none;
       font-weight: 900;
@@ -60,46 +62,39 @@
       border-radius: 12px;
     }
 
-    .emoji-layer {
-      position: absolute;
-      left: 9.7%;
-      top: 25.5%;
-      width: 75%;
-      z-index: 30;
-      display: grid;
-      grid-template-columns: repeat(14, 1fr);
-      gap: 3.2vw 1.15vw;
-      pointer-events: none;
-    }
+    /*
+      IMPORTANT:
+      These buttons are intentionally transparent.
+      No visible rectangular hover boxes.
+      Only the emoji itself grows/glows.
+    */
 
     .emoji-btn {
-      pointer-events: auto;
+      position: absolute;
+      z-index: 35;
+      width: 5.2%;
+      height: 9.2%;
       border: 0;
       background: transparent;
-      cursor: pointer;
-      font-size: clamp(24px, 3.2vw, 52px);
-      line-height: 1;
-      transition: transform .18s ease, filter .18s ease;
       padding: 0;
-      text-shadow: 0 0 14px rgba(0,245,255,.45);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      font-size: clamp(24px, 3.1vw, 50px);
+      line-height: 1;
+      transition: transform .16s ease, filter .16s ease;
+      transform: translate(-50%, -50%);
     }
 
     .emoji-btn:hover {
-      transform: scale(1.35) translateY(-8px);
-      filter: drop-shadow(0 0 18px #ff2aa3) drop-shadow(0 0 12px #00f5ff);
-      z-index: 50;
+      transform: translate(-50%, -50%) scale(1.22);
+      filter:
+        drop-shadow(0 0 12px #00f5ff)
+        drop-shadow(0 0 18px #ff2aa3);
     }
 
-    .emoji-btn:nth-child(n+15):nth-child(-n+28) {
-      transform: translateY(18px);
-    }
-
-    .emoji-btn:nth-child(n+29) {
-      transform: translateY(36px);
-    }
-
-    .emoji-btn:nth-child(n+29):hover {
-      transform: translateY(28px) scale(1.35);
+    .emoji-btn:focus {
+      outline: none;
     }
 
     .modal {
@@ -197,6 +192,7 @@
     @media (max-width: 800px) {
       .frame {
         width: 1400px;
+        max-width: none;
       }
 
       .page {
@@ -204,8 +200,8 @@
         justify-content: flex-start;
       }
 
-      .emoji-layer {
-        gap: 44px 16px;
+      .emoji-btn {
+        font-size: 42px;
       }
     }
   </style>
@@ -220,7 +216,7 @@
 
       <a href="hub.html" class="back-link">← BACK TO HUB</a>
 
-      <div id="emojiLayer" class="emoji-layer"></div>
+      <div id="emojiButtons"></div>
     </section>
   </main>
 
@@ -245,45 +241,53 @@
   </div>
 
   <script>
+    /*
+      Exact 35 emoji sequence from your reference image.
+      Positions are center-points over the visible emoji cards.
+      If one is still a few pixels off, we only adjust that emoji's x/y.
+    */
+
     const emojis = [
-      { e:"😳", name:"Shock", text:"The opening signal. Surprise, confusion, and attention." },
-      { e:"💩", name:"Mess", text:"Chaos, noise, or the market looking ugly before the next move." },
-      { e:"😿", name:"Sad Cat", text:"The cat looks wounded, but the story is not over." },
-      { e:"🥜", name:"Peanuts", text:"Small pieces that may matter more than they seem." },
-      { e:"🐸", name:"Frog", text:"A leap, a jump, a meme signal, or transformation clue." },
-      { e:"🍦", name:"Ice Cream", text:"Sweet Cohen-coded community lore." },
-      { e:"🤢", name:"Sick", text:"Nausea, discomfort, or a rough market moment before the turn." },
-      { e:"👍", name:"Thumbs Up", text:"Confirmation. Something checks out." },
-      { e:"👊", name:"Fist", text:"Locked in. Community resolve." },
-      { e:"💀", name:"Skull", text:"Danger, FUD, shorts, or something getting buried." },
-      { e:"🤓", name:"Nerd", text:"Research mode. Look closer." },
-      { e:"👀", name:"Eyes", text:"Watch closely. Something is hidden in plain sight." },
-      { e:"😁", name:"Grin", text:"Confidence, mischief, or the reveal getting closer." },
-      { e:"⚡", name:"Lightning", text:"Sudden energy. Fast movement." },
-      { e:"🎮", name:"Game", text:"GameStop energy. The game continues." },
-      { e:"🚀", name:"Rocket", text:"Launch imagery. Obvious but powerful." },
-      { e:"🍄", name:"Mushroom", text:"Power-up mode." },
-      { e:"💥", name:"Explosion", text:"Boom. Impact moment." },
-      { e:"🍏", name:"Apple", text:"A clean bite, company clue, or garden-path clue." },
-      { e:"🤔", name:"Thinking", text:"Question everything. Do not accept the first answer." },
-      { e:"🥴", name:"Dizzy", text:"Disorientation before the reveal." },
-      { e:"💜", name:"Purple Heart", text:"Community loyalty, DRS-purple, or love for the thesis." },
-      { e:"👥", name:"People", text:"The crowd, the community, the players." },
-      { e:"👌", name:"OK", text:"Signal accepted." },
-      { e:"🤝", name:"Handshake", text:"Deal, agreement, partnership, or merger tinfoil." },
-      { e:"⛺", name:"Tent", text:"Camp, setup, waiting, or gathering." },
-      { e:"😼", name:"Smirking Cat", text:"The cat knows something." },
-      { e:"🎯", name:"Target", text:"The thesis narrows." },
-      { e:"👀", name:"Eyes Again", text:"A repeated watch signal. Look again." },
-      { e:"🐶", name:"Dog", text:"Loyalty, pet clue, or company reference." },
-      { e:"🇺🇸", name:"Flag", text:"America, timing, markets, celebration, or announcement energy." },
-      { e:"👀", name:"Eyes Again", text:"The pattern repeats. Keep watching." },
-      { e:"🔥", name:"Fire", text:"Everything heats up." },
-      { e:"💥", name:"Explosion Again", text:"Second boom. Bigger impact." },
-      { e:"🍻", name:"Beers", text:"Beer = Friday. The celebration card." }
+      { e:"😳", name:"Shock", x:13.2, y:31.0, text:"The opening signal. Surprise, confusion, and attention." },
+      { e:"💩", name:"Mess", x:19.3, y:31.0, text:"Chaos, noise, or the market looking ugly before the next move." },
+      { e:"😿", name:"Sad Cat", x:25.3, y:31.0, text:"The cat looks wounded, but the story is not over." },
+      { e:"🥜", name:"Peanuts", x:31.2, y:31.0, text:"Small pieces that may matter more than they seem." },
+      { e:"🐸", name:"Frog", x:37.2, y:31.0, text:"A leap, a jump, a meme signal, or transformation clue." },
+      { e:"🍦", name:"Ice Cream", x:43.2, y:31.0, text:"Sweet Cohen-coded community lore." },
+      { e:"🤢", name:"Sick", x:49.3, y:31.0, text:"Nausea, discomfort, or a rough market moment before the turn." },
+      { e:"👍", name:"Thumbs Up", x:55.3, y:31.0, text:"Confirmation. Something checks out." },
+      { e:"👊", name:"Fist", x:61.3, y:31.0, text:"Locked in. Community resolve." },
+      { e:"💀", name:"Skull", x:67.2, y:31.0, text:"Danger, FUD, shorts, or something getting buried." },
+      { e:"🤓", name:"Nerd", x:73.2, y:31.0, text:"Research mode. Look closer." },
+      { e:"👀", name:"Eyes", x:79.3, y:31.0, text:"Watch closely. Something is hidden in plain sight." },
+      { e:"😁", name:"Grin", x:85.2, y:31.0, text:"Confidence, mischief, or the reveal getting closer." },
+      { e:"⚡", name:"Lightning", x:91.1, y:31.0, text:"Sudden energy. Fast movement." },
+
+      { e:"🎮", name:"Game", x:13.2, y:51.2, text:"GameStop energy. The game continues." },
+      { e:"🚀", name:"Rocket", x:19.3, y:51.2, text:"Launch imagery. Obvious but powerful." },
+      { e:"🍄", name:"Mushroom", x:25.3, y:51.2, text:"Power-up mode." },
+      { e:"💥", name:"Explosion", x:31.2, y:51.2, text:"Boom. Impact moment." },
+      { e:"🍏", name:"Apple", x:37.2, y:51.2, text:"A clean bite, company clue, or garden-path clue." },
+      { e:"🤔", name:"Thinking", x:43.2, y:51.2, text:"Question everything. Do not accept the first answer." },
+      { e:"🥴", name:"Dizzy", x:49.3, y:51.2, text:"Disorientation before the reveal." },
+      { e:"💜", name:"Purple Heart", x:55.3, y:51.2, text:"Community loyalty, DRS-purple, or love for the thesis." },
+      { e:"👥", name:"People", x:61.3, y:51.2, text:"The crowd, the community, the players." },
+      { e:"👌", name:"OK", x:67.2, y:51.2, text:"Signal accepted." },
+      { e:"🤝", name:"Handshake", x:73.2, y:51.2, text:"Deal, agreement, partnership, or merger tinfoil." },
+      { e:"⛺", name:"Tent", x:79.3, y:51.2, text:"Camp, setup, waiting, or gathering." },
+      { e:"😼", name:"Smirking Cat", x:85.2, y:51.2, text:"The cat knows something." },
+      { e:"🎯", name:"Target", x:91.1, y:51.2, text:"The thesis narrows." },
+
+      { e:"👀", name:"Eyes Again", x:25.3, y:70.7, text:"A repeated watch signal. Look again." },
+      { e:"🐶", name:"Dog", x:31.2, y:70.7, text:"Loyalty, pet clue, or company reference." },
+      { e:"🇺🇸", name:"Flag", x:37.2, y:70.7, text:"America, timing, markets, celebration, or announcement energy." },
+      { e:"👀", name:"Eyes Again", x:43.2, y:70.7, text:"The pattern repeats. Keep watching." },
+      { e:"🔥", name:"Fire", x:49.3, y:70.7, text:"Everything heats up." },
+      { e:"💥", name:"Explosion Again", x:55.3, y:70.7, text:"Second boom. Bigger impact." },
+      { e:"🍻", name:"Beers", x:61.3, y:70.7, text:"Beer = Friday. The celebration card." }
     ];
 
-    const layer = document.getElementById("emojiLayer");
+    const emojiButtons = document.getElementById("emojiButtons");
     const modal = document.getElementById("modal");
     const modalEmoji = document.getElementById("modalEmoji");
     const modalTitle = document.getElementById("modalTitle");
@@ -299,9 +303,12 @@
       const btn = document.createElement("button");
       btn.className = "emoji-btn";
       btn.textContent = item.e;
+      btn.style.left = item.x + "%";
+      btn.style.top = item.y + "%";
       btn.title = `${index + 1}. ${item.name}`;
+      btn.setAttribute("aria-label", `${index + 1}. ${item.name}`);
       btn.addEventListener("click", () => openEmoji(index));
-      layer.appendChild(btn);
+      emojiButtons.appendChild(btn);
     });
 
     function openEmoji(index) {
