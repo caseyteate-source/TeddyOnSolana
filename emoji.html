@@ -1,60 +1,79 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>$TEDDY | Emoji Timeline</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body class="wiki-body">
 
-<div class="wiki-header">
-  <a href="index.html" class="back-button">← RETURN TO ARCADE</a>
-  <h1>📈 EMOJI TIMELINE</h1>
-  <p>Every emoji is a clue.</p>
-</div>
+<body class="emoji-page">
+  <div class="scanlines"></div>
 
-<div class="emoji-board">
+  <header class="page-header">
+    <a href="index.html" class="back-link">← Back to Arcade</a>
+    <h1>🧩 Emoji Timeline</h1>
+    <p>The corkboard. The clues. The timeline nobody can ignore.</p>
+  </header>
 
-  <button class="emoji-pin">🐸</button>
-  <button class="emoji-pin">🍦</button>
-  <button class="emoji-pin">💀</button>
-  <button class="emoji-pin">🇺🇸</button>
-  <button class="emoji-pin">🎤</button>
-  <button class="emoji-pin">👀</button>
-  <button class="emoji-pin">🔥</button>
-  <button class="emoji-pin">💥</button>
-  <button class="emoji-pin">🍻</button>
+  <main class="corkboard-wrap">
+    <section class="corkboard">
 
-</div>
+      <svg class="strings" viewBox="0 0 1200 800" preserveAspectRatio="none">
+        <line x1="130" y1="120" x2="420" y2="170" />
+        <line x1="420" y1="170" x2="720" y2="110" />
+        <line x1="720" y1="110" x2="1000" y2="190" />
+        <line x1="180" y1="310" x2="520" y2="350" />
+        <line x1="520" y1="350" x2="880" y2="310" />
+        <line x1="260" y1="560" x2="600" y2="500" />
+        <line x1="600" y1="500" x2="980" y2="610" />
+        <line x1="420" y1="170" x2="520" y2="350" />
+        <line x1="720" y1="110" x2="600" y2="500" />
+        <line x1="1000" y1="190" x2="880" y2="310" />
+      </svg>
 
-<div id="wikiModal" class="wiki-modal">
-  <div class="wiki-box">
+      <div class="board-title">CLASSIFIED: TEDDY EMOJI MAP</div>
 
-    <button id="closeWiki">✕</button>
+      <button class="emoji-pin e1" data-note="The bear. The name. The father. The company.">🧸</button>
+      <button class="emoji-pin e2" data-note="The controller. The game never stopped.">🎮</button>
+      <button class="emoji-pin e3" data-note="The rocket. Launch sequence hidden in plain sight.">🚀</button>
+      <button class="emoji-pin e4" data-note="Ice cream. Sweet reward? McDonald's clue? You decide.">🍦</button>
+      <button class="emoji-pin e5" data-note="Diamond hands. Pressure creates value.">💎</button>
+      <button class="emoji-pin e6" data-note="Fire. Something is heating up.">🔥</button>
+      <button class="emoji-pin e7" data-note="Eyes watching the timeline.">👀</button>
+      <button class="emoji-pin e8" data-note="Frog energy. Meme signal detected.">🐸</button>
+      <button class="emoji-pin e9" data-note="Cat signal. Kitty is never far away.">🐱</button>
+      <button class="emoji-pin e10" data-note="Money bag. Follow the value.">💰</button>
+      <button class="emoji-pin e11" data-note="Puzzle piece. One piece connects the rest.">🧩</button>
+      <button class="emoji-pin e12" data-note="Clock. Timing matters.">⏰</button>
+      <button class="emoji-pin e13" data-note="Book. Children’s books. Teddy lore.">📚</button>
+      <button class="emoji-pin e14" data-note="Target acquired.">🎯</button>
+      <button class="emoji-pin e15" data-note="Popcorn. Everyone is watching.">🍿</button>
+      <button class="emoji-pin e16" data-note="Explosion. Something breaks open.">💥</button>
+      <button class="emoji-pin e17" data-note="Moon mission remains on board.">🌕</button>
+      <button class="emoji-pin e18" data-note="Key. Unlock the next room.">🔑</button>
+      <button class="emoji-pin e19" data-note="Magnifying glass. Zoom in.">🔍</button>
+      <button class="emoji-pin e20" data-note="Chart. Candles never lie.">📈</button>
+      <button class="emoji-pin e21" data-note="Banana. Ape signal remains active.">🍌</button>
+      <button class="emoji-pin e22" data-note="Crown. Who really owns the board?">👑</button>
+      <button class="emoji-pin e23" data-note="Skull. Shorts beware.">💀</button>
+      <button class="emoji-pin e24" data-note="Lightning. Sudden move incoming.">⚡</button>
+      <button class="emoji-pin e25" data-note="Crystal ball. Future clue.">🔮</button>
+      <button class="emoji-pin e26" data-note="Train. No stops.">🚂</button>
+      <button class="emoji-pin e27" data-note="House. Holdings. Home base.">🏠</button>
+      <button class="emoji-pin e28" data-note="Baby. Teddy books. Family clue.">👶</button>
+      <button class="emoji-pin e29" data-note="Dog. Loyalty marker.">🐶</button>
+      <button class="emoji-pin e30" data-note="Flag planted.">🚩</button>
+      <button class="emoji-pin e31" data-note="Treasure chest. Hidden value.">🧰</button>
+      <button class="emoji-pin e32" data-note="Pure imagination unlocked.">🌈</button>
+      <button class="emoji-pin e33" data-note="Final signal: Teddy lives in the arcade.">🕹️</button>
 
-    <h2 id="wikiTitle"></h2>
+      <div id="noteBox" class="note-box">
+        Click an emoji clue.
+      </div>
+    </section>
+  </main>
 
-    <h3>COMMON INTERPRETATIONS</h3>
-
-    <ul id="wikiTheoryList"></ul>
-
-    <h3>COMMUNITY NOTES</h3>
-
-    <textarea
-      id="communityNotes"
-      placeholder="What could this emoji mean?"
-    ></textarea>
-
-    <button id="saveTheory">
-      SAVE THEORY
-    </button>
-
-  </div>
-</div>
-
-<script src="wiki.js"></script>
-
+  <script src="script.js"></script>
 </body>
 </html>
