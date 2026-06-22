@@ -1,1 +1,73 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>$TEDDY | Pure Imagination Room</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body class="room-body">
+  <a href="index.html" class="room-back">← Back to Arcade</a>
+
+  <main class="room">
+    <div class="wall-glow"></div>
+
+    <section class="crt-scene">
+      <div class="tv">
+        <div class="tv-screen" id="tvScreen">
+          <div class="static-screen" id="staticScreen">
+            <div class="scan"></div>
+            <div class="standby">PLEASE STAND BY</div>
+            <button id="playBtn" class="insert-btn">INSERT IMAGINATION</button>
+          </div>
+
+          <video id="wonkaVideo" class="tv-video" controls playsinline>
+            <source src="Gene_Wilder_-_Pure_Imagination.mp4" type="video/mp4" />
+          </video>
+        </div>
+
+        <div class="tv-controls">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+
+      <div class="console-row">
+        <div class="atari">
+          <div class="wood"></div>
+          <div class="label">ATARI 2600</div>
+        </div>
+
+        <div class="nes">
+          <div class="slot"></div>
+          <div class="label">NES</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="room-copy">
+      <h1>Pure Imagination</h1>
+      <p>
+        Static. Signal. Tinfoil. One weird little room where the $TEDDY arcade starts broadcasting something different.
+      </p>
+    </section>
+  </main>
+
+  <script>
+    const playBtn = document.getElementById("playBtn");
+    const staticScreen = document.getElementById("staticScreen");
+    const video = document.getElementById("wonkaVideo");
+
+    playBtn.addEventListener("click", () => {
+      staticScreen.classList.add("fade-out");
+
+      setTimeout(() => {
+        staticScreen.style.display = "none";
+        video.classList.add("active");
+        video.play();
+      }, 900);
+    });
+  </script>
+</body>
+</html>
