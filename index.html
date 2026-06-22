@@ -3,144 +3,222 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>$TEDDY | Insert Coin</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>$TEDDY | Labyrinth Hub</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #050510;
+      color: white;
+      font-family: Arial, Helvetica, sans-serif;
+      overflow-x: hidden;
+    }
+
+    .scanlines {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 999;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,.045) 0,
+        rgba(255,255,255,.045) 1px,
+        transparent 2px,
+        transparent 5px
+      );
+      mix-blend-mode: overlay;
+    }
+
+    .hub {
+      min-height: 100vh;
+      padding: 60px 20px;
+      background:
+        radial-gradient(circle at 25% 20%, rgba(255,42,163,.25), transparent 30%),
+        radial-gradient(circle at 75% 25%, rgba(0,245,255,.18), transparent 32%),
+        linear-gradient(180deg, #080014, #050510 70%);
+      display: grid;
+      place-items: center;
+    }
+
+    .hub-inner {
+      width: min(1200px, 96vw);
+      text-align: center;
+    }
+
+    .hub h1 {
+      font-size: clamp(3rem, 9vw, 7rem);
+      margin: 0;
+      color: #ff2aa3;
+      text-shadow:
+        0 0 18px #ff2aa3,
+        0 0 35px #00f5ff;
+    }
+
+    .subtitle {
+      max-width: 850px;
+      margin: 20px auto 45px;
+      color: #dffcff;
+      font-size: 1.2rem;
+      line-height: 1.6;
+    }
+
+    .labyrinth-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 22px;
+    }
+
+    .portal {
+      min-height: 250px;
+      padding: 28px;
+      border-radius: 24px;
+      border: 2px solid #00f5ff;
+      background:
+        linear-gradient(180deg, rgba(0,245,255,.14), rgba(255,42,163,.12)),
+        #090914;
+      color: white;
+      text-decoration: none;
+      box-shadow:
+        0 0 24px rgba(0,245,255,.55),
+        inset 0 0 22px rgba(255,42,163,.16);
+      transition: .25s ease;
+      display: grid;
+      align-content: center;
+    }
+
+    .portal:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: #ff2aa3;
+      box-shadow:
+        0 0 36px rgba(255,42,163,.8),
+        0 0 60px rgba(0,245,255,.45);
+    }
+
+    .portal span {
+      font-size: 4rem;
+      display: block;
+      margin-bottom: 16px;
+    }
+
+    .portal h2 {
+      margin: 0 0 12px;
+      color: #00f5ff;
+      text-shadow: 0 0 14px #00f5ff;
+    }
+
+    .portal p {
+      margin: 0;
+      color: #ddd;
+      line-height: 1.5;
+    }
+
+    .secret-tv {
+      margin: 55px auto 0;
+      width: min(420px, 90vw);
+      padding: 22px;
+      border: 3px solid #333;
+      border-radius: 26px;
+      background: #17110f;
+      box-shadow: 0 0 28px rgba(255,211,106,.25);
+      cursor: pointer;
+      position: relative;
+    }
+
+    .secret-tv-screen {
+      height: 180px;
+      border-radius: 20px;
+      background:
+        repeating-radial-gradient(circle, #fff 0 1px, #000 1px 3px);
+      animation: staticMove .12s infinite;
+      display: grid;
+      place-items: center;
+      color: #ffd36a;
+      font-weight: 900;
+      text-shadow: 0 0 12px #ffd36a;
+      overflow: hidden;
+    }
+
+    .secret-tv::after {
+      content: "click the signal";
+      display: block;
+      margin-top: 14px;
+      color: #888;
+      font-size: .85rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    @keyframes staticMove {
+      from { background-position: 0 0; }
+      to { background-position: 20px 15px; }
+    }
+
+    .back {
+      position: fixed;
+      left: 18px;
+      top: 18px;
+      z-index: 50;
+      color: #ffd36a;
+      background: rgba(0,0,0,.55);
+      border: 1px solid rgba(255,211,106,.35);
+      text-decoration: none;
+      font-weight: 900;
+      padding: 10px 14px;
+      border-radius: 999px;
+    }
+  </style>
 </head>
 
 <body>
   <div class="scanlines"></div>
 
-  <section id="startScreen" class="start-screen">
-    <div class="arcade-container">
-      <img
-        src="https://raw.githubusercontent.com/caseyteate-source/TeddyOnSolana/main/teddy-arcade-cabinet.png"
-        alt="$TEDDY Arcade Cabinet"
-        class="arcade-cabinet"
-      />
+  <a href="index.html" class="back">← Back to Arcade</a>
 
-      <div class="game-screen">
-        <canvas id="gameCanvas" width="520" height="360"></canvas>
-      </div>
+  <main class="hub">
+    <div class="hub-inner">
+      <h1>$TEDDY LABYRINTH</h1>
 
-      <button id="startGame" class="cabinet-button start-btn">START GAME</button>
-      <button id="enterSite" class="cabinet-button enter-btn">ENTER SITE</button>
-    </div>
-  </section>
-
-  <main id="siteContent" class="site-content hidden">
-    <section class="hero">
-      <div class="hero-frame">
-        <img src="arcade-home.png" alt="$TEDDY Arcade" class="hero-image" />
-
-        <a href="#caseFiles" class="hotspot investigation"></a>
-        <button class="hotspot teddy" data-title="📚 TEDDY" data-text="The books. The company. The mystery."></button>
-        <button class="hotspot gamestop" data-title="🎮 GameStop" data-text="Transformation theories, marketplace dreams, and community lore."></button>
-        <button class="hotspot gmebay" data-title="📦 GMEBAY" data-text="GameStop + eBay = GMEBAY. The catchphrase lives here."></button>
-        <a href="kitty.html" class="hotspot kitty" aria-label="Open Kitty Files"></a>
-        <a href="emoji.html" class="hotspot timeline-card" aria-label="Open Emoji Timeline"></a>
-
-        <div class="sparkles"></div>
-      </div>
-    </section>
-
-    <section class="quick-actions">
-      <h2>PRESS START TO PLAY $TEDDY</h2>
-      <p>
-        $TEDDY is a community meme token on Solana built around mystery,
-        tinfoil, arcade energy, and the story that refuses to end.
+      <p class="subtitle">
+        You entered the arcade. Now follow the strings. Every room is a clue,
+        every emoji is a signal, and every screen might hide another door.
       </p>
 
-      <div class="action-buttons">
-        <a href="https://dexscreener.com/solana/4k73kxhcsswhkybc9dxm3tyr8a2jrgv4nqm5tmzq69vx" target="_blank">📈 VIEW CHART</a>
-        <a href="https://x.com/teddy0n_sol" target="_blank">🐦 FOLLOW ON X</a>
-        <button id="copyContractTop">📋 COPY CONTRACT</button>
-      </div>
-    </section>
+      <section class="labyrinth-grid">
+        <a href="emoji.html" class="portal">
+          <span>🧩</span>
+          <h2>Emoji Timeline</h2>
+          <p>The Roaring Kitty emoji sequence as a conspiracy corkboard of sticky notes, strings, and theories.</p>
+        </a>
 
-    <section id="caseFiles" class="case-files-section">
-      <h2>🧵 CHOOSE YOUR RABBIT HOLE</h2>
-      <p>The board is open. Pick a case file, connect the clues, and help build the lore.</p>
-
-      <div class="case-grid">
-        <a href="kitty.html" class="case-card">
+        <a href="kitty.html" class="portal">
           <span>🐱</span>
-          <h3>Kitty Files</h3>
-          <p>Roaring Kitty tinfoil, tweet clues, theories, and community notes.</p>
+          <h2>Kitty Files</h2>
+          <p>Charts, tweets, memes, tinfoil, clues, and community case files.</p>
         </a>
 
-        <a href="emoji.html" class="case-card">
-          <span>📈</span>
-          <h3>Emoji Timeline</h3>
-          <p>Every emoji becomes a clue with possible meanings and editable theories.</p>
-        </a>
-
-        <button class="case-card" data-title="📦 GMEBAY THEORY" data-text="GameStop + eBay = GMEBAY. One of the strongest community catchphrases in the lore.">
+        <a href="#" class="portal">
           <span>📦</span>
-          <h3>GMEBAY Theory</h3>
-          <p>The marketplace dream, community theory, and meme-layer connection.</p>
-        </button>
-
-        <button class="case-card" data-title="🎮 GAMESTOP LORE" data-text="Transformation theories, marketplace speculation, and the community story around the stock.">
-          <span>🎮</span>
-          <h3>GameStop Lore</h3>
-          <p>The transformation story, speculation, memes, and market mystery.</p>
-        </button>
-
-        <a href="#terminal" class="case-card">
-          <span>🧸</span>
-          <h3>$TEDDY Terminal</h3>
-          <p>Contract, chart, X account, and token details.</p>
+          <h2>GMEBAY Theory</h2>
+          <p>Marketplace dreams, meme lore, and the catchphrase that refuses to die.</p>
         </a>
-      </div>
-    </section>
 
-    <section id="terminal" class="terminal-section">
-      <div class="terminal-box">
-        <h2>████ TOKEN TERMINAL ████</h2>
+        <a href="#" class="portal">
+          <span>🧸</span>
+          <h2>Teddy Terminal</h2>
+          <p>Contract, chart, token details, disclaimers, and mission control.</p>
+        </a>
+      </section>
 
-        <div class="terminal-grid">
-          <p><span>PLAYER:</span> $TEDDY</p>
-          <p><span>NETWORK:</span> SOLANA</p>
-          <p><span>PRICE:</span> $0.00005868</p>
-          <p><span>STATUS:</span> ACTIVE</p>
+      <div class="secret-tv" onclick="window.location.href='imagination-room.html'">
+        <div class="secret-tv-screen">
+          PLEASE STAND BY
         </div>
-
-        <div class="contract-box">
-          <span>CONTRACT:</span>
-          <code id="contractAddress">8KJEWtuq1c1699nAup7WatZfgodS3YFnadBq46FDpump</code>
-        </div>
-
-        <p class="terminal-line">>>> INSERT COIN TO CONTINUE <span class="cursor">█</span></p>
-
-        <div class="terminal-buttons">
-          <a href="https://dexscreener.com/solana/4k73kxhcsswhkybc9dxm3tyr8a2jrgv4nqm5tmzq69vx" target="_blank">📈 VIEW CHART</a>
-          <a href="https://x.com/teddy0n_sol" target="_blank">🐦 FOLLOW ON X</a>
-          <button id="copyContract">📋 COPY CONTRACT</button>
-        </div>
-
-        <p class="disclaimer">
-          $TEDDY is not affiliated with, endorsed by, or officially connected to Ryan Cohen,
-          Teddy Holdings LLC, GameStop, eBay, Roaring Kitty, or any related company or individual.
-        </p>
-      </div>
-    </section>
-
-    <div class="ticker">
-      <div class="ticker-track">
-        $TEDDY ▲ PRICE $0.00005868 ▲ SOLANA ▲ GMEBAY ▲ FOLLOW THE STRINGS ▲ INSERT COIN ▲
-        $TEDDY ▲ PRICE $0.00005868 ▲ SOLANA ▲ GMEBAY ▲ FOLLOW THE STRINGS ▲ INSERT COIN ▲
       </div>
     </div>
   </main>
-
-  <div id="modal" class="modal">
-    <div class="modal-box">
-      <button id="closeModal">×</button>
-      <h2 id="modalTitle"></h2>
-      <p id="modalText"></p>
-    </div>
-  </div>
-
-  <script src="script.js"></script>
 </body>
 </html>
