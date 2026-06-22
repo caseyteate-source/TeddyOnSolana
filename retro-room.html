@@ -1,1 +1,55 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>$TEDDY | 80s Living Room</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body class="retro-page">
+  <div class="scanlines"></div>
+
+  <header class="page-header">
+    <a href="index.html" class="back-link">← Back to Arcade</a>
+    <h1>📺 Pure Imagination Room</h1>
+    <p>Click the TV power button.</p>
+  </header>
+
+  <main class="living-room">
+    <div class="wall">
+      <div class="poster">TEDDY<br>CLUB</div>
+      <div class="poster small">INSERT<br>COIN</div>
+    </div>
+
+    <section class="tv-area">
+      <div class="crt">
+        <div class="tv-screen" id="tvScreen">
+          <div class="static"></div>
+
+          <video id="wonkaVideo" class="wonka-video" controls>
+            <source src="Gene_Wilder_-_Pure_Imagination.mp4" type="video/mp4" />
+          </video>
+        </div>
+
+        <button id="powerButton" class="power-button">POWER</button>
+      </div>
+
+      <div class="console-row">
+        <div class="console atari">
+          <span>ATARI 2600</span>
+          <div class="red-light"></div>
+        </div>
+
+        <div class="console nes">
+          <span>NES</span>
+          <div class="red-light"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
