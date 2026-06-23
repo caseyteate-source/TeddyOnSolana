@@ -46,43 +46,16 @@
       text-decoration: none;
     }
 
-    .timeline-overlay {
-      position: absolute;
-      left: 9.2%;
-      top: 25.8%;
-      width: 78.8%;
-      z-index: 75;
-    }
-
-    .emoji-row {
-      display: grid;
-      gap: 0.65%;
-      margin-bottom: 6.15%;
-    }
-
-    .row1,
-    .row2 {
-      grid-template-columns: repeat(14, 1fr);
-    }
-
-    .row3 {
-      width: 52%;
-      margin: 0 auto;
-      grid-template-columns: repeat(7, 1fr);
-    }
-
     .emoji-zone {
-      position: relative;
-      aspect-ratio: 0.74 / 1;
+      position: absolute;
+      z-index: 70;
+      width: 4.15%;
+      height: 7.3%;
       border: 0;
       background: transparent;
-      cursor: pointer;
       padding: 0;
-    }
-
-    .emoji-zone:hover {
-      outline: none;
-      filter: drop-shadow(0 0 8px #00f5ff);
+      cursor: pointer;
+      transform: translate(-50%, -50%);
     }
 
     body.debug .emoji-zone {
@@ -110,9 +83,7 @@
       box-shadow: 0 0 12px #00f5ff;
     }
 
-    .debug-label {
-      display: none;
-    }
+    .debug-label { display: none; }
 
     body.debug .debug-label {
       display: block;
@@ -230,19 +201,13 @@
 </head>
 
 <body>
-  <div class="debug-label">DEBUG: grid overlay loaded</div>
+  <div class="debug-label">DEBUG: absolute emoji hotspots loaded</div>
 
   <main class="page">
     <section class="frame">
       <img src="emoji-timeline-bg.png" class="bg" alt="The Emoji Timeline" />
-
       <a href="hub.html" class="back-link" aria-label="Back to hub"></a>
-
-      <div class="timeline-overlay">
-        <div id="row1" class="emoji-row row1"></div>
-        <div id="row2" class="emoji-row row2"></div>
-        <div id="row3" class="emoji-row row3"></div>
-      </div>
+      <div id="emojiZones"></div>
     </section>
   </main>
 
@@ -270,49 +235,46 @@
     }
 
     const emojis = [
-      { e:"😳", name:"Shock", text:"Surprise, confusion, or the opening signal." },
-      { e:"💩", name:"Mess", text:"Chaos, ugliness, or everything looking bad before the turn." },
-      { e:"😿", name:"Crying Cat", text:"The cat appears wounded, but the story may not be over." },
-      { e:"🥜", name:"Peanuts", text:"Something small or dismissed that may matter later." },
-      { e:"🐸", name:"Frog", text:"A leap, transformation, or meme signal." },
-      { e:"🍦", name:"Ice Cream", text:"Sweet reward, callback, or Cohen-coded lore." },
-      { e:"🤢", name:"Sick", text:"Discomfort, pressure, or a rough market moment." },
-      { e:"👍", name:"Thumbs Up", text:"Confirmation. Something checks out." },
-      { e:"👊", name:"Fist", text:"Resolve, strength, or community conviction." },
-      { e:"💀", name:"Skull", text:"Danger, FUD, shorts, or something getting buried." },
-      { e:"🤓", name:"Nerd", text:"Research mode. Look closer." },
-      { e:"👀", name:"Eyes", text:"Watch closely. Something is hidden in plain sight." },
-      { e:"🤩", name:"Star Eyes", text:"Excitement, awe, or the reveal getting closer." },
-      { e:"⚡", name:"Lightning", text:"Sudden energy, speed, or volatility." },
+      { e:"😳", name:"Shock", x:11.9, y:31.0, text:"Surprise, confusion, or the opening signal." },
+      { e:"💩", name:"Mess", x:17.6, y:31.0, text:"Chaos, ugliness, or everything looking bad before the turn." },
+      { e:"😿", name:"Crying Cat", x:23.3, y:31.0, text:"The cat appears wounded, but the story may not be over." },
+      { e:"🥜", name:"Peanuts", x:29.0, y:31.0, text:"Something small or dismissed that may matter later." },
+      { e:"🐸", name:"Frog", x:34.7, y:31.0, text:"A leap, transformation, or meme signal." },
+      { e:"🍦", name:"Ice Cream", x:40.4, y:31.0, text:"Sweet reward, callback, or Cohen-coded lore." },
+      { e:"🤢", name:"Sick", x:46.1, y:31.0, text:"Discomfort, pressure, or a rough market moment." },
+      { e:"👍", name:"Thumbs Up", x:51.8, y:31.0, text:"Confirmation. Something checks out." },
+      { e:"👊", name:"Fist", x:57.5, y:31.0, text:"Resolve, strength, or community conviction." },
+      { e:"💀", name:"Skull", x:63.2, y:31.0, text:"Danger, FUD, shorts, or something getting buried." },
+      { e:"🤓", name:"Nerd", x:68.9, y:31.0, text:"Research mode. Look closer." },
+      { e:"👀", name:"Eyes", x:74.6, y:31.0, text:"Watch closely. Something is hidden in plain sight." },
+      { e:"🤩", name:"Star Eyes", x:80.3, y:31.0, text:"Excitement, awe, or the reveal getting closer." },
+      { e:"⚡", name:"Lightning", x:86.0, y:31.0, text:"Sudden energy, speed, or volatility." },
 
-      { e:"🎮", name:"Game", text:"GameStop energy. The game continues." },
-      { e:"🚀", name:"Rocket", text:"Launch imagery and upward movement." },
-      { e:"🍄", name:"Mushroom", text:"Power-up mode or entering another level." },
-      { e:"💥", name:"Explosion", text:"Impact event, boom, or sudden break." },
-      { e:"🍏", name:"Apple", text:"A bite, clue, company reference, or garden-path signal." },
-      { e:"🤔", name:"Thinking", text:"Question everything. Do not accept the first answer." },
-      { e:"🥴", name:"Dizzy", text:"Confusion or disorientation before the reveal." },
-      { e:"💜", name:"Purple Heart", text:"Community loyalty, purple/DRS associations, or love for the thesis." },
-      { e:"👥", name:"People", text:"The crowd, community, or collective attention." },
-      { e:"👌", name:"OK", text:"Signal accepted." },
-      { e:"🤝", name:"Handshake", text:"Deal, partnership, agreement, or merger tinfoil." },
-      { e:"⛺", name:"Tent", text:"Camping, waiting, gathering, or holding position." },
-      { e:"😿", name:"Crying Cat Again", text:"The cat appears again. Repetition may matter." },
-      { e:"🎯", name:"Target", text:"The thesis narrows. A target is identified." },
+      { e:"🎮", name:"Game", x:11.9, y:49.1, text:"GameStop energy. The game continues." },
+      { e:"🚀", name:"Rocket", x:17.6, y:49.1, text:"Launch imagery and upward movement." },
+      { e:"🍄", name:"Mushroom", x:23.3, y:49.1, text:"Power-up mode or entering another level." },
+      { e:"💥", name:"Explosion", x:29.0, y:49.1, text:"Impact event, boom, or sudden break." },
+      { e:"🍏", name:"Apple", x:34.7, y:49.1, text:"A bite, clue, company reference, or garden-path signal." },
+      { e:"🤔", name:"Thinking", x:40.4, y:49.1, text:"Question everything. Do not accept the first answer." },
+      { e:"🥴", name:"Dizzy", x:46.1, y:49.1, text:"Confusion or disorientation before the reveal." },
+      { e:"💜", name:"Purple Heart", x:51.8, y:49.1, text:"Community loyalty, purple/DRS associations, or love for the thesis." },
+      { e:"👥", name:"People", x:57.5, y:49.1, text:"The crowd, community, or collective attention." },
+      { e:"👌", name:"OK", x:63.2, y:49.1, text:"Signal accepted." },
+      { e:"🤝", name:"Handshake", x:68.9, y:49.1, text:"Deal, partnership, agreement, or merger tinfoil." },
+      { e:"⛺", name:"Tent", x:74.6, y:49.1, text:"Camping, waiting, gathering, or holding position." },
+      { e:"😿", name:"Crying Cat Again", x:80.3, y:49.1, text:"The cat appears again. Repetition may matter." },
+      { e:"🎯", name:"Target", x:86.0, y:49.1, text:"The thesis narrows. A target is identified." },
 
-      { e:"👀", name:"Eyes Again", text:"A repeated watch signal." },
-      { e:"🐶", name:"Dog", text:"Loyalty, pet clue, or company reference." },
-      { e:"🇺🇸🎤🎶", name:"Flag Mic Music", text:"The American flag with microphone/music notes clue." },
-      { e:"👀", name:"Eyes Again", text:"Look again. The pattern repeats." },
-      { e:"🔥", name:"Fire", text:"Heat, attention, and momentum." },
-      { e:"💥", name:"Explosion Again", text:"Second boom or larger impact." },
-      { e:"🍻", name:"Beers", text:"Beer = Friday. Celebration or timing clue." }
+      { e:"👀", name:"Eyes Again", x:28.7, y:68.4, text:"A repeated watch signal." },
+      { e:"🐶", name:"Dog", x:34.8, y:68.4, text:"Loyalty, pet clue, or company reference." },
+      { e:"🇺🇸🎤🎶", name:"Flag Mic Music", x:41.0, y:68.4, text:"The American flag with microphone/music notes clue." },
+      { e:"👀", name:"Eyes Again", x:47.2, y:68.4, text:"Look again. The pattern repeats." },
+      { e:"🔥", name:"Fire", x:53.3, y:68.4, text:"Heat, attention, and momentum." },
+      { e:"💥", name:"Explosion Again", x:59.4, y:68.4, text:"Second boom or larger impact." },
+      { e:"🍻", name:"Beers", x:65.5, y:68.4, text:"Beer = Friday. Celebration or timing clue." }
     ];
 
-    const row1 = document.getElementById("row1");
-    const row2 = document.getElementById("row2");
-    const row3 = document.getElementById("row3");
-
+    const emojiZones = document.getElementById("emojiZones");
     const modal = document.getElementById("modal");
     const modalEmoji = document.getElementById("modalEmoji");
     const modalTitle = document.getElementById("modalTitle");
@@ -325,20 +287,15 @@
     let activeIndex = null;
 
     emojis.forEach((item, index) => {
-      const btn = document.createElement("button");
-      btn.className = "emoji-zone";
-      btn.dataset.number = index + 1;
-      btn.title = `${index + 1}. ${item.name}`;
-      btn.setAttribute("aria-label", `${index + 1}. ${item.name}`);
-      btn.addEventListener("click", () => openEmoji(index));
-
-      if (index < 14) {
-        row1.appendChild(btn);
-      } else if (index < 28) {
-        row2.appendChild(btn);
-      } else {
-        row3.appendChild(btn);
-      }
+      const zone = document.createElement("button");
+      zone.className = "emoji-zone";
+      zone.style.left = item.x + "%";
+      zone.style.top = item.y + "%";
+      zone.dataset.number = index + 1;
+      zone.title = `${index + 1}. ${item.name}`;
+      zone.setAttribute("aria-label", `${index + 1}. ${item.name}`);
+      zone.addEventListener("click", () => openEmoji(index));
+      emojiZones.appendChild(zone);
     });
 
     function openEmoji(index) {
