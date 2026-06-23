@@ -1,50 +1,50 @@
 
-.modal-box h2 {
-  color: #00f5ff;
-  line-height: 1.4;
+  if (lives <= 0) {
+    gameRunning = false;
+    modalTitle.textContent = "☠️ FUD GOT YOU";
+    modalText.textContent = "The FUD skulls got too close. Try again or enter the site.";
+    modal.classList.add("active");
+    return;
+  }
+
+  requestAnimationFrame(gameLoop);
 }
 
-.modal-box p {
-  font-size: 18px;
-  line-height: 1.6;
+drawBackground();
+drawPlayer();
+drawHUD();
+
+document.querySelectorAll("[data-title]").forEach((item) => {
+  item.addEventListener("click", () => {
+    modalTitle.textContent = item.dataset.title;
+    modalText.textContent = item.dataset.text;
+    modal.classList.add("active");
+  });
+});
+
+closeModal.addEventListener("click", () => {
+  modal.classList.remove("active");
+});
+
+modal.addEventListener("click", (event) => {
+  if (event.target === modal) {
+    modal.classList.remove("active");
+  }
+});
+
+function copyContract() {
+  const contract = document.getElementById("contractAddress").textContent;
+
+  navigator.clipboard.writeText(contract).then(() => {
+    modalTitle.textContent = "📋 CONTRACT COPIED";
+    modalText.textContent = contract;
+    modal.classList.add("active");
+  }).catch(() => {
+    modalTitle.textContent = "COPY THIS CONTRACT";
+    modalText.textContent = contract;
+    modal.classList.add("active");
+  });
 }
 
-@media (max-width: 700px) {
-  .start-screen {
-    padding: 6px;
-    align-items: flex-start;
-  }
-
-  .arcade-container {
-    width: 100vw;
-  }
-
-  .cabinet-button {
-    font-size: 6px;
-    padding: 6px 7px;
-  }
-
-  .terminal-box h2,
-  .case-files-section h2 {
-    font-size: 28px;
-  }
-
-  .terminal-grid p,
-  .contract-box,
-  .terminal-line,
-  .modal-box p,
-  .case-files-section > p {
-    font-size: 16px;
-  }
-
-  .terminal-buttons a,
-  .terminal-buttons button,
-  .action-buttons a,
-  .action-buttons button {
-    width: 100%;
-  }
-
-  code {
-    font-size: 13px;
-  }
-}
+document.getElementById("copyContract").addEventListener("click", copyContract);
+document.getElementById("copyContractTop").addEventListener("click", copyContract);
