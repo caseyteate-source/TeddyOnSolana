@@ -286,51 +286,56 @@
 
     let activeIndex = null;
 
-    emojis.forEach((item, index) => {
-      const zone = document.createElement("button");
-      zone.className = "emoji-zone";
-      zone.style.left = item.x + "%";
-      zone.style.top = item.y + "%";
-      zone.dataset.number = index + 1;
-      zone.title = `${index + 1}. ${item.name}`;
-      zone.setAttribute("aria-label", `${index + 1}. ${item.name}`);
-      zone.addEventListener("click", () => openEmoji(index));
-      emojiZones.appendChild(zone);
-    });
+  emojis.forEach((item, index) => {
+  const zone = document.createElement("button");
+  zone.className = "emoji-zone";
+  zone.style.left = item.x + "%";
+  zone.style.top = item.y + "%";
+  zone.dataset.number = index + 1;
+  zone.title = `${index + 1}. ${item.name}`;
+  zone.setAttribute("aria-label", `${index + 1}. ${item.name}`);
 
-    function openEmoji(index) {
-      activeIndex = index;
-      const item = emojis[index];
+  if (document.body.classList.contains("debug")) {
+    zone.draggable = false;
 
-      modalEmoji.textContent = item.e;
-      modalTitle.textContent = `${index + 1}. ${item.name}`;
-      modalText.textContent = item.text;
-      theoryInput.value = "";
+    zone.addEventListener("pointerdown", (event) => {
+      event.preventDefault();
 
-      renderTheories();
-      modal.classList.add("active");
-    }
+      function moveDot(e) {
+        const frame = document.querySelector(".frame");
+        const rect = frame.getBoundingClientRect();
 
-    function getTheoryKey() {
-      return `emoji-theories-${activeIndex}`;
-    }
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
 
-    function renderTheories() {
-      theoryList.innerHTML = "";
-      const saved = JSON.parse(localStorage.getItem(getTheoryKey()) || "[]");
+        item.x = Number(x.toFixed(2));
+        item.y = Number(y.toFixed(2));
 
-      if (saved.length === 0) {
-        theoryList.innerHTML = "<p>No theories saved yet.</p>";
-        return;
+        zone.style.left = item.x + "%";
+        zone.style.top = item.y + "%";
+
+        console.clear();
+        console.log(
+          emojis.map(i =>
+            `{ e:"${i.e}", name:"${i.name}", x:${i.x}, y:${i.y}, text:${JSON.stringify(i.text)} }`
+          ).join(",\n")
+        );
       }
 
-      saved.forEach((text) => {
-        const div = document.createElement("div");
-        div.className = "theory";
-        div.textContent = text;
-        theoryList.appendChild(div);
-      });
-    }
+      function stopMove() {
+        window.removeEventListener("pointermove", moveDot);
+        window.removeEventListener("pointerup", stopMove);
+      }
+
+      window.addEventListener("pointermove", moveDot);
+      window.addEventListener("pointerup", stopMove);
+    });
+  } else {
+    zone.addEventListener("click", () => openEmoji(index));
+  }
+
+  emojiZones.appendChild(zone);
+});
 
     saveTheory.addEventListener("click", () => {
       const text = theoryInput.value.trim();
