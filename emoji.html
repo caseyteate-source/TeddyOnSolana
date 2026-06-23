@@ -18,92 +18,190 @@
 
     .page {
       min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      background: #050510;
+      padding: 24px;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(0,245,255,.16), transparent 30%),
+        radial-gradient(circle at 80% 20%, rgba(255,42,163,.18), transparent 30%),
+        #050510;
     }
 
-    .frame {
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .back {
+      color: #00f5ff;
+      border: 2px solid #00f5ff;
+      padding: 12px 18px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 900;
+      box-shadow: 0 0 18px #00f5ff;
+    }
+
+    .count {
+      color: #ff2aa3;
+      border: 2px solid #ff2aa3;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-weight: 900;
+      box-shadow: 0 0 18px #ff2aa3;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 0;
+      font-size: clamp(3rem, 8vw, 6.5rem);
+      color: #ff2aa3;
+      text-shadow: 0 0 20px #ff2aa3;
+    }
+
+    h1 span {
+      color: #00f5ff;
+      text-shadow: 0 0 20px #00f5ff;
+    }
+
+    .subtitle {
+      text-align: center;
+      margin: 8px 0 24px;
+      font-weight: 900;
+      letter-spacing: .08em;
+    }
+
+    .board {
       position: relative;
-      width: min(100%, 1600px);
+      width: min(1500px, 100%);
+      margin: 0 auto;
+      padding: 42px;
+      border: 16px solid #5b2d12;
+      border-radius: 22px;
+      background:
+        radial-gradient(circle, rgba(255,255,255,.08) 1px, transparent 1px),
+        linear-gradient(135deg, #a45b26, #6f3516);
+      background-size: 18px 18px, cover;
+      box-shadow:
+        inset 0 0 60px rgba(0,0,0,.55),
+        0 0 50px rgba(255,42,163,.25);
+    }
+
+    .sticky {
+      position: absolute;
+      background: #ffe66d;
+      color: #1c1200;
+      padding: 16px;
+      font-weight: 900;
+      transform: rotate(-5deg);
+      box-shadow: 7px 7px 0 rgba(0,0,0,.25);
+      max-width: 190px;
+    }
+
+    .sticky.right {
+      right: 24px;
+      top: 24px;
+      background: #69d7ff;
+      transform: rotate(5deg);
+    }
+
+    .sticky.left {
+      left: 24px;
+      top: 24px;
+    }
+
+    .timeline {
+      margin-top: 95px;
+      display: grid;
+      grid-template-columns: repeat(14, 1fr);
+      gap: 26px 14px;
+    }
+
+    .emoji-card {
+      position: relative;
+      border: 0;
+      cursor: pointer;
+      background: #efe0c4;
+      border-radius: 5px;
+      padding: 30px 8px 12px;
+      min-height: 120px;
+      box-shadow:
+        0 8px 0 rgba(0,0,0,.25),
+        inset 0 0 0 3px rgba(255,255,255,.35);
+      transition: transform .18s ease, filter .18s ease;
+    }
+
+    .emoji-card:hover {
+      transform: scale(1.12) translateY(-8px);
+      filter: drop-shadow(0 0 14px #00f5ff) drop-shadow(0 0 18px #ff2aa3);
+      z-index: 10;
+    }
+
+    .emoji-card::before {
+      content: attr(data-num);
+      position: absolute;
+      top: -13px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #ffd56a;
+      color: #111;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-weight: 900;
+      box-shadow: 0 3px 0 rgba(0,0,0,.3);
+    }
+
+    .emoji-card::after {
+      content: "";
+      position: absolute;
+      top: -28px;
+      left: 50%;
+      width: 16px;
+      height: 16px;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background: #d60000;
+      box-shadow: 0 0 8px red;
+    }
+
+    .emoji {
+      display: grid;
+      place-items: center;
+      height: 74px;
+      background: #070707;
+      border-radius: 3px;
+      font-size: clamp(2rem, 3vw, 3.1rem);
+    }
+
+    .bottom-row {
+      grid-column: span 14;
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 14px;
+      width: 58%;
       margin: 0 auto;
     }
 
-    .bg {
-      width: 100%;
-      display: block;
-      user-select: none;
-    }
-
-    .back-link {
-      position: absolute;
-      left: 1.5%;
-      top: 1.5%;
-      z-index: 80;
-      width: 14%;
-      height: 7%;
-      color: transparent;
-      text-decoration: none;
-    }
-
-    .emoji-zone {
-      position: absolute;
-      z-index: 70;
-      width: 3.2%;
-      height: 5.2%;
-      border: 0;
-      background: transparent;
-      padding: 0;
-      cursor: pointer;
-      transform: translate(-50%, -50%);
-    }
-
-    .emoji-zone:hover,
-    .emoji-zone:focus {
-      outline: none;
-      background: transparent;
-      box-shadow: none;
-    }
-
-    .emoji-zone:active {
-      transform: translate(-50%, -50%) scale(.92);
-    }
-
-    body.debug .emoji-zone::after {
-      content: attr(data-number);
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 26px;
-      height: 26px;
+    .panel-row {
+      width: min(1100px, 100%);
+      margin: 28px auto 0;
       display: grid;
-      place-items: center;
-      transform: translate(-50%, -50%);
-      color: white;
-      background: rgba(0,0,0,.9);
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .panel {
       border: 2px solid #00f5ff;
-      border-radius: 999px;
-      font-weight: 900;
-      font-size: 12px;
-      box-shadow: 0 0 14px #00f5ff;
+      border-radius: 14px;
+      padding: 18px;
+      background: rgba(0,0,0,.62);
+      box-shadow: 0 0 18px rgba(0,245,255,.45);
     }
 
-    .debug-label {
-      display: none;
-    }
-
-    body.debug .debug-label {
-      display: block;
-      position: fixed;
-      right: 14px;
-      bottom: 14px;
-      z-index: 2000;
-      background: #00f5ff;
-      color: #050510;
-      padding: 10px 14px;
-      border-radius: 10px;
-      font-weight: 900;
-      box-shadow: 0 0 20px #00f5ff;
+    .panel h3 {
+      margin: 0 0 12px;
+      color: #ff2aa3;
     }
 
     .modal {
@@ -112,7 +210,7 @@
       display: none;
       align-items: center;
       justify-content: center;
-      background: rgba(0,0,0,.84);
+      background: rgba(0,0,0,.86);
       z-index: 1000;
       padding: 20px;
     }
@@ -120,15 +218,13 @@
     .modal.active { display: flex; }
 
     .modal-box {
-      position: relative;
       width: min(680px, 95vw);
       border: 3px solid #ff2aa3;
       border-radius: 24px;
       background: linear-gradient(180deg, #12001f, #050510);
       padding: 30px;
-      box-shadow:
-        0 0 35px #ff2aa3,
-        0 0 65px rgba(0,245,255,.7);
+      position: relative;
+      box-shadow: 0 0 40px #ff2aa3, 0 0 70px rgba(0,245,255,.65);
     }
 
     .close {
@@ -143,19 +239,13 @@
     }
 
     .modal-emoji {
-      font-size: 5rem;
       text-align: center;
+      font-size: 5rem;
     }
 
     .modal-box h2 {
-      color: #00f5ff;
       text-align: center;
-      margin: 6px 0 14px;
-    }
-
-    .modal-box p {
-      color: #eee;
-      line-height: 1.6;
+      color: #00f5ff;
     }
 
     textarea {
@@ -182,12 +272,6 @@
       cursor: pointer;
     }
 
-    .saved-theories {
-      margin-top: 18px;
-      padding-top: 12px;
-      border-top: 1px solid rgba(255,255,255,.2);
-    }
-
     .theory {
       background: rgba(0,245,255,.08);
       border-left: 3px solid #00f5ff;
@@ -196,28 +280,59 @@
       color: #dffcff;
     }
 
-    @media (max-width: 800px) {
-      .frame {
-        width: 1400px;
-        max-width: none;
+    @media (max-width: 900px) {
+      .timeline {
+        grid-template-columns: repeat(7, 1fr);
       }
 
-      .page {
-        overflow-x: auto;
-        justify-content: flex-start;
+      .bottom-row {
+        grid-column: span 7;
+        width: 100%;
+        grid-template-columns: repeat(7, 1fr);
+      }
+
+      .panel-row {
+        grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
 
 <body>
-  <div class="debug-label">DEBUG: emoji hotspots loaded</div>
-
   <main class="page">
-    <section class="frame">
-      <img src="emoji-timeline-bg.png" class="bg" alt="The Emoji Timeline" />
-      <a href="hub.html" class="back-link" aria-label="Back to hub"></a>
-      <div id="emojiZones"></div>
+    <div class="topbar">
+      <a class="back" href="hub.html">← BACK TO HUB</a>
+      <div class="count">TOTAL EMOJIS: 35</div>
+    </div>
+
+    <h1><span>THE</span> EMOJI TIMELINE</h1>
+    <p class="subtitle">FOLLOW THE SEQUENCE. CONNECT THE DOTS. QUESTION EVERYTHING.</p>
+
+    <section class="board">
+      <div class="sticky left">NOT A MEME.<br>A MAP.<br>– RK –</div>
+      <div class="sticky right">THERE IS<br>ALWAYS<br>A REASON.</div>
+
+      <div id="timeline" class="timeline"></div>
+    </section>
+
+    <section class="panel-row">
+      <div class="panel">
+        <h3>SEQUENCE STATUS</h3>
+        <p>Status: Unknown</p>
+        <p>Progress: 0 / 35</p>
+      </div>
+
+      <div class="panel">
+        <h3>POSSIBLE MEANINGS</h3>
+        <p>Interpretation #1</p>
+        <p>Interpretation #2</p>
+        <p>Interpretation #3</p>
+      </div>
+
+      <div class="panel">
+        <h3>RELATED CLUES</h3>
+        <p>👀 🚀 🔥 😿 🎯 and more...</p>
+      </div>
     </section>
   </main>
 
@@ -232,59 +347,53 @@
       <textarea id="theoryInput" placeholder="Add your interpretation of this emoji..."></textarea>
       <button id="saveTheory" class="save-btn">SAVE THEORY</button>
 
-      <div class="saved-theories">
-        <h3>Saved Theories</h3>
-        <div id="theoryList"></div>
-      </div>
+      <h3>Saved Theories</h3>
+      <div id="theoryList"></div>
     </div>
   </div>
 
   <script>
-    if (new URLSearchParams(window.location.search).get("debug") === "1") {
-      document.body.classList.add("debug");
-    }
-
     const emojis = [
-      { e:"😳", name:"Shock", x:11.4, y:32.5, text:"Surprise, confusion, or the opening signal." },
-      { e:"💩", name:"Mess", x:17.6, y:32.5, text:"Chaos, ugliness, or everything looking bad before the turn." },
-      { e:"😿", name:"Crying Cat", x:23.8, y:32.5, text:"The cat appears wounded, but the story may not be over." },
-      { e:"🥜", name:"Peanuts", x:30.0, y:32.5, text:"Something small or dismissed that may matter later." },
-      { e:"🐸", name:"Frog", x:36.2, y:32.5, text:"A leap, transformation, or meme signal." },
-      { e:"🍦", name:"Ice Cream", x:42.4, y:32.5, text:"Sweet reward, callback, or Cohen-coded lore." },
-      { e:"🤢", name:"Sick", x:48.6, y:32.5, text:"Discomfort, pressure, or a rough market moment." },
-      { e:"👍", name:"Thumbs Up", x:54.8, y:32.5, text:"Confirmation. Something checks out." },
-      { e:"👊", name:"Fist", x:61.0, y:32.5, text:"Resolve, strength, or community conviction." },
-      { e:"💀", name:"Skull", x:67.2, y:32.5, text:"Danger, FUD, shorts, or something getting buried." },
-      { e:"🤓", name:"Nerd", x:73.4, y:32.5, text:"Research mode. Look closer." },
-      { e:"👀", name:"Eyes", x:79.6, y:32.5, text:"Watch closely. Something is hidden in plain sight." },
-      { e:"🤩", name:"Star Eyes", x:85.8, y:32.5, text:"Excitement, awe, or the reveal getting closer." },
-      { e:"⚡", name:"Lightning", x:92.0, y:32.5, text:"Sudden energy, speed, or volatility." },
+      { e:"😳", name:"Shock", text:"Surprise, confusion, or the opening signal." },
+      { e:"💩", name:"Mess", text:"Chaos, ugliness, or everything looking bad before the turn." },
+      { e:"😿", name:"Crying Cat", text:"The cat appears wounded, but the story may not be over." },
+      { e:"🥜", name:"Peanuts", text:"Something small or dismissed that may matter later." },
+      { e:"🐸", name:"Frog", text:"A leap, transformation, or meme signal." },
+      { e:"🍦", name:"Ice Cream", text:"Sweet reward, callback, or Cohen-coded lore." },
+      { e:"🤢", name:"Sick", text:"Discomfort, pressure, or a rough market moment." },
+      { e:"👍", name:"Thumbs Up", text:"Confirmation. Something checks out." },
+      { e:"👊", name:"Fist", text:"Resolve, strength, or community conviction." },
+      { e:"💀", name:"Skull", text:"Danger, FUD, shorts, or something getting buried." },
+      { e:"🤓", name:"Nerd", text:"Research mode. Look closer." },
+      { e:"👀", name:"Eyes", text:"Watch closely. Something is hidden in plain sight." },
+      { e:"🤩", name:"Star Eyes", text:"Excitement, awe, or the reveal getting closer." },
+      { e:"⚡", name:"Lightning", text:"Sudden energy, speed, or volatility." },
 
-      { e:"🎮", name:"Game", x:11.4, y:50.2, text:"GameStop energy. The game continues." },
-      { e:"🚀", name:"Rocket", x:17.6, y:50.2, text:"Launch imagery and upward movement." },
-      { e:"🍄", name:"Mushroom", x:23.8, y:50.2, text:"Power-up mode or entering another level." },
-      { e:"💥", name:"Explosion", x:30.0, y:50.2, text:"Impact event, boom, or sudden break." },
-      { e:"🍏", name:"Apple", x:36.2, y:50.2, text:"A bite, clue, company reference, or garden-path signal." },
-      { e:"🤔", name:"Thinking", x:42.4, y:50.2, text:"Question everything. Do not accept the first answer." },
-      { e:"🥴", name:"Dizzy", x:48.6, y:50.2, text:"Confusion or disorientation before the reveal." },
-      { e:"💜", name:"Purple Heart", x:54.8, y:50.2, text:"Community loyalty, purple/DRS associations, or love for the thesis." },
-      { e:"👥", name:"People", x:61.0, y:50.2, text:"The crowd, community, or collective attention." },
-      { e:"👌", name:"OK", x:67.2, y:50.2, text:"Signal accepted." },
-      { e:"🤝", name:"Handshake", x:73.4, y:50.2, text:"Deal, partnership, agreement, or merger tinfoil." },
-      { e:"⛺", name:"Tent", x:79.6, y:50.2, text:"Camping, waiting, gathering, or holding position." },
-      { e:"😿", name:"Cat Again", x:85.8, y:50.2, text:"The cat appears again. Repetition may matter." },
-      { e:"🎯", name:"Target", x:92.0, y:50.2, text:"The thesis narrows. A target is identified." },
+      { e:"🎮", name:"Game", text:"GameStop energy. The game continues." },
+      { e:"🚀", name:"Rocket", text:"Launch imagery and upward movement." },
+      { e:"🍄", name:"Mushroom", text:"Power-up mode or entering another level." },
+      { e:"💥", name:"Explosion", text:"Impact event, boom, or sudden break." },
+      { e:"🍏", name:"Apple", text:"A bite, clue, company reference, or garden-path signal." },
+      { e:"🤔", name:"Thinking", text:"Question everything. Do not accept the first answer." },
+      { e:"🥴", name:"Dizzy", text:"Confusion or disorientation before the reveal." },
+      { e:"💜", name:"Purple Heart", text:"Community loyalty, purple/DRS associations, or love for the thesis." },
+      { e:"👥", name:"People", text:"The crowd, community, or collective attention." },
+      { e:"👌", name:"OK", text:"Signal accepted." },
+      { e:"🤝", name:"Handshake", text:"Deal, partnership, agreement, or merger tinfoil." },
+      { e:"⛺", name:"Tent", text:"Camping, waiting, gathering, or holding position." },
+      { e:"😿", name:"Crying Cat Again", text:"The cat appears again. Repetition may matter." },
+      { e:"🎯", name:"Target", text:"The thesis narrows. A target is identified." },
 
-      { e:"👀", name:"Eyes Again", x:27.0, y:67.0, text:"A repeated watch signal." },
-      { e:"🐶", name:"Dog", x:34.0, y:67.0, text:"Loyalty, pet clue, or company reference." },
-      { e:"🇺🇸🎤🎶", name:"Flag Mic Music", x:41.0, y:67.0, text:"The American flag with microphone/music notes clue." },
-      { e:"👀", name:"Eyes Again", x:48.0, y:67.0, text:"Look again. The pattern repeats." },
-      { e:"🔥", name:"Fire", x:55.0, y:67.0, text:"Heat, attention, and momentum." },
-      { e:"💥", name:"Explosion Again", x:62.0, y:67.0, text:"Second boom or larger impact." },
-      { e:"🍻", name:"Beers", x:69.0, y:67.0, text:"Beer = Friday. Celebration or timing clue." }
+      { e:"👀", name:"Eyes Again", text:"A repeated watch signal." },
+      { e:"🐶", name:"Dog", text:"Loyalty, pet clue, or company reference." },
+      { e:"🇺🇸🎤🎶", name:"Flag Mic Music", text:"The American flag with microphone/music notes clue." },
+      { e:"👀", name:"Eyes Again", text:"Look again. The pattern repeats." },
+      { e:"🔥", name:"Fire", text:"Heat, attention, and momentum." },
+      { e:"💥", name:"Explosion Again", text:"Second boom or larger impact." },
+      { e:"🍻", name:"Beers", text:"Beer = Friday. Celebration or timing clue." }
     ];
 
-    const emojiZones = document.getElementById("emojiZones");
+    const timeline = document.getElementById("timeline");
     const modal = document.getElementById("modal");
     const modalEmoji = document.getElementById("modalEmoji");
     const modalTitle = document.getElementById("modalTitle");
@@ -297,15 +406,25 @@
     let activeIndex = null;
 
     emojis.forEach((item, index) => {
-      const zone = document.createElement("button");
-      zone.className = "emoji-zone";
-      zone.style.left = item.x + "%";
-      zone.style.top = item.y + "%";
-      zone.dataset.number = index + 1;
-      zone.title = `${index + 1}. ${item.name}`;
-      zone.setAttribute("aria-label", `${index + 1}. ${item.name}`);
-      zone.addEventListener("click", () => openEmoji(index));
-      emojiZones.appendChild(zone);
+      const button = document.createElement("button");
+      button.className = "emoji-card";
+      button.dataset.num = String(index + 1).padStart(2, "0");
+
+      if (index >= 28) {
+        if (!timeline.querySelector(".bottom-row")) {
+          const bottom = document.createElement("div");
+          bottom.className = "bottom-row";
+          timeline.appendChild(bottom);
+        }
+
+        button.innerHTML = `<div class="emoji">${item.e}</div>`;
+        button.addEventListener("click", () => openEmoji(index));
+        timeline.querySelector(".bottom-row").appendChild(button);
+      } else {
+        button.innerHTML = `<div class="emoji">${item.e}</div>`;
+        button.addEventListener("click", () => openEmoji(index));
+        timeline.appendChild(button);
+      }
     });
 
     function openEmoji(index) {
