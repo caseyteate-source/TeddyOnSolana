@@ -46,16 +46,17 @@
       text-decoration: none;
     }
 
-    .emoji-zone {
-      position: absolute;
-      z-index: 70;
-      width: 4.15%;
-      height: 7.3%;
-      border: 0;
-      background: transparent;
-      padding: 0;
-      cursor: pointer;
-      transform: translate(-50%, -50%);
+   .emoji-zone {
+  position: absolute;
+  z-index: 70;
+  width: 3.2%;
+  height: 5%;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+
     }
 
     body.debug .emoji-zone {
@@ -64,24 +65,24 @@
       border-radius: 8px;
     }
 
-    body.debug .emoji-zone::after {
-      content: attr(data-number);
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      background: black;
-      color: white;
-      border: 2px solid #00f5ff;
-      border-radius: 999px;
-      width: 26px;
-      height: 26px;
-      display: grid;
-      place-items: center;
-      font-size: 12px;
-      font-weight: 900;
-      box-shadow: 0 0 12px #00f5ff;
-    }
+ body.debug .emoji-zone::after {
+  content: attr(data-number);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  transform: translate(-50%, -50%);
+  color: white;
+  background: rgba(0,0,0,.88);
+  border: 2px solid #00f5ff;
+  border-radius: 999px;
+  font-weight: 900;
+  font-size: 12px;
+  box-shadow: 0 0 14px #00f5ff;
+}
 
     .debug-label { display: none; }
 
