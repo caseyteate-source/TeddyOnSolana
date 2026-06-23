@@ -6,9 +6,7 @@
   <title>The Emoji Timeline</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -66,8 +64,8 @@
     .emoji-zone {
       position: absolute;
       z-index: 70;
-      width: 3.2%;
-      height: 5%;
+      width: 3.8%;
+      height: 6%;
       border: 0;
       background: transparent;
       padding: 0;
@@ -83,81 +81,7 @@
     }
 
     .emoji-zone:active {
-      transform: translate(-50%, -50%) scale(.92);
-    }
-
-    body.debug .emoji-zone::after {
-      content: attr(data-number);
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 24px;
-      height: 24px;
-      display: grid;
-      place-items: center;
-      transform: translate(-50%, -50%);
-      color: white;
-      background: rgba(0,0,0,.88);
-      border: 2px solid #00f5ff;
-      border-radius: 999px;
-      font-weight: 900;
-      font-size: 12px;
-      box-shadow: 0 0 14px #00f5ff;
-    }
-
-    .debug-label {
-      display: none;
-    }
-
-    body.debug .debug-label {
-      display: block;
-      position: fixed;
-      right: 14px;
-      bottom: 14px;
-      z-index: 2000;
-      background: #00f5ff;
-      color: #050510;
-      padding: 10px 14px;
-      border-radius: 10px;
-      font-weight: 900;
-      box-shadow: 0 0 20px #00f5ff;
-    }
-
-    .copy-box {
-      display: none;
-    }
-
-    body.debug .copy-box {
-      display: block;
-      position: fixed;
-      left: 14px;
-      bottom: 14px;
-      z-index: 2000;
-      width: min(520px, calc(100vw - 28px));
-      background: rgba(0,0,0,.88);
-      border: 2px solid #00f5ff;
-      border-radius: 14px;
-      padding: 12px;
-      color: white;
-      box-shadow: 0 0 18px rgba(0,245,255,.7);
-    }
-
-    .copy-box button {
-      width: 100%;
-      border: 0;
-      border-radius: 10px;
-      padding: 10px;
-      background: #ff2aa3;
-      color: white;
-      font-weight: 900;
-      cursor: pointer;
-    }
-
-    .copy-box p {
-      margin: 8px 0 0;
-      font-size: 13px;
-      color: #dffcff;
-      line-height: 1.4;
+      transform: translate(-50%, -50%) scale(.95);
     }
 
     .modal {
@@ -171,9 +95,7 @@
       padding: 20px;
     }
 
-    .modal.active {
-      display: flex;
-    }
+    .modal.active { display: flex; }
 
     .modal-box {
       position: relative;
@@ -275,12 +197,6 @@
 
 <body>
   <div class="scanlines"></div>
-  <div class="debug-label">DRAG DEBUG MODE</div>
-
-  <div class="copy-box">
-    <button id="copyCoords">COPY UPDATED EMOJI COORDINATES</button>
-    <p>Open this page with <b>?debug=1</b>, drag the numbered dots onto the exact emoji centers, then press this button.</p>
-  </div>
 
   <main class="page">
     <section class="frame">
@@ -313,51 +229,44 @@
   </div>
 
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const debugMode = params.get("debug") === "1";
-
-    if (debugMode) {
-      document.body.classList.add("debug");
-    }
-
     const emojis = [
-      { e:"😳", name:"Shock", x:12.7, y:31.6, text:"The opening signal. Surprise, confusion, and attention." },
-      { e:"💩", name:"Mess", x:18.7, y:31.6, text:"Chaos, ugliness, or everything looking like a disaster before the next turn." },
-      { e:"😿", name:"Sad Cat", x:24.7, y:31.6, text:"The cat appears wounded or discouraged, but this may be a fake-out rather than the end of the story." },
-      { e:"🥜", name:"Peanuts", x:30.7, y:31.6, text:"Something small, overlooked, or dismissed as insignificant that may matter later." },
-      { e:"🐸", name:"Frog", x:36.7, y:31.6, text:"A leap, transformation, meme signal, or jump from one phase to another." },
-      { e:"🍦", name:"Ice Cream", x:42.7, y:31.6, text:"Often read by the community as a Cohen-coded clue, sweetness, reward, or callback." },
-      { e:"🤢", name:"Sick", x:48.7, y:31.6, text:"A rough market moment, nausea, discomfort, or emotional pressure before the pivot." },
-      { e:"👍", name:"Thumbs Up", x:54.7, y:31.6, text:"Approval, confirmation, or a signal that something checks out." },
-      { e:"👊", name:"Fist", x:60.7, y:31.6, text:"Resolve, solidarity, locked-in conviction, or community strength." },
-      { e:"💀", name:"Skull", x:66.8, y:31.6, text:"Danger, death of an old thesis, shorts getting wrecked, or FUD entering the board." },
-      { e:"🤓", name:"Nerd", x:72.8, y:31.6, text:"Research mode. This may be a signal to study the details instead of reacting emotionally." },
-      { e:"👀", name:"Eyes", x:78.8, y:31.6, text:"Watch closely. Something hidden in plain sight may be developing." },
-      { e:"😁", name:"Grin", x:84.8, y:31.6, text:"Confidence, mischief, or the feeling that the reveal is getting closer." },
-      { e:"⚡", name:"Lightning", x:90.8, y:31.6, text:"Sudden energy, speed, volatility, or an electric move." },
+      { e:"😳", name:"Shock", x:12.24, y:31.18, text:"The opening signal. Surprise, confusion, and attention." },
+      { e:"💩", name:"Mess", x:17.84, y:31.22, text:"Chaos, ugliness, or everything looking like a disaster before the next turn." },
+      { e:"😿", name:"Sad Cat", x:23.64, y:31.34, text:"The cat appears wounded or discouraged, but this may be a fake-out rather than the end of the story." },
+      { e:"🥜", name:"Peanuts", x:29.22, y:31.11, text:"Something small, overlooked, or dismissed as insignificant that may matter later." },
+      { e:"🐸", name:"Frog", x:34.88, y:31.41, text:"A leap, transformation, meme signal, or jump from one phase to another." },
+      { e:"🍦", name:"Ice Cream", x:40.52, y:31.03, text:"Often read by the community as a Cohen-coded clue, sweetness, reward, or callback." },
+      { e:"🤢", name:"Sick", x:45.99, y:30.99, text:"A rough market moment, nausea, discomfort, or emotional pressure before the pivot." },
+      { e:"👍", name:"Thumbs Up", x:51.72, y:31.2, text:"Approval, confirmation, or a signal that something checks out." },
+      { e:"👊", name:"Fist", x:57.13, y:31.23, text:"Resolve, solidarity, locked-in conviction, or community strength." },
+      { e:"💀", name:"Skull", x:62.91, y:31.29, text:"Danger, death of an old thesis, shorts getting wrecked, or FUD entering the board." },
+      { e:"🤓", name:"Nerd", x:68.39, y:31.33, text:"Research mode. This may be a signal to study the details instead of reacting emotionally." },
+      { e:"👀", name:"Eyes", x:74.04, y:31.14, text:"Watch closely. Something hidden in plain sight may be developing." },
+      { e:"😁", name:"Grin", x:79.49, y:31.03, text:"Confidence, mischief, or the feeling that the reveal is getting closer." },
+      { e:"⚡", name:"Lightning", x:84.92, y:31.16, text:"Sudden energy, speed, volatility, or an electric move." },
 
-      { e:"🎮", name:"Game", x:13.1, y:51.1, text:"GameStop energy. The game continues." },
-      { e:"🚀", name:"Rocket", x:19.2, y:51.1, text:"Launch imagery. The classic meme-market symbol for upward movement." },
-      { e:"🍄", name:"Mushroom", x:25.3, y:51.1, text:"Power-up mode, video game transformation, or entering another level." },
-      { e:"💥", name:"Explosion", x:31.4, y:51.1, text:"A boom, impact event, or sudden break in the timeline." },
-      { e:"🍏", name:"Apple", x:37.5, y:51.1, text:"Could suggest a clean bite, temptation, technology, a company clue, or a garden-path clue." },
-      { e:"🤔", name:"Thinking", x:43.6, y:51.1, text:"Question everything. The sequence may require interpretation rather than a surface reading." },
-      { e:"🥴", name:"Dizzy", x:49.7, y:51.1, text:"Confusion, disorientation, or the audience being thrown off before the reveal." },
-      { e:"💜", name:"Purple Heart", x:55.8, y:51.1, text:"Community loyalty, purple DRS associations, or love for the thesis." },
-      { e:"👥", name:"People", x:61.9, y:51.1, text:"The crowd, the community, the players, or collective attention." },
-      { e:"👌", name:"OK", x:68.0, y:51.1, text:"Signal accepted. A small confirmation marker." },
-      { e:"🤝", name:"Handshake", x:74.1, y:51.1, text:"Deal, agreement, partnership, merger speculation, or two parties connecting." },
-      { e:"⛺", name:"Tent", x:80.2, y:51.1, text:"Camping, waiting, setting up, gathering, or holding position." },
-      { e:"😼", name:"Smirking Cat", x:86.3, y:51.1, text:"The cat knows something. Confidence with a hidden card." },
-      { e:"🎯", name:"Target", x:91.8, y:51.1, text:"The thesis narrows. A target has been identified." },
+      { e:"🎮", name:"Game", x:12.32, y:48.52, text:"GameStop energy. The game continues." },
+      { e:"🚀", name:"Rocket", x:17.94, y:48.56, text:"Launch imagery. The classic meme-market symbol for upward movement." },
+      { e:"🍄", name:"Mushroom", x:23.8, y:48.47, text:"Power-up mode, video game transformation, or entering another level." },
+      { e:"💥", name:"Explosion", x:29.74, y:48.27, text:"A boom, impact event, or sudden break in the timeline." },
+      { e:"🍏", name:"Apple", x:35.42, y:48.29, text:"Could suggest a clean bite, temptation, technology, a company clue, or a garden-path clue." },
+      { e:"🤔", name:"Thinking", x:41.51, y:48.3, text:"Question everything. The sequence may require interpretation rather than a surface reading." },
+      { e:"🥴", name:"Dizzy", x:47.29, y:48.2, text:"Confusion, disorientation, or the audience being thrown off before the reveal." },
+      { e:"💜", name:"Purple Heart", x:53.1, y:47.88, text:"Community loyalty, purple DRS associations, or love for the thesis." },
+      { e:"👥", name:"People", x:59.12, y:48.23, text:"The crowd, the community, the players, or collective attention." },
+      { e:"👌", name:"OK", x:64.7, y:48.43, text:"Signal accepted. A small confirmation marker." },
+      { e:"🤝", name:"Handshake", x:70.29, y:48.13, text:"Deal, agreement, partnership, merger speculation, or two parties connecting." },
+      { e:"⛺", name:"Tent", x:76.18, y:48.51, text:"Camping, waiting, setting up, gathering, or holding position." },
+      { e:"😼", name:"Smirking Cat", x:81.6, y:48.42, text:"The cat knows something. Confidence with a hidden card." },
+      { e:"🎯", name:"Target", x:87.15, y:48.52, text:"The thesis narrows. A target has been identified." },
 
-      { e:"👀", name:"Eyes Again", x:25.1, y:66.0, text:"A repeated watch signal. The viewer is being told to look again." },
-      { e:"🐶", name:"Dog", x:32.2, y:66.0, text:"Loyalty, pet-related clue, company reference, or a faithful companion signal." },
-      { e:"🇺🇸", name:"Flag", x:38.9, y:66.0, text:"America, timing, market structure, celebration, or an announcement window." },
-      { e:"👀", name:"Eyes Again", x:45.6, y:66.0, text:"The pattern repeats again. Pay attention to what changed between the first eyes and now." },
-      { e:"🔥", name:"Fire", x:52.4, y:66.0, text:"Heat, momentum, attention, or everything starting to catch fire." },
-      { e:"💥", name:"Explosion Again", x:59.2, y:66.0, text:"Second boom. A larger impact or follow-up event." },
-      { e:"🍻", name:"Beers", x:66.1, y:66.0, text:"Beer = Friday. Celebration, timing, or the end-of-week signal." }
+      { e:"👀", name:"Eyes Again", x:28.53, y:65.87, text:"A repeated watch signal. The viewer is being told to look again." },
+      { e:"🐶", name:"Dog", x:35.02, y:65.78, text:"Loyalty, pet-related clue, company reference, or a faithful companion signal." },
+      { e:"🇺🇸", name:"Flag", x:41.44, y:65.7, text:"America, timing, market structure, celebration, or an announcement window." },
+      { e:"👀", name:"Eyes Again", x:47.99, y:65.91, text:"The pattern repeats again. Pay attention to what changed between the first eyes and now." },
+      { e:"🔥", name:"Fire", x:54.43, y:65.43, text:"Heat, momentum, attention, or everything starting to catch fire." },
+      { e:"💥", name:"Explosion Again", x:60.71, y:65.62, text:"Second boom. A larger impact or follow-up event." },
+      { e:"🍻", name:"Beers", x:66.75, y:65.66, text:"Beer = Friday. Celebration, timing, or the end-of-week signal." }
     ];
 
     const emojiZones = document.getElementById("emojiZones");
@@ -369,77 +278,19 @@
     const saveTheory = document.getElementById("saveTheory");
     const theoryList = document.getElementById("theoryList");
     const closeModal = document.getElementById("closeModal");
-    const copyCoords = document.getElementById("copyCoords");
 
     let activeIndex = null;
-
-    function printCoords() {
-      return `const emojis = [\n${emojis.map(item =>
-        `  { e:${JSON.stringify(item.e)}, name:${JSON.stringify(item.name)}, x:${item.x}, y:${item.y}, text:${JSON.stringify(item.text)} }`
-      ).join(",\n")}\n];`;
-    }
 
     emojis.forEach((item, index) => {
       const zone = document.createElement("button");
       zone.className = "emoji-zone";
       zone.style.left = item.x + "%";
       zone.style.top = item.y + "%";
-      zone.dataset.number = index + 1;
       zone.title = `${index + 1}. ${item.name}`;
       zone.setAttribute("aria-label", `${index + 1}. ${item.name}`);
-
-      if (debugMode) {
-        zone.addEventListener("pointerdown", (event) => {
-          event.preventDefault();
-
-          function moveDot(e) {
-            const frame = document.querySelector(".frame");
-            const rect = frame.getBoundingClientRect();
-
-            const x = ((e.clientX - rect.left) / rect.width) * 100;
-            const y = ((e.clientY - rect.top) / rect.height) * 100;
-
-            item.x = Number(x.toFixed(2));
-            item.y = Number(y.toFixed(2));
-
-            zone.style.left = item.x + "%";
-            zone.style.top = item.y + "%";
-
-            console.clear();
-            console.log(printCoords());
-          }
-
-          function stopMove() {
-            window.removeEventListener("pointermove", moveDot);
-            window.removeEventListener("pointerup", stopMove);
-          }
-
-          window.addEventListener("pointermove", moveDot);
-          window.addEventListener("pointerup", stopMove);
-        });
-      } else {
-        zone.addEventListener("click", () => openEmoji(index));
-      }
-
+      zone.addEventListener("click", () => openEmoji(index));
       emojiZones.appendChild(zone);
     });
-
-    if (copyCoords) {
-      copyCoords.addEventListener("click", async () => {
-        const coords = printCoords();
-
-        try {
-          await navigator.clipboard.writeText(coords);
-          copyCoords.textContent = "COPIED!";
-          setTimeout(() => {
-            copyCoords.textContent = "COPY UPDATED EMOJI COORDINATES";
-          }, 1400);
-        } catch {
-          console.log(coords);
-          alert("Could not copy automatically. Open the console and copy the coordinates there.");
-        }
-      });
-    }
 
     function openEmoji(index) {
       activeIndex = index;
