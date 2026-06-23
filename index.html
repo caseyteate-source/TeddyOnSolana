@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -47,3 +46,101 @@
     <section class="quick-actions">
       <h2>PRESS START TO PLAY $TEDDY</h2>
       <p>
+        $TEDDY is a community meme token on Solana built around mystery,
+        tinfoil, arcade energy, and the story that refuses to end.
+      </p>
+
+      <div class="action-buttons">
+        <a href="https://dexscreener.com/solana/4k73kxhcsswhkybc9dxm3tyr8a2jrgv4nqm5tmzq69vx" target="_blank">📈 VIEW CHART</a>
+        <a href="https://x.com/teddy0n_sol" target="_blank">🐦 FOLLOW ON X</a>
+        <button id="copyContractTop">📋 COPY CONTRACT</button>
+      </div>
+    </section>
+
+    <section id="caseFiles" class="case-files-section">
+      <h2>🧵 CHOOSE YOUR RABBIT HOLE</h2>
+      <p>The board is open. Pick a case file, connect the clues, and help build the lore.</p>
+
+      <div class="case-grid">
+        <a href="kitty.html" class="case-card">
+          <span>🐱</span>
+          <h3>Kitty Files</h3>
+          <p>Roaring Kitty tinfoil, tweet clues, theories, and community notes.</p>
+        </a>
+
+        <a href="emoji.html" class="case-card">
+          <span>📈</span>
+          <h3>Emoji Timeline</h3>
+          <p>Every emoji becomes a clue with possible meanings and editable theories.</p>
+        </a>
+
+        <button class="case-card" data-title="📦 GMEBAY THEORY" data-text="GameStop + eBay = GMEBAY. One of the strongest community catchphrases in the lore.">
+          <span>📦</span>
+          <h3>GMEBAY Theory</h3>
+          <p>The marketplace dream, community theory, and meme-layer connection.</p>
+        </button>
+
+        <button class="case-card" data-title="🎮 GAMESTOP LORE" data-text="Transformation theories, marketplace speculation, and the community story around the stock.">
+          <span>🎮</span>
+          <h3>GameStop Lore</h3>
+          <p>The transformation story, speculation, memes, and market mystery.</p>
+        </button>
+
+        <a href="#terminal" class="case-card">
+          <span>🧸</span>
+          <h3>$TEDDY Terminal</h3>
+          <p>Contract, chart, X account, and token details.</p>
+        </a>
+      </div>
+    </section>
+
+    <section id="terminal" class="terminal-section">
+      <div class="terminal-box">
+        <h2>████ TOKEN TERMINAL ████</h2>
+
+        <div class="terminal-grid">
+          <p><span>PLAYER:</span> $TEDDY</p>
+          <p><span>NETWORK:</span> SOLANA</p>
+          <p><span>PRICE:</span> $0.00005868</p>
+          <p><span>STATUS:</span> ACTIVE</p>
+        </div>
+
+        <div class="contract-box">
+          <span>CONTRACT:</span>
+          <code id="contractAddress">8KJEWtuq1c1699nAup7WatZfgodS3YFnadBq46FDpump</code>
+        </div>
+
+        <p class="terminal-line">>>> INSERT COIN TO CONTINUE <span class="cursor">█</span></p>
+
+        <div class="terminal-buttons">
+          <a href="https://dexscreener.com/solana/4k73kxhcsswhkybc9dxm3tyr8a2jrgv4nqm5tmzq69vx" target="_blank">📈 VIEW CHART</a>
+          <a href="https://x.com/teddy0n_sol" target="_blank">🐦 FOLLOW ON X</a>
+          <button id="copyContract">📋 COPY CONTRACT</button>
+        </div>
+
+        <p class="disclaimer">
+          $TEDDY is not affiliated with, endorsed by, or officially connected to Ryan Cohen,
+          Teddy Holdings LLC, GameStop, eBay, Roaring Kitty, or any related company or individual.
+        </p>
+      </div>
+    </section>
+
+    <div class="ticker">
+      <div class="ticker-track">
+        $TEDDY ▲ PRICE $0.00005868 ▲ SOLANA ▲ GMEBAY ▲ FOLLOW THE STRINGS ▲ INSERT COIN ▲
+        $TEDDY ▲ PRICE $0.00005868 ▲ SOLANA ▲ GMEBAY ▲ FOLLOW THE STRINGS ▲ INSERT COIN ▲
+      </div>
+    </div>
+  </main>
+
+  <div id="modal" class="modal">
+    <div class="modal-box">
+      <button id="closeModal">×</button>
+      <h2 id="modalTitle"></h2>
+      <p id="modalText"></p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
