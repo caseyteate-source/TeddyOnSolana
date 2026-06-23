@@ -1,258 +1,49 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The Emoji Timeline</title>
-
-  <style>
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      background: #050510;
-      color: white;
-      font-family: Arial, Helvetica, sans-serif;
-      overflow-x: hidden;
-    }
-
-    .scanlines {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 999;
-      background: repeating-linear-gradient(
-        to bottom,
-        rgba(255,255,255,.045) 0,
-        rgba(255,255,255,.045) 1px,
-        transparent 2px,
-        transparent 5px
-      );
-      mix-blend-mode: overlay;
-    }
-
-    .page {
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      background: #050510;
-    }
-
-    .timeline-frame {
-      position: relative;
-      width: min(100%, 1600px);
-      margin: 0 auto;
-    }
-
-    .timeline-bg {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-
-    .emoji-hotspot {
-      position: absolute;
-      width: 4.8%;
-      height: 9%;
-      border: 0;
-      background: transparent;
-      cursor: pointer;
-      z-index: 20;
-    }
-
-    .emoji-hotspot:hover {
-      border-radius: 10px;
-      box-shadow:
-        0 0 26px rgba(0,245,255,.9),
-        inset 0 0 24px rgba(255,42,163,.45);
-    }
-
-    .back-hotspot {
-      position: absolute;
-      left: 1.5%;
-      top: 2%;
-      width: 12%;
-      height: 5%;
-      z-index: 30;
-      cursor: pointer;
-    }
-
-    .modal {
-      position: fixed;
-      inset: 0;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0,0,0,.82);
-      z-index: 1000;
-      padding: 20px;
-    }
-
-    .modal.active {
-      display: flex;
-    }
-
-    .modal-box {
-      width: min(560px, 95vw);
-      border: 3px solid #ff2aa3;
-      border-radius: 22px;
-      background: linear-gradient(180deg, #12001f, #050510);
-      padding: 30px;
-      box-shadow:
-        0 0 35px #ff2aa3,
-        0 0 60px rgba(0,245,255,.7);
-      text-align: center;
-      position: relative;
-    }
-
-    .modal-box h2 {
-      color: #00f5ff;
-      font-size: 2rem;
-      margin: 0 0 12px;
-    }
-
-    .modal-emoji {
-      font-size: 5rem;
-      margin-bottom: 10px;
-    }
-
-    .modal-box p {
-      color: #eee;
-      line-height: 1.6;
-      font-size: 1.05rem;
-    }
-
-    .modal-box ul {
-      text-align: left;
-      line-height: 1.7;
-      color: #ffd6f2;
-    }
-
-    .close {
-      position: absolute;
-      top: 10px;
-      right: 16px;
-      background: transparent;
-      border: 0;
-      color: white;
-      font-size: 34px;
-      cursor: pointer;
-    }
-
-    .secret-note {
-      position: absolute;
-      right: 8%;
-      bottom: 8%;
-      width: 11%;
-      height: 8%;
-      cursor: pointer;
-      z-index: 25;
-    }
-
-    @media (max-width: 700px) {
-      .timeline-frame {
-        width: 1300px;
-      }
-
-      .page {
-        overflow-x: auto;
-        justify-content: flex-start;
-      }
-    }
-  </style>
+  <title>$TEDDY | Insert Coin</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
   <div class="scanlines"></div>
 
-  <main class="page">
-    <section class="timeline-frame">
-      <img src="emoji-timeline-bg.png" alt="The Emoji Timeline" class="timeline-bg" />
+  <section id="startScreen" class="start-screen">
+    <div class="arcade-container">
+      <img
+        src="https://raw.githubusercontent.com/caseyteate-source/TeddyOnSolana/main/teddy-arcade-cabinet.png"
+        alt="$TEDDY Arcade Cabinet"
+        class="arcade-cabinet"
+      />
 
-      <a href="hub.html" class="back-hotspot" aria-label="Back to hub"></a>
+      <div class="game-screen">
+        <canvas id="gameCanvas" width="520" height="360"></canvas>
+      </div>
 
-      <!-- Row 1 -->
-      <button class="emoji-hotspot" style="left:10.3%; top:26%;" data-emoji="😳" data-title="01 — Shock" data-text="The opening signal. Surprise, confusion, and attention."></button>
-      <button class="emoji-hotspot" style="left:16.3%; top:26%;" data-emoji="💩" data-title="02 — Mess" data-text="Chaos, noise, and the market looking ugly before the next move."></button>
-      <button class="emoji-hotspot" style="left:22.4%; top:26%;" data-emoji="😿" data-title="03 — Sad Cat" data-text="The cat looks wounded, but the story is not over."></button>
-      <button class="emoji-hotspot" style="left:28.4%; top:26%;" data-emoji="🥜" data-title="04 — Peanuts" data-text="Small pieces that may matter more than they seem."></button>
-      <button class="emoji-hotspot" style="left:34.3%; top:26%;" data-emoji="🐸" data-title="05 — Frog" data-text="A leap, a jump, a meme signal, or transformation clue."></button>
-      <button class="emoji-hotspot" style="left:40.3%; top:26%;" data-emoji="🍦" data-title="06 — Ice Cream" data-text="Sweet Cohen-coded community lore."></button>
-      <button class="emoji-hotspot" style="left:46.4%; top:26%;" data-emoji="🤢" data-title="07 — Sick" data-text="The market feels nauseous before the turn."></button>
-      <button class="emoji-hotspot" style="left:52.4%; top:26%;" data-emoji="👍" data-title="08 — Thumbs Up" data-text="Confirmation signal. Something checks out."></button>
-      <button class="emoji-hotspot" style="left:58.5%; top:26%;" data-emoji="👊" data-title="09 — Fist" data-text="Locked in. Community resolve."></button>
-      <button class="emoji-hotspot" style="left:64.4%; top:26%;" data-emoji="💀" data-title="10 — Skull" data-text="The danger card. Shorts, FUD, or something getting buried."></button>
-      <button class="emoji-hotspot" style="left:70.5%; top:26%;" data-emoji="🤓" data-title="11 — Nerd" data-text="Research mode. Look closer."></button>
-      <button class="emoji-hotspot" style="left:76.4%; top:26%;" data-emoji="👀" data-title="12 — Eyes" data-text="Watch closely. Something is hidden in plain sight."></button>
-      <button class="emoji-hotspot" style="left:82.5%; top:26%;" data-emoji="⚡" data-title="13 — Lightning" data-text="Sudden energy. Fast movement."></button>
-
-      <!-- Row 2 -->
-      <button class="emoji-hotspot" style="left:10.3%; top:46%;" data-emoji="🎮" data-title="14 — Game" data-text="GameStop energy. The game continues."></button>
-      <button class="emoji-hotspot" style="left:16.3%; top:46%;" data-emoji="🚀" data-title="15 — Rocket" data-text="Launch imagery. Obvious but powerful."></button>
-      <button class="emoji-hotspot" style="left:22.4%; top:46%;" data-emoji="🍄" data-title="16 — Mushroom" data-text="Power-up mode."></button>
-      <button class="emoji-hotspot" style="left:28.4%; top:46%;" data-emoji="💥" data-title="17 — Explosion" data-text="Boom. Impact moment."></button>
-      <button class="emoji-hotspot" style="left:34.3%; top:46%;" data-emoji="🍏" data-title="18 — Apple" data-text="A clean bite? A company clue? A garden-path clue?"></button>
-      <button class="emoji-hotspot" style="left:40.3%; top:46%;" data-emoji="🤨" data-title="19 — Suspicion" data-text="Question everything."></button>
-      <button class="emoji-hotspot" style="left:46.4%; top:46%;" data-emoji="🥴" data-title="20 — Dizzy" data-text="Disorientation before the reveal."></button>
-      <button class="emoji-hotspot" style="left:52.4%; top:46%;" data-emoji="💜" data-title="21 — Purple Heart" data-text="Community loyalty, DRS-purple, or love for the thesis."></button>
-      <button class="emoji-hotspot" style="left:58.5%; top:46%;" data-emoji="👥" data-title="22 — People" data-text="The crowd. The community. The players."></button>
-      <button class="emoji-hotspot" style="left:64.4%; top:46%;" data-emoji="👌" data-title="23 — OK" data-text="Signal accepted."></button>
-      <button class="emoji-hotspot" style="left:70.5%; top:46%;" data-emoji="🤝" data-title="24 — Handshake" data-text="Deal, agreement, partnership, or merger tinfoil."></button>
-      <button class="emoji-hotspot" style="left:76.4%; top:46%;" data-emoji="⛺" data-title="25 — Tent" data-text="Camp, setup, waiting, or gathering."></button>
-      <button class="emoji-hotspot" style="left:82.5%; top:46%;" data-emoji="🎯" data-title="26 — Target" data-text="The thesis narrows."></button>
-
-      <!-- Row 3 -->
-      <button class="emoji-hotspot" style="left:22.4%; top:65%;" data-emoji="👀" data-title="27 — Eyes Again" data-text="A repeated watch signal."></button>
-      <button class="emoji-hotspot" style="left:28.4%; top:65%;" data-emoji="🐶" data-title="28 — Dog" data-text="Loyalty, pet clue, or company reference."></button>
-      <button class="emoji-hotspot" style="left:34.3%; top:65%;" data-emoji="🇺🇸" data-title="29 — Flag" data-text="America, timing, markets, or celebration."></button>
-      <button class="emoji-hotspot" style="left:40.3%; top:65%;" data-emoji="👀" data-title="30 — Eyes Again" data-text="Look again. The pattern repeats."></button>
-      <button class="emoji-hotspot" style="left:46.4%; top:65%;" data-emoji="🔥" data-title="31 — Fire" data-text="Everything heats up."></button>
-      <button class="emoji-hotspot" style="left:52.4%; top:65%;" data-emoji="💥" data-title="32 — Explosion Again" data-text="Second boom. Bigger impact."></button>
-      <button class="emoji-hotspot" style="left:58.5%; top:65%;" data-emoji="🍻" data-title="33 — Beers" data-text="Beer = Friday. The celebration card."></button>
-
-      <button class="secret-note" data-emoji="🎟️" data-title="Golden Ticket?" data-text="This may not be the room. But it might point to one."></button>
-    </section>
-  </main>
-
-  <div id="modal" class="modal">
-    <div class="modal-box">
-      <button id="closeModal" class="close">×</button>
-      <div id="modalEmoji" class="modal-emoji"></div>
-      <h2 id="modalTitle"></h2>
-      <p id="modalText"></p>
-      <ul>
-        <li>Status: community investigation ongoing</li>
-        <li>Possible meaning: unresolved</li>
-        <li>Related clues: connected by red string</li>
-      </ul>
+      <button id="startGame" class="cabinet-button start-btn">START GAME</button>
+      <button id="enterSite" class="cabinet-button enter-btn">ENTER SITE</button>
     </div>
-  </div>
+  </section>
 
-  <script>
-    const modal = document.getElementById("modal");
-    const modalEmoji = document.getElementById("modalEmoji");
-    const modalTitle = document.getElementById("modalTitle");
-    const modalText = document.getElementById("modalText");
-    const closeModal = document.getElementById("closeModal");
+  <main id="siteContent" class="site-content hidden">
+    <section class="hero">
+      <div class="hero-frame">
+        <img src="arcade-home.png" alt="$TEDDY Arcade" class="hero-image" />
 
-    document.querySelectorAll("[data-emoji]").forEach((button) => {
-      button.addEventListener("click", () => {
-        modalEmoji.textContent = button.dataset.emoji;
-        modalTitle.textContent = button.dataset.title;
-        modalText.textContent = button.dataset.text;
-        modal.classList.add("active");
-      });
-    });
+        <a href="#caseFiles" class="hotspot investigation"></a>
+        <button class="hotspot teddy" data-title="📚 TEDDY" data-text="The books. The company. The mystery."></button>
+        <button class="hotspot gamestop" data-title="🎮 GameStop" data-text="Transformation theories, marketplace dreams, and community lore."></button>
+        <button class="hotspot gmebay" data-title="📦 GMEBAY" data-text="GameStop + eBay = GMEBAY. The catchphrase lives here."></button>
+        <a href="kitty.html" class="hotspot kitty" aria-label="Open Kitty Files"></a>
+        <a href="emoji.html" class="hotspot timeline-card" aria-label="Open Emoji Timeline"></a>
 
-    closeModal.addEventListener("click", () => {
-      modal.classList.remove("active");
-    });
+        <div class="sparkles"></div>
+      </div>
+    </section>
 
-    modal.addEventListener("click", (event) => {
-      if (event.target === modal) {
-        modal.classList.remove("active");
-      }
-    });
-  </script>
-</body>
-</html>
+    <section class="quick-actions">
+      <h2>PRESS START TO PLAY $TEDDY</h2>
+      <p>
