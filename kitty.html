@@ -53,7 +53,7 @@
       background:
         linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px),
         linear-gradient(180deg, rgba(255,255,255,.018) 1px, transparent 1px);
-      background-size: 72px 72px, 72px 72px;
+      background-size: 72px 72px;
       opacity: .3;
     }
 
@@ -208,6 +208,28 @@
       color: #eee;
     }
 
+    .related-links {
+      display: grid;
+      gap: 10px;
+      margin: 18px 0;
+    }
+
+    .related-links a {
+      display: block;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: rgba(0,245,255,.10);
+      border: 1px solid rgba(0,245,255,.55);
+      color: #dffcff;
+      text-decoration: none;
+      font-weight: 900;
+    }
+
+    .related-links a:hover {
+      background: rgba(255,42,163,.16);
+      border-color: #ff2aa3;
+    }
+
     textarea {
       width: 100%;
       min-height: 110px;
@@ -296,6 +318,7 @@
       <h2 id="modalTitle"></h2>
       <div id="modalDate" class="date"></div>
       <p id="modalText"></p>
+      <div id="relatedLinks" class="related-links"></div>
 
       <h3>Community Theory</h3>
       <textarea id="theoryInput" placeholder="Add your tinfoil theory here..."></textarea>
@@ -323,16 +346,34 @@
       { id:"whats-next", title:"What's Next", tag:"Transition", date:"May 17, 2024", text:"A bridge clue. What changes after this point?", xPost:"https://x.com/TheRoaringKitty", x:67.82, y:21.8, w:8.7, h:22.5 },
       { id:"time", title:"TIME", tag:"Magazine Clue", date:"May 29, 2024", text:"Why TIME? Timing, countdown, cover symbolism, or something hidden in the frame.", xPost:"https://x.com/TheRoaringKitty", x:77, y:17.03, w:10.5, h:25.5 },
       { id:"gift", title:"Gift Box", tag:"Teddy Clue", date:"May 29, 2024", text:"What is inside? Who is the gift for?", xPost:"https://x.com/TheRoaringKitty", x:88.2, y:24.93, w:10.6, h:22.5 },
+
       { id:"kitty-stare", title:"Kitty Stare", tag:"Game Signal", date:"May 21, 2024", text:"A stare, a pause, a prompt to look closer.", xPost:"https://x.com/TheRoaringKitty", x:20.8, y:48.56, w:9.4, h:22.8 },
       { id:"reverse", title:"Reverse", tag:"Game Signal", date:"UNO Reverse", text:"Direction changes. Roles flip.", xPost:"https://x.com/TheRoaringKitty", x:30.97, y:48.42, w:9.2, h:22.8 },
       { id:"good-boy", title:"Good Boy", tag:"Dog Signal", date:"May 26, 2024", text:"Dog clue. Could connect to loyalty, pets, Chewy, or a companion signal.", xPost:"https://x.com/TheRoaringKitty", x:40.69, y:48.57, w:9.2, h:22.8 },
       { id:"dog", title:"The Dog", tag:"Emoji / Pet Signal", date:"May 27, 2024", text:"A dog image deserves its own node because dog/pet symbolism keeps returning.", xPost:"https://x.com/TheRoaringKitty", x:50.46, y:48.21, w:9.2, h:22.8 },
       { id:"bruno", title:"Bruno / Green Face", tag:"Movie Clip", date:"May 28, 2024", text:"A mysterious emotional beat. Fear, realization, magic, or hidden pressure.", xPost:"https://x.com/TheRoaringKitty", x:60.91, y:47.97, w:9.2, h:22.8 },
       { id:"bandana-cat", title:"Bandana Cat", tag:"Cat Signal", date:"May 28, 2024", text:"The bandana cat is a strong RK identity node.", xPost:"https://x.com/TheRoaringKitty", x:71.91, y:44.2, w:8.5, h:22.8 },
-      { id:"handshake", title:"Handshake", tag:"Possible Deal", date:"June 21, 2024", text:"Handshake imagery invites deal, agreement, or partnership theories.", xPost:"https://x.com/TheRoaringKitty", x:81.77, y:49.94, w:9.5, h:22.8 },
+      {
+        id:"handshake",
+        title:"Handshake",
+        tag:"Possible Deal",
+        date:"June 21, 2024",
+        text:"Handshake imagery invites deal, agreement, partnership, merger, or negotiation theories.",
+        xPost:"https://x.com/TheRoaringKitty",
+        related:[
+          { label:"🎬 Watch The Office Handshake Clip", url:"https://youtu.be/ueVby9HffPE?si=mKHsioajJn5Z0eJh" },
+          { label:"🐦 Original Roaring Kitty X Post", url:"https://x.com/TheRoaringKitty" }
+        ],
+        x:81.77,
+        y:49.94,
+        w:9.5,
+        h:22.8
+      },
       { id:"billionaire", title:"You Were A Billionaire", tag:"Memory / Regret", date:"June 2, 2024", text:"A high-emotion clue. Reminder, warning, or mirror.", xPost:"https://x.com/TheRoaringKitty", x:92.56, y:51.73, w:9.5, h:25.5 },
+
       { id:"cookie", title:"Tin Foil... Num Num Num", tag:"Tinfoil Corner", date:"Community Joke", text:"The tinfoil monster eats the theories.", xPost:"https://x.com/TheRoaringKitty", x:7.43, y:58.6, w:13.5, h:25 },
       { id:"latest-gif", title:"Latest GIF / Clip", tag:"CRT Monitor", date:"Featured Clip", text:"This CRT can link to the highlighted RK clip or X video.", xPost:"https://x.com/i/status/1874621633777844714", x:8.91, y:82.36, w:13.8, h:22 },
+
       { id:"amc-gme", title:"AMC / GameStop Gift", tag:"Meme Signal", date:"January 1, 2021", text:"AMC, GameStop, gift box, celebration energy.", xPost:"https://x.com/TheRoaringKitty", x:21.19, y:72.08, w:9.2, h:22 },
       { id:"teddy", title:"Teddy?", tag:"Teddy Signal", date:"June 7, 2024", text:"Comfort? Waiting? Teddy?", xPost:"https://x.com/TheRoaringKitty", x:31.31, y:72.76, w:9.2, h:22 },
       { id:"pain", title:"Pain", tag:"Emotional Beat", date:"June 8, 2024", text:"Pain, pressure, endurance.", xPost:"https://x.com/TheRoaringKitty", x:41.24, y:72.42, w:9.2, h:22 },
@@ -341,6 +382,7 @@
       { id:"focus", title:"Focus / Discipline", tag:"Signal Node", date:"June 6, 2024", text:"Focus. Discipline. Lock in.", xPost:"https://x.com/TheRoaringKitty", x:72.13, y:66.52, w:8.6, h:21 },
       { id:"yellow-note", title:"No One Knows The Full Story", tag:"Sticky Note", date:"Board Note", text:"We are all just connecting the clues.", xPost:"https://x.com/TheRoaringKitty", x:81.17, y:74.36, w:9.5, h:18 },
       { id:"possible-signs", title:"Possible Signs", tag:"Checklist", date:"Open Questions", text:"Headband? Return? Next chapter? Teddy? Double meaning? Reverse everything?", xPost:"https://x.com/TheRoaringKitty", x:92.01, y:78.84, w:11, h:23 },
+
       { id:"all-clues", title:"All Clues", tag:"Archive Button", date:"Chronological Archive", text:"This will eventually open the full chronological archive of every RK post.", xPost:"https://x.com/TheRoaringKitty", x:43.6, y:94.27, w:14, h:7 },
       { id:"emoji", title:"Emoji Timeline", tag:"Navigation", date:"See Every Emoji", text:"Jump back to the interactive emoji corkboard.", xPost:"emoji.html", nav:"emoji.html", x:59.21, y:94.31, w:14, h:7 },
       { id:"notes", title:"Community Notes", tag:"Theory Hub", date:"Add Your Theories", text:"General board notes.", xPost:"https://x.com/TheRoaringKitty", x:76.5, y:94.13, w:15, h:7 },
@@ -353,6 +395,7 @@
     const modalTitle = document.getElementById("modalTitle");
     const modalDate = document.getElementById("modalDate");
     const modalText = document.getElementById("modalText");
+    const relatedLinks = document.getElementById("relatedLinks");
     const theoryInput = document.getElementById("theoryInput");
     const saveTheory = document.getElementById("saveTheory");
     const theoryList = document.getElementById("theoryList");
@@ -392,8 +435,21 @@
       modalText.textContent = activeClue.text;
       theoryInput.value = "";
 
+      relatedLinks.innerHTML = "";
+
+      if (activeClue.related && activeClue.related.length) {
+        activeClue.related.forEach(link => {
+          const a = document.createElement("a");
+          a.href = link.url;
+          a.target = "_blank";
+          a.rel = "noopener";
+          a.textContent = link.label;
+          relatedLinks.appendChild(a);
+        });
+      }
+
       xLink.href = activeClue.xPost;
-      xLink.textContent = activeClue.xPost.includes("x.com") ? "VIEW OG X POST" : "OPEN LINK";
+      xLink.textContent = activeClue.xPost.includes("x.com") ? "🐦 ORIGINAL X POST" : "OPEN LINK";
 
       renderTheories();
       modal.classList.add("active");
