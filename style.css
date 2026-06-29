@@ -556,3 +556,172 @@ code {
     font-size: 13px;
   }
 }
+/* ======================================================
+   RABBIT HOLE / HQ PAGE
+====================================================== */
+
+.rabbit-page {
+  margin: 0;
+  background: #030306;
+  overflow-x: auto;
+  padding-bottom: 0;
+}
+
+.rabbit-stage {
+  position: relative;
+  width: min(100vw, 1600px);
+  margin: 0 auto;
+  background: #050510;
+}
+
+.rabbit-bg {
+  width: 100%;
+  height: auto;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+#rabbitHotspots {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+}
+
+.rabbit-hotspot {
+  position: absolute;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 12px;
+  transform: translate(-50%, -50%);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.rabbit-hotspot:hover {
+  background: rgba(0, 245, 255, 0.08);
+  box-shadow:
+    0 0 22px rgba(0,245,255,.8),
+    inset 0 0 18px rgba(255,42,163,.25);
+}
+
+.rabbit-light {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 15;
+  background:
+    radial-gradient(circle at 50% 12%, rgba(255,210,120,.18), transparent 28%),
+    radial-gradient(circle at 78% 42%, rgba(0,245,255,.08), transparent 22%),
+    radial-gradient(circle at 18% 24%, rgba(255,42,163,.10), transparent 24%);
+  mix-blend-mode: screen;
+  animation: rabbitSurge 9s infinite;
+}
+
+.ambient-glow {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+@keyframes rabbitSurge {
+  0%, 92%, 100% { opacity: .65; }
+  93% { opacity: .95; }
+  94% { opacity: .45; }
+  95% { opacity: .85; }
+}
+
+.rabbit-modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,.82);
+  z-index: 2000;
+  padding: 20px;
+}
+
+.rabbit-modal.active {
+  display: flex;
+}
+
+.rabbit-modal-box {
+  position: relative;
+  width: min(620px, 94vw);
+  border: 3px solid #ff2aa3;
+  border-radius: 24px;
+  padding: 30px;
+  background: linear-gradient(180deg, #13001f, #050510);
+  box-shadow:
+    0 0 32px rgba(255,42,163,.9),
+    0 0 60px rgba(0,245,255,.6);
+}
+
+.rabbit-close {
+  position: absolute;
+  top: 10px;
+  right: 16px;
+  border: 0;
+  background: transparent;
+  color: white;
+  font-size: 34px;
+  cursor: pointer;
+}
+
+.rabbit-tag {
+  color: #ffea00;
+  font-weight: 900;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.rabbit-modal-box h2 {
+  color: #00f5ff;
+  margin: 0 0 12px;
+  font-size: clamp(26px, 4vw, 42px);
+}
+
+.rabbit-modal-box p {
+  color: #eee;
+  line-height: 1.6;
+  font-size: 18px;
+}
+
+.rabbit-link {
+  display: block;
+  margin-top: 18px;
+  padding: 14px 18px;
+  border-radius: 14px;
+  background: #ff2aa3;
+  color: white;
+  text-decoration: none;
+  text-align: center;
+  font-weight: 900;
+  box-shadow: 0 0 18px rgba(255,42,163,.85);
+}
+
+.rabbit-link:hover {
+  background: #00aaff;
+  box-shadow: 0 0 22px rgba(0,245,255,.9);
+}
+
+@media (max-width: 700px) {
+  .rabbit-stage {
+    width: 1200px;
+    max-width: none;
+  }
+
+  .rabbit-page {
+    overflow-x: auto;
+  }
+
+  .rabbit-modal-box {
+    padding: 24px;
+  }
+
+  .rabbit-modal-box p {
+    font-size: 16px;
+  }
+}
