@@ -4,35 +4,28 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>$TEDDY | The Rabbit Hole</title>
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 
 <body class="rabbit-page">
   <div class="scanlines"></div>
-  <div class="light-flicker"></div>
+  <div class="rabbit-light"></div>
 
-  <main class="rabbit-wrap">
-    <img
-      src="images/rabbit-hole-bg.png"
-      alt="$TEDDY The Rabbit Hole"
-      class="rabbit-bg"
-    />
-
+  <main class="rabbit-stage">
+    <img src="rabbit-hole-bg.png" alt="$TEDDY The Rabbit Hole" class="rabbit-bg" />
     <div id="rabbitHotspots"></div>
   </main>
 
   <div id="rabbitModal" class="rabbit-modal">
     <div class="rabbit-modal-box">
-      <button id="closeRabbitModal" class="rabbit-close">×</button>
-      <div id="rabbitModalTag" class="rabbit-tag"></div>
-      <h2 id="rabbitModalTitle"></h2>
-      <p id="rabbitModalText"></p>
-      <a id="rabbitModalLink" class="rabbit-link" href="#" target="_blank" rel="noopener">
-        OPEN
-      </a>
+      <button id="rabbitClose" class="rabbit-close">×</button>
+      <div id="rabbitTag" class="rabbit-tag"></div>
+      <h2 id="rabbitTitle"></h2>
+      <p id="rabbitText"></p>
+      <a id="rabbitLink" class="rabbit-link" href="#" target="_blank" rel="noopener">OPEN</a>
     </div>
   </div>
 
-  <script src="js/hq.js"></script>
+  <script src="rabbit-hole.js"></script>
 </body>
 </html>
