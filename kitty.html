@@ -53,18 +53,20 @@
     .hotspot {
       position: absolute;
       z-index: 50;
-      border: 0;
-      background: transparent;
+      border: 2px solid #ff2aa3;
+      background: rgba(0,245,255,.22);
+      box-shadow: 0 0 12px rgba(255,42,163,.8);
+      border-radius: 10px;
       padding: 0;
       cursor: pointer;
       transform: translate(-50%, -50%);
     }
 
     .hotspot:hover {
+      background: rgba(255,42,163,.28);
       box-shadow:
-        0 0 18px rgba(0,245,255,.9),
+        0 0 18px rgba(0,245,255,.95),
         inset 0 0 18px rgba(255,42,163,.35);
-      border-radius: 10px;
     }
 
     .modal {
@@ -160,13 +162,8 @@
       cursor: pointer;
     }
 
-    .save-btn {
-      background: #ff2aa3;
-    }
-
-    .x-btn {
-      background: #00aaff;
-    }
+    .save-btn { background: #ff2aa3; }
+    .x-btn { background: #00aaff; }
 
     .saved-theories {
       margin-top: 18px;
@@ -232,260 +229,67 @@
 
   <script>
     const clues = [
-      {
-        id: "hang",
-        title: "Hang In There",
-        tag: "Poster",
-        date: "Classic Cat Signal",
-        text: "The hanging kitten belongs on the wall as a reminder: hold on, follow the thread, and do not let go.",
-        xPost: "https://x.com/TheRoaringKitty",
-        x: 7.5, y: 17.5, w: 9, h: 24
-      },
-      {
-        id: "keith",
-        title: "Keith Gill",
-        tag: "About DFV",
-        date: "Roaring Kitty / DeepFuckingValue",
-        text: "The central figure of the board. This opens the context for who Roaring Kitty is and why the return mattered.",
-        xPost: "https://x.com/TheRoaringKitty",
-        x: 19.5, y: 22, w: 10, h: 27
-      },
-      {
-        id: "return",
-        title: "Lean Forward",
-        tag: "The Return",
-        date: "May 12, 2024",
-        text: "The comeback signal. The internet starts watching again. This should link to the original RK return post.",
-        xPost: "https://x.com/TheRoaringKitty/status/1789807772542067105",
-        x: 29.5, y: 22, w: 9, h: 20
-      },
-      {
-        id: "cheers",
-        title: "Cheers",
-        tag: "The Memes Begin",
-        date: "May 13, 2024",
-        text: "The next beat in the timeline. A different theme from the return: celebration, confidence, and the game being back on.",
-        xPost: "https://x.com/TheRoaringKitty",
-        x: 39.5, y: 22, w: 9, h: 20
-      },
-      {
-        id: "back",
-        title: "I'll Be Back",
-        tag: "Movie Signal",
-        date: "May 16, 2024",
-        text: "A return motif. The board treats this as part of the comeback arc.",
-        xPost: "https://x.com/TheRoaringKitty",
-        x: 49, y: 22, w: 9, h: 20
-      },
-      {
-        id: "next",
-        title: "What's Next",
-        tag: "Transition",
-        date: "May 17, 2024",
-        text: "A bridge clue. Something changes after this point in the sequence.",
-        xPost: "https://x.com/TheRoaringKitty",
-        x: 58.5, y: 22, w: 9, h: 20
-      },
-      {
-        id: "buckle",
-        title: "Buckle Up",
-        tag: "Cat Signal",
-        date: "May 20, 2024",
-        text: "The board reads this as a volatility / prepare-yourself clue.",
-        xPost: "https://x.com/TheRoaringKitty",
-        x: 68, y: 22, w: 9, h: 20
-      },
-      {
-        id: "time",
-        title: "TIME",
-        tag: "Magazine Clue",
-        date: "May 29, 2024",
-        text: "Why TIME? Timing, countdown, cover symbolism, or something hidden in the frame.",
-        xPost: "https://x.com/TheRoaringKitty",
-        x: 78.5, y: 19, w: 9, h: 23
-      },
-      {
-        id: "gift",
-        title: "Gift Box",
-        tag: "Teddy Clue",
-        date: "May 29, 2024",
-        text: "What is inside? Who is the gift for? This is one of the strongest Teddy-flavored visual clues.",
-        xPost: "https://x.com/TheRoaringKitty",
-        x: 90, y: 22, w: 10, h: 22
-      },
-      {
-        id: "kitty-stare",
-        title: "Kitty Stare",
-        tag: "Game Signal",
-        date: "May 21, 2024",
-        text: "A stare, a pause, a prompt to look closer.",
-        xPost: "https://x.com/TheRoaringKitty",
-        x: 24, y: 47, w: 9, h: 20
-      },
-      {
-        id: "reverse",
-        title: "Reverse",
-        tag: "Game Signal",
-        date: "UNO Reverse",
-        text: "The reversal card. Direction changes. Roles flip. The board treats this as a major connection point.",
-        xPost: "https://x.com/TheRoaringKitty",
-        x: 34, y: 47, w: 9, h: 20
-      },
-      {
-        id: "goodboy",
-        title: "Good Boy",
-        tag: "Dog Signal",
-        date: "May 26, 2024",
-        text: "Dog clue. Could connect to loyalty, pets, Chewy, or a companion signal.",
-        xPost: "https://x.com/TheRoaringKitty",
-        x: 43.5, y: 47, w: 9, h: 20
-      },
-      {
-        id: "dog",
-        title: "The Dog",
-        tag: "Emoji / Pet Signal",
-        date: "May 27, 2024",
-        text: "A dog image deserves its own node because dog/pet symbolism keeps returning.",
-        xPost: "https://x.com/TheRoaringKitty",
-        x: 53, y: 47, w: 9, h: 20
-      },
-      {
-        id: "bruno",
-        title: "Green Face",
-        tag: "Movie Clip",
-        date: "May 28, 2024",
-        text: "A mysterious emotional beat. Fear, realization, magic, or hidden pressure.",
-        xPost: "https://x.com/TheRoaringKitty",
-        x: 62.5, y: 47, w: 9, h: 20
-      },
-      {
-        id: "cat-bandana",
-        title: "Bandana Cat",
-        tag: "Roaring Kitty Symbol",
-        date: "Signal Node",
-        text: "A cat with the headband. This acts as a visual bridge between RK identity and the meme sequence.",
-        xPost: "https://x.com/TheRoaringKitty",
-        x: 73, y: 50, w: 8.5, h: 20
-      },
-      {
-        id: "handshake",
-        title: "Handshake",
-        tag: "Possible Deal",
-        date: "June 21, 2024",
-        text: "Handshake imagery naturally invites deal, merger, agreement, or partnership theories.",
-        xPost: "https://x.com/TheRoaringKitty",
-        x: 84, y: 52, w: 10, h: 23
-      },
-      {
-        id: "billionaire",
-        title: "You Were A Billionaire",
-        tag: "Memory / Regret",
-        date: "June 2, 2024",
-        text: "A high-emotion clue. The board treats this as a reminder, warning, or mirror.",
-        xPost: "https://x.com/TheRoaringKitty",
-        x: 94, y: 51, w: 9, h: 26
-      },
-      {
-        id: "cookie",
-        title: "Tin Foil... Num Num Num",
-        tag: "Tinfoil Corner",
-        date: "Community Joke",
-        text: "The tinfoil monster eats the theories. This is comic relief and a perfect hidden-corner clue.",
-        xPost: "https://x.com/TheRoaringKitty",
-        x: 9.5, y: 59.5, w: 13, h: 21
-      },
-      {
-        id: "latest-gif",
-        title: "Latest GIF / Clip",
-        tag: "CRT Monitor",
-        date: "Featured Clip",
-        text: "This CRT can link to the latest highlighted RK clip or X video.",
-        xPost: "https://x.com/i/status/1874621633777844714",
-        x: 8, y: 78, w: 14, h: 20
-      },
-      {
-        id: "perspective",
-        title: "Perspective",
-        tag: "Movie Clip",
-        date: "May 23, 2024",
-        text: "A visual clue about viewpoint, angle, or seeing the same event differently.",
-        xPost: "https://x.com/TheRoaringKitty",
-        x: 25, y: 72, w: 9, h: 20
-      },
-      {
-        id: "teddy",
-        title: "Teddy?",
-        tag: "Teddy Signal",
-        date: "June 7, 2024",
-        text: "Comfort? Waiting? Teddy? This clue belongs close to the Teddy narrative.",
-        xPost: "https://x.com/TheRoaringKitty",
-        x: 34.5, y: 72, w: 9, h: 20
-      },
-      {
-        id: "pain",
-        title: "Pain",
-        tag: "Emotional Beat",
-        date: "June 8, 2024",
-        text: "Pain, pressure, endurance. Another clue in the saga-deepens section.",
-        xPost: "https://x.com/TheRoaringKitty",
-        x: 44, y: 72, w: 9, h: 20
-      },
-      {
-        id: "lean-in",
-        title: "Lean In",
-        tag: "Instruction",
-        date: "June 10, 2024",
-        text: "The lean-in clue echoes the original return posture and may imply attention/focus.",
-        xPost: "https://x.com/TheRoaringKitty",
-        x: 54, y: 72, w: 9, h: 20
-      },
-      {
-        id: "last-post",
-        title: "Last Post",
-        tag: "Final Signal",
-        date: "The journey continues",
-        text: "The final-post card should link to the most recent RK post you want featured.",
-        xPost: "https://x.com/TheRoaringKitty",
-        x: 63.5, y: 72, w: 9, h: 20
-      },
-      {
-        id: "all-clues",
-        title: "All Clues",
-        tag: "Archive Button",
-        date: "Chronological Archive",
-        text: "This will eventually open the full chronological archive of every RK post.",
-        xPost: "https://x.com/TheRoaringKitty",
-        x: 47, y: 94, w: 13, h: 7
-      },
-      {
-        id: "emoji",
-        title: "Emoji Timeline",
-        tag: "Navigation",
-        date: "See Every Emoji",
-        text: "Jump back to the interactive emoji corkboard.",
-        xPost: "emoji.html",
-        nav: "emoji.html",
-        x: 61, y: 94, w: 13, h: 7
-      },
-      {
-        id: "notes",
-        title: "Community Notes",
-        tag: "Theory Hub",
-        date: "Add Your Theories",
-        text: "This opens the community theory modal for general board notes.",
-        xPost: "https://x.com/TheRoaringKitty",
-        x: 76, y: 94, w: 13, h: 7
-      },
-      {
-        id: "hub",
-        title: "Hub",
-        tag: "Navigation",
-        date: "Return Home",
-        text: "Return to the main investigation hub.",
-        xPost: "hub.html",
-        nav: "hub.html",
-        x: 90, y: 94, w: 10, h: 7
-      }
+      { id:"hang", title:"Hang In There", tag:"Poster", date:"Classic Cat Signal", text:"Hold on. Follow the thread.", xPost:"https://x.com/TheRoaringKitty", x:7.9, y:18.7, w:10.5, h:27.5 },
+
+      { id:"top-dog", title:"The Comeback", tag:"The Return", date:"May 12, 2024", text:"The comeback signal. This card starts the board timeline.", xPost:"https://x.com/TheRoaringKitty", x:20.7, y:21.5, w:10.2, h:22.5 },
+
+      { id:"cheers", title:"Cheers", tag:"The Memes Begin", date:"May 13, 2024", text:"The next beat in the timeline. Celebration, confidence, or invitation?", xPost:"https://x.com/TheRoaringKitty", x:31.1, y:21.5, w:8.4, h:22.5 },
+
+      { id:"game-over", title:"Game Over", tag:"Meme Signal", date:"May 14, 2024", text:"A major game/meme signal.", xPost:"https://x.com/TheRoaringKitty", x:40.0, y:21.5, w:8.7, h:22.5 },
+
+      { id:"ill-be-back-1", title:"I'll Be Back", tag:"Movie Signal", date:"May 16, 2024", text:"A return motif. Something is not finished.", xPost:"https://x.com/TheRoaringKitty", x:49.3, y:21.5, w:8.7, h:22.5 },
+
+      { id:"ill-be-back-2", title:"I'll Be Back Again", tag:"Movie Signal", date:"May 16, 2024", text:"Second return signal. We can rename or swap this later if needed.", xPost:"https://x.com/TheRoaringKitty", x:58.3, y:21.5, w:8.7, h:22.5 },
+
+      { id:"whats-next", title:"What's Next", tag:"Transition", date:"May 17, 2024", text:"A bridge clue. What changes after this point?", xPost:"https://x.com/TheRoaringKitty", x:67.3, y:21.5, w:8.7, h:22.5 },
+
+      { id:"time", title:"TIME", tag:"Magazine Clue", date:"May 29, 2024", text:"Why TIME? Timing, countdown, cover symbolism, or something hidden in the frame.", xPost:"https://x.com/TheRoaringKitty", x:79.3, y:19.7, w:10.5, h:25.5 },
+
+      { id:"gift", title:"Gift Box", tag:"Teddy Clue", date:"May 29, 2024", text:"What is inside? Who is the gift for?", xPost:"https://x.com/TheRoaringKitty", x:90.2, y:23.5, w:10.6, h:22.5 },
+
+      { id:"kitty-stare", title:"Kitty Stare", tag:"Game Signal", date:"May 21, 2024", text:"A stare, a pause, a prompt to look closer.", xPost:"https://x.com/TheRoaringKitty", x:21.2, y:50.0, w:9.4, h:22.8 },
+
+      { id:"reverse", title:"Reverse", tag:"Game Signal", date:"UNO Reverse", text:"Direction changes. Roles flip.", xPost:"https://x.com/TheRoaringKitty", x:31.4, y:50.0, w:9.2, h:22.8 },
+
+      { id:"good-boy", title:"Good Boy", tag:"Dog Signal", date:"May 26, 2024", text:"Dog clue. Could connect to loyalty, pets, Chewy, or a companion signal.", xPost:"https://x.com/TheRoaringKitty", x:41.5, y:50.0, w:9.2, h:22.8 },
+
+      { id:"dog", title:"The Dog", tag:"Emoji / Pet Signal", date:"May 27, 2024", text:"A dog image deserves its own node because dog/pet symbolism keeps returning.", xPost:"https://x.com/TheRoaringKitty", x:51.5, y:50.0, w:9.2, h:22.8 },
+
+      { id:"bruno", title:"Bruno / Green Face", tag:"Movie Clip", date:"May 28, 2024", text:"A mysterious emotional beat. Fear, realization, magic, or hidden pressure.", xPost:"https://x.com/TheRoaringKitty", x:61.5, y:50.0, w:9.2, h:22.8 },
+
+      { id:"bandana-cat", title:"Bandana Cat", tag:"Cat Signal", date:"May 28, 2024", text:"The bandana cat is a strong RK identity node.", xPost:"https://x.com/TheRoaringKitty", x:72.0, y:50.0, w:8.5, h:22.8 },
+
+      { id:"handshake", title:"Handshake", tag:"Possible Deal", date:"June 21, 2024", text:"Handshake imagery invites deal, agreement, or partnership theories.", xPost:"https://x.com/TheRoaringKitty", x:82.5, y:50.0, w:9.5, h:22.8 },
+
+      { id:"billionaire", title:"You Were A Billionaire", tag:"Memory / Regret", date:"June 2, 2024", text:"A high-emotion clue. Reminder, warning, or mirror.", xPost:"https://x.com/TheRoaringKitty", x:93.0, y:51.0, w:9.5, h:25.5 },
+
+      { id:"cookie", title:"Tin Foil... Num Num Num", tag:"Tinfoil Corner", date:"Community Joke", text:"The tinfoil monster eats the theories.", xPost:"https://x.com/TheRoaringKitty", x:7.3, y:59.5, w:13.5, h:25 },
+
+      { id:"latest-gif", title:"Latest GIF / Clip", tag:"CRT Monitor", date:"Featured Clip", text:"This CRT can link to the highlighted RK clip or X video.", xPost:"https://x.com/i/status/1874621633777844714", x:7.5, y:80.5, w:13.8, h:22 },
+
+      { id:"amc-gme", title:"AMC / GameStop Gift", tag:"Meme Signal", date:"January 1, 2021", text:"AMC, GameStop, gift box, celebration energy.", xPost:"https://x.com/TheRoaringKitty", x:21.2, y:75.5, w:9.2, h:22 },
+
+      { id:"teddy", title:"Teddy?", tag:"Teddy Signal", date:"June 7, 2024", text:"Comfort? Waiting? Teddy?", xPost:"https://x.com/TheRoaringKitty", x:31.6, y:75.5, w:9.2, h:22 },
+
+      { id:"pain", title:"Pain", tag:"Emotional Beat", date:"June 8, 2024", text:"Pain, pressure, endurance.", xPost:"https://x.com/TheRoaringKitty", x:42.0, y:75.5, w:9.2, h:22 },
+
+      { id:"lean-in", title:"Lean In", tag:"Instruction", date:"June 10, 2024", text:"Lean in. Pay attention. Get closer.", xPost:"https://x.com/TheRoaringKitty", x:52.5, y:75.5, w:9.2, h:22 },
+
+      { id:"journey", title:"The Journey Continues", tag:"Final Signal", date:"June 3, 2024", text:"The journey continues.", xPost:"https://x.com/TheRoaringKitty", x:63.0, y:75.5, w:9.2, h:22 },
+
+      { id:"focus", title:"Focus / Discipline", tag:"Signal Node", date:"June 6, 2024", text:"Focus. Discipline. Lock in.", xPost:"https://x.com/TheRoaringKitty", x:72.2, y:70.0, w:8.6, h:21 },
+
+      { id:"yellow-note", title:"No One Knows The Full Story", tag:"Sticky Note", date:"Board Note", text:"We are all just connecting the clues.", xPost:"https://x.com/TheRoaringKitty", x:81.3, y:74.5, w:9.5, h:18 },
+
+      { id:"possible-signs", title:"Possible Signs", tag:"Checklist", date:"Open Questions", text:"Headband? Return? Next chapter? Teddy? Double meaning? Reverse everything?", xPost:"https://x.com/TheRoaringKitty", x:91.2, y:78.5, w:11, h:23 },
+
+      { id:"all-clues", title:"All Clues", tag:"Archive Button", date:"Chronological Archive", text:"This will eventually open the full chronological archive of every RK post.", xPost:"https://x.com/TheRoaringKitty", x:44.5, y:93.5, w:14, h:7 },
+
+      { id:"emoji", title:"Emoji Timeline", tag:"Navigation", date:"See Every Emoji", text:"Jump back to the interactive emoji corkboard.", xPost:"emoji.html", nav:"emoji.html", x:60.5, y:93.5, w:14, h:7 },
+
+      { id:"notes", title:"Community Notes", tag:"Theory Hub", date:"Add Your Theories", text:"General board notes.", xPost:"https://x.com/TheRoaringKitty", x:77.0, y:93.5, w:15, h:7 },
+
+      { id:"hub", title:"Hub", tag:"Navigation", date:"Return Home", text:"Return to the main investigation hub.", xPost:"hub.html", nav:"hub.html", x:92.0, y:93.5, w:10, h:7 }
     ];
 
     const hotspots = document.getElementById("hotspots");
@@ -533,9 +337,7 @@
       theoryInput.value = "";
 
       xLink.href = activeClue.xPost;
-      xLink.textContent = activeClue.xPost.includes("x.com")
-        ? "VIEW OG X POST"
-        : "OPEN LINK";
+      xLink.textContent = activeClue.xPost.includes("x.com") ? "VIEW OG X POST" : "OPEN LINK";
 
       renderTheories();
       modal.classList.add("active");
@@ -547,7 +349,6 @@
 
     function renderTheories() {
       theoryList.innerHTML = "";
-
       const saved = JSON.parse(localStorage.getItem(getTheoryKey()) || "[]");
 
       if (saved.length === 0) {
