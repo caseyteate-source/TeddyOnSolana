@@ -10,7 +10,7 @@
 
     body {
       margin: 0;
-      background: #050510;
+      background: #050306;
       color: white;
       font-family: Arial, Helvetica, sans-serif;
       overflow-x: hidden;
@@ -23,31 +23,110 @@
       z-index: 999;
       background: repeating-linear-gradient(
         to bottom,
-        rgba(255,255,255,.045) 0,
-        rgba(255,255,255,.045) 1px,
+        rgba(255,255,255,.035) 0,
+        rgba(255,255,255,.035) 1px,
         transparent 2px,
         transparent 5px
       );
       mix-blend-mode: overlay;
     }
 
-    .page {
+    .room {
       min-height: 100vh;
-      background: #050510;
+      position: relative;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 50% 8%, rgba(255,210,125,.30), transparent 27%),
+        radial-gradient(circle at 50% 38%, rgba(255,175,70,.16), transparent 42%),
+        linear-gradient(180deg, #1a1010 0%, #0b0708 55%, #030203 100%);
       display: flex;
+      align-items: center;
       justify-content: center;
+      padding: 34px 18px 46px;
+    }
+
+    .room::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(255,255,255,.018) 1px, transparent 1px);
+      background-size: 72px 72px, 72px 72px;
+      opacity: .3;
+    }
+
+    .room::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 100;
+      background:
+        radial-gradient(ellipse at center, transparent 33%, rgba(0,0,0,.48) 75%, rgba(0,0,0,.82) 100%);
+    }
+
+    .lamp {
+      position: fixed;
+      top: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      width: 130px;
+      height: 80px;
+      pointer-events: none;
+    }
+
+    .lamp::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 0;
+      width: 3px;
+      height: 34px;
+      transform: translateX(-50%);
+      background: rgba(255,235,180,.65);
+    }
+
+    .lamp::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 30px;
+      width: 92px;
+      height: 42px;
+      transform: translateX(-50%);
+      border-radius: 50% 50% 12px 12px;
+      background: linear-gradient(180deg, #2d2520, #0d0909);
+      box-shadow: 0 10px 55px rgba(255,205,105,.55);
     }
 
     .board-frame {
       position: relative;
-      width: min(100%, 1600px);
+      z-index: 5;
+      width: min(100%, 1500px);
       margin: 0 auto;
+      filter: drop-shadow(0 24px 42px rgba(0,0,0,.75));
+    }
+
+    .board-frame::before {
+      content: "";
+      position: absolute;
+      inset: -18px;
+      z-index: -1;
+      border-radius: 18px;
+      background: rgba(0,0,0,.28);
+      box-shadow:
+        0 0 80px rgba(255,180,70,.18),
+        inset 0 0 40px rgba(255,255,255,.035);
     }
 
     .board-bg {
       width: 100%;
       display: block;
       user-select: none;
+      -webkit-user-drag: none;
     }
 
     .hotspot {
@@ -64,67 +143,8 @@
     .hotspot:hover {
       box-shadow:
         0 0 18px rgba(0,245,255,.9),
-        inset 0 0 18px rgba(255,42,163,.35);
-    }
-
-    body.drag-mode .hotspot {
-      border: 2px solid #ff2aa3;
-      background: rgba(0,245,255,.24);
-      box-shadow: 0 0 12px rgba(255,42,163,.8);
-      color: white;
-      font-weight: 900;
-      font-size: 11px;
-      text-shadow: 0 2px 4px black;
-      display: grid;
-      place-items: center;
-      text-align: center;
-      padding: 4px;
-      touch-action: none;
-    }
-
-    body.drag-mode .hotspot::after {
-      content: attr(data-label);
-      pointer-events: none;
-    }
-
-    .dev-panel {
-      position: fixed;
-      left: 12px;
-      bottom: 12px;
-      z-index: 3000;
-      width: min(520px, calc(100vw - 24px));
-      background: rgba(0,0,0,.88);
-      border: 2px solid #00f5ff;
-      border-radius: 14px;
-      padding: 12px;
-      box-shadow: 0 0 24px rgba(0,245,255,.65);
-    }
-
-    .dev-panel button {
-      width: 100%;
-      border: 0;
-      border-radius: 10px;
-      padding: 11px;
-      margin-top: 8px;
-      color: white;
-      font-weight: 900;
-      cursor: pointer;
-      background: #ff2aa3;
-    }
-
-    .dev-panel .secondary {
-      background: #00aaff;
-    }
-
-    .dev-panel p {
-      margin: 8px 0 0;
-      color: #dffcff;
-      font-size: 13px;
-      line-height: 1.4;
-    }
-
-    body:not(.drag-mode) #copyClues {
-      display: none;
+        inset 0 0 18px rgba(255,42,163,.28);
+      background: rgba(255,255,255,.025);
     }
 
     .modal {
@@ -238,22 +258,20 @@
     }
 
     @media (max-width: 800px) {
+      .room {
+        overflow-x: auto;
+        justify-content: flex-start;
+        padding: 24px 0 34px;
+      }
+
       .board-frame {
         width: 1500px;
         max-width: none;
+        margin-left: 0;
       }
 
-      .page {
-        overflow-x: auto;
-        justify-content: flex-start;
-      }
-
-      .dev-panel {
-        position: fixed;
-        left: 8px;
-        right: 8px;
-        bottom: 8px;
-        width: auto;
+      .modal-box {
+        padding: 22px;
       }
     }
   </style>
@@ -261,14 +279,9 @@
 
 <body>
   <div class="scanlines"></div>
+  <div class="lamp"></div>
 
-  <div class="dev-panel">
-    <button id="toggleDrag">ENTER DRAG MODE</button>
-    <button id="copyClues" class="secondary">COPY UPDATED CLUES</button>
-    <p>Drag mode lets you move boxes directly on the board. Copy updated clues after lining everything up.</p>
-  </div>
-
-  <main class="page">
+  <main class="room">
     <section class="board-frame">
       <img src="kitty-board-bg.png" class="board-bg" alt="$TEDDY Roaring Kitty Investigation Board" />
       <div id="hotspots"></div>
@@ -300,8 +313,6 @@
   </div>
 
   <script>
-    let dragMode = false;
-
     const clues = [
       { id:"hang", title:"Hang In There", tag:"Poster", date:"Classic Cat Signal", text:"Hold on. Follow the thread.", xPost:"https://x.com/TheRoaringKitty", x:7.96, y:18.9, w:10.5, h:27.5 },
       { id:"top-dog", title:"The Comeback", tag:"The Return", date:"May 12, 2024", text:"The comeback signal. This card starts the board timeline.", xPost:"https://x.com/TheRoaringKitty", x:20.34, y:22.77, w:10.2, h:22.5 },
@@ -347,38 +358,12 @@
     const theoryList = document.getElementById("theoryList");
     const closeModal = document.getElementById("closeModal");
     const xLink = document.getElementById("xLink");
-    const toggleDrag = document.getElementById("toggleDrag");
-    const copyClues = document.getElementById("copyClues");
 
     let activeClue = null;
-
-    function updateDragModeUI() {
-      document.body.classList.toggle("drag-mode", dragMode);
-      toggleDrag.textContent = dragMode ? "EXIT DRAG MODE" : "ENTER DRAG MODE";
-    }
-
-    function printClues() {
-      return `const clues = [\n${clues.map(c => {
-        const navPart = c.nav ? `, nav:${JSON.stringify(c.nav)}` : "";
-        return `  { id:${JSON.stringify(c.id)}, title:${JSON.stringify(c.title)}, tag:${JSON.stringify(c.tag)}, date:${JSON.stringify(c.date)}, text:${JSON.stringify(c.text)}, xPost:${JSON.stringify(c.xPost)}${navPart}, x:${c.x}, y:${c.y}, w:${c.w}, h:${c.h} }`;
-      }).join(",\n")}\n];`;
-    }
-
-    function copyUpdatedClues() {
-      const text = printClues();
-      navigator.clipboard.writeText(text).then(() => {
-        copyClues.textContent = "COPIED!";
-        setTimeout(() => copyClues.textContent = "COPY UPDATED CLUES", 1200);
-      }).catch(() => {
-        console.log(text);
-        alert("Could not copy automatically. Open console and copy clues there.");
-      });
-    }
 
     clues.forEach((clue, index) => {
       const button = document.createElement("button");
       button.className = "hotspot";
-      button.dataset.label = clue.title;
       button.style.left = clue.x + "%";
       button.style.top = clue.y + "%";
       button.style.width = clue.w + "%";
@@ -386,56 +371,7 @@
       button.title = clue.title;
       button.setAttribute("aria-label", clue.title);
 
-      let startX = 0;
-      let startY = 0;
-      let startLeft = 0;
-      let startTop = 0;
-
-      button.addEventListener("pointerdown", (event) => {
-        if (!dragMode) return;
-
-        event.preventDefault();
-        button.setPointerCapture(event.pointerId);
-
-        const frame = document.querySelector(".board-frame");
-        const rect = frame.getBoundingClientRect();
-
-        startX = event.clientX;
-        startY = event.clientY;
-        startLeft = clue.x;
-        startTop = clue.y;
-
-        function moveBox(e) {
-          const dx = ((e.clientX - startX) / rect.width) * 100;
-          const dy = ((e.clientY - startY) / rect.height) * 100;
-
-          clue.x = Number((startLeft + dx).toFixed(2));
-          clue.y = Number((startTop + dy).toFixed(2));
-
-          button.style.left = clue.x + "%";
-          button.style.top = clue.y + "%";
-        }
-
-        function stopMove() {
-          button.releasePointerCapture(event.pointerId);
-          button.removeEventListener("pointermove", moveBox);
-          button.removeEventListener("pointerup", stopMove);
-          button.removeEventListener("pointercancel", stopMove);
-          console.clear();
-          console.log(printClues());
-        }
-
-        button.addEventListener("pointermove", moveBox);
-        button.addEventListener("pointerup", stopMove);
-        button.addEventListener("pointercancel", stopMove);
-      });
-
-      button.addEventListener("click", (event) => {
-        if (dragMode) {
-          event.preventDefault();
-          return;
-        }
-
+      button.addEventListener("click", () => {
         if (clue.nav) {
           window.location.href = clue.nav;
           return;
@@ -446,15 +382,6 @@
 
       hotspots.appendChild(button);
     });
-
-    toggleDrag.addEventListener("click", () => {
-      dragMode = !dragMode;
-      updateDragModeUI();
-    });
-
-    copyClues.addEventListener("click", copyUpdatedClues);
-
-    updateDragModeUI();
 
     function openClue(index) {
       activeClue = clues[index];
@@ -495,6 +422,7 @@
 
     saveTheory.addEventListener("click", () => {
       if (!activeClue) return;
+
       const text = theoryInput.value.trim();
       if (!text) return;
 
