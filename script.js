@@ -33,7 +33,10 @@ setInterval(() => {
 
 function enterSite() {
   gameRunning = false;
-  window.location.href = "hq.html";
+  startScreen.classList.add("hidden");
+  siteContent.classList.remove("hidden");
+  window.scrollTo(0, 0);
+}
 }
 }
 
