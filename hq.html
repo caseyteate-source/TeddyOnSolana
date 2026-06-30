@@ -2,59 +2,649 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>$TEDDY | The Rabbit Hole</title>
   <link rel="stylesheet" href="style.css" />
+
+  <style>
+    /* ======================================================
+       RABBIT HOLE PAGE — LOCKED OVERLAY VERSION
+       This keeps TV static, clock, hotspots, and effects
+       attached to the image on desktop and iPhone.
+    ====================================================== */
+
+    body.rabbit-page {
+      margin: 0 !important;
+      background: #020207 !important;
+      color: white;
+      overflow-x: hidden !important;
+      min-height: 100vh;
+    }
+
+    .scanlines {
+      pointer-events: none;
+    }
+
+    .rabbit-page-shell {
+      width: 100%;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 50% 8%, rgba(255, 42, 163, 0.14), transparent 28%),
+        radial-gradient(circle at 80% 42%, rgba(0, 245, 255, 0.09), transparent 30%),
+        #020207;
+    }
+
+    .rabbit-scroll-wrap {
+      width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-x: contain;
+      position: relative;
+      z-index: 1;
+    }
+
+    .rabbit-scroll-wrap::-webkit-scrollbar {
+      height: 10px;
+    }
+
+    .rabbit-scroll-wrap::-webkit-scrollbar-track {
+      background: #050510;
+    }
+
+    .rabbit-scroll-wrap::-webkit-scrollbar-thumb {
+      background: linear-gradient(90deg, #ff2aa3, #00f5ff);
+      border-radius: 999px;
+    }
+
+    .rabbit-stage {
+      position: relative !important;
+      width: min(100vw, 1600px) !important;
+      margin: 0 auto !important;
+      background: #050510 !important;
+      overflow: hidden !important;
+      isolation: isolate;
+      touch-action: pan-x pan-y;
+      transform: translateZ(0);
+    }
+
+    .rabbit-stage::after {
+      content: none !important;
+      display: none !important;
+    }
+
+    .rabbit-bg {
+      display: block !important;
+      width: 100% !important;
+      height: auto !important;
+      user-select: none !important;
+      -webkit-user-drag: none !important;
+      pointer-events: none !important;
+    }
+
+    .mobile-rabbit-hint {
+      display: none;
+      position: sticky;
+      top: 0;
+      left: 0;
+      z-index: 5000;
+      padding: 10px 12px;
+      text-align: center;
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      color: #fff;
+      background: linear-gradient(90deg, rgba(255,42,163,.94), rgba(0,245,255,.88));
+      text-shadow: 0 1px 2px rgba(0,0,0,.6);
+    }
+
+    /* ======================================================
+       TV STATIC — locked inside .rabbit-stage
+    ====================================================== */
+
+    .tv-static-wrap {
+      position: absolute !important;
+      left: 81.92% !important;
+      top: 36.55% !important;
+      width: 13.7% !important;
+      height: 15.7% !important;
+      transform: rotate(-1.1deg) skewX(-1.5deg) skewY(.3deg) !important;
+      clip-path: polygon(4% 5%, 96% 2%, 98% 94%, 5% 98%) !important;
+      z-index: 70 !important;
+      pointer-events: none !important;
+      overflow: hidden !important;
+      opacity: .72 !important;
+      mix-blend-mode: screen;
+      border-radius: 5px;
+      filter: contrast(1.2) brightness(1.05);
+    }
+
+    .tv-static-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      opacity: .72;
+    }
+
+    .tv-static-lines {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,.12) 0,
+        rgba(255,255,255,.12) 1px,
+        transparent 1px,
+        transparent 4px
+      );
+      opacity: .32;
+      animation: tvLines 1.8s linear infinite;
+    }
+
+    .tv-static-roll {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: -35%;
+      height: 24%;
+      background: rgba(255,255,255,.16);
+      filter: blur(4px);
+      animation: tvRoll 3.1s linear infinite;
+    }
+
+    @keyframes tvLines {
+      from { transform: translateY(0); }
+      to { transform: translateY(8px); }
+    }
+
+    @keyframes tvRoll {
+      from { transform: translateY(-60%); }
+      to { transform: translateY(620%); }
+    }
+
+    /* ======================================================
+       REAL 12:00 DIGITS — not a floating page overlay
+    ====================================================== */
+
+    .alarm-blink-box,
+    #alarmBlinkBox,
+    #forcedClockBlinkBox,
+    #forcedBlinkingClock1200,
+    #finalBlinkingClock1200,
+    #cleanBlinkingClock1200 {
+      display: none !important;
+      content: none !important;
+    }
+
+    .alarm-digits {
+      position: absolute !important;
+      left: 76.88% !important;
+      top: 56.88% !important;
+      transform: translate(-50%, -50%) rotate(8.85deg) !important;
+      z-index: 90 !important;
+      pointer-events: none !important;
+
+      font-family: "Courier New", monospace;
+      font-size: clamp(9px, 1.05vw, 18px);
+      font-weight: 900;
+      letter-spacing: .05em;
+      color: #ff1515;
+
+      text-shadow:
+        0 0 3px rgba(255,0,0,1),
+        0 0 7px rgba(255,0,0,.95),
+        0 0 13px rgba(255,0,0,.75);
+
+      animation: alarmDigitBlink 1.05s steps(1, end) infinite;
+      opacity: .96;
+    }
+
+    @keyframes alarmDigitBlink {
+      0%, 49% {
+        opacity: .98;
+        filter: brightness(1.45);
+      }
+
+      50%, 100% {
+        opacity: .16;
+        filter: brightness(.55);
+      }
+    }
+
+    /* ======================================================
+       EXTRA ROOM GLOWS — also locked to the image
+    ====================================================== */
+
+    .rabbit-glow {
+      position: absolute;
+      z-index: 35;
+      pointer-events: none;
+      border-radius: 999px;
+      mix-blend-mode: screen;
+      filter: blur(9px);
+      opacity: .55;
+      animation: rabbitPulse 3.8s ease-in-out infinite;
+    }
+
+    .glow-moass {
+      left: 4%;
+      top: 7%;
+      width: 21%;
+      height: 12%;
+      background: rgba(255, 42, 163, .42);
+    }
+
+    .glow-bunny {
+      right: 4%;
+      top: 6%;
+      width: 15%;
+      height: 17%;
+      background: rgba(0, 245, 255, .36);
+      animation-delay: .6s;
+    }
+
+    .glow-arcade {
+      left: 2%;
+      top: 35%;
+      width: 20%;
+      height: 34%;
+      background: rgba(255, 42, 163, .14);
+      animation-delay: 1.2s;
+    }
+
+    .glow-lava {
+      left: 28%;
+      top: 14%;
+      width: 5%;
+      height: 14%;
+      background: rgba(255, 42, 163, .25);
+      animation-delay: .2s;
+    }
+
+    .glow-lamp {
+      right: 0;
+      bottom: 8%;
+      width: 20%;
+      height: 18%;
+      background: rgba(0, 255, 180, .18);
+      animation-delay: 1.7s;
+    }
+
+    .glow-phone {
+      left: 3%;
+      bottom: 11%;
+      width: 20%;
+      height: 15%;
+      background: rgba(0, 245, 255, .08);
+      animation-delay: 2.1s;
+    }
+
+    @keyframes rabbitPulse {
+      0%, 100% { opacity: .32; transform: scale(1); }
+      50% { opacity: .7; transform: scale(1.04); }
+    }
+
+    .rabbit-dust {
+      position: absolute;
+      z-index: 95;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.55);
+      box-shadow:
+        70px 80px rgba(255,255,255,.22),
+        180px 35px rgba(0,245,255,.23),
+        260px 130px rgba(255,42,163,.22),
+        420px 60px rgba(255,255,255,.18),
+        640px 170px rgba(255,255,255,.16);
+      animation: dustFloat 12s linear infinite;
+      pointer-events: none;
+    }
+
+    .dust-one {
+      left: 12%;
+      top: 18%;
+    }
+
+    .dust-two {
+      left: 48%;
+      top: 30%;
+      animation-delay: -5s;
+      opacity: .6;
+    }
+
+    @keyframes dustFloat {
+      from { transform: translateY(0); opacity: .2; }
+      50% { opacity: .7; }
+      to { transform: translateY(-110px); opacity: .1; }
+    }
+
+    /* ======================================================
+       HOTSPOTS
+    ====================================================== */
+
+    #rabbitHotspots {
+      position: absolute !important;
+      inset: 0 !important;
+      z-index: 120 !important;
+    }
+
+    .rabbit-hotspot {
+      position: absolute !important;
+      z-index: 130 !important;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    .rabbit-hotspot:hover {
+      background: rgba(0, 245, 255, 0.10);
+      box-shadow:
+        0 0 22px rgba(0,245,255,.9),
+        inset 0 0 18px rgba(255,42,163,.35);
+    }
+
+    .rabbit-edit-mode .rabbit-hotspot {
+      background: rgba(0,245,255,.3) !important;
+      border: 2px solid #00f5ff !important;
+      box-shadow: 0 0 18px rgba(0,245,255,.95) !important;
+    }
+
+    .rabbit-edit-mode .rabbit-hotspot::after {
+      content: attr(data-label);
+      position: absolute;
+      left: 50%;
+      top: 115%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      font-size: 10px;
+      color: white;
+      background: rgba(0,0,0,.75);
+      border: 1px solid rgba(255,255,255,.35);
+      border-radius: 999px;
+      padding: 4px 7px;
+      pointer-events: none;
+    }
+
+    /* ======================================================
+       MODAL
+    ====================================================== */
+
+    .rabbit-modal {
+      position: fixed !important;
+      inset: 0 !important;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,.82);
+      z-index: 9000 !important;
+      padding: 20px;
+    }
+
+    .rabbit-modal.active {
+      display: flex;
+    }
+
+    .rabbit-modal-box {
+      position: relative;
+      width: min(620px, 94vw);
+      border: 3px solid #ff2aa3;
+      border-radius: 24px;
+      padding: 30px;
+      background:
+        linear-gradient(180deg, rgba(19,0,31,.97), rgba(5,5,16,.98)),
+        repeating-linear-gradient(
+          to bottom,
+          rgba(255,255,255,.04) 0,
+          rgba(255,255,255,.04) 1px,
+          transparent 1px,
+          transparent 4px
+        );
+      box-shadow:
+        0 0 32px rgba(255,42,163,.9),
+        0 0 60px rgba(0,245,255,.6);
+    }
+
+    .rabbit-close {
+      position: absolute;
+      top: 10px;
+      right: 16px;
+      border: 0;
+      background: transparent;
+      color: white;
+      font-size: 34px;
+      cursor: pointer;
+    }
+
+    .rabbit-tag {
+      color: #ffea00;
+      font-weight: 900;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      letter-spacing: .08em;
+    }
+
+    .rabbit-modal-box h2 {
+      color: #00f5ff;
+      margin: 0 0 12px;
+      font-size: clamp(26px, 4vw, 42px);
+      text-shadow: 0 0 14px rgba(0,245,255,.75);
+    }
+
+    .rabbit-modal-box p {
+      color: #eee;
+      line-height: 1.6;
+      font-size: 18px;
+    }
+
+    .rabbit-link {
+      display: block;
+      margin-top: 18px;
+      padding: 14px 18px;
+      border-radius: 14px;
+      background: #ff2aa3;
+      color: white;
+      text-decoration: none;
+      text-align: center;
+      font-weight: 900;
+      box-shadow: 0 0 18px rgba(255,42,163,.85);
+    }
+
+    .rabbit-link:hover {
+      background: #00aaff;
+      box-shadow: 0 0 22px rgba(0,245,255,.9);
+    }
+
+    /* ======================================================
+       STATIC SOUND BUTTON
+    ====================================================== */
+
+    .static-sound-toggle {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 7000;
+      border: 2px solid #00f5ff;
+      border-radius: 999px;
+      background: rgba(0,0,0,.78);
+      color: white;
+      padding: 11px 14px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow:
+        0 0 16px rgba(0,245,255,.7),
+        inset 0 0 10px rgba(255,42,163,.25);
+    }
+
+    .static-sound-toggle.on {
+      border-color: #ff2aa3;
+      box-shadow:
+        0 0 18px rgba(255,42,163,.85),
+        inset 0 0 10px rgba(0,245,255,.25);
+    }
+
+    /* ======================================================
+       EDITOR PANEL
+    ====================================================== */
+
+    .rabbit-editor-panel {
+      position: fixed;
+      left: 12px;
+      bottom: 12px;
+      z-index: 10000;
+      width: min(520px, calc(100vw - 24px));
+      background: rgba(0,0,0,.92);
+      border: 2px solid #00f5ff;
+      border-radius: 14px;
+      padding: 12px;
+      color: white;
+      box-shadow: 0 0 24px rgba(0,245,255,.65);
+    }
+
+    .rabbit-editor-panel strong {
+      color: #00f5ff;
+    }
+
+    .rabbit-editor-panel p {
+      margin: 8px 0;
+      color: #dffcff;
+      font-size: 13px;
+    }
+
+    .rabbit-editor-panel button {
+      width: 100%;
+      border: 0;
+      border-radius: 10px;
+      padding: 11px;
+      color: white;
+      font-weight: 900;
+      cursor: pointer;
+      background: #ff2aa3;
+      margin-bottom: 8px;
+    }
+
+    .rabbit-editor-panel textarea {
+      width: 100%;
+      height: 150px;
+      background: #050510;
+      color: #dffcff;
+      border: 1px solid #00f5ff;
+      border-radius: 10px;
+      padding: 10px;
+      font-family: monospace;
+      font-size: 11px;
+      box-sizing: border-box;
+    }
+
+    /* ======================================================
+       iPHONE / MOBILE FORMAT
+    ====================================================== */
+
+    @media (max-width: 760px) {
+      body.rabbit-page {
+        overflow-x: hidden !important;
+      }
+
+      .mobile-rabbit-hint {
+        display: block;
+      }
+
+      .rabbit-stage {
+        width: 1180px !important;
+        max-width: none !important;
+        margin: 0 !important;
+      }
+
+      .rabbit-scroll-wrap {
+        cursor: grab;
+      }
+
+      .static-sound-toggle {
+        right: 10px;
+        bottom: 10px;
+        font-size: 11px;
+        padding: 9px 11px;
+      }
+
+      .rabbit-modal {
+        padding: 14px;
+      }
+
+      .rabbit-modal-box {
+        padding: 24px;
+      }
+
+      .rabbit-modal-box p {
+        font-size: 16px;
+      }
+
+      .alarm-digits {
+        font-size: 13px;
+      }
+    }
+  </style>
 </head>
 
 <body class="rabbit-page">
   <div class="scanlines"></div>
-  <div class="rabbit-light"></div>
-  <div class="rabbit-cursor-glow"></div>
 
-  <button id="staticSoundToggle" class="static-sound-toggle" type="button">
-    TV STATIC: OFF
-  </button>
-
-  <main class="rabbit-stage">
-    <img src="rabbit-hole-bg.png" alt="$TEDDY The Rabbit Hole" class="rabbit-bg" />
-
-    <div class="rabbit-glow-layer">
-      <div class="rabbit-glow glow-moass"></div>
-      <div class="rabbit-glow glow-bunny"></div>
-      <div class="rabbit-glow glow-tv"></div>
-      <div class="rabbit-glow glow-arcade"></div>
-      <div class="rabbit-glow glow-lava"></div>
-      <div class="rabbit-glow glow-lamp"></div>
-      <div class="rabbit-glow glow-stock"></div>
-      <div class="rabbit-glow glow-phone"></div>
-
-      <div id="tvStaticBox" class="tv-static-wrap">
-        <canvas id="tvStaticCanvas" class="tv-static-canvas"></canvas>
-        <div class="tv-static-lines"></div>
-        <div class="tv-static-roll"></div>
-      </div>
-
-      <div class="rabbit-dust dust-one"></div>
-      <div class="rabbit-dust dust-two"></div>
+  <div class="rabbit-page-shell">
+    <div class="mobile-rabbit-hint">
+      ← SWIPE THE ROOM • TAP CLUES • FOLLOW THE RABBIT HOLE →
     </div>
 
-    <div id="rabbitHotspots"></div>
-  </main>
+    <button id="staticSoundToggle" class="static-sound-toggle" type="button">
+      TV STATIC: OFF
+    </button>
+
+    <div class="rabbit-scroll-wrap" id="rabbitScrollWrap">
+      <main class="rabbit-stage" id="rabbitStage">
+        <img src="rabbit-hole-bg.png" alt="$TEDDY The Rabbit Hole" class="rabbit-bg" />
+
+        <div class="rabbit-glow glow-moass"></div>
+        <div class="rabbit-glow glow-bunny"></div>
+        <div class="rabbit-glow glow-arcade"></div>
+        <div class="rabbit-glow glow-lava"></div>
+        <div class="rabbit-glow glow-lamp"></div>
+        <div class="rabbit-glow glow-phone"></div>
+
+        <div id="tvStaticBox" class="tv-static-wrap">
+          <canvas id="tvStaticCanvas" class="tv-static-canvas"></canvas>
+          <div class="tv-static-lines"></div>
+          <div class="tv-static-roll"></div>
+        </div>
+
+        <div id="alarmDigits" class="alarm-digits">12:00</div>
+
+        <div class="rabbit-dust dust-one"></div>
+        <div class="rabbit-dust dust-two"></div>
+
+        <div id="rabbitHotspots"></div>
+      </main>
+    </div>
+  </div>
+
+  <div id="rabbitModal" class="rabbit-modal" aria-hidden="true">
+    <div class="rabbit-modal-box">
+      <button id="rabbitClose" class="rabbit-close" type="button">×</button>
+      <div id="rabbitTag" class="rabbit-tag">CASE FILE</div>
+      <h2 id="rabbitTitle">Rabbit Hole</h2>
+      <p id="rabbitText">Follow the clues.</p>
+      <a id="rabbitLink" class="rabbit-link" href="#">ENTER</a>
+    </div>
+  </div>
 
   <script>
-    document.addEventListener("pointermove", (event) => {
-      document.documentElement.style.setProperty("--rabbit-mouse-x", event.clientX + "px");
-      document.documentElement.style.setProperty("--rabbit-mouse-y", event.clientY + "px");
-    });
-
     /* ======================================================
-       REALISTIC TV STATIC CANVAS
+       TV STATIC CANVAS
     ====================================================== */
 
     const tvCanvas = document.getElementById("tvStaticCanvas");
     const tvCtx = tvCanvas.getContext("2d", { willReadFrequently: true });
-
     const staticWidth = 180;
     const staticHeight = 120;
 
@@ -67,22 +657,22 @@
 
       for (let i = 0; i < data.length; i += 4) {
         const shade = Math.random() * 255;
-        const flicker = Math.random() > 0.985 ? 255 : shade;
+        const pop = Math.random() > 0.985 ? 255 : shade;
 
-        data[i] = flicker;
-        data[i + 1] = flicker;
-        data[i + 2] = flicker;
-        data[i + 3] = 145 + Math.random() * 85;
+        data[i] = pop;
+        data[i + 1] = pop;
+        data[i + 2] = pop;
+        data[i + 3] = 135 + Math.random() * 95;
       }
 
       tvCtx.putImageData(imageData, 0, 0);
 
-      tvCtx.fillStyle = "rgba(80, 210, 255, 0.055)";
+      tvCtx.fillStyle = "rgba(80, 210, 255, 0.06)";
       tvCtx.fillRect(0, 0, staticWidth, staticHeight);
 
-      if (Math.random() > 0.89) {
-        tvCtx.fillStyle = "rgba(255,255,255,0.24)";
-        tvCtx.fillRect(0, Math.random() * staticHeight, staticWidth, 2 + Math.random() * 4);
+      if (Math.random() > 0.9) {
+        tvCtx.fillStyle = "rgba(255,255,255,0.25)";
+        tvCtx.fillRect(0, Math.random() * staticHeight, staticWidth, 2 + Math.random() * 6);
       }
 
       requestAnimationFrame(drawTvStatic);
@@ -91,463 +681,92 @@
     drawTvStatic();
 
     /* ======================================================
-       OPTIONAL LOW-VOLUME TV STATIC SOUND — MAC FIX
+       OPTIONAL TV STATIC SOUND
     ====================================================== */
 
-    const staticToggle = document.getElementById("staticSoundToggle");
-
-    let audioCtx = null;
-    let staticSource = null;
+    const staticSoundToggle = document.getElementById("staticSoundToggle");
+    let audioContext = null;
+    let staticNode = null;
     let staticGain = null;
-    let staticFilter = null;
     let staticPlaying = false;
 
-    function buildStaticNodes() {
-      const bufferSize = audioCtx.sampleRate * 2;
-      const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    function startStaticSound() {
+      if (staticPlaying) return;
+
+      audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+      const bufferSize = 2 * audioContext.sampleRate;
+      const noiseBuffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
       const output = noiseBuffer.getChannelData(0);
 
       for (let i = 0; i < bufferSize; i++) {
         output[i] = Math.random() * 2 - 1;
       }
 
-      staticSource = audioCtx.createBufferSource();
-      staticSource.buffer = noiseBuffer;
-      staticSource.loop = true;
+      staticNode = audioContext.createBufferSource();
+      staticNode.buffer = noiseBuffer;
+      staticNode.loop = true;
 
-      staticFilter = audioCtx.createBiquadFilter();
-      staticFilter.type = "bandpass";
-      staticFilter.frequency.value = 1150;
-      staticFilter.Q.value = 0.55;
+      staticGain = audioContext.createGain();
+      staticGain.gain.value = 0.025;
 
-      staticGain = audioCtx.createGain();
-      staticGain.gain.value = 0.0001;
+      const filter = audioContext.createBiquadFilter();
+      filter.type = "highpass";
+      filter.frequency.value = 850;
 
-      staticSource.connect(staticFilter);
-      staticFilter.connect(staticGain);
-      staticGain.connect(audioCtx.destination);
+      staticNode.connect(filter);
+      filter.connect(staticGain);
+      staticGain.connect(audioContext.destination);
 
-      staticSource.start(0);
-    }
-
-    async function startStaticSound() {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        buildStaticNodes();
-      }
-
-      if (audioCtx.state === "suspended") {
-        await audioCtx.resume();
-      }
-
-      staticGain.gain.cancelScheduledValues(audioCtx.currentTime);
-      staticGain.gain.setTargetAtTime(0.04, audioCtx.currentTime, 0.06);
-
+      staticNode.start();
       staticPlaying = true;
-      staticToggle.textContent = "TV STATIC: ON";
-      staticToggle.classList.add("active");
+
+      staticSoundToggle.textContent = "TV STATIC: ON";
+      staticSoundToggle.classList.add("on");
     }
 
-    async function stopStaticSound() {
-      if (!audioCtx || !staticGain) return;
+    function stopStaticSound() {
+      if (!staticPlaying) return;
 
-      if (audioCtx.state === "suspended") {
-        await audioCtx.resume();
-      }
-
-      staticGain.gain.cancelScheduledValues(audioCtx.currentTime);
-      staticGain.gain.setTargetAtTime(0.0001, audioCtx.currentTime, 0.06);
-
-      staticPlaying = false;
-      staticToggle.textContent = "TV STATIC: OFF";
-      staticToggle.classList.remove("active");
-    }
-
-    staticToggle.addEventListener("click", async () => {
       try {
-        if (staticPlaying) {
-          await stopStaticSound();
-        } else {
-          await startStaticSound();
-        }
-      } catch (error) {
-        console.warn("Static sound could not start:", error);
-        staticToggle.textContent = "TV STATIC BLOCKED";
+        staticNode.stop();
+      } catch {}
+
+      try {
+        audioContext.close();
+      } catch {}
+
+      audioContext = null;
+      staticNode = null;
+      staticGain = null;
+      staticPlaying = false;
+
+      staticSoundToggle.textContent = "TV STATIC: OFF";
+      staticSoundToggle.classList.remove("on");
+    }
+
+    staticSoundToggle.addEventListener("click", () => {
+      if (staticPlaying) {
+        stopStaticSound();
+      } else {
+        startStaticSound();
       }
     });
 
     /* ======================================================
-       TV STATIC PLACEMENT EDITOR
-       Use: hq.html?tvedit=1
+       NICE MOBILE START POSITION
+       Starts iPhone closer to the middle of the room.
     ====================================================== */
 
-    const tvEditMode = new URLSearchParams(window.location.search).has("tvedit");
-    const tvBox = document.getElementById("tvStaticBox");
+    window.addEventListener("load", () => {
+      const wrap = document.getElementById("rabbitScrollWrap");
 
-    let tvState = {
-      left: 80.91,
-      top: 25.22,
-      width: 19,
-      height: 19.7,
-      rotate: -0.1,
-      skewX: -0.65,
-      skewY: 0.35,
-      opacity: 0.9,
-      tlx: 6.4,
-      tly: 4.4,
-      trx: 97.4,
-      tryy: 5.4,
-      brx: 95.8,
-      bry: 100,
-      blx: 5.6,
-      bly: 90.6
-    };
-
-    const savedTvState = localStorage.getItem("teddyTvStaticState");
-
-    if (savedTvState) {
-      try {
-        tvState = { ...tvState, ...JSON.parse(savedTvState) };
-      } catch {}
-    }
-
-    function applyTvState() {
-      tvBox.style.left = tvState.left + "%";
-      tvBox.style.top = tvState.top + "%";
-      tvBox.style.width = tvState.width + "%";
-      tvBox.style.height = tvState.height + "%";
-      tvBox.style.opacity = tvState.opacity;
-      tvBox.style.transform =
-        `rotate(${tvState.rotate}deg) skewX(${tvState.skewX}deg) skewY(${tvState.skewY}deg)`;
-
-      tvBox.style.clipPath =
-        `polygon(${tvState.tlx}% ${tvState.tly}%, ${tvState.trx}% ${tvState.tryy}%, ${tvState.brx}% ${tvState.bry}%, ${tvState.blx}% ${tvState.bly}%)`;
-
-      localStorage.setItem("teddyTvStaticState", JSON.stringify(tvState));
-      syncTvSliders();
-      updateTvEditorOutput();
-    }
-
-    function createTvStaticEditor() {
-      document.body.classList.add("tv-static-edit-mode");
-
-      const glowLayer = document.querySelector(".rabbit-glow-layer");
-      const hotspotLayer = document.getElementById("rabbitHotspots");
-
-      if (glowLayer) glowLayer.style.pointerEvents = "auto";
-      if (hotspotLayer) hotspotLayer.style.pointerEvents = "none";
-
-      tvBox.style.pointerEvents = "auto";
-      tvBox.style.zIndex = "5000";
-
-      const panel = document.createElement("div");
-      panel.className = "tv-static-editor-panel";
-
-      panel.innerHTML = `
-        <strong>TV Static Box Editor</strong>
-        <p>Drag the static box. Use sliders to move, size, rotate, skew, and shape corners.</p>
-
-        <div class="tv-nudge-grid">
-          <button type="button" data-tv-nudge-y="-0.15">UP</button>
-          <button type="button" data-tv-nudge-x="-0.15">LEFT</button>
-          <button type="button" data-tv-nudge-x="0.15">RIGHT</button>
-          <button type="button" data-tv-nudge-y="0.15">DOWN</button>
-        </div>
-
-        <label>Left <input type="range" min="60" max="100" step="0.05" data-tv-key="left"></label>
-        <label>Top <input type="range" min="10" max="60" step="0.05" data-tv-key="top"></label>
-        <label>Width <input type="range" min="4" max="28" step="0.1" data-tv-key="width"></label>
-        <label>Height <input type="range" min="4" max="28" step="0.1" data-tv-key="height"></label>
-        <label>Rotate <input type="range" min="-8" max="8" step="0.05" data-tv-key="rotate"></label>
-        <label>Skew X <input type="range" min="-12" max="12" step="0.05" data-tv-key="skewX"></label>
-        <label>Skew Y <input type="range" min="-12" max="12" step="0.05" data-tv-key="skewY"></label>
-        <label>Opacity <input type="range" min="0.05" max="0.9" step="0.01" data-tv-key="opacity"></label>
-
-        <hr>
-
-        <label>Top Left X <input type="range" min="0" max="30" step="0.1" data-tv-key="tlx"></label>
-        <label>Top Left Y <input type="range" min="0" max="30" step="0.1" data-tv-key="tly"></label>
-        <label>Top Right X <input type="range" min="70" max="100" step="0.1" data-tv-key="trx"></label>
-        <label>Top Right Y <input type="range" min="0" max="30" step="0.1" data-tv-key="tryy"></label>
-        <label>Bottom Right X <input type="range" min="70" max="100" step="0.1" data-tv-key="brx"></label>
-        <label>Bottom Right Y <input type="range" min="70" max="100" step="0.1" data-tv-key="bry"></label>
-        <label>Bottom Left X <input type="range" min="0" max="30" step="0.1" data-tv-key="blx"></label>
-        <label>Bottom Left Y <input type="range" min="70" max="100" step="0.1" data-tv-key="bly"></label>
-
-        <button id="copyTvStaticCss" type="button">COPY TV STATIC CSS</button>
-        <textarea id="tvStaticOutput" readonly></textarea>
-      `;
-
-      document.body.appendChild(panel);
-
-      panel.querySelectorAll("input[data-tv-key]").forEach((input) => {
-        const key = input.dataset.tvKey;
-        input.value = tvState[key];
-
-        input.addEventListener("input", () => {
-          tvState[key] = Number(input.value);
-          applyTvState();
-        });
-      });
-
-      panel.querySelectorAll("[data-tv-nudge-x], [data-tv-nudge-y]").forEach((button) => {
-        button.addEventListener("click", () => {
-          tvState.left = Number((tvState.left + Number(button.dataset.tvNudgeX || 0)).toFixed(2));
-          tvState.top = Number((tvState.top + Number(button.dataset.tvNudgeY || 0)).toFixed(2));
-          applyTvState();
-        });
-      });
-
-      document.getElementById("copyTvStaticCss").addEventListener("click", async () => {
-        updateTvEditorOutput();
-        const output = document.getElementById("tvStaticOutput").value;
-
-        try {
-          await navigator.clipboard.writeText(output);
-          document.getElementById("copyTvStaticCss").textContent = "COPIED!";
-          setTimeout(() => {
-            document.getElementById("copyTvStaticCss").textContent = "COPY TV STATIC CSS";
-          }, 1200);
-        } catch {
-          alert("Could not auto-copy. Select the text box and copy manually.");
-        }
-      });
-
-      enableTvDrag();
-      applyTvState();
-    }
-
-    function syncTvSliders() {
-      document.querySelectorAll("input[data-tv-key]").forEach((input) => {
-        const key = input.dataset.tvKey;
-        input.value = tvState[key];
-      });
-    }
-
-    function enableTvDrag() {
-      let startX = 0;
-      let startY = 0;
-      let startLeft = 0;
-      let startTop = 0;
-
-      tvBox.addEventListener("pointerdown", (event) => {
-        if (!tvEditMode) return;
-
-        event.preventDefault();
-        event.stopPropagation();
-
-        tvBox.setPointerCapture(event.pointerId);
-
-        const stage = document.querySelector(".rabbit-stage");
-        const rect = stage.getBoundingClientRect();
-
-        startX = event.clientX;
-        startY = event.clientY;
-        startLeft = tvState.left;
-        startTop = tvState.top;
-
-        function moveTvBox(e) {
-          const dx = ((e.clientX - startX) / rect.width) * 100;
-          const dy = ((e.clientY - startY) / rect.height) * 100;
-
-          tvState.left = Number((startLeft + dx).toFixed(2));
-          tvState.top = Number((startTop + dy).toFixed(2));
-
-          applyTvState();
-        }
-
-        function stopMove() {
-          try {
-            tvBox.releasePointerCapture(event.pointerId);
-          } catch {}
-
-          tvBox.removeEventListener("pointermove", moveTvBox);
-          tvBox.removeEventListener("pointerup", stopMove);
-          tvBox.removeEventListener("pointercancel", stopMove);
-        }
-
-        tvBox.addEventListener("pointermove", moveTvBox);
-        tvBox.addEventListener("pointerup", stopMove);
-        tvBox.addEventListener("pointercancel", stopMove);
-      });
-    }
-
-    function updateTvEditorOutput() {
-      const output = document.getElementById("tvStaticOutput");
-      if (!output) return;
-
-      output.value =
-`/* TV STATIC CUSTOM PLACEMENT */
-.tv-static-wrap {
-  left: ${tvState.left}% !important;
-  top: ${tvState.top}% !important;
-  width: ${tvState.width}% !important;
-  height: ${tvState.height}% !important;
-  opacity: ${tvState.opacity} !important;
-  transform: rotate(${tvState.rotate}deg) skewX(${tvState.skewX}deg) skewY(${tvState.skewY}deg) !important;
-  clip-path: polygon(${tvState.tlx}% ${tvState.tly}%, ${tvState.trx}% ${tvState.tryy}%, ${tvState.brx}% ${tvState.bry}%, ${tvState.blx}% ${tvState.bly}%) !important;
-}`;
-    }
-
-    applyTvState();
-
-    if (tvEditMode) {
-      createTvStaticEditor();
-    }
+      if (window.innerWidth <= 760 && wrap) {
+        wrap.scrollLeft = 360;
+      }
+    });
   </script>
 
   <script src="rabbit-hole.js"></script>
-
-  <script>
-    /* ======================================================
-       FINAL CLEAN 12:00 BLINK
-       This is the ONLY clock blink script in this file.
-       It removes old experiments and manually blinks the red digits.
-    ====================================================== */
-
-    (function () {
-      const CLOCK = {
-        left: 76.89,
-        top: 56.92,
-        width: 4.08,
-        height: 1.96,
-        rotate: 8.85
-      };
-
-      function removeOldClockStuff() {
-        document.querySelectorAll(
-          "#forcedClockBlinkBox, #forcedBlinkingClock1200, #finalBlinkingClock1200, #cleanBlinkingClock1200, .alarm-blink-box"
-        ).forEach((el) => el.remove());
-
-        document.querySelectorAll("style").forEach((style) => {
-          const text = style.textContent || "";
-
-          if (
-            text.includes("forcedClockBlink") ||
-            text.includes("forcedBlinkingClock1200") ||
-            text.includes("finalBlinkingClock1200") ||
-            text.includes("simpleBlackBoxBlink") ||
-            text.includes("alarmRealBlink") ||
-            text.includes("alarmCoverBlink") ||
-            text.includes("cleanBlinkingClock1200")
-          ) {
-            style.remove();
-          }
-        });
-      }
-
-      function installCleanStyle() {
-        const style = document.createElement("style");
-        style.id = "cleanClock1200Style";
-
-        style.textContent = `
-          #forcedClockBlinkBox,
-          #forcedBlinkingClock1200,
-          #finalBlinkingClock1200,
-          .alarm-blink-box {
-            display: none !important;
-            opacity: 0 !important;
-            visibility: hidden !important;
-            box-shadow: none !important;
-            outline: none !important;
-            border: none !important;
-            animation: none !important;
-          }
-
-          .rabbit-stage::before,
-          .rabbit-stage::after {
-            content: none !important;
-            display: none !important;
-          }
-
-          #cleanBlinkingClock1200 {
-            position: fixed !important;
-            background: #020000 !important;
-            border: none !important;
-            outline: none !important;
-            box-shadow:
-              inset 0 0 5px rgba(0,0,0,1),
-              0 0 4px rgba(0,0,0,.7) !important;
-            border-radius: 5px !important;
-            pointer-events: none !important;
-            z-index: 2147483647 !important;
-            overflow: hidden !important;
-
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-          }
-
-          #cleanBlinkingClock1200 span {
-            display: block !important;
-            color: #ff1010 !important;
-            font-family: "Courier New", monospace !important;
-            font-weight: 900 !important;
-            line-height: 1 !important;
-            letter-spacing: -0.06em !important;
-            text-shadow:
-              0 0 3px rgba(255,0,0,1),
-              0 0 8px rgba(255,0,0,.9),
-              0 0 14px rgba(255,0,0,.55) !important;
-          }
-        `;
-
-        document.head.appendChild(style);
-      }
-
-      function createClock() {
-        const clock = document.createElement("div");
-        clock.id = "cleanBlinkingClock1200";
-        clock.innerHTML = "<span>12:00</span>";
-        document.body.appendChild(clock);
-        return clock;
-      }
-
-      function positionClock() {
-        const stage = document.querySelector(".rabbit-stage");
-        const clock = document.getElementById("cleanBlinkingClock1200");
-
-        if (!stage || !clock) return;
-
-        const rect = stage.getBoundingClientRect();
-
-        const left = rect.left + rect.width * (CLOCK.left / 100);
-        const top = rect.top + rect.height * (CLOCK.top / 100);
-        const width = rect.width * (CLOCK.width / 100);
-        const height = rect.height * (CLOCK.height / 100);
-
-        clock.style.left = left + "px";
-        clock.style.top = top + "px";
-        clock.style.width = width + "px";
-        clock.style.height = height + "px";
-        clock.style.transform = "rotate(" + CLOCK.rotate + "deg)";
-        clock.style.transformOrigin = "center center";
-
-        const digits = clock.querySelector("span");
-        digits.style.fontSize = Math.max(8, height * 0.82) + "px";
-      }
-
-      removeOldClockStuff();
-      installCleanStyle();
-      createClock();
-      positionClock();
-
-      let visible = true;
-
-      setInterval(() => {
-        const digits = document.querySelector("#cleanBlinkingClock1200 span");
-        if (!digits) return;
-
-        visible = !visible;
-        digits.style.opacity = visible ? "1" : "0";
-      }, 575);
-
-      window.addEventListener("resize", positionClock);
-      window.addEventListener("orientationchange", positionClock);
-
-      setTimeout(positionClock, 300);
-      setTimeout(positionClock, 900);
-    })();
-  </script>
 </body>
 </html>
