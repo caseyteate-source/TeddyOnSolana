@@ -1,6 +1,7 @@
 /* ======================================================
    $TEDDY ARCADE GAME + OLD HUB MODALS
    Full recovery gameplay version
+   RK emoji timeline + flashing SHORT skulls
 ====================================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -39,13 +40,41 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const emojiTimeline = [
-    "🐶", "🇺🇸", "🎤", "👀", "🔥",
-    "💥", "🍻", "💜", "🕹️", "🍿",
-    "🚀", "🌕", "💎", "🧸", "🐱",
-    "🎯", "🧩", "🕰️", "📼", "☎️",
-    "💡", "🍫", "🎩", "🦋", "🧠",
-    "🗝️", "📚", "🧃", "🧨", "🛒",
-    "🏴‍☠️", "🔮", "🛸", "♾️", "🌈"
+    "😳",
+    "💩",
+    "😿",
+    "🥜",
+    "🐸",
+    "🍦",
+    "🤢",
+    "👍",
+    "👊",
+    "💀",
+    "🤓",
+    "👀",
+    "🤩",
+    "⚡",
+    "🎮",
+    "🚀",
+    "🍄",
+    "💥",
+    "🍏",
+    "🤔",
+    "🥴",
+    "💜",
+    "👥",
+    "👌",
+    "🤝",
+    "⛺",
+    "😿",
+    "🎯",
+    "👀",
+    "🐶",
+    "🇺🇸🎤🎶",
+    "👀",
+    "🔥",
+    "💥",
+    "🍻"
   ];
 
   let collectibles = [];
@@ -148,13 +177,14 @@ document.addEventListener("DOMContentLoaded", () => {
     if (nextEmojiIndex >= emojiTimeline.length) return;
 
     const pos = safeRandomPosition();
+    const emoji = emojiTimeline[nextEmojiIndex];
 
     collectibles.push({
-      emoji: emojiTimeline[nextEmojiIndex],
+      emoji,
       index: nextEmojiIndex,
       x: pos.x,
       y: pos.y,
-      size: 34,
+      size: emoji.length > 3 ? 28 : 34,
       pulse: Math.random() * Math.PI * 2,
       collected: false
     });
@@ -300,7 +330,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.textAlign = "right";
     ctx.fillStyle = "#ffea00";
     ctx.shadowColor = "#ffea00";
-    ctx.fillText("AVOID THE FUD ☠️", canvas.width - 18, 18);
+    ctx.fillText("AVOID THE SHORTS ☠️", canvas.width - 18, 18);
 
     ctx.font = "12px Arial, sans-serif";
     ctx.fillStyle = "rgba(255,255,255,.82)";
@@ -348,13 +378,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function drawEnemies() {
     enemies.forEach((enemy) => {
+      const flashShort = Math.floor(frame / 12) % 2 === 0;
+
       ctx.save();
+
       ctx.font = `${enemy.size}px Arial, sans-serif`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.shadowColor = "#ff1111";
       ctx.shadowBlur = 18;
       ctx.fillText("☠️", enemy.x, enemy.y);
+
+      if (flashShort) {
+        ctx.font = "bold 11px Arial, sans-serif";
+        ctx.fillStyle = "#ffea00";
+        ctx.shadowColor = "#ffea00";
+        ctx.shadowBlur = 12;
+        ctx.fillText("SHORT", enemy.x, enemy.y + 28);
+      }
+
       ctx.restore();
     });
   }
@@ -523,7 +565,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.font = "18px Arial, sans-serif";
     ctx.fillStyle = "#ffffff";
     ctx.shadowBlur = 0;
-    ctx.fillText("The FUD got you.", canvas.width / 2, canvas.height / 2 + 8);
+    ctx.fillText("The shorts got you.", canvas.width / 2, canvas.height / 2 + 8);
 
     ctx.fillStyle = "#ffea00";
     ctx.fillText("Click START GAME to try again.", canvas.width / 2, canvas.height / 2 + 42);
@@ -577,7 +619,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.font = "16px Arial, sans-serif";
     ctx.fillStyle = "#ffffff";
     ctx.shadowBlur = 0;
-    ctx.fillText("Collect the emojis. Avoid the FUD skulls.", canvas.width / 2, canvas.height / 2 + 48);
+    ctx.fillText("Collect RK's emoji timeline. Avoid the shorts.", canvas.width / 2, canvas.height / 2 + 48);
 
     ctx.fillStyle = "#ffea00";
     ctx.fillText("Press START GAME", canvas.width / 2, canvas.height / 2 + 78);
