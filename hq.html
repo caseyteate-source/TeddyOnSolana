@@ -7,11 +7,6 @@
   <link rel="stylesheet" href="style.css" />
 
   <style>
-    /* ======================================================
-       RABBIT HOLE PAGE — CLOCK + ANIMATION OVERLAY BUILD
-       Leave rabbit-hole.js alone.
-    ====================================================== */
-
     html,
     body {
       margin: 0;
@@ -83,8 +78,6 @@
     .rabbit-stage::after {
       content: none !important;
       display: none !important;
-      opacity: 0 !important;
-      visibility: hidden !important;
     }
 
     .rabbit-bg {
@@ -96,10 +89,6 @@
       pointer-events: none !important;
     }
 
-    /* ======================================================
-       KILL OLD WANDERING CLOCK OVERLAYS FROM EARLIER TESTS
-    ====================================================== */
-
     .alarm-blink-box,
     .clock-blink,
     .alarm-digits,
@@ -108,9 +97,7 @@
     #forcedClockBlinkBox,
     #forcedBlinkingClock1200,
     #finalBlinkingClock1200,
-    #cleanBlinkingClock1200,
-    .rabbit-stage > .alarm-blink-box,
-    .rabbit-stage > .clock-blink {
+    #cleanBlinkingClock1200 {
       display: none !important;
       opacity: 0 !important;
       visibility: hidden !important;
@@ -124,43 +111,44 @@
     }
 
     /* ======================================================
-       ALL ANIMATION OVERLAYS — LOCKED TO BACKGROUND IMAGE
+       OVERLAY ROOT
     ====================================================== */
 
-    .anim-layer {
+    #rabbitOverlayRoot {
+      position: absolute;
+      inset: 0;
+      z-index: 80;
+      pointer-events: none;
+    }
+
+    .rabbit-overlay {
       position: absolute;
       pointer-events: none;
       z-index: 80;
       mix-blend-mode: screen;
+      transform-origin: center center;
     }
 
-    .moass-neon {
-      left: 1.4%;
-      top: 4.8%;
-      width: 19.5%;
-      height: 12%;
-      border-radius: 20px;
+    .rabbit-overlay-glow {
+      border-radius: 999px;
+      filter: blur(7px);
+    }
+
+    .overlay-moass {
       background: rgba(255, 20, 120, .18);
+      border-radius: 20px;
       filter: blur(8px);
       animation: neonFlicker 4.5s infinite;
     }
 
-    .bunny-neon {
-      left: 82.8%;
-      top: 3.5%;
-      width: 12.4%;
-      height: 21%;
-      border-radius: 999px;
+    .overlay-bunny {
       background: rgba(0, 245, 255, .22);
+      border-radius: 999px;
       filter: blur(7px);
       animation: bunnyFlicker 3.6s infinite;
     }
 
-    .arcade-glow {
-      left: 1.8%;
-      top: 24.2%;
-      width: 21%;
-      height: 39%;
+    .overlay-arcade {
       border-radius: 22px;
       background:
         radial-gradient(circle at 50% 32%, rgba(255,42,163,.28), transparent 38%),
@@ -169,11 +157,7 @@
       animation: softPulse 3.2s infinite ease-in-out;
     }
 
-    .lava-glow {
-      left: 24.8%;
-      top: 13.5%;
-      width: 4.6%;
-      height: 17%;
+    .overlay-lava-glow {
       border-radius: 999px;
       background:
         radial-gradient(circle at 50% 25%, rgba(255,230,80,.42), transparent 24%),
@@ -183,18 +167,8 @@
       animation: lavaPulse 2.7s infinite ease-in-out;
     }
 
-    .lava-bubble-one,
-    .lava-bubble-two,
-    .lava-bubble-three {
-      position: absolute;
-      left: 25.75%;
-      top: 16.5%;
-      width: .9%;
-      height: 1.8%;
+    .overlay-lava-bubble {
       border-radius: 999px;
-      z-index: 88;
-      pointer-events: none;
-      mix-blend-mode: screen;
       background: rgba(255, 90, 190, .65);
       box-shadow:
         0 0 8px rgba(255,42,163,.9),
@@ -202,79 +176,51 @@
       animation: lavaBubble 4.2s infinite ease-in-out;
     }
 
-    .lava-bubble-two {
-      left: 26.9%;
-      top: 22.5%;
-      width: .7%;
-      height: 1.4%;
+    .overlay-lava-bubble.yellow {
       background: rgba(255, 226, 80, .62);
       animation-delay: -1.4s;
     }
 
-    .lava-bubble-three {
-      left: 25.35%;
-      top: 26%;
-      width: .75%;
-      height: 1.5%;
+    .overlay-lava-bubble.blue {
       background: rgba(0, 245, 255, .38);
       animation-delay: -2.4s;
     }
 
-    .phone-glow {
-      left: 4.8%;
-      top: 77%;
-      width: 15%;
-      height: 15%;
+    .overlay-phone {
       border-radius: 999px;
       background: rgba(0, 245, 255, .08);
       filter: blur(8px);
       animation: phonePulse 5s infinite ease-in-out;
     }
 
-    .heart-gme-pulse {
-      left: 22.1%;
-      top: 52.2%;
-      width: 5.2%;
-      height: 6.4%;
+    .overlay-heart-gme {
       border-radius: 999px;
       background: rgba(255, 50, 80, .2);
       filter: blur(5px);
       animation: heartPulse 1.4s infinite;
     }
 
-    .power-glow {
-      left: 70.8%;
-      top: 30.5%;
-      width: 8.8%;
-      height: 10.6%;
+    .overlay-power {
       border-radius: 10px;
       background: rgba(255, 231, 70, .13);
       filter: blur(4px);
       animation: paperPulse 3.4s infinite ease-in-out;
     }
 
-    .hang-poster-glow {
-      left: 5.9%;
-      top: 13.2%;
-      width: 8.4%;
-      height: 17%;
+    .overlay-hang-poster {
       border-radius: 8px;
       background: rgba(255, 230, 80, .10);
       filter: blur(4px);
       animation: posterPulse 4.2s infinite ease-in-out;
     }
 
-    .chart-shimmer {
-      left: 73.9%;
-      top: 5.9%;
-      width: 9.2%;
-      height: 15.3%;
+    .overlay-chart {
       overflow: hidden;
       opacity: .9;
       clip-path: polygon(5% 3%, 95% 0, 98% 96%, 2% 100%);
     }
 
-    .chart-shimmer::after {
+    .overlay-chart::after {
       content: "";
       position: absolute;
       top: -30%;
@@ -286,71 +232,47 @@
       animation: shimmerSweep 4.2s infinite;
     }
 
-    .magnify-glint {
-      left: 63.5%;
-      top: 82.4%;
-      width: 5.8%;
-      height: 6.8%;
+    .overlay-magnify {
       border-radius: 999px;
       background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.55), transparent 36%);
       filter: blur(1px);
       animation: magnifyGlint 3.1s infinite;
     }
 
-    .diamond-sparkle {
-      left: 56.6%;
-      top: 46.2%;
-      width: 6%;
-      height: 8.5%;
+    .overlay-diamond {
       border-radius: 999px;
       background: radial-gradient(circle, rgba(255,255,255,.38), rgba(0,245,255,.12), transparent 55%);
       filter: blur(2px);
       animation: diamondFlash 2.8s infinite;
     }
 
-    .kitty-pulse {
-      left: 54.7%;
-      top: 60.3%;
-      width: 8%;
-      height: 14.5%;
+    .overlay-kitty {
       border-radius: 999px;
       background: rgba(255, 210, 55, .12);
       filter: blur(5px);
       animation: kittyPulse 2.1s infinite ease-in-out;
     }
 
-    .vhs-glow {
-      left: 45.4%;
-      top: 77.2%;
-      width: 15.8%;
-      height: 6.4%;
+    .overlay-vhs {
       border-radius: 12px;
       background: rgba(255, 42, 163, .08);
       filter: blur(5px);
       animation: softPulse 4.6s infinite ease-in-out;
     }
 
-    .notebook-pulse {
-      left: 46.5%;
-      top: 83.5%;
-      width: 17%;
-      height: 11%;
+    .overlay-notebook {
       border-radius: 14px;
       background: rgba(255, 232, 150, .07);
       filter: blur(4px);
       animation: paperPulse 4.9s infinite ease-in-out;
     }
 
-    .coffee-steam {
-      left: 75.6%;
-      top: 75%;
-      width: 5%;
-      height: 10%;
+    .overlay-coffee-steam {
       overflow: visible;
       opacity: .55;
     }
 
-    .coffee-steam span {
+    .overlay-coffee-steam span {
       position: absolute;
       bottom: 0;
       width: 2px;
@@ -361,18 +283,13 @@
       animation: steamRise 3.4s infinite ease-in-out;
     }
 
-    .coffee-steam span:nth-child(1) { left: 20%; animation-delay: 0s; }
-    .coffee-steam span:nth-child(2) { left: 48%; animation-delay: .9s; }
-    .coffee-steam span:nth-child(3) { left: 72%; animation-delay: 1.6s; }
+    .overlay-coffee-steam span:nth-child(1) { left: 20%; animation-delay: 0s; }
+    .overlay-coffee-steam span:nth-child(2) { left: 48%; animation-delay: .9s; }
+    .overlay-coffee-steam span:nth-child(3) { left: 72%; animation-delay: 1.6s; }
 
-    .dust {
-      position: absolute;
-      z-index: 95;
-      left: 12%;
-      top: 20%;
-      width: 4px;
-      height: 4px;
-      pointer-events: none;
+    .overlay-dust {
+      width: 4px !important;
+      height: 4px !important;
       border-radius: 50%;
       background: rgba(255,255,255,.5);
       box-shadow:
@@ -385,27 +302,12 @@
       animation: dustFloat 13s linear infinite;
     }
 
-    .dust.two {
-      left: 42%;
-      top: 31%;
+    .overlay-dust.two {
       opacity: .55;
       animation-delay: -6s;
     }
 
-    /* ======================================================
-       TV STATIC — LOCKED INSIDE SCREEN
-    ====================================================== */
-
     .tv-static-wrap {
-      position: absolute !important;
-      left: 81.92% !important;
-      top: 36.55% !important;
-      width: 13.7% !important;
-      height: 15.7% !important;
-      transform: rotate(-1.1deg) skewX(-1.5deg) skewY(.3deg) !important;
-      clip-path: polygon(4% 5%, 96% 2%, 98% 94%, 5% 98%) !important;
-      z-index: 100 !important;
-      pointer-events: none !important;
       overflow: hidden !important;
       opacity: .72 !important;
       mix-blend-mode: screen;
@@ -445,19 +347,7 @@
       animation: tvRoll 3.1s linear infinite;
     }
 
-    /* ======================================================
-       SVG CLOCK — LOCKED TO THE IMAGE, NO WANDERING TEXT
-    ====================================================== */
-
     .clock-svg-wrap {
-      position: absolute !important;
-      left: 80.08% !important;
-      top: 67.06% !important;
-      width: 4.25% !important;
-      height: auto !important;
-      transform: translate(-50%, -50%) rotate(6deg) !important;
-      z-index: 150 !important;
-      pointer-events: none !important;
       mix-blend-mode: screen;
       filter:
         drop-shadow(0 0 2px rgba(255,0,0,1))
@@ -473,13 +363,134 @@
       overflow: visible;
     }
 
-    .clock-seg {
+    .clock-seg,
+    .clock-colon {
       fill: #ff1717;
     }
 
     .clock-colon {
-      fill: #ff1717;
       animation: colonBlink 1.08s steps(1, end) infinite;
+    }
+
+    /* ======================================================
+       OVERLAY EDIT MODE
+    ====================================================== */
+
+    .overlay-edit-mode #rabbitOverlayRoot {
+      pointer-events: auto;
+      z-index: 250;
+    }
+
+    .overlay-edit-mode .rabbit-overlay {
+      pointer-events: auto !important;
+      cursor: move;
+      outline: 2px solid rgba(255, 234, 0, .85);
+      background-color: rgba(255, 234, 0, .08);
+    }
+
+    .overlay-edit-mode .rabbit-overlay.selected-overlay {
+      outline: 3px solid #00f5ff;
+      box-shadow:
+        0 0 18px rgba(0,245,255,.9),
+        inset 0 0 14px rgba(255,42,163,.25);
+    }
+
+    .overlay-edit-mode .rabbit-overlay::before {
+      content: attr(data-label);
+      position: absolute;
+      left: 50%;
+      top: -22px;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      font-size: 10px;
+      font-family: Arial, sans-serif;
+      color: white;
+      background: rgba(0,0,0,.78);
+      border: 1px solid rgba(255,255,255,.35);
+      border-radius: 999px;
+      padding: 4px 7px;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .overlay-editor-panel {
+      position: fixed;
+      right: 12px;
+      bottom: 12px;
+      z-index: 11000;
+      width: min(430px, calc(100vw - 24px));
+      background: rgba(0,0,0,.94);
+      border: 2px solid #ffea00;
+      border-radius: 14px;
+      padding: 12px;
+      color: white;
+      box-shadow: 0 0 24px rgba(255,234,0,.55);
+      font-family: Arial, sans-serif;
+    }
+
+    .overlay-editor-panel strong {
+      color: #ffea00;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .overlay-editor-panel p {
+      margin: 6px 0 10px;
+      color: #fff7b0;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .overlay-editor-panel .selected-name {
+      color: #00f5ff;
+      font-weight: 900;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+
+    .overlay-editor-buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .overlay-editor-panel button {
+      border: 0;
+      border-radius: 9px;
+      padding: 9px 6px;
+      color: white;
+      font-weight: 900;
+      cursor: pointer;
+      background: #ff2aa3;
+      font-size: 11px;
+    }
+
+    .overlay-editor-panel button.blue {
+      background: #00aaff;
+    }
+
+    .overlay-editor-panel button.yellow {
+      background: #c49b00;
+    }
+
+    .overlay-editor-panel button.copy {
+      width: 100%;
+      background: #00aaff;
+      margin-bottom: 8px;
+    }
+
+    .overlay-editor-panel textarea {
+      width: 100%;
+      height: 130px;
+      background: #050510;
+      color: #dffcff;
+      border: 1px solid #ffea00;
+      border-radius: 10px;
+      padding: 10px;
+      font-family: monospace;
+      font-size: 10px;
+      box-sizing: border-box;
     }
 
     /* ======================================================
@@ -614,14 +625,10 @@
       box-shadow: 0 0 22px rgba(0,245,255,.9);
     }
 
-    /* ======================================================
-       TV SOUND BUTTON
-    ====================================================== */
-
     .static-sound-toggle {
       position: fixed;
       right: 18px;
-      bottom: 18px;
+      top: 18px;
       z-index: 7000;
       border: 2px solid #00f5ff;
       border-radius: 999px;
@@ -637,10 +644,6 @@
       border-color: #ff2aa3;
       box-shadow: 0 0 18px rgba(255,42,163,.85);
     }
-
-    /* ======================================================
-       EDITOR PANEL
-    ====================================================== */
 
     .rabbit-editor-panel {
       position: fixed;
@@ -715,13 +718,13 @@
     }
 
     @keyframes softPulse {
-      0%, 100% { opacity: .32; transform: scale(1); }
-      50% { opacity: .75; transform: scale(1.04); }
+      0%, 100% { opacity: .32; }
+      50% { opacity: .75; }
     }
 
     @keyframes lavaPulse {
-      0%, 100% { opacity: .28; transform: scaleY(.95); }
-      50% { opacity: .95; transform: scaleY(1.08); }
+      0%, 100% { opacity: .28; }
+      50% { opacity: .95; }
     }
 
     @keyframes lavaBubble {
@@ -732,13 +735,13 @@
     }
 
     @keyframes phonePulse {
-      0%, 100% { opacity: .14; transform: scale(.98); }
-      50% { opacity: .55; transform: scale(1.05); }
+      0%, 100% { opacity: .14; }
+      50% { opacity: .55; }
     }
 
     @keyframes heartPulse {
-      0%, 100% { opacity: .25; transform: scale(.96); }
-      50% { opacity: .9; transform: scale(1.12); }
+      0%, 100% { opacity: .25; }
+      50% { opacity: .9; }
     }
 
     @keyframes paperPulse {
@@ -747,8 +750,8 @@
     }
 
     @keyframes posterPulse {
-      0%, 100% { opacity: .14; transform: scale(.99); }
-      50% { opacity: .58; transform: scale(1.03); }
+      0%, 100% { opacity: .14; }
+      50% { opacity: .58; }
     }
 
     @keyframes shimmerSweep {
@@ -757,18 +760,18 @@
     }
 
     @keyframes magnifyGlint {
-      0%, 100% { opacity: .08; transform: scale(.8); }
-      40% { opacity: .8; transform: scale(1.1); }
+      0%, 100% { opacity: .08; }
+      40% { opacity: .8; }
     }
 
     @keyframes diamondFlash {
-      0%, 100% { opacity: .12; transform: scale(.8) rotate(0deg); }
-      50% { opacity: .9; transform: scale(1.18) rotate(12deg); }
+      0%, 100% { opacity: .12; }
+      50% { opacity: .9; }
     }
 
     @keyframes kittyPulse {
-      0%, 100% { opacity: .18; transform: scale(.98); }
-      50% { opacity: .7; transform: scale(1.08); }
+      0%, 100% { opacity: .18; }
+      50% { opacity: .7; }
     }
 
     @keyframes steamRise {
@@ -794,28 +797,14 @@
     }
 
     @keyframes clockBlink {
-      0%, 49% {
-        opacity: .96;
-      }
-
-      50%, 100% {
-        opacity: .18;
-      }
+      0%, 49% { opacity: .96; }
+      50%, 100% { opacity: .18; }
     }
 
     @keyframes colonBlink {
-      0%, 49% {
-        opacity: 1;
-      }
-
-      50%, 100% {
-        opacity: .2;
-      }
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: .2; }
     }
-
-    /* ======================================================
-       MOBILE / iPHONE
-    ====================================================== */
 
     @media (max-width: 760px) {
       .mobile-rabbit-hint {
@@ -830,7 +819,7 @@
 
       .static-sound-toggle {
         right: 10px;
-        bottom: 10px;
+        top: 45px;
         font-size: 11px;
         padding: 9px 11px;
       }
@@ -847,8 +836,10 @@
         font-size: 16px;
       }
 
-      .clock-svg-wrap {
-        width: 50px !important;
+      .overlay-editor-panel {
+        left: 10px;
+        right: auto;
+        bottom: 10px;
       }
     }
   </style>
@@ -870,69 +861,7 @@
       <main class="rabbit-stage" id="rabbitStage">
         <img src="rabbit-hole-bg.png" alt="$TEDDY The Rabbit Hole" class="rabbit-bg" />
 
-        <div class="anim-layer moass-neon"></div>
-        <div class="anim-layer bunny-neon"></div>
-        <div class="anim-layer arcade-glow"></div>
-        <div class="anim-layer lava-glow"></div>
-        <div class="lava-bubble-one"></div>
-        <div class="lava-bubble-two"></div>
-        <div class="lava-bubble-three"></div>
-        <div class="anim-layer phone-glow"></div>
-        <div class="anim-layer heart-gme-pulse"></div>
-        <div class="anim-layer power-glow"></div>
-        <div class="anim-layer hang-poster-glow"></div>
-        <div class="anim-layer chart-shimmer"></div>
-        <div class="anim-layer magnify-glint"></div>
-        <div class="anim-layer diamond-sparkle"></div>
-        <div class="anim-layer kitty-pulse"></div>
-        <div class="anim-layer vhs-glow"></div>
-        <div class="anim-layer notebook-pulse"></div>
-
-        <div class="anim-layer coffee-steam">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-
-        <div id="tvStaticBox" class="tv-static-wrap">
-          <canvas id="tvStaticCanvas" class="tv-static-canvas"></canvas>
-          <div class="tv-static-lines"></div>
-          <div class="tv-static-roll"></div>
-        </div>
-
-        <div id="clockSvgWrap" class="clock-svg-wrap" aria-hidden="true">
-          <svg class="clock-svg" viewBox="0 0 240 70" xmlns="http://www.w3.org/2000/svg">
-            <!-- 1 -->
-            <rect class="clock-seg" x="18" y="10" width="8" height="50" rx="4" />
-            <rect class="clock-seg" x="8" y="16" width="16" height="8" rx="4" />
-
-            <!-- 2 -->
-            <rect class="clock-seg" x="47" y="7" width="40" height="8" rx="4" />
-            <rect class="clock-seg" x="83" y="11" width="8" height="21" rx="4" />
-            <rect class="clock-seg" x="47" y="31" width="40" height="8" rx="4" />
-            <rect class="clock-seg" x="43" y="35" width="8" height="21" rx="4" />
-            <rect class="clock-seg" x="47" y="55" width="40" height="8" rx="4" />
-
-            <!-- colon -->
-            <circle class="clock-colon" cx="112" cy="24" r="5" />
-            <circle class="clock-colon" cx="112" cy="47" r="5" />
-
-            <!-- 0 -->
-            <rect class="clock-seg" x="135" y="7" width="40" height="8" rx="4" />
-            <rect class="clock-seg" x="131" y="11" width="8" height="45" rx="4" />
-            <rect class="clock-seg" x="171" y="11" width="8" height="45" rx="4" />
-            <rect class="clock-seg" x="135" y="55" width="40" height="8" rx="4" />
-
-            <!-- 0 -->
-            <rect class="clock-seg" x="193" y="7" width="40" height="8" rx="4" />
-            <rect class="clock-seg" x="189" y="11" width="8" height="45" rx="4" />
-            <rect class="clock-seg" x="229" y="11" width="8" height="45" rx="4" />
-            <rect class="clock-seg" x="193" y="55" width="40" height="8" rx="4" />
-          </svg>
-        </div>
-
-        <div class="dust one"></div>
-        <div class="dust two"></div>
+        <div id="rabbitOverlayRoot"></div>
 
         <div id="rabbitHotspots"></div>
       </main>
@@ -949,129 +878,7 @@
     </div>
   </div>
 
-  <script>
-    /* ======================================================
-       TV STATIC CANVAS
-    ====================================================== */
-
-    const tvCanvas = document.getElementById("tvStaticCanvas");
-    const tvCtx = tvCanvas.getContext("2d", { willReadFrequently: true });
-    const staticWidth = 180;
-    const staticHeight = 120;
-
-    tvCanvas.width = staticWidth;
-    tvCanvas.height = staticHeight;
-
-    function drawTvStatic() {
-      const imageData = tvCtx.createImageData(staticWidth, staticHeight);
-      const data = imageData.data;
-
-      for (let i = 0; i < data.length; i += 4) {
-        const shade = Math.random() * 255;
-        const pop = Math.random() > 0.985 ? 255 : shade;
-
-        data[i] = pop;
-        data[i + 1] = pop;
-        data[i + 2] = pop;
-        data[i + 3] = 135 + Math.random() * 95;
-      }
-
-      tvCtx.putImageData(imageData, 0, 0);
-
-      tvCtx.fillStyle = "rgba(80, 210, 255, 0.06)";
-      tvCtx.fillRect(0, 0, staticWidth, staticHeight);
-
-      if (Math.random() > 0.9) {
-        tvCtx.fillStyle = "rgba(255,255,255,0.25)";
-        tvCtx.fillRect(0, Math.random() * staticHeight, staticWidth, 2 + Math.random() * 6);
-      }
-
-      requestAnimationFrame(drawTvStatic);
-    }
-
-    drawTvStatic();
-
-    /* ======================================================
-       OPTIONAL TV STATIC SOUND
-    ====================================================== */
-
-    const staticSoundToggle = document.getElementById("staticSoundToggle");
-    let audioContext = null;
-    let staticNode = null;
-    let staticGain = null;
-    let staticPlaying = false;
-
-    function startStaticSound() {
-      if (staticPlaying) return;
-
-      audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
-      const bufferSize = 2 * audioContext.sampleRate;
-      const noiseBuffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
-      const output = noiseBuffer.getChannelData(0);
-
-      for (let i = 0; i < bufferSize; i++) {
-        output[i] = Math.random() * 2 - 1;
-      }
-
-      staticNode = audioContext.createBufferSource();
-      staticNode.buffer = noiseBuffer;
-      staticNode.loop = true;
-
-      staticGain = audioContext.createGain();
-      staticGain.gain.value = 0.025;
-
-      const filter = audioContext.createBiquadFilter();
-      filter.type = "highpass";
-      filter.frequency.value = 850;
-
-      staticNode.connect(filter);
-      filter.connect(staticGain);
-      staticGain.connect(audioContext.destination);
-
-      staticNode.start();
-      staticPlaying = true;
-
-      staticSoundToggle.textContent = "TV STATIC: ON";
-      staticSoundToggle.classList.add("on");
-    }
-
-    function stopStaticSound() {
-      if (!staticPlaying) return;
-
-      try { staticNode.stop(); } catch {}
-      try { audioContext.close(); } catch {}
-
-      audioContext = null;
-      staticNode = null;
-      staticGain = null;
-      staticPlaying = false;
-
-      staticSoundToggle.textContent = "TV STATIC: OFF";
-      staticSoundToggle.classList.remove("on");
-    }
-
-    staticSoundToggle.addEventListener("click", () => {
-      if (staticPlaying) {
-        stopStaticSound();
-      } else {
-        startStaticSound();
-      }
-    });
-
-    /* ======================================================
-       MOBILE START POSITION
-    ====================================================== */
-
-    window.addEventListener("load", () => {
-      const wrap = document.getElementById("rabbitScrollWrap");
-
-      if (window.innerWidth <= 760 && wrap) {
-        wrap.scrollLeft = 360;
-      }
-    });
-  </script>
-
+  <script src="rabbit-overlays.js"></script>
   <script src="rabbit-hole.js"></script>
 </body>
 </html>
