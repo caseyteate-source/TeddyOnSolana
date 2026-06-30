@@ -1,6 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Bungee&family=Monoton&family=Orbitron:wght@500;700;900&family=Permanent+Marker&family=Space+Mono:wght@400;700&display=swap');
-
-* {
   box-sizing: border-box;
 }
 
@@ -2468,5 +2466,567 @@ code {
 
   50%, 100% {
     opacity: 0 !important;
+  }
+}
+/* ======================================================
+   RADICAL 80s WIKI / MODAL CARD OVERHAUL
+   Paste at VERY BOTTOM of style.css
+====================================================== */
+
+:root {
+  --wiki-cyan: #22f3ff;
+  --wiki-pink: #ff39b7;
+  --wiki-purple: #1a022e;
+  --wiki-purple-2: #2a0548;
+  --wiki-yellow: #ffe76a;
+  --wiki-white: #f8fbff;
+  --wiki-deep: #070010;
+}
+
+/* modal background */
+.modal,
+.wiki-modal,
+#modal,
+#wikiModal,
+#clueModal,
+.rabbit-modal {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 22px;
+  background:
+    radial-gradient(circle at 50% 20%, rgba(34,243,255,.15), transparent 28%),
+    radial-gradient(circle at 50% 80%, rgba(255,57,183,.12), transparent 32%),
+    rgba(0,0,0,.82) !important;
+  backdrop-filter: blur(8px) saturate(1.08);
+}
+
+.modal.active,
+.wiki-modal.active,
+#modal.active,
+#wikiModal.active,
+#clueModal.active,
+.rabbit-modal.active {
+  display: flex !important;
+}
+
+/* main card shell */
+.modal-box,
+.wiki-modal-box,
+.wiki-box,
+.clue-box,
+.rabbit-modal-box,
+#modal .modal-box,
+#wikiModal .modal-box,
+#clueModal .modal-box,
+#modalContent,
+#wikiContent {
+  width: min(780px, 94vw) !important;
+  max-width: 780px !important;
+  margin: 0 auto !important;
+  padding: 30px 26px 26px !important;
+  border-radius: 28px !important;
+  border: 3px solid var(--wiki-pink) !important;
+  text-align: center !important;
+  position: relative !important;
+  overflow: hidden !important;
+
+  background:
+    linear-gradient(135deg, rgba(34,243,255,.10), transparent 25%),
+    linear-gradient(315deg, rgba(255,57,183,.12), transparent 32%),
+    linear-gradient(180deg, var(--wiki-purple-2), var(--wiki-purple) 52%, var(--wiki-deep)) !important;
+
+  box-shadow:
+    0 0 18px rgba(255,57,183,.95),
+    0 0 48px rgba(34,243,255,.24),
+    0 0 80px rgba(255,57,183,.20),
+    inset 0 0 22px rgba(34,243,255,.07) !important;
+}
+
+/* inner chrome frame */
+.modal-box::before,
+.wiki-modal-box::before,
+.wiki-box::before,
+.clue-box::before,
+.rabbit-modal-box::before,
+#modalContent::before,
+#wikiContent::before {
+  content: "";
+  position: absolute;
+  inset: 9px;
+  border-radius: 20px;
+  pointer-events: none;
+  z-index: 0;
+  border: 1px solid rgba(34,243,255,.22);
+  box-shadow:
+    inset 0 0 18px rgba(34,243,255,.08),
+    inset 0 0 22px rgba(255,57,183,.08);
+}
+
+/* scanlines */
+.modal-box::after,
+.wiki-modal-box::after,
+.wiki-box::after,
+.clue-box::after,
+.rabbit-modal-box::after,
+#modalContent::after,
+#wikiContent::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,.045) 0px,
+      rgba(255,255,255,.045) 1px,
+      transparent 2px,
+      transparent 5px
+    );
+  opacity: .18;
+  mix-blend-mode: screen;
+}
+
+.modal-box > *,
+.wiki-modal-box > *,
+.wiki-box > *,
+.clue-box > *,
+.rabbit-modal-box > *,
+#modalContent > *,
+#wikiContent > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* close button */
+.close,
+.close-modal,
+.modal-close,
+#closeModal,
+#wikiClose,
+#rabbitClose {
+  position: absolute !important;
+  top: 10px !important;
+  right: 16px !important;
+  z-index: 5 !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: white !important;
+  font-family: "Orbitron", sans-serif !important;
+  font-size: 36px !important;
+  font-weight: 900 !important;
+  cursor: pointer !important;
+  line-height: 1 !important;
+  text-shadow:
+    0 0 8px var(--wiki-pink),
+    0 0 18px var(--wiki-pink) !important;
+}
+
+.close:hover,
+.close-modal:hover,
+.modal-close:hover,
+#closeModal:hover,
+#wikiClose:hover,
+#rabbitClose:hover {
+  color: var(--wiki-cyan) !important;
+  text-shadow:
+    0 0 8px var(--wiki-cyan),
+    0 0 18px var(--wiki-cyan) !important;
+}
+
+/* tiny top tag */
+#wikiTag,
+#rabbitTag,
+.modal-tag,
+.wiki-tag,
+.clue-tag,
+.tag,
+.tagline {
+  display: inline-block !important;
+  margin: 0 auto 12px !important;
+  padding: 8px 14px !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(255,231,106,.45) !important;
+  background: rgba(255,231,106,.10) !important;
+
+  font-family: "Orbitron", sans-serif !important;
+  font-size: clamp(11px, 1.1vw, 13px) !important;
+  font-weight: 900 !important;
+  letter-spacing: 2px !important;
+  text-transform: uppercase !important;
+  line-height: 1.2 !important;
+  color: var(--wiki-yellow) !important;
+
+  text-shadow:
+    0 0 8px rgba(255,231,106,.55),
+    0 0 14px rgba(255,231,106,.22) !important;
+}
+
+/* main title */
+#wikiTitle,
+#modalTitle,
+#rabbitTitle,
+.modal-box h2,
+.wiki-modal-box h2,
+.wiki-box h2,
+.clue-box h2,
+.rabbit-modal-box h2 {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 auto 10px !important;
+  text-align: center !important;
+  line-height: .95 !important;
+  letter-spacing: 1px !important;
+  text-transform: uppercase !important;
+
+  font-family: "Bungee", sans-serif !important;
+  font-size: clamp(34px, 4.3vw, 62px) !important;
+  font-weight: 400 !important;
+
+  background: linear-gradient(
+    180deg,
+    #fff8fd 0%,
+    #ffd4ef 12%,
+    #ff84ca 28%,
+    #ff42b2 45%,
+    #48ecff 70%,
+    #1b8fff 100%
+  ) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+
+  filter: drop-shadow(0 0 6px rgba(255,57,183,.22));
+  text-shadow: none !important;
+}
+
+/* subtitle/date */
+#wikiDate,
+.modal-subtitle,
+.wiki-subtitle,
+.clue-subtitle,
+.modal-box h3,
+.wiki-modal-box h3,
+.wiki-box h3,
+.clue-box h3 {
+  display: block !important;
+  margin: 0 auto 18px !important;
+  text-align: center !important;
+
+  font-family: "Permanent Marker", cursive !important;
+  font-size: clamp(18px, 2vw, 27px) !important;
+  line-height: 1.15 !important;
+  font-weight: 400 !important;
+  letter-spacing: .3px !important;
+  color: #ff74c6 !important;
+
+  text-shadow:
+    0 0 10px rgba(255,57,183,.55),
+    0 0 18px rgba(255,57,183,.18) !important;
+}
+
+/* divider line after title area */
+#wikiDate::after,
+.modal-subtitle::after,
+.wiki-subtitle::after,
+.clue-subtitle::after,
+.modal-box h3::after,
+.wiki-modal-box h3::after,
+.wiki-box h3::after,
+.clue-box h3::after {
+  content: "";
+  display: block;
+  width: min(340px, 70%);
+  height: 2px;
+  margin: 14px auto 0;
+  background:
+    linear-gradient(
+      to right,
+      transparent,
+      rgba(34,243,255,.95),
+      rgba(255,57,183,.95),
+      transparent
+    );
+  box-shadow: 0 0 10px rgba(34,243,255,.35);
+}
+
+/* body text */
+#wikiText,
+#modalText,
+#rabbitText,
+.modal-box p,
+.wiki-modal-box p,
+.wiki-box p,
+.clue-box p,
+.rabbit-modal-box p {
+  max-width: 620px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  text-align: center !important;
+
+  font-family: "Space Mono", monospace !important;
+  font-size: clamp(15px, 1.25vw, 18px) !important;
+  line-height: 1.72 !important;
+  color: var(--wiki-white) !important;
+}
+
+/* section labels */
+.modal-box h4,
+.wiki-modal-box h4,
+.wiki-box h4,
+.clue-box h4,
+.wiki-section-title,
+.section-label,
+.modal-section-title {
+  display: block !important;
+  width: 100% !important;
+  margin: 24px auto 12px !important;
+  text-align: center !important;
+
+  font-family: "Monoton", cursive !important;
+  font-size: clamp(18px, 2vw, 28px) !important;
+  line-height: 1.15 !important;
+  font-weight: 400 !important;
+  letter-spacing: 1px !important;
+  color: var(--wiki-cyan) !important;
+
+  text-shadow:
+    0 0 8px rgba(34,243,255,.75),
+    0 0 18px rgba(34,243,255,.26) !important;
+}
+
+/* theory textarea */
+.modal-box textarea,
+.wiki-modal-box textarea,
+.wiki-box textarea,
+.clue-box textarea,
+#wikiTheoryInput,
+#theoryInput,
+.theory-input {
+  width: min(590px, 100%) !important;
+  min-height: 116px !important;
+  display: block !important;
+  margin: 0 auto !important;
+  padding: 16px 18px !important;
+
+  border-radius: 18px !important;
+  border: 2px solid var(--wiki-cyan) !important;
+  background:
+    linear-gradient(180deg, rgba(0,10,28,.96), rgba(2,0,18,.98)) !important;
+  color: #e4fcff !important;
+
+  font-family: "Space Mono", monospace !important;
+  font-size: clamp(15px, 1.15vw, 17px) !important;
+  line-height: 1.55 !important;
+  text-align: left !important;
+  resize: vertical !important;
+  outline: none !important;
+
+  box-shadow:
+    inset 0 0 18px rgba(34,243,255,.08),
+    0 0 16px rgba(34,243,255,.16) !important;
+}
+
+.modal-box textarea::placeholder,
+.wiki-modal-box textarea::placeholder,
+.wiki-box textarea::placeholder,
+.clue-box textarea::placeholder {
+  color: rgba(228,252,255,.55) !important;
+  font-style: italic !important;
+}
+
+/* theory area wrap / saved notes boxes */
+.saved-theories,
+#savedTheories,
+.theory-list {
+  width: min(590px, 100%) !important;
+  margin: 16px auto 0 !important;
+  padding: 14px 14px 8px !important;
+  border-radius: 18px !important;
+  border: 1px solid rgba(255,57,183,.28) !important;
+  background: rgba(255,57,183,.05) !important;
+  box-shadow: inset 0 0 12px rgba(255,57,183,.06);
+  text-align: center !important;
+}
+
+.saved-theories p,
+#savedTheories p,
+.saved-theories li,
+#savedTheories li,
+.theory-list p,
+.theory-list li {
+  text-align: center !important;
+  font-family: "Space Mono", monospace !important;
+  font-size: clamp(14px, 1.05vw, 16px) !important;
+  line-height: 1.58 !important;
+  color: #f6f6f6 !important;
+}
+
+/* button rows */
+.modal-actions,
+.wiki-actions,
+.button-row,
+.modal-buttons,
+.wiki-buttons {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 12px !important;
+  margin-top: 18px !important;
+}
+
+/* buttons and links */
+.modal-box button:not(.close):not(.close-modal):not(.modal-close),
+.modal-box a,
+.wiki-modal-box button:not(.close):not(.close-modal):not(.modal-close),
+.wiki-modal-box a,
+.wiki-box button:not(.close):not(.close-modal):not(.modal-close),
+.wiki-box a,
+.clue-box button:not(.close):not(.close-modal):not(.modal-close),
+.clue-box a,
+.rabbit-modal-box button:not(#rabbitClose),
+.rabbit-modal-box a,
+.wiki-btn,
+.modal-btn {
+  min-width: 220px !important;
+  min-height: 56px !important;
+  padding: 14px 22px !important;
+  border-radius: 18px !important;
+  border: 2px solid transparent !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+
+  display: inline-flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+
+  font-family: "Orbitron", sans-serif !important;
+  font-size: clamp(14px, 1.2vw, 17px) !important;
+  font-weight: 900 !important;
+  letter-spacing: .8px !important;
+  text-transform: uppercase !important;
+  color: white !important;
+
+  transition:
+    transform .18s ease,
+    box-shadow .18s ease,
+    border-color .18s ease,
+    filter .18s ease !important;
+}
+
+/* pink action button */
+#saveTheory,
+.save-btn,
+.primary,
+.modal-box button:first-of-type:not(.close):not(.close-modal):not(.modal-close),
+.wiki-modal-box button:first-of-type:not(.close):not(.close-modal):not(.modal-close),
+.wiki-box button:first-of-type:not(.close):not(.close-modal):not(.modal-close),
+.clue-box button:first-of-type:not(.close):not(.close-modal):not(.modal-close) {
+  background: linear-gradient(180deg, #ff4bbd, #eb1587) !important;
+  box-shadow:
+    0 0 18px rgba(255,57,183,.55),
+    inset 0 -3px 0 rgba(0,0,0,.25) !important;
+}
+
+/* blue action button / links */
+#openXPost,
+#rabbitLink,
+.xpost-btn,
+.secondary,
+.modal-link,
+.wiki-link,
+.modal-box a,
+.wiki-modal-box a,
+.wiki-box a,
+.clue-box a,
+.rabbit-modal-box a {
+  background: linear-gradient(180deg, #31cfff, #0e86de) !important;
+  box-shadow:
+    0 0 18px rgba(34,243,255,.45),
+    inset 0 -3px 0 rgba(0,0,0,.25) !important;
+}
+
+.modal-box button:hover,
+.modal-box a:hover,
+.wiki-modal-box button:hover,
+.wiki-modal-box a:hover,
+.wiki-box button:hover,
+.wiki-box a:hover,
+.clue-box button:hover,
+.clue-box a:hover,
+.rabbit-modal-box button:hover,
+.rabbit-modal-box a:hover {
+  transform: translateY(-2px) scale(1.015) !important;
+  border-color: white !important;
+  filter: brightness(1.08) !important;
+}
+
+/* generic hr */
+.modal-box hr,
+.wiki-modal-box hr,
+.wiki-box hr,
+.clue-box hr,
+.rabbit-modal-box hr {
+  width: min(560px, 100%) !important;
+  margin: 22px auto !important;
+  border: 0 !important;
+  height: 1px !important;
+  background:
+    linear-gradient(
+      to right,
+      transparent,
+      rgba(34,243,255,.9),
+      rgba(255,57,183,.95),
+      transparent
+    ) !important;
+}
+
+/* force centering on random wrappers */
+.modal-box > div,
+.wiki-modal-box > div,
+.wiki-box > div,
+.clue-box > div,
+.rabbit-modal-box > div {
+  text-align: center !important;
+}
+
+/* mobile */
+@media (max-width: 700px) {
+  .modal-box,
+  .wiki-modal-box,
+  .wiki-box,
+  .clue-box,
+  .rabbit-modal-box,
+  #modalContent,
+  #wikiContent {
+    width: min(94vw, 680px) !important;
+    padding: 22px 16px 20px !important;
+    border-radius: 22px !important;
+  }
+
+  #wikiTitle,
+  #modalTitle,
+  #rabbitTitle,
+  .modal-box h2,
+  .wiki-modal-box h2,
+  .wiki-box h2,
+  .clue-box h2,
+  .rabbit-modal-box h2 {
+    font-size: 30px !important;
+  }
+
+  .modal-box button:not(.close):not(.close-modal):not(.modal-close),
+  .modal-box a,
+  .wiki-modal-box button:not(.close):not(.close-modal):not(.modal-close),
+  .wiki-modal-box a,
+  .wiki-box button:not(.close):not(.close-modal):not(.modal-close),
+  .wiki-box a,
+  .clue-box button:not(.close):not(.close-modal):not(.modal-close),
+  .clue-box a,
+  .rabbit-modal-box button:not(#rabbitClose),
+  .rabbit-modal-box a {
+    min-width: 100% !important;
   }
 }
