@@ -1305,29 +1305,31 @@ code {
   }
 }
 /* ======================================================
-   REALISTIC TV STATIC + SOUND TOGGLE
-   Paste at the very bottom of style.css
+   TV STATIC FIT FIX
+   Replace the earlier TV static section with this
 ====================================================== */
 
 .tv-static-wrap {
   position: absolute;
-  left: 84.05%;
-  top: 27.15%;
-  width: 12.95%;
-  height: 16.85%;
+  left: 84.55%;
+  top: 29.2%;
+  width: 12.1%;
+  height: 14.9%;
   z-index: 18;
   overflow: hidden;
-  border-radius: 14px;
-  transform: rotate(-0.5deg);
-  opacity: .82;
+  border-radius: 10px;
+  transform: rotate(-0.6deg) skewX(-2.2deg) skewY(0.3deg);
+  transform-origin: center center;
+  opacity: .84;
   mix-blend-mode: screen;
   filter:
     contrast(1.35)
-    brightness(1.15)
+    brightness(1.12)
     saturate(.35);
   box-shadow:
-    inset 0 0 22px rgba(255,255,255,.22),
-    0 0 18px rgba(80,210,255,.28);
+    inset 0 0 18px rgba(255,255,255,.18),
+    0 0 14px rgba(80,210,255,.18);
+  pointer-events: none;
 }
 
 .tv-static-canvas {
@@ -1335,8 +1337,9 @@ code {
   height: 100%;
   display: block;
   image-rendering: pixelated;
-  transform: scale(1.08);
-  opacity: .82;
+  transform: scale(1.05);
+  transform-origin: center center;
+  opacity: .84;
 }
 
 .tv-static-lines {
@@ -1346,13 +1349,13 @@ code {
   background:
     repeating-linear-gradient(
       to bottom,
-      rgba(255,255,255,.12) 0px,
-      rgba(255,255,255,.12) 1px,
-      rgba(0,0,0,.22) 2px,
-      rgba(0,0,0,.22) 4px
+      rgba(255,255,255,.11) 0px,
+      rgba(255,255,255,.11) 1px,
+      rgba(0,0,0,.18) 2px,
+      rgba(0,0,0,.18) 4px
     );
   mix-blend-mode: overlay;
-  opacity: .56;
+  opacity: .5;
   animation: tvLineBuzz .18s steps(2, end) infinite;
 }
 
@@ -1367,59 +1370,10 @@ code {
     linear-gradient(
       to bottom,
       transparent,
-      rgba(255,255,255,.18),
-      rgba(100,220,255,.22),
+      rgba(255,255,255,.16),
+      rgba(100,220,255,.18),
       transparent
     );
-  opacity: .45;
+  opacity: .38;
   animation: tvRoll 3.7s linear infinite;
-}
-
-.static-sound-toggle {
-  position: fixed;
-  right: 14px;
-  bottom: 14px;
-  z-index: 3000;
-  border: 2px solid rgba(0,245,255,.75);
-  border-radius: 999px;
-  background: rgba(0,0,0,.78);
-  color: #dffcff;
-  padding: 10px 14px;
-  font-weight: 900;
-  font-size: 12px;
-  letter-spacing: .6px;
-  cursor: pointer;
-  box-shadow:
-    0 0 16px rgba(0,245,255,.35),
-    inset 0 0 12px rgba(0,245,255,.12);
-}
-
-.static-sound-toggle:hover,
-.static-sound-toggle.active {
-  color: white;
-  border-color: #ff2aa3;
-  background: rgba(40,0,35,.86);
-  box-shadow:
-    0 0 18px rgba(255,42,163,.65),
-    0 0 26px rgba(0,245,255,.35);
-}
-
-@keyframes tvLineBuzz {
-  0% {
-    transform: translateY(0);
-    opacity: .48;
-  }
-  100% {
-    transform: translateY(3px);
-    opacity: .68;
-  }
-}
-
-@keyframes tvRoll {
-  from {
-    transform: translateY(-20%);
-  }
-  to {
-    transform: translateY(340%);
-  }
 }
