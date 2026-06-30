@@ -1575,3 +1575,23 @@ code {
     transform: translateY(340%);
   }
 }
+.tv-nudge-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.tv-nudge-grid button {
+  margin: 0 !important;
+  padding: 9px !important;
+  border-radius: 10px !important;
+  background: #00aaff !important;
+  color: white !important;
+  font-weight: 900 !important;
+  cursor: pointer !important;
+}
+
+.tv-nudge-grid button:hover {
+  background: #ff2aa3 !important;
+}
