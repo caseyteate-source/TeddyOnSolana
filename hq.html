@@ -129,11 +129,6 @@
       transform-origin: center center;
     }
 
-    .rabbit-overlay-glow {
-      border-radius: 999px;
-      filter: blur(7px);
-    }
-
     .overlay-moass {
       background: rgba(255, 20, 120, .18);
       border-radius: 20px;
@@ -168,20 +163,27 @@
     }
 
     .overlay-lava-bubble {
+      overflow: visible;
+    }
+
+    .overlay-lava-bubble span {
+      display: block;
+      width: 100%;
+      height: 100%;
       border-radius: 999px;
       background: rgba(255, 90, 190, .65);
       box-shadow:
         0 0 8px rgba(255,42,163,.9),
         0 0 16px rgba(255,42,163,.5);
-      animation: lavaBubble 4.2s infinite ease-in-out;
+      animation: lavaBubbleRise 4.2s infinite ease-in-out;
     }
 
-    .overlay-lava-bubble.yellow {
+    .overlay-lava-bubble.yellow span {
       background: rgba(255, 226, 80, .62);
       animation-delay: -1.4s;
     }
 
-    .overlay-lava-bubble.blue {
+    .overlay-lava-bubble.blue span {
       background: rgba(0, 245, 255, .38);
       animation-delay: -2.4s;
     }
@@ -307,19 +309,33 @@
       animation-delay: -6s;
     }
 
+    /* ======================================================
+       TV STATIC — OLD SOFTER LOOK
+    ====================================================== */
+
     .tv-static-wrap {
       overflow: hidden !important;
-      opacity: .72 !important;
-      mix-blend-mode: screen;
-      border-radius: 5px;
-      filter: contrast(1.2) brightness(1.05);
+      border-radius: 18px !important;
+      mix-blend-mode: screen !important;
+      filter:
+        contrast(1.18)
+        brightness(.92)
+        saturate(.35)
+        blur(.15px) !important;
+      box-shadow:
+        inset 0 0 18px rgba(255,255,255,.12),
+        0 0 12px rgba(80,210,255,.15) !important;
+      pointer-events: none !important;
     }
 
     .tv-static-canvas {
-      width: 100%;
-      height: 100%;
-      display: block;
-      opacity: .72;
+      width: 100% !important;
+      height: 100% !important;
+      display: block !important;
+      image-rendering: pixelated !important;
+      transform: scale(1.08) !important;
+      transform-origin: center center !important;
+      opacity: .38 !important;
     }
 
     .tv-static-lines {
@@ -332,7 +348,7 @@
         transparent 1px,
         transparent 4px
       );
-      opacity: .32;
+      opacity: .22;
       animation: tvLines 1.8s linear infinite;
     }
 
@@ -342,10 +358,14 @@
       right: 0;
       top: -35%;
       height: 24%;
-      background: rgba(255,255,255,.16);
+      background: rgba(255,255,255,.10);
       filter: blur(4px);
       animation: tvRoll 3.1s linear infinite;
     }
+
+    /* ======================================================
+       CLOCK SVG
+    ====================================================== */
 
     .clock-svg-wrap {
       mix-blend-mode: screen;
@@ -378,7 +398,11 @@
 
     .overlay-edit-mode #rabbitOverlayRoot {
       pointer-events: auto;
-      z-index: 250;
+      z-index: 500;
+    }
+
+    .overlay-edit-mode #rabbitHotspots {
+      pointer-events: none !important;
     }
 
     .overlay-edit-mode .rabbit-overlay {
@@ -640,7 +664,8 @@
       box-shadow: 0 0 16px rgba(0,245,255,.7);
     }
 
-    .static-sound-toggle.on {
+    .static-sound-toggle.on,
+    .static-sound-toggle.active {
       border-color: #ff2aa3;
       box-shadow: 0 0 18px rgba(255,42,163,.85);
     }
@@ -710,9 +735,9 @@
     }
 
     @keyframes bunnyFlicker {
-      0%, 100% { opacity: .72; transform: scale(1); }
+      0%, 100% { opacity: .72; }
       44% { opacity: .48; }
-      45% { opacity: .95; transform: scale(1.03); }
+      45% { opacity: .95; }
       46% { opacity: .45; }
       47% { opacity: .9; }
     }
@@ -727,7 +752,7 @@
       50% { opacity: .95; }
     }
 
-    @keyframes lavaBubble {
+    @keyframes lavaBubbleRise {
       0% { transform: translateY(28px) scale(.7); opacity: .12; }
       25% { opacity: .72; }
       65% { opacity: .9; }
