@@ -19,74 +19,54 @@
 
     .arcade-page {
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 8px 14px 22px;
+      padding: 14px 14px 28px;
       box-sizing: border-box;
     }
 
-    .arcade-shell {
-      position: relative;
+    .arcade-top-panel {
       width: min(99vw, 1180px);
-      margin: 0 auto;
-    }
-
-    .arcade-cabinet-img {
-      width: 100%;
-      height: auto;
-      display: block;
-      filter:
-        drop-shadow(0 0 24px rgba(255,42,163,.75))
-        drop-shadow(0 0 42px rgba(0,245,255,.45));
-      user-select: none;
-      -webkit-user-drag: none;
-    }
-
-    /*
-      These place the game screen inside the cabinet.
-      Leave these alone unless the game screen is visually off-center.
-    */
-    .arcade-screen {
-      position: absolute;
-      left: 22.6%;
-      top: 19.2%;
-      width: 54.8%;
-      height: 33.8%;
-      border-radius: 12px;
-      overflow: hidden;
-      background: #050510;
+      margin: 0 auto 12px;
+      padding: 12px 16px;
+      box-sizing: border-box;
+      border: 2px solid rgba(0,245,255,.5);
+      border-radius: 18px;
+      background:
+        linear-gradient(90deg, rgba(255,42,163,.18), rgba(0,245,255,.14)),
+        rgba(0,0,0,.72);
       box-shadow:
-        inset 0 0 22px rgba(0,245,255,.5),
-        0 0 18px rgba(0,245,255,.55);
-    }
-
-    #gameCanvas {
-      display: block;
-      width: 100%;
-      height: 100%;
-      background: #050510;
-      cursor: crosshair;
-    }
-
-    .arcade-buttons {
-      position: absolute;
-      left: 50%;
-      top: 66.5%;
-      transform: translateX(-50%);
-      width: 62%;
+        0 0 18px rgba(0,245,255,.35),
+        0 0 24px rgba(255,42,163,.22);
       display: flex;
-      justify-content: center;
       align-items: center;
-      gap: 16px;
+      justify-content: space-between;
+      gap: 14px;
       flex-wrap: wrap;
-      z-index: 5;
+    }
+
+    .arcade-instructions {
+      flex: 1 1 420px;
+      font-size: clamp(11px, 1vw, 14px);
+      line-height: 1.45;
+      color: #dffcff;
+      text-shadow: 0 0 8px rgba(0,0,0,.9);
+    }
+
+    .arcade-instructions strong {
+      color: #ffea00;
+    }
+
+    .arcade-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
     }
 
     .arcade-btn {
       border: 0;
       border-radius: 999px;
-      padding: 14px 24px;
+      padding: 13px 22px;
       color: white;
       font-weight: 900;
       letter-spacing: 1px;
@@ -95,7 +75,7 @@
       box-shadow:
         0 0 14px rgba(255,42,163,.95),
         inset 0 -3px 0 rgba(0,0,0,.25);
-      font-size: clamp(12px, 1.45vw, 17px);
+      font-size: clamp(12px, 1.1vw, 16px);
       text-transform: uppercase;
       text-decoration: none;
       display: inline-flex;
@@ -122,34 +102,47 @@
       box-shadow: 0 0 18px rgba(255,42,163,.95);
     }
 
-    /*
-      Moved up from 75.5% to 59.8% so it is legible
-      and not sitting on the lower cabinet artwork.
-    */
-    .arcade-rules {
-      position: absolute;
-      left: 50%;
-      top: 59.8%;
-      transform: translateX(-50%);
-      width: 64%;
-      text-align: center;
-      color: #dffcff;
-      font-size: clamp(10px, 1.05vw, 14px);
-      line-height: 1.5;
-      text-shadow:
-        0 0 8px rgba(0,0,0,1),
-        0 0 14px rgba(0,0,0,1);
-      z-index: 6;
-      background: rgba(0, 0, 0, 0.42);
-      border: 1px solid rgba(0,245,255,.25);
-      border-radius: 14px;
-      padding: 8px 12px;
-      box-shadow: 0 0 16px rgba(0,245,255,.16);
-      backdrop-filter: blur(2px);
+    .arcade-shell {
+      position: relative;
+      width: min(99vw, 1180px);
+      margin: 0 auto;
     }
 
-    .arcade-rules strong {
-      color: #ffea00;
+    .arcade-cabinet-img {
+      width: 100%;
+      height: auto;
+      display: block;
+      filter:
+        drop-shadow(0 0 24px rgba(255,42,163,.75))
+        drop-shadow(0 0 42px rgba(0,245,255,.45));
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    /*
+      Game screen placement inside the cabinet.
+      If the screen is slightly off later, only adjust these 4 values.
+    */
+    .arcade-screen {
+      position: absolute;
+      left: 22.6%;
+      top: 19.2%;
+      width: 54.8%;
+      height: 33.8%;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #050510;
+      box-shadow:
+        inset 0 0 22px rgba(0,245,255,.5),
+        0 0 18px rgba(0,245,255,.55);
+    }
+
+    #gameCanvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: #050510;
+      cursor: crosshair;
     }
 
     #siteContent {
@@ -158,31 +151,34 @@
 
     @media (max-width: 700px) {
       .arcade-page {
-        align-items: flex-start;
-        justify-content: flex-start;
         padding: 10px 8px 30px;
+        overflow-x: auto;
+      }
+
+      .arcade-top-panel {
+        width: 1180px;
+        max-width: none;
+        margin-left: 0;
+        margin-right: 0;
       }
 
       .arcade-shell {
         width: 1180px;
         max-width: none;
+        margin-left: 0;
+        margin-right: 0;
       }
 
       body {
         overflow-x: auto;
       }
 
-      .arcade-buttons {
-        gap: 10px;
+      .arcade-top-panel {
+        justify-content: flex-start;
       }
 
-      .arcade-btn {
-        padding: 12px 18px;
-      }
-
-      .arcade-rules {
-        top: 59.5%;
-        width: 64%;
+      .arcade-instructions {
+        flex-basis: 100%;
       }
     }
   </style>
@@ -192,6 +188,24 @@
   <div class="scanlines"></div>
 
   <main id="startScreen" class="arcade-page">
+    <div class="arcade-top-panel">
+      <div class="arcade-instructions">
+        <strong>HOW TO PLAY:</strong>
+        Move Teddy with arrows, WASD, or drag/touch.
+        Collect RK’s emoji timeline. Avoid the flashing <strong>SHORT</strong> skulls.
+      </div>
+
+      <div class="arcade-controls">
+        <button id="startGame" class="arcade-btn" type="button">
+          START GAME
+        </button>
+
+        <a class="arcade-btn enter" href="hq.html">
+          ENTER SITE
+        </a>
+      </div>
+    </div>
+
     <div class="arcade-shell">
       <img
         src="teddy-arcade-cabinet.png"
@@ -201,27 +215,6 @@
 
       <div class="arcade-screen">
         <canvas id="gameCanvas"></canvas>
-      </div>
-
-      <div class="arcade-rules">
-        <strong>HOW TO PLAY:</strong>
-        Move Teddy with arrows, WASD, or drag/touch.
-        Collect RK's emoji timeline. Avoid the flashing <strong>SHORT</strong> skulls.
-      </div>
-
-      <div class="arcade-buttons">
-        <button id="startGame" class="arcade-btn" type="button">
-          START GAME
-        </button>
-
-        <a
-          id="enterSite"
-          class="arcade-btn enter"
-          href="hq.html"
-          onclick="event.stopImmediatePropagation();"
-        >
-          ENTER SITE
-        </a>
       </div>
     </div>
   </main>
