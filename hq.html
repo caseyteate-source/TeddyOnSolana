@@ -12,6 +12,10 @@
   <div class="rabbit-light"></div>
   <div class="rabbit-cursor-glow"></div>
 
+  <button id="staticSoundToggle" class="static-sound-toggle" type="button">
+    TV STATIC: OFF
+  </button>
+
   <main class="rabbit-stage">
     <img src="rabbit-hole-bg.png" alt="$TEDDY The Rabbit Hole" class="rabbit-bg" />
 
@@ -25,6 +29,14 @@
       <div class="rabbit-glow glow-lamp"></div>
       <div class="rabbit-glow glow-stock"></div>
       <div class="rabbit-glow glow-phone"></div>
+
+      <!-- Real animated TV static -->
+      <div class="tv-static-wrap">
+        <canvas id="tvStaticCanvas" class="tv-static-canvas"></canvas>
+        <div class="tv-static-lines"></div>
+        <div class="tv-static-roll"></div>
+      </div>
+
       <div class="rabbit-dust dust-one"></div>
       <div class="rabbit-dust dust-two"></div>
     </div>
@@ -46,6 +58,117 @@
     document.addEventListener("pointermove", (event) => {
       document.documentElement.style.setProperty("--rabbit-mouse-x", event.clientX + "px");
       document.documentElement.style.setProperty("--rabbit-mouse-y", event.clientY + "px");
+    });
+
+    /* ======================================================
+       REALISTIC TV STATIC CANVAS
+    ====================================================== */
+
+    const tvCanvas = document.getElementById("tvStaticCanvas");
+    const tvCtx = tvCanvas.getContext("2d", { willReadFrequently: true });
+
+    const staticWidth = 180;
+    const staticHeight = 120;
+
+    tvCanvas.width = staticWidth;
+    tvCanvas.height = staticHeight;
+
+    function drawTvStatic() {
+      const imageData = tvCtx.createImageData(staticWidth, staticHeight);
+      const data = imageData.data;
+
+      for (let i = 0; i < data.length; i += 4) {
+        const shade = Math.random() * 255;
+        const flicker = Math.random() > 0.985 ? 255 : shade;
+
+        data[i] = flicker;
+        data[i + 1] = flicker;
+        data[i + 2] = flicker;
+        data[i + 3] = 165 + Math.random() * 90;
+      }
+
+      tvCtx.putImageData(imageData, 0, 0);
+
+      tvCtx.fillStyle = "rgba(80, 210, 255, 0.08)";
+      tvCtx.fillRect(0, 0, staticWidth, staticHeight);
+
+      if (Math.random() > 0.88) {
+        tvCtx.fillStyle = "rgba(255,255,255,0.35)";
+        tvCtx.fillRect(0, Math.random() * staticHeight, staticWidth, 2 + Math.random() * 5);
+      }
+
+      requestAnimationFrame(drawTvStatic);
+    }
+
+    drawTvStatic();
+
+    /* ======================================================
+       OPTIONAL LOW-VOLUME TV STATIC SOUND
+       Starts only when user clicks the toggle.
+    ====================================================== */
+
+    const staticToggle = document.getElementById("staticSoundToggle");
+
+    let audioCtx = null;
+    let staticSource = null;
+    let staticGain = null;
+    let staticFilter = null;
+    let staticPlaying = false;
+
+    function createStaticSound() {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+      const bufferSize = audioCtx.sampleRate * 2;
+      const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const output = noiseBuffer.getChannelData(0);
+
+      for (let i = 0; i < bufferSize; i++) {
+        output[i] = Math.random() * 2 - 1;
+      }
+
+      staticSource = audioCtx.createBufferSource();
+      staticSource.buffer = noiseBuffer;
+      staticSource.loop = true;
+
+      staticFilter = audioCtx.createBiquadFilter();
+      staticFilter.type = "bandpass";
+      staticFilter.frequency.value = 1150;
+      staticFilter.Q.value = 0.55;
+
+      staticGain = audioCtx.createGain();
+      staticGain.gain.value = 0.018;
+
+      staticSource.connect(staticFilter);
+      staticFilter.connect(staticGain);
+      staticGain.connect(audioCtx.destination);
+
+      staticSource.start();
+    }
+
+    staticToggle.addEventListener("click", async () => {
+      if (!audioCtx) {
+        createStaticSound();
+        staticPlaying = true;
+        staticToggle.textContent = "TV STATIC: ON";
+        staticToggle.classList.add("active");
+        return;
+      }
+
+      if (audioCtx.state === "suspended") {
+        await audioCtx.resume();
+      }
+
+      staticPlaying = !staticPlaying;
+
+      if (staticPlaying) {
+        staticGain.gain.setTargetAtTime(0.018, audioCtx.currentTime, 0.08);
+        staticToggle.textContent = "TV STATIC: ON";
+        staticToggle.classList.add("active");
+      } else {
+        staticGain.gain.setTargetAtTime(0.0001, audioCtx.currentTime, 0.08);
+        staticToggle.textContent = "TV STATIC: OFF";
+        staticToggle.classList.remove("active");
+      }
     });
   </script>
 
