@@ -27,7 +27,7 @@ const rabbitHotspots = [
     "id": "emoji",
     "title": "Emoji Timeline",
     "tag": "VHS Tape",
-    "text": "Follow the emoji timeline.",
+    "text": "Follow the Roaring Kitty emoji timeline.",
     "url": "emoji.html",
     "sameTab": true,
     "x": 25,
@@ -69,7 +69,7 @@ const rabbitHotspots = [
   },
   {
     "id": "desk-lamp",
-    "title": "The Lamp",
+    "title": "The Desk Lamp",
     "tag": "Easter Egg",
     "text": "The lamp leads to Norm Macdonald's legendary moth joke.",
     "url": "https://youtu.be/jJN9mBRX3uo",
@@ -198,6 +198,84 @@ const rabbitHotspots = [
     "x": 32,
     "y": 86,
     "size": 48
+  },
+
+  {
+    "id": "hang-in-there",
+    "title": "Hang In There",
+    "tag": "Poster",
+    "text": "The classic cat signal. Hang in there. Follow the thread.",
+    "url": "kitty.html",
+    "sameTab": true,
+    "x": 30.2,
+    "y": 17.8,
+    "size": 62
+  },
+  {
+    "id": "rocket",
+    "title": "Rocket Blueprint",
+    "tag": "Launch Plan",
+    "text": "A future launch-plan page for the rocket, the timeline, and the moon mission.",
+    "url": "rocket.html",
+    "sameTab": true,
+    "x": 65.6,
+    "y": 47.8,
+    "size": 58
+  },
+  {
+    "id": "ebay-book",
+    "title": "How To Sell Anything On eBay",
+    "tag": "GMEBAY Clue",
+    "text": "The marketplace clue. Open the GMEBAY theory page.",
+    "url": "gmebay.html",
+    "sameTab": true,
+    "x": 84.4,
+    "y": 20.6,
+    "size": 62
+  },
+  {
+    "id": "nintendo-controller",
+    "title": "Nintendo Controller",
+    "tag": "Retro Room",
+    "text": "The controller opens the retro room.",
+    "url": "retro-room.html",
+    "sameTab": true,
+    "x": 91.2,
+    "y": 76.2,
+    "size": 54
+  },
+  {
+    "id": "camcorder",
+    "title": "Camcorder",
+    "tag": "Video Archive",
+    "text": "The camcorder opens the video archive side of the rabbit hole.",
+    "url": "retro-room.html",
+    "sameTab": true,
+    "x": 57.8,
+    "y": 65.2,
+    "size": 54
+  },
+  {
+    "id": "lava-lamp",
+    "title": "Lava Lamp",
+    "tag": "Easter Egg",
+    "text": "A glowing clue from the old room.",
+    "url": "https://youtu.be/jJN9mBRX3uo",
+    "sameTab": false,
+    "x": 21.9,
+    "y": 12.7,
+    "size": 50
+  },
+  {
+    "id": "stock-chart",
+    "title": "Stock Chart",
+    "tag": "Market Clue",
+    "text": "Open the GME stock chart.",
+    "url": "https://finance.yahoo.com/quote/GME/",
+    "sameTab": false,
+    "x": 65.7,
+    "y": 8.6,
+    "size": 54
   }
 ];
 
