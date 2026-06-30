@@ -1,8 +1,9 @@
-
 /* ======================================================
    $TEDDY RABBIT HOLE ANIMATION OVERLAYS
    Movable overlay editor:
    hq.html?overlays=1
+
+   Leave rabbit-hole.js alone.
 ====================================================== */
 
 const isOverlayEditMode = new URLSearchParams(window.location.search).has("overlays");
@@ -67,7 +68,7 @@ const rabbitOverlaySettings = [
   {
     id: "lava-bubble-one",
     label: "Lava Bubble 1",
-    type: "simple",
+    type: "bubble",
     className: "rabbit-overlay overlay-lava-bubble",
     x: 25.75,
     y: 16.5,
@@ -81,7 +82,7 @@ const rabbitOverlaySettings = [
   {
     id: "lava-bubble-two",
     label: "Lava Bubble 2",
-    type: "simple",
+    type: "bubble",
     className: "rabbit-overlay overlay-lava-bubble yellow",
     x: 26.9,
     y: 22.5,
@@ -95,7 +96,7 @@ const rabbitOverlaySettings = [
   {
     id: "lava-bubble-three",
     label: "Lava Bubble 3",
-    type: "simple",
+    type: "bubble",
     className: "rabbit-overlay overlay-lava-bubble blue",
     x: 25.35,
     y: 26,
@@ -289,21 +290,24 @@ const rabbitOverlaySettings = [
     opacity: 1
   },
 
-  /* The TV values below are the dialed-in skew setup we had before. */
+  /* ======================================================
+     OLD DIAL-IN TV STATIC STARTING POINT
+  ====================================================== */
+
   {
     id: "tv-static",
     label: "TV Static",
     type: "tv",
     className: "rabbit-overlay tv-static-wrap",
-    x: 81.92,
-    y: 36.55,
-    w: 13.7,
-    h: 15.7,
-    rotate: -1.1,
+    x: 80.9,
+    y: 23.8,
+    w: 16.2,
+    h: 19.2,
+    rotate: -0.55,
     skewX: -1.5,
-    skewY: 0.3,
-    opacity: 0.72,
-    clipPath: "polygon(4% 5%, 96% 2%, 98% 94%, 5% 98%)"
+    skewY: 0,
+    opacity: 0.42,
+    clipPath: "polygon(5% 5%, 98% 2%, 96% 96%, 7% 98%)"
   },
 
   {
@@ -323,7 +327,6 @@ const rabbitOverlaySettings = [
 ];
 
 const overlayRoot = document.getElementById("rabbitOverlayRoot");
-
 let selectedOverlay = null;
 
 if (isOverlayEditMode) {
@@ -399,6 +402,10 @@ function createOverlayElement(overlay) {
     el.innerHTML = `<span></span><span></span><span></span>`;
   }
 
+  if (overlay.type === "bubble") {
+    el.innerHTML = `<span></span>`;
+  }
+
   return el;
 }
 
@@ -412,6 +419,8 @@ function applyOverlayStyle(el, overlay) {
 
   if (overlay.clipPath) {
     el.style.clipPath = overlay.clipPath;
+  } else {
+    el.style.clipPath = "";
   }
 }
 
@@ -484,7 +493,7 @@ function createOverlayEditorPanel() {
 
   panel.innerHTML = `
     <strong>Overlay Editor</strong>
-    <p>Tap an overlay to select it. Drag it into place. Use buttons for size, rotate, skew, and opacity. Then copy the updated overlay settings.</p>
+    <p>Tap an overlay to select it. Drag it into place. Use the buttons to size, rotate, skew, or fade it.</p>
 
     <div id="overlaySelectedName" class="selected-name">Selected: none</div>
 
@@ -594,17 +603,17 @@ function setupTvStatic() {
       data[i] = pop;
       data[i + 1] = pop;
       data[i + 2] = pop;
-      data[i + 3] = 135 + Math.random() * 95;
+      data[i + 3] = 115 + Math.random() * 75;
     }
 
     tvCtx.putImageData(imageData, 0, 0);
 
-    tvCtx.fillStyle = "rgba(80, 210, 255, 0.06)";
+    tvCtx.fillStyle = "rgba(80, 210, 255, 0.04)";
     tvCtx.fillRect(0, 0, staticWidth, staticHeight);
 
-    if (Math.random() > 0.9) {
-      tvCtx.fillStyle = "rgba(255,255,255,0.25)";
-      tvCtx.fillRect(0, Math.random() * staticHeight, staticWidth, 2 + Math.random() * 6);
+    if (Math.random() > 0.92) {
+      tvCtx.fillStyle = "rgba(255,255,255,0.16)";
+      tvCtx.fillRect(0, Math.random() * staticHeight, staticWidth, 2 + Math.random() * 4);
     }
 
     requestAnimationFrame(drawTvStatic);
@@ -641,11 +650,12 @@ function startStaticSound() {
   staticNode.loop = true;
 
   staticGain = audioContext.createGain();
-  staticGain.gain.value = 0.025;
+  staticGain.gain.value = 0.018;
 
   const filter = audioContext.createBiquadFilter();
-  filter.type = "highpass";
-  filter.frequency.value = 850;
+  filter.type = "bandpass";
+  filter.frequency.value = 1150;
+  filter.Q.value = 0.55;
 
   staticNode.connect(filter);
   filter.connect(staticGain);
