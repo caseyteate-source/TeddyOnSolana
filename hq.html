@@ -35,8 +35,6 @@
         <div class="tv-static-roll"></div>
       </div>
 
-      <div id="alarmBlinkBox" class="alarm-blink-box"></div>
-
       <div class="rabbit-dust dust-one"></div>
       <div class="rabbit-dust dust-two"></div>
     </div>
@@ -208,8 +206,8 @@
         `polygon(${tvState.tlx}% ${tvState.tly}%, ${tvState.trx}% ${tvState.tryy}%, ${tvState.brx}% ${tvState.bry}%, ${tvState.blx}% ${tvState.bly}%)`;
 
       localStorage.setItem("teddyTvStaticState", JSON.stringify(tvState));
-      updateTvEditorOutput();
       syncTvSliders();
+      updateTvEditorOutput();
     }
 
     function createTvStaticEditor() {
@@ -246,6 +244,17 @@
         <label>Skew X <input type="range" min="-12" max="12" step="0.05" data-tv-key="skewX"></label>
         <label>Skew Y <input type="range" min="-12" max="12" step="0.05" data-tv-key="skewY"></label>
         <label>Opacity <input type="range" min="0.05" max="0.9" step="0.01" data-tv-key="opacity"></label>
+
+        <hr>
+
+        <label>Top Left X <input type="range" min="0" max="30" step="0.1" data-tv-key="tlx"></label>
+        <label>Top Left Y <input type="range" min="0" max="30" step="0.1" data-tv-key="tly"></label>
+        <label>Top Right X <input type="range" min="70" max="100" step="0.1" data-tv-key="trx"></label>
+        <label>Top Right Y <input type="range" min="0" max="30" step="0.1" data-tv-key="tryy"></label>
+        <label>Bottom Right X <input type="range" min="70" max="100" step="0.1" data-tv-key="brx"></label>
+        <label>Bottom Right Y <input type="range" min="70" max="100" step="0.1" data-tv-key="bry"></label>
+        <label>Bottom Left X <input type="range" min="0" max="30" step="0.1" data-tv-key="blx"></label>
+        <label>Bottom Left Y <input type="range" min="70" max="100" step="0.1" data-tv-key="bly"></label>
 
         <button id="copyTvStaticCss" type="button">COPY TV STATIC CSS</button>
         <textarea id="tvStaticOutput" readonly></textarea>
@@ -367,344 +376,160 @@
     if (tvEditMode) {
       createTvStaticEditor();
     }
-
-    /* ======================================================
-       ALARM CLOCK BLINK BOX EDITOR
-       Use: hq.html?alarmedit=1
-    ====================================================== */
-
-    const alarmEditMode = new URLSearchParams(window.location.search).has("alarmedit");
-    const alarmBox = document.getElementById("alarmBlinkBox");
-
-    let alarmState = {
-      left: 78.75,
-      top: 65.8,
-      width: 5.8,
-      height: 2.6,
-      rotate: -1.2,
-      radius: 6,
-      opacity: 0.95
-    };
-
-    const savedAlarmState = localStorage.getItem("teddyAlarmBlinkState");
-
-    if (savedAlarmState) {
-      try {
-        alarmState = { ...alarmState, ...JSON.parse(savedAlarmState) };
-      } catch {}
-    }
-
-    function applyAlarmState() {
-      alarmBox.style.left = alarmState.left + "%";
-      alarmBox.style.top = alarmState.top + "%";
-      alarmBox.style.width = alarmState.width + "%";
-      alarmBox.style.height = alarmState.height + "%";
-      alarmBox.style.transform = `rotate(${alarmState.rotate}deg)`;
-      alarmBox.style.borderRadius = alarmState.radius + "px";
-      alarmBox.style.setProperty("--alarm-cover-opacity", alarmState.opacity);
-
-      localStorage.setItem("teddyAlarmBlinkState", JSON.stringify(alarmState));
-      syncAlarmSliders();
-      updateAlarmEditorOutput();
-    }
-
-    function createAlarmEditor() {
-      document.body.classList.add("alarm-edit-mode");
-
-      const glowLayer = document.querySelector(".rabbit-glow-layer");
-      const hotspotLayer = document.getElementById("rabbitHotspots");
-
-      if (glowLayer) glowLayer.style.pointerEvents = "auto";
-      if (hotspotLayer) hotspotLayer.style.pointerEvents = "none";
-
-      alarmBox.style.pointerEvents = "auto";
-      alarmBox.style.zIndex = "5200";
-
-      const panel = document.createElement("div");
-      panel.className = "alarm-editor-panel";
-
-      panel.innerHTML = `
-        <strong>Alarm Blink Box Editor</strong>
-        <p>Drag the black box over the red 12:00. It blinks by covering/uncovering the clock.</p>
-
-        <div class="tv-nudge-grid">
-          <button type="button" data-alarm-nudge-y="-0.08">UP</button>
-          <button type="button" data-alarm-nudge-x="-0.08">LEFT</button>
-          <button type="button" data-alarm-nudge-x="0.08">RIGHT</button>
-          <button type="button" data-alarm-nudge-y="0.08">DOWN</button>
-        </div>
-
-        <label>Left <input type="range" min="65" max="95" step="0.02" data-alarm-key="left"></label>
-        <label>Top <input type="range" min="45" max="85" step="0.02" data-alarm-key="top"></label>
-        <label>Width <input type="range" min="1" max="12" step="0.02" data-alarm-key="width"></label>
-        <label>Height <input type="range" min="0.5" max="7" step="0.02" data-alarm-key="height"></label>
-        <label>Rotate <input type="range" min="-10" max="10" step="0.05" data-alarm-key="rotate"></label>
-        <label>Round <input type="range" min="0" max="18" step="1" data-alarm-key="radius"></label>
-        <label>Opacity <input type="range" min="0.25" max="1" step="0.01" data-alarm-key="opacity"></label>
-
-        <button id="copyAlarmCss" type="button">COPY ALARM CSS</button>
-        <textarea id="alarmOutput" readonly></textarea>
-      `;
-
-      document.body.appendChild(panel);
-
-      panel.querySelectorAll("input[data-alarm-key]").forEach((input) => {
-        const key = input.dataset.alarmKey;
-        input.value = alarmState[key];
-
-        input.addEventListener("input", () => {
-          alarmState[key] = Number(input.value);
-          applyAlarmState();
-        });
-      });
-
-      panel.querySelectorAll("[data-alarm-nudge-x], [data-alarm-nudge-y]").forEach((button) => {
-        button.addEventListener("click", () => {
-          alarmState.left = Number((alarmState.left + Number(button.dataset.alarmNudgeX || 0)).toFixed(2));
-          alarmState.top = Number((alarmState.top + Number(button.dataset.alarmNudgeY || 0)).toFixed(2));
-          applyAlarmState();
-        });
-      });
-
-      document.getElementById("copyAlarmCss").addEventListener("click", async () => {
-        updateAlarmEditorOutput();
-
-        const output = document.getElementById("alarmOutput").value;
-
-        try {
-          await navigator.clipboard.writeText(output);
-          document.getElementById("copyAlarmCss").textContent = "COPIED!";
-          setTimeout(() => {
-            document.getElementById("copyAlarmCss").textContent = "COPY ALARM CSS";
-          }, 1200);
-        } catch {
-          alert("Could not auto-copy. Select the text box and copy manually.");
-        }
-      });
-
-      enableAlarmDrag();
-      applyAlarmState();
-    }
-
-    function syncAlarmSliders() {
-      document.querySelectorAll("input[data-alarm-key]").forEach((input) => {
-        const key = input.dataset.alarmKey;
-        input.value = alarmState[key];
-      });
-    }
-
-    function enableAlarmDrag() {
-      let startX = 0;
-      let startY = 0;
-      let startLeft = 0;
-      let startTop = 0;
-
-      alarmBox.addEventListener("pointerdown", (event) => {
-        if (!alarmEditMode) return;
-
-        event.preventDefault();
-        event.stopPropagation();
-
-        alarmBox.setPointerCapture(event.pointerId);
-
-        const stage = document.querySelector(".rabbit-stage");
-        const rect = stage.getBoundingClientRect();
-
-        startX = event.clientX;
-        startY = event.clientY;
-        startLeft = alarmState.left;
-        startTop = alarmState.top;
-
-        function moveAlarmBox(e) {
-          const dx = ((e.clientX - startX) / rect.width) * 100;
-          const dy = ((e.clientY - startY) / rect.height) * 100;
-
-          alarmState.left = Number((startLeft + dx).toFixed(2));
-          alarmState.top = Number((startTop + dy).toFixed(2));
-
-          applyAlarmState();
-        }
-
-        function stopAlarmMove() {
-          try {
-            alarmBox.releasePointerCapture(event.pointerId);
-          } catch {}
-
-          alarmBox.removeEventListener("pointermove", moveAlarmBox);
-          alarmBox.removeEventListener("pointerup", stopAlarmMove);
-          alarmBox.removeEventListener("pointercancel", stopAlarmMove);
-        }
-
-        alarmBox.addEventListener("pointermove", moveAlarmBox);
-        alarmBox.addEventListener("pointerup", stopAlarmMove);
-        alarmBox.addEventListener("pointercancel", stopAlarmMove);
-      });
-    }
-
-    function updateAlarmEditorOutput() {
-      const output = document.getElementById("alarmOutput");
-      if (!output) return;
-
-      output.value =
-`/* ALARM CLOCK BLINK BOX CUSTOM PLACEMENT */
-.alarm-blink-box {
-  left: ${alarmState.left}% !important;
-  top: ${alarmState.top}% !important;
-  width: ${alarmState.width}% !important;
-  height: ${alarmState.height}% !important;
-  transform: rotate(${alarmState.rotate}deg) !important;
-  border-radius: ${alarmState.radius}px !important;
-  --alarm-cover-opacity: ${alarmState.opacity} !important;
-}`;
-    }
-
-    applyAlarmState();
-
-    if (alarmEditMode) {
-      createAlarmEditor();
-    }
   </script>
 
   <script src="rabbit-hole.js"></script>
+
   <script>
-<script>
-<script>
-  /* ======================================================
-     FINAL CLOCK FIX
-     Keeps a black clock face in place.
-     Makes red 12:00 blink on/off.
-     Also kills the old pink-outline black box.
-  ====================================================== */
+    /* ======================================================
+       FINAL CLEAN 12:00 BLINK
+       This is the ONLY clock blink script in this file.
+       It removes old experiments and manually blinks the red digits.
+    ====================================================== */
 
-  (function () {
-    const CLOCK_CONFIG = {
-      left: 76.89,
-      top: 56.92,
-      width: 4.08,
-      height: 1.96,
-      rotate: 8.85
-    };
+    (function () {
+      const CLOCK = {
+        left: 76.89,
+        top: 56.92,
+        width: 4.08,
+        height: 1.96,
+        rotate: 8.85
+      };
 
-    function killOldClockBox() {
-      document.querySelectorAll("#forcedClockBlinkBox").forEach((el) => {
-        el.remove();
-      });
-    }
+      function removeOldClockStuff() {
+        document.querySelectorAll(
+          "#forcedClockBlinkBox, #forcedBlinkingClock1200, #finalBlinkingClock1200, #cleanBlinkingClock1200, .alarm-blink-box"
+        ).forEach((el) => el.remove());
 
-    function installClockStyle() {
-      const oldStyle = document.getElementById("finalClock1200Style");
-      if (oldStyle) oldStyle.remove();
+        document.querySelectorAll("style").forEach((style) => {
+          const text = style.textContent || "";
 
-      const style = document.createElement("style");
-      style.id = "finalClock1200Style";
-
-      style.textContent = `
-        #forcedClockBlinkBox {
-          display: none !important;
-          opacity: 0 !important;
-          visibility: hidden !important;
-        }
-
-        @keyframes finalClockDigitsBlink {
-          0%, 48% {
-            opacity: 1;
+          if (
+            text.includes("forcedClockBlink") ||
+            text.includes("forcedBlinkingClock1200") ||
+            text.includes("finalBlinkingClock1200") ||
+            text.includes("simpleBlackBoxBlink") ||
+            text.includes("alarmRealBlink") ||
+            text.includes("alarmCoverBlink") ||
+            text.includes("cleanBlinkingClock1200")
+          ) {
+            style.remove();
           }
-
-          49%, 100% {
-            opacity: 0;
-          }
-        }
-
-        #finalBlinkingClock1200 {
-          position: fixed !important;
-          background: #030000 !important;
-          border: none !important;
-          outline: none !important;
-          border-radius: 5px !important;
-          pointer-events: none !important;
-          z-index: 2147483647 !important;
-          overflow: hidden !important;
-
-          display: flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-
-          box-shadow:
-            inset 0 0 5px rgba(0, 0, 0, 1),
-            0 0 4px rgba(0, 0, 0, .75) !important;
-        }
-
-        #finalBlinkingClock1200 span {
-          display: block !important;
-          color: #ff1616 !important;
-          font-family: "Courier New", monospace !important;
-          font-weight: 900 !important;
-          line-height: 1 !important;
-          letter-spacing: -0.04em !important;
-          text-shadow:
-            0 0 3px rgba(255, 0, 0, 1),
-            0 0 7px rgba(255, 0, 0, .95),
-            0 0 13px rgba(255, 0, 0, .55) !important;
-
-          animation: finalClockDigitsBlink 1.05s steps(1, end) infinite !important;
-        }
-      `;
-
-      document.head.appendChild(style);
-    }
-
-    function createClock() {
-      killOldClockBox();
-
-      let clock = document.getElementById("finalBlinkingClock1200");
-
-      if (!clock) {
-        clock = document.createElement("div");
-        clock.id = "finalBlinkingClock1200";
-        clock.innerHTML = "<span>12:00</span>";
-        document.body.appendChild(clock);
+        });
       }
 
-      return clock;
-    }
+      function installCleanStyle() {
+        const style = document.createElement("style");
+        style.id = "cleanClock1200Style";
 
-    function positionClock() {
-      const stage = document.querySelector(".rabbit-stage");
-      const clock = document.getElementById("finalBlinkingClock1200");
+        style.textContent = `
+          #forcedClockBlinkBox,
+          #forcedBlinkingClock1200,
+          #finalBlinkingClock1200,
+          .alarm-blink-box {
+            display: none !important;
+            opacity: 0 !important;
+            visibility: hidden !important;
+            box-shadow: none !important;
+            outline: none !important;
+            border: none !important;
+            animation: none !important;
+          }
 
-      if (!stage || !clock) return;
+          .rabbit-stage::before,
+          .rabbit-stage::after {
+            content: none !important;
+            display: none !important;
+          }
 
-      const rect = stage.getBoundingClientRect();
+          #cleanBlinkingClock1200 {
+            position: fixed !important;
+            background: #020000 !important;
+            border: none !important;
+            outline: none !important;
+            box-shadow:
+              inset 0 0 5px rgba(0,0,0,1),
+              0 0 4px rgba(0,0,0,.7) !important;
+            border-radius: 5px !important;
+            pointer-events: none !important;
+            z-index: 2147483647 !important;
+            overflow: hidden !important;
 
-      const boxLeft = rect.left + rect.width * (CLOCK_CONFIG.left / 100);
-      const boxTop = rect.top + rect.height * (CLOCK_CONFIG.top / 100);
-      const boxWidth = rect.width * (CLOCK_CONFIG.width / 100);
-      const boxHeight = rect.height * (CLOCK_CONFIG.height / 100);
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+          }
 
-      clock.style.left = boxLeft + "px";
-      clock.style.top = boxTop + "px";
-      clock.style.width = boxWidth + "px";
-      clock.style.height = boxHeight + "px";
-      clock.style.transform = "rotate(" + CLOCK_CONFIG.rotate + "deg)";
-      clock.style.transformOrigin = "center center";
+          #cleanBlinkingClock1200 span {
+            display: block !important;
+            color: #ff1010 !important;
+            font-family: "Courier New", monospace !important;
+            font-weight: 900 !important;
+            line-height: 1 !important;
+            letter-spacing: -0.06em !important;
+            text-shadow:
+              0 0 3px rgba(255,0,0,1),
+              0 0 8px rgba(255,0,0,.9),
+              0 0 14px rgba(255,0,0,.55) !important;
+          }
+        `;
 
-      const digits = clock.querySelector("span");
-      digits.style.fontSize = Math.max(8, boxHeight * 0.82) + "px";
-    }
+        document.head.appendChild(style);
+      }
 
-    installClockStyle();
-    createClock();
-    positionClock();
+      function createClock() {
+        const clock = document.createElement("div");
+        clock.id = "cleanBlinkingClock1200";
+        clock.innerHTML = "<span>12:00</span>";
+        document.body.appendChild(clock);
+        return clock;
+      }
 
-    window.addEventListener("resize", positionClock);
-    window.addEventListener("orientationchange", positionClock);
+      function positionClock() {
+        const stage = document.querySelector(".rabbit-stage");
+        const clock = document.getElementById("cleanBlinkingClock1200");
 
-    setInterval(() => {
-      killOldClockBox();
+        if (!stage || !clock) return;
+
+        const rect = stage.getBoundingClientRect();
+
+        const left = rect.left + rect.width * (CLOCK.left / 100);
+        const top = rect.top + rect.height * (CLOCK.top / 100);
+        const width = rect.width * (CLOCK.width / 100);
+        const height = rect.height * (CLOCK.height / 100);
+
+        clock.style.left = left + "px";
+        clock.style.top = top + "px";
+        clock.style.width = width + "px";
+        clock.style.height = height + "px";
+        clock.style.transform = "rotate(" + CLOCK.rotate + "deg)";
+        clock.style.transformOrigin = "center center";
+
+        const digits = clock.querySelector("span");
+        digits.style.fontSize = Math.max(8, height * 0.82) + "px";
+      }
+
+      removeOldClockStuff();
+      installCleanStyle();
       createClock();
       positionClock();
-    }, 500);
-  })();
-</script>
+
+      let visible = true;
+
+      setInterval(() => {
+        const digits = document.querySelector("#cleanBlinkingClock1200 span");
+        if (!digits) return;
+
+        visible = !visible;
+        digits.style.opacity = visible ? "1" : "0";
+      }, 575);
+
+      window.addEventListener("resize", positionClock);
+      window.addEventListener("orientationchange", positionClock);
+
+      setTimeout(positionClock, 300);
+      setTimeout(positionClock, 900);
+    })();
+  </script>
 </body>
 </html>
