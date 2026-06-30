@@ -568,102 +568,142 @@
   <script src="rabbit-hole.js"></script>
   <script>
 <script>
+<script>
   /* ======================================================
-     FINAL FORCED BLINKING 12:00 CLOCK
-     Black clock face stays. Red 12:00 blinks.
+     FINAL CLOCK FIX
+     Keeps a black clock face in place.
+     Makes red 12:00 blink on/off.
+     Also kills the old pink-outline black box.
   ====================================================== */
 
   (function () {
-    const stage = document.querySelector(".rabbit-stage");
-    if (!stage) return;
+    const CLOCK_CONFIG = {
+      left: 76.89,
+      top: 56.92,
+      width: 4.08,
+      height: 1.96,
+      rotate: 8.85
+    };
 
-    const oldBox = document.getElementById("forcedClockBlinkBox");
-    if (oldBox) oldBox.remove();
+    function killOldClockBox() {
+      document.querySelectorAll("#forcedClockBlinkBox").forEach((el) => {
+        el.remove();
+      });
+    }
 
-    const oldClock = document.getElementById("forcedBlinkingClock1200");
-    if (oldClock) oldClock.remove();
+    function installClockStyle() {
+      const oldStyle = document.getElementById("finalClock1200Style");
+      if (oldStyle) oldStyle.remove();
 
-    const clock = document.createElement("div");
-    clock.id = "forcedBlinkingClock1200";
-    clock.innerHTML = `<span>12:00</span>`;
-    document.body.appendChild(clock);
+      const style = document.createElement("style");
+      style.id = "finalClock1200Style";
 
-    const style = document.createElement("style");
-    style.textContent = `
-      @keyframes forcedClockTextBlink {
-        0%, 48% {
-          opacity: 1;
+      style.textContent = `
+        #forcedClockBlinkBox {
+          display: none !important;
+          opacity: 0 !important;
+          visibility: hidden !important;
         }
 
-        49%, 100% {
-          opacity: 0;
+        @keyframes finalClockDigitsBlink {
+          0%, 48% {
+            opacity: 1;
+          }
+
+          49%, 100% {
+            opacity: 0;
+          }
         }
+
+        #finalBlinkingClock1200 {
+          position: fixed !important;
+          background: #030000 !important;
+          border: none !important;
+          outline: none !important;
+          border-radius: 5px !important;
+          pointer-events: none !important;
+          z-index: 2147483647 !important;
+          overflow: hidden !important;
+
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+
+          box-shadow:
+            inset 0 0 5px rgba(0, 0, 0, 1),
+            0 0 4px rgba(0, 0, 0, .75) !important;
+        }
+
+        #finalBlinkingClock1200 span {
+          display: block !important;
+          color: #ff1616 !important;
+          font-family: "Courier New", monospace !important;
+          font-weight: 900 !important;
+          line-height: 1 !important;
+          letter-spacing: -0.04em !important;
+          text-shadow:
+            0 0 3px rgba(255, 0, 0, 1),
+            0 0 7px rgba(255, 0, 0, .95),
+            0 0 13px rgba(255, 0, 0, .55) !important;
+
+          animation: finalClockDigitsBlink 1.05s steps(1, end) infinite !important;
+        }
+      `;
+
+      document.head.appendChild(style);
+    }
+
+    function createClock() {
+      killOldClockBox();
+
+      let clock = document.getElementById("finalBlinkingClock1200");
+
+      if (!clock) {
+        clock = document.createElement("div");
+        clock.id = "finalBlinkingClock1200";
+        clock.innerHTML = "<span>12:00</span>";
+        document.body.appendChild(clock);
       }
 
-      #forcedClockBlinkBox {
-        display: none !important;
-      }
-
-      #forcedBlinkingClock1200 {
-        position: fixed;
-        background: #050000;
-        border-radius: 5px;
-        pointer-events: none;
-        z-index: 2147483647;
-        overflow: hidden;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        box-shadow:
-          inset 0 0 5px rgba(0,0,0,1),
-          0 0 4px rgba(0,0,0,.8);
-      }
-
-      #forcedBlinkingClock1200 span {
-        display: block;
-        color: #ff1515;
-        font-family: "Courier New", monospace;
-        font-weight: 900;
-        line-height: 1;
-        letter-spacing: 0.02em;
-        text-shadow:
-          0 0 3px rgba(255, 0, 0, 1),
-          0 0 8px rgba(255, 0, 0, .95),
-          0 0 14px rgba(255, 0, 0, .55);
-        animation: forcedClockTextBlink 1.05s steps(1, end) infinite;
-      }
-    `;
-    document.head.appendChild(style);
+      return clock;
+    }
 
     function positionClock() {
+      const stage = document.querySelector(".rabbit-stage");
+      const clock = document.getElementById("finalBlinkingClock1200");
+
+      if (!stage || !clock) return;
+
       const rect = stage.getBoundingClientRect();
 
-      const leftPercent = 76.89;
-      const topPercent = 56.92;
-      const widthPercent = 4.08;
-      const heightPercent = 1.96;
-
-      const boxLeft = rect.left + rect.width * (leftPercent / 100);
-      const boxTop = rect.top + rect.height * (topPercent / 100);
-      const boxWidth = rect.width * (widthPercent / 100);
-      const boxHeight = rect.height * (heightPercent / 100);
+      const boxLeft = rect.left + rect.width * (CLOCK_CONFIG.left / 100);
+      const boxTop = rect.top + rect.height * (CLOCK_CONFIG.top / 100);
+      const boxWidth = rect.width * (CLOCK_CONFIG.width / 100);
+      const boxHeight = rect.height * (CLOCK_CONFIG.height / 100);
 
       clock.style.left = boxLeft + "px";
       clock.style.top = boxTop + "px";
       clock.style.width = boxWidth + "px";
       clock.style.height = boxHeight + "px";
-      clock.style.transform = "rotate(8.85deg)";
+      clock.style.transform = "rotate(" + CLOCK_CONFIG.rotate + "deg)";
       clock.style.transformOrigin = "center center";
 
-      const text = clock.querySelector("span");
-      text.style.fontSize = Math.max(8, boxHeight * 0.78) + "px";
+      const digits = clock.querySelector("span");
+      digits.style.fontSize = Math.max(8, boxHeight * 0.82) + "px";
     }
 
+    installClockStyle();
+    createClock();
     positionClock();
+
     window.addEventListener("resize", positionClock);
     window.addEventListener("orientationchange", positionClock);
+
+    setInterval(() => {
+      killOldClockBox();
+      createClock();
+      positionClock();
+    }, 500);
   })();
 </script>
 </body>
