@@ -321,6 +321,69 @@ const rabbitHotspots = [
     x: 52,
     y: 82,
     size: 54
+  }  {
+    id: "extra-11",
+    title: "Extra Circle 9",
+    tag: "New Clue",
+    text: "Placeholder circle. We will name and link this later.",
+    url: "#",
+    sameTab: true,
+    x: 43,
+    y: 82,
+    size: 54
+  },
+  {
+    id: "extra-12",
+    title: "Extra Circle 10",
+    tag: "New Clue",
+    text: "Placeholder circle. We will name and link this later.",
+    url: "#",
+    sameTab: true,
+    x: 52,
+    y: 82,
+    size: 54
+  }  {
+    id: "extra-13",
+    title: "Extra Circle 9",
+    tag: "New Clue",
+    text: "Placeholder circle. We will name and link this later.",
+    url: "#",
+    sameTab: true,
+    x: 43,
+    y: 82,
+    size: 54
+  },
+  {
+    id: "extra-14",
+    title: "Extra Circle 10",
+    tag: "New Clue",
+    text: "Placeholder circle. We will name and link this later.",
+    url: "#",
+    sameTab: true,
+    x: 52,
+    y: 82,
+    size: 54
+  }  {
+    id: "extra-15",
+    title: "Extra Circle 9",
+    tag: "New Clue",
+    text: "Placeholder circle. We will name and link this later.",
+    url: "#",
+    sameTab: true,
+    x: 43,
+    y: 82,
+    size: 54
+  },
+  {
+    id: "extra-16",
+    title: "Extra Circle 10",
+    tag: "New Clue",
+    text: "Placeholder circle. We will name and link this later.",
+    url: "#",
+    sameTab: true,
+    x: 52,
+    y: 82,
+    size: 54
   }
 ];
 
