@@ -1,3 +1,4 @@
+const isEditMode = new URLSearchParams(window.location.search).has("edit");
 
 const rabbitHotspots = [
   {
@@ -7,70 +8,75 @@ const rabbitHotspots = [
     text: "Return to the $TEDDY arcade game.",
     url: "index.html",
     sameTab: true,
-    x: 14,
-    y: 54,
-    w: 16,
-    h: 38
+    x: 11,
+    y: 44,
+    size: 64
   },
   {
     id: "kitty-files",
     title: "Kitty Files",
-    tag: "Investigation Board",
+    tag: "Case File",
     text: "Open the Roaring Kitty investigation board.",
     url: "kitty.html",
     sameTab: true,
-    x: 50,
-    y: 35,
-    w: 28,
-    h: 28
+    x: 82,
+    y: 86,
+    size: 58
   },
   {
     id: "emoji",
     title: "Emoji Timeline",
-    tag: "VHS Shelf",
+    tag: "VHS Tape",
     text: "Follow the emoji timeline.",
     url: "emoji.html",
     sameTab: true,
-    x: 80,
-    y: 72,
-    w: 19,
-    h: 18
+    x: 25,
+    y: 62,
+    size: 58
   },
   {
     id: "memory",
     title: "Memory Room",
-    tag: "Imagine The Future",
+    tag: "VHS Tape",
     text: "Enter the 1980s memory room.",
-    url: "memory.html",
+    url: "imagination-room.html",
     sameTab: true,
-    x: 77,
-    y: 42,
-    w: 18,
-    h: 24
+    x: 79,
+    y: 73,
+    size: 58
+  },
+  {
+    id: "tv",
+    title: "CRT Television",
+    tag: "Memory Room",
+    text: "The screen is waiting. Step inside the past.",
+    url: "imagination-room.html",
+    sameTab: true,
+    x: 83,
+    y: 35,
+    size: 70
   },
   {
     id: "moass",
     title: "MOASS",
     tag: "Easter Egg",
-    text: "A very serious educational musical experience.",
+    text: "Click the MOASS sign to hear Mr. T's Mother.",
     url: "https://youtu.be/RO6JiFztJdg?si=BqHPez0QepkQeCkz",
     sameTab: false,
-    x: 48,
-    y: 12,
-    w: 18,
-    h: 10
+    x: 8,
+    y: 8,
+    size: 70
   },
   {
-    id: "lamp",
+    id: "desk-lamp",
     title: "The Lamp",
     tag: "Easter Egg",
-    text: "The light has a story to tell.",
+    text: "The lamp leads to Norm Macdonald's legendary moth joke.",
     url: "https://youtu.be/jJN9mBRX3uo",
     sameTab: false,
-    x: 61,
-    y: 25,
-    w: 10,
-    h: 18
+    x: 96,
+    y: 54,
+    size: 58
   },
   {
     id: "phone",
@@ -79,10 +85,9 @@ const rabbitHotspots = [
     text: "Sometimes the rabbit hole calls you back.",
     url: "tel:7192662837",
     sameTab: true,
-    x: 34,
-    y: 73,
-    w: 10,
-    h: 12
+    x: 13,
+    y: 80,
+    size: 62
   },
   {
     id: "gamestop",
@@ -91,10 +96,9 @@ const rabbitHotspots = [
     text: "Open GameStop's official investor relations page.",
     url: "https://investor.gamestop.com/",
     sameTab: false,
-    x: 35,
-    y: 37,
-    w: 12,
-    h: 12
+    x: 52,
+    y: 9,
+    size: 58
   },
   {
     id: "teddy",
@@ -103,10 +107,42 @@ const rabbitHotspots = [
     text: "A future page for Teddy, Ryan Cohen's books, and community theories.",
     url: "teddy.html",
     sameTab: true,
-    x: 52,
-    y: 70,
-    w: 12,
-    h: 16
+    x: 19,
+    y: 25,
+    size: 60
+  },
+  {
+    id: "ryan",
+    title: "Ryan Cohen Files",
+    tag: "Coming Soon",
+    text: "Ryan Cohen biography, timeline, Teddy theories, and GameStop connections.",
+    url: "ryan.html",
+    sameTab: true,
+    x: 43,
+    y: 14,
+    size: 54
+  },
+  {
+    id: "greg",
+    title: "Greg",
+    tag: "Tinfoil Thread",
+    text: "A future page for the Greg rabbit hole.",
+    url: "greg.html",
+    sameTab: true,
+    x: 53,
+    y: 25,
+    size: 54
+  },
+  {
+    id: "keith",
+    title: "Keith Gill",
+    tag: "Roaring Kitty",
+    text: "Open the Keith Gill / Roaring Kitty file.",
+    url: "kitty-bio.html",
+    sameTab: true,
+    x: 43,
+    y: 42,
+    size: 54
   },
   {
     id: "buck",
@@ -115,10 +151,53 @@ const rabbitHotspots = [
     text: "The rabbit was here first.",
     url: "buck.html",
     sameTab: true,
-    x: 70,
-    y: 20,
-    w: 11,
-    h: 14
+    x: 86,
+    y: 9,
+    size: 58
+  },
+  {
+    id: "gmebay",
+    title: "GMEBAY",
+    tag: "Theory Tape",
+    text: "What could GMEBAY become?",
+    url: "gmebay.html",
+    sameTab: true,
+    x: 59,
+    y: 55,
+    size: 58
+  },
+  {
+    id: "roaring-kitty-vhs",
+    title: "Roaring Kitty VHS",
+    tag: "VHS Tape",
+    text: "Open the Roaring Kitty tinfoil collection.",
+    url: "kitty.html",
+    sameTab: true,
+    x: 45,
+    y: 67,
+    size: 58
+  },
+  {
+    id: "wonka",
+    title: "Willy Wonka VHS",
+    tag: "Pure Imagination",
+    text: "A path toward the Memory Room.",
+    url: "imagination-room.html",
+    sameTab: true,
+    x: 84,
+    y: 51,
+    size: 54
+  },
+  {
+    id: "floppy",
+    title: "Floppy Disk",
+    tag: "Secret",
+    text: "You found something that probably should not be here.",
+    url: "secret.html",
+    sameTab: true,
+    x: 32,
+    y: 86,
+    size: 48
   }
 ];
 
@@ -130,27 +209,137 @@ const title = document.getElementById("rabbitTitle");
 const text = document.getElementById("rabbitText");
 const link = document.getElementById("rabbitLink");
 
-rabbitHotspots.forEach((spot) => {
-  const button = document.createElement("button");
-  button.className = `rabbit-hotspot ${spot.id}`;
-  button.style.left = spot.x + "%";
-  button.style.top = spot.y + "%";
-  button.style.width = spot.w + "%";
-  button.style.height = spot.h + "%";
-  button.setAttribute("aria-label", spot.title);
-  button.title = spot.title;
+if (isEditMode) {
+  document.body.classList.add("rabbit-edit-mode");
+  createEditorPanel();
+}
 
-  button.addEventListener("click", () => {
-    tag.textContent = spot.tag;
-    title.textContent = spot.title;
-    text.textContent = spot.text;
-    link.href = spot.url;
-    link.textContent = spot.sameTab ? "ENTER" : "OPEN LINK";
-    link.target = spot.sameTab ? "_self" : "_blank";
-    modal.classList.add("active");
+function renderHotspots() {
+  container.innerHTML = "";
+
+  rabbitHotspots.forEach((spot, index) => {
+    const button = document.createElement("button");
+    button.className = `rabbit-hotspot ${spot.id}`;
+    button.style.left = spot.x + "%";
+    button.style.top = spot.y + "%";
+    button.style.width = spot.size + "px";
+    button.style.height = spot.size + "px";
+    button.setAttribute("aria-label", spot.title);
+    button.title = spot.title;
+    button.dataset.label = spot.title;
+
+    if (isEditMode) {
+      makeDraggable(button, spot, index);
+    } else {
+      button.addEventListener("click", () => openRabbitModal(spot));
+    }
+
+    container.appendChild(button);
   });
+}
 
-  container.appendChild(button);
+function openRabbitModal(spot) {
+  tag.textContent = spot.tag;
+  title.textContent = spot.title;
+  text.textContent = spot.text;
+  link.href = spot.url;
+  link.textContent = spot.sameTab ? "ENTER" : "OPEN LINK";
+  link.target = spot.sameTab ? "_self" : "_blank";
+  modal.classList.add("active");
+}
+
+function makeDraggable(button, spot) {
+  let startX = 0;
+  let startY = 0;
+  let startLeft = 0;
+  let startTop = 0;
+
+  button.addEventListener("pointerdown", (event) => {
+    event.preventDefault();
+    button.setPointerCapture(event.pointerId);
+
+    const stage = document.querySelector(".rabbit-stage");
+    const rect = stage.getBoundingClientRect();
+
+    startX = event.clientX;
+    startY = event.clientY;
+    startLeft = spot.x;
+    startTop = spot.y;
+
+    function moveCircle(e) {
+      const dx = ((e.clientX - startX) / rect.width) * 100;
+      const dy = ((e.clientY - startY) / rect.height) * 100;
+
+      spot.x = Number((startLeft + dx).toFixed(2));
+      spot.y = Number((startTop + dy).toFixed(2));
+
+      button.style.left = spot.x + "%";
+      button.style.top = spot.y + "%";
+
+      updateEditorOutput();
+    }
+
+    function stopMove() {
+      button.releasePointerCapture(event.pointerId);
+      button.removeEventListener("pointermove", moveCircle);
+      button.removeEventListener("pointerup", stopMove);
+      button.removeEventListener("pointercancel", stopMove);
+      updateEditorOutput();
+    }
+
+    button.addEventListener("pointermove", moveCircle);
+    button.addEventListener("pointerup", stopMove);
+    button.addEventListener("pointercancel", stopMove);
+  });
+}
+
+function createEditorPanel() {
+  const panel = document.createElement("div");
+  panel.className = "rabbit-editor-panel";
+
+  panel.innerHTML = `
+    <strong>Rabbit Hole Hotspot Editor</strong>
+    <p>Drag the circles into place. Then copy the updated coordinates.</p>
+    <button id="copyRabbitHotspots">COPY UPDATED HOTSPOTS</button>
+    <textarea id="rabbitHotspotOutput" readonly></textarea>
+  `;
+
+  document.body.appendChild(panel);
+
+  document.getElementById("copyRabbitHotspots").addEventListener("click", async () => {
+    updateEditorOutput();
+
+    const output = document.getElementById("rabbitHotspotOutput").value;
+
+    try {
+      await navigator.clipboard.writeText(output);
+      document.getElementById("copyRabbitHotspots").textContent = "COPIED!";
+      setTimeout(() => {
+        document.getElementById("copyRabbitHotspots").textContent = "COPY UPDATED HOTSPOTS";
+      }, 1200);
+    } catch {
+      alert("Could not auto-copy. Select the text box and copy manually.");
+    }
+  });
+}
+
+function updateEditorOutput() {
+  const output = document.getElementById("rabbitHotspotOutput");
+  if (!output) return;
+
+  output.value =
+`const rabbitHotspots = ${JSON.stringify(rabbitHotspots, null, 2)};`;
+}
+
+closeBtn.addEventListener("click", () => {
+  modal.classList.remove("active");
 });
 
-closeBtn.addEventListener("click", () => modal
+modal.addEventListener("click", (event) => {
+  if (event.target === modal) {
+    modal.classList.remove("active");
+  }
+});
+
+renderHotspots();
+updateEditorOutput();
