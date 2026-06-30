@@ -1,288 +1,558 @@
-const startScreen = document.getElementById("startScreen");
-const siteContent = document.getElementById("siteContent");
-const startGameBtn = document.getElementById("startGame");
-const enterSiteBtn = document.getElementById("enterSite");
+/* ======================================================
+   $TEDDY ARCADE + MAIN SITE SCRIPT
+   Safe recovery version
+====================================================== */
 
-const modal = document.getElementById("modal");
-const modalTitle = document.getElementById("modalTitle");
-const modalText = document.getElementById("modalText");
-const closeModal = document.getElementById("closeModal");
+document.addEventListener("DOMContentLoaded", () => {
+  const startScreen = document.getElementById("startScreen");
+  const siteContent = document.getElementById("siteContent");
+  const startGameBtn =
+    document.getElementById("startGame") ||
+    document.getElementById("startGameBtn");
+  const enterSiteBtn =
+    document.getElementById("enterSite") ||
+    document.getElementById("enterSiteBtn");
 
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
+  const canvas = document.getElementById("gameCanvas");
+  const ctx = canvas ? canvas.getContext("2d") : null;
 
-const timelineEmojis = [
-  "🐸", "🍦", "💀", "🥴", "🤝", "👌", "💜", "🫡", "😳", "😵‍💫",
-  "👀", "🦍", "🚀", "🌕", "💎", "🙌", "🎮", "🧸", "📚", "📦",
-  "🇺🇸", "🎤", "🔥", "💥", "🍻", "⏰", "🧩", "🧵", "🕹️", "🎯",
-  "👑", "🪄", "🌀", "⚡", "🏴‍☠️"
-];
+  let animationFrame = null;
+  let gameRunning = false;
+  let gameWon = false;
+  let score = 0;
+  let lives = 3;
+  let keys = {};
 
-let player = { x: 240, y: 305, w: 34, h: 28, speed: 7 };
-let falling = [];
-let fud = [];
-let collected = 0;
-let lives = 5;
-let gameRunning = false;
-let keys = {};
-let blink = true;
+  const player = {
+    x: 120,
+    y: 260,
+    size: 42,
+    speed: 5
+  };
 
-setInterval(() => {
-  blink = !blink;
-}, 500);
+  const emojisToCollect = [
+    "🐶", "🇺🇸", "🎤", "👀", "🔥", "💥", "🍻",
+    "💜", "🕹️", "🍿", "🚀", "🌕", "💎", "🧸"
+  ];
 
-function enterSite() {
-  gameRunning = false;
-  startScreen.classList.add("hidden");
-  siteContent.classList.remove("hidden");
-  window.scrollTo(0, 0);
-}
-}
-}
+  let collectibles = [];
+  let enemies = [];
+  let particles = [];
+  let spawnTimer = 0;
 
-enterSiteBtn.addEventListener("click", enterSite);
+  function resizeCanvas() {
+    if (!canvas) return;
 
-startGameBtn.addEventListener("click", () => {
-  collected = 0;
-  lives = 5;
-  falling = [];
-  fud = [];
-  player.x = 240;
-  gameRunning = true;
-  requestAnimationFrame(gameLoop);
-});
+    const parentWidth = canvas.parentElement
+      ? canvas.parentElement.clientWidth
+      : 900;
 
-window.addEventListener("keydown", (e) => {
-  keys[e.key] = true;
-});
+    canvas.width = Math.min(900, Math.max(320, parentWidth));
+    canvas.height = Math.round(canvas.width * 0.56);
 
-window.addEventListener("keyup", (e) => {
-  keys[e.key] = false;
-});
+    player.x = Math.max(60, Math.min(player.x, canvas.width - 60));
+    player.y = Math.max(60, Math.min(player.y, canvas.height - 60));
+  }
 
-canvas.addEventListener("touchstart", (e) => {
-  const touchX = e.touches[0].clientX;
-  const middle = canvas.getBoundingClientRect().left + canvas.offsetWidth / 2;
-  keys[touchX < middle ? "ArrowLeft" : "ArrowRight"] = true;
-});
+  function showElement(el) {
+    if (!el) return;
+    el.classList.remove("hidden");
+    el.style.display = "";
+  }
 
-canvas.addEventListener("touchend", () => {
-  keys["ArrowLeft"] = false;
-  keys["ArrowRight"] = false;
-});
+  function hideElement(el) {
+    if (!el) return;
+    el.classList.add("hidden");
+  }
 
-function spawnItems() {
-  if (Math.random() < 0.075 && collected < timelineEmojis.length) {
-    falling.push({
-      emoji: timelineEmojis[collected],
-      x: Math.random() * (canvas.width - 52),
-      y: -52,
-      size: 30,
-      speed: 2.1 + Math.random() * 1.4
+  function enterSite() {
+    gameRunning = false;
+
+    if (animationFrame) {
+      cancelAnimationFrame(animationFrame);
+      animationFrame = null;
+    }
+
+    hideElement(startScreen);
+
+    if (siteContent) {
+      showElement(siteContent);
+      window.scrollTo(0, 0);
+    } else {
+      window.location.href = "hq.html";
+    }
+  }
+
+  function resetGame() {
+    resizeCanvas();
+
+    gameRunning = true;
+    gameWon = false;
+    score = 0;
+    lives = 3;
+    spawnTimer = 0;
+    collectibles = [];
+    enemies = [];
+    particles = [];
+
+    player.x = canvas.width * 0.16;
+    player.y = canvas.height * 0.5;
+
+    const usableWidth = canvas.width - 130;
+    const usableHeight = canvas.height - 110;
+
+    emojisToCollect.forEach((emoji, index) => {
+      collectibles.push({
+        emoji,
+        x: 120 + Math.random() * usableWidth,
+        y: 70 + Math.random() * usableHeight,
+        size: 32,
+        collected: false,
+        pulse: Math.random() * Math.PI * 2
+      });
     });
+
+    for (let i = 0; i < 5; i++) {
+      enemies.push(createEnemy());
+    }
   }
 
-  if (Math.random() < 0.012) {
-    fud.push({
-      emoji: "☠️",
-      x: Math.random() * (canvas.width - 48),
-      y: -48,
-      size: 26,
-      speed: 2.4 + Math.random() * 1.4
-    });
+  function createEnemy() {
+    if (!canvas) {
+      return {
+        x: 0,
+        y: 0,
+        size: 32,
+        speedX: 2,
+        speedY: 1.5
+      };
+    }
+
+    const side = Math.random() > 0.5 ? "right" : "top";
+
+    if (side === "right") {
+      return {
+        x: canvas.width + 40,
+        y: 40 + Math.random() * (canvas.height - 80),
+        size: 34,
+        speedX: -(1.6 + Math.random() * 2.4),
+        speedY: -1.4 + Math.random() * 2.8
+      };
+    }
+
+    return {
+      x: 40 + Math.random() * (canvas.width - 80),
+      y: -40,
+      size: 34,
+      speedX: -1.5 + Math.random() * 3,
+      speedY: 1.5 + Math.random() * 2.2
+    };
   }
-}
 
-function drawBackground() {
-  ctx.shadowBlur = 0;
-  ctx.textAlign = "left";
+  function startGame() {
+    if (!canvas || !ctx) {
+      enterSite();
+      return;
+    }
 
-  ctx.fillStyle = "#020208";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+    showElement(startScreen);
 
-  ctx.strokeStyle = "rgba(0,245,255,.16)";
-  for (let y = 62; y < canvas.height; y += 28) {
-    ctx.beginPath();
-    ctx.moveTo(0, y);
-    ctx.lineTo(canvas.width, y);
-    ctx.stroke();
+    if (siteContent) {
+      hideElement(siteContent);
+    }
+
+    if (animationFrame) {
+      cancelAnimationFrame(animationFrame);
+      animationFrame = null;
+    }
+
+    resetGame();
+    drawGame();
   }
 
-  ctx.strokeStyle = "rgba(255,42,163,.22)";
-  for (let x = 0; x < canvas.width; x += 40) {
-    ctx.beginPath();
-    ctx.moveTo(x, canvas.height);
-    ctx.lineTo(canvas.width / 2, 190);
-    ctx.stroke();
+  function drawBackground() {
+    const w = canvas.width;
+    const h = canvas.height;
+
+    ctx.clearRect(0, 0, w, h);
+
+    const gradient = ctx.createLinearGradient(0, 0, w, h);
+    gradient.addColorStop(0, "#080014");
+    gradient.addColorStop(0.5, "#120025");
+    gradient.addColorStop(1, "#001425");
+
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, w, h);
+
+    ctx.strokeStyle = "rgba(0, 245, 255, 0.18)";
+    ctx.lineWidth = 1;
+
+    for (let x = 0; x < w; x += 36) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, h);
+      ctx.stroke();
+    }
+
+    for (let y = 0; y < h; y += 36) {
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(w, y);
+      ctx.stroke();
+    }
+
+    ctx.fillStyle = "rgba(255, 42, 163, 0.10)";
+    ctx.fillRect(0, h - 64, w, 64);
   }
-}
 
-function drawHUD() {
-  ctx.shadowBlur = 0;
-  ctx.textAlign = "left";
+  function drawText() {
+    ctx.save();
 
-  ctx.fillStyle = "rgba(255,42,163,.22)";
-  ctx.fillRect(0, 0, canvas.width, 62);
-
-  ctx.font = "16px monospace";
-  ctx.fillStyle = "#00f5ff";
-  ctx.fillText(`EMOJIS ${collected}/${timelineEmojis.length}`, 14, 24);
-
-  ctx.fillStyle = "#ff2aa3";
-  ctx.fillText(`LIVES ${lives}`, canvas.width - 95, 24);
-
-  if (blink) {
-    ctx.font = "14px monospace";
-    ctx.fillStyle = "#ffffff";
-    ctx.textAlign = "center";
-    ctx.fillText(
-      "← → MOVE • COLLECT EMOJIS • AVOID THE FUD ☠️",
-      canvas.width / 2,
-      50
-    );
-    ctx.textAlign = "left";
-  }
-}
-
-function drawPlayer() {
-  ctx.font = "44px Arial";
-  ctx.shadowColor = "#00f5ff";
-  ctx.shadowBlur = 16;
-  ctx.fillText("🧸", player.x, player.y + 36);
-  ctx.shadowBlur = 0;
-}
-
-function drawItems() {
-  falling.forEach(item => {
-    ctx.font = "48px Arial";
+    ctx.font = "16px Arial, sans-serif";
+    ctx.fillStyle = "#00f5ff";
     ctx.shadowColor = "#00f5ff";
-    ctx.shadowBlur = 18;
-    ctx.fillText(item.emoji, item.x, item.y);
-    ctx.shadowBlur = 0;
-  });
+    ctx.shadowBlur = 12;
+    ctx.fillText(`EMOJIS: ${score}/${emojisToCollect.length}`, 18, 28);
 
-  fud.forEach(item => {
-    ctx.font = "44px Arial";
+    ctx.fillStyle = "#ff2aa3";
+    ctx.shadowColor = "#ff2aa3";
+    ctx.fillText(`LIVES: ${lives}`, 18, 54);
+
+    ctx.fillStyle = "#ffea00";
+    ctx.shadowColor = "#ffea00";
+    ctx.fillText("AVOID THE FUD ☠️", canvas.width - 180, 28);
+
+    ctx.restore();
+  }
+
+  function drawPlayer() {
+    ctx.save();
+
+    ctx.font = `${player.size}px Arial, sans-serif`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
     ctx.shadowColor = "#ff2aa3";
     ctx.shadowBlur = 18;
-    ctx.fillText(item.emoji, item.x, item.y);
+    ctx.fillText("🧸", player.x, player.y);
+
+    ctx.restore();
+  }
+
+  function drawCollectibles() {
+    collectibles.forEach((item) => {
+      if (item.collected) return;
+
+      item.pulse += 0.08;
+      const pulseSize = item.size + Math.sin(item.pulse) * 4;
+
+      ctx.save();
+      ctx.font = `${pulseSize}px Arial, sans-serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.shadowColor = "#00f5ff";
+      ctx.shadowBlur = 14;
+      ctx.fillText(item.emoji, item.x, item.y);
+      ctx.restore();
+    });
+  }
+
+  function drawEnemies() {
+    enemies.forEach((enemy) => {
+      ctx.save();
+      ctx.font = `${enemy.size}px Arial, sans-serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.shadowColor = "#ff0000";
+      ctx.shadowBlur = 16;
+      ctx.fillText("☠️", enemy.x, enemy.y);
+      ctx.restore();
+    });
+  }
+
+  function drawParticles() {
+    particles.forEach((p) => {
+      ctx.save();
+      ctx.globalAlpha = p.life / 30;
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    });
+  }
+
+  function updatePlayer() {
+    if (keys.ArrowLeft || keys.a || keys.A) player.x -= player.speed;
+    if (keys.ArrowRight || keys.d || keys.D) player.x += player.speed;
+    if (keys.ArrowUp || keys.w || keys.W) player.y -= player.speed;
+    if (keys.ArrowDown || keys.s || keys.S) player.y += player.speed;
+
+    player.x = Math.max(26, Math.min(canvas.width - 26, player.x));
+    player.y = Math.max(38, Math.min(canvas.height - 26, player.y));
+  }
+
+  function updateEnemies() {
+    spawnTimer++;
+
+    if (spawnTimer > 120) {
+      enemies.push(createEnemy());
+      spawnTimer = 0;
+    }
+
+    enemies.forEach((enemy) => {
+      enemy.x += enemy.speedX;
+      enemy.y += enemy.speedY;
+
+      if (
+        enemy.x < -70 ||
+        enemy.x > canvas.width + 70 ||
+        enemy.y < -70 ||
+        enemy.y > canvas.height + 70
+      ) {
+        Object.assign(enemy, createEnemy());
+      }
+    });
+
+    if (enemies.length > 9) {
+      enemies.shift();
+    }
+  }
+
+  function updateParticles() {
+    particles.forEach((p) => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.life -= 1;
+    });
+
+    particles = particles.filter((p) => p.life > 0);
+  }
+
+  function distance(aX, aY, bX, bY) {
+    return Math.hypot(aX - bX, aY - bY);
+  }
+
+  function makeParticles(x, y, color) {
+    for (let i = 0; i < 14; i++) {
+      particles.push({
+        x,
+        y,
+        vx: -3 + Math.random() * 6,
+        vy: -3 + Math.random() * 6,
+        size: 2 + Math.random() * 4,
+        life: 30,
+        color
+      });
+    }
+  }
+
+  function checkCollisions() {
+    collectibles.forEach((item) => {
+      if (item.collected) return;
+
+      if (distance(player.x, player.y, item.x, item.y) < 38) {
+        item.collected = true;
+        score++;
+        makeParticles(item.x, item.y, "#00f5ff");
+      }
+    });
+
+    enemies.forEach((enemy) => {
+      if (distance(player.x, player.y, enemy.x, enemy.y) < 34) {
+        lives--;
+        makeParticles(player.x, player.y, "#ff2aa3");
+
+        player.x = canvas.width * 0.16;
+        player.y = canvas.height * 0.5;
+
+        Object.assign(enemy, createEnemy());
+
+        if (lives <= 0) {
+          gameRunning = false;
+          drawGameOver();
+        }
+      }
+    });
+
+    if (score >= emojisToCollect.length) {
+      gameRunning = false;
+      gameWon = true;
+      drawWinScreen();
+    }
+  }
+
+  function drawGameOver() {
+    drawBackground();
+
+    ctx.save();
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    ctx.font = "42px Arial, sans-serif";
+    ctx.fillStyle = "#ff2aa3";
+    ctx.shadowColor = "#ff2aa3";
+    ctx.shadowBlur = 18;
+    ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - 28);
+
+    ctx.font = "18px Arial, sans-serif";
+    ctx.fillStyle = "#ffffff";
     ctx.shadowBlur = 0;
-  });
-}
+    ctx.fillText("The FUD got you. Try again.", canvas.width / 2, canvas.height / 2 + 18);
 
-function hitPlayerWithItem(item, itemSize) {
-  const playerBox = {
-    x: player.x + 10,
-    y: player.y + 12,
-    w: player.w,
-    h: player.h
-  };
+    ctx.restore();
+  }
 
-  const itemBox = {
-    x: item.x + 12,
-    y: item.y - itemSize + 12,
-    w: itemSize - 18,
-    h: itemSize - 18
-  };
+  function drawWinScreen() {
+    drawBackground();
 
-  return (
-    playerBox.x < itemBox.x + itemBox.w &&
-    playerBox.x + playerBox.w > itemBox.x &&
-    playerBox.y < itemBox.y + itemBox.h &&
-    playerBox.y + playerBox.h > itemBox.y
-  );
-}
+    ctx.save();
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
 
-function gameLoop() {
-  if (!gameRunning) return;
+    ctx.font = "34px Arial, sans-serif";
+    ctx.fillStyle = "#00f5ff";
+    ctx.shadowColor = "#00f5ff";
+    ctx.shadowBlur = 18;
+    ctx.fillText("RABBIT HOLE UNLOCKED", canvas.width / 2, canvas.height / 2 - 35);
 
-  drawBackground();
+    ctx.font = "48px Arial, sans-serif";
+    ctx.fillText("🧸 🚀 🌕", canvas.width / 2, canvas.height / 2 + 15);
 
-  if (keys["ArrowLeft"]) player.x -= player.speed;
-  if (keys["ArrowRight"]) player.x += player.speed;
+    ctx.font = "17px Arial, sans-serif";
+    ctx.fillStyle = "#ffea00";
+    ctx.shadowColor = "#ffea00";
+    ctx.fillText("Click ENTER SITE to continue.", canvas.width / 2, canvas.height / 2 + 68);
 
-  player.x = Math.max(0, Math.min(canvas.width - 44, player.x));
+    ctx.restore();
+  }
 
-  spawnItems();
+  function drawGame() {
+    if (!canvas || !ctx) return;
 
-  falling.forEach(item => item.y += item.speed);
-  fud.forEach(item => item.y += item.speed);
+    drawBackground();
+    updatePlayer();
+    updateEnemies();
+    updateParticles();
+    checkCollisions();
 
-  falling = falling.filter(item => {
-    if (hitPlayerWithItem(item, 48)) {
-      collected++;
-      return false;
+    drawCollectibles();
+    drawEnemies();
+    drawParticles();
+    drawPlayer();
+    drawText();
+
+    if (gameRunning) {
+      animationFrame = requestAnimationFrame(drawGame);
     }
-    return item.y < canvas.height + 60;
-  });
+  }
 
-  fud = fud.filter(item => {
-    if (hitPlayerWithItem(item, 44)) {
-      lives--;
-      return false;
+  window.startGame = startGame;
+  window.enterSite = enterSite;
+
+  if (startGameBtn) {
+    startGameBtn.addEventListener("click", startGame);
+  }
+
+  if (enterSiteBtn) {
+    enterSiteBtn.addEventListener("click", enterSite);
+  }
+
+  window.addEventListener("keydown", (event) => {
+    keys[event.key] = true;
+
+    if (event.key === "Enter" && gameWon) {
+      enterSite();
     }
-    return item.y < canvas.height + 60;
   });
 
-  drawItems();
-  drawPlayer();
-  drawHUD();
-
-  if (collected >= timelineEmojis.length) {
-    gameRunning = false;
-    modalTitle.textContent = "🎮 EMOJI TIMELINE COMPLETE";
-    modalText.textContent = "You collected the full Roaring Kitty emoji quest. Welcome to the $TEDDY board.";
-    modal.classList.add("active");
-    setTimeout(enterSite, 1400);
-    return;
-  }
-
-  if (lives <= 0) {
-    gameRunning = false;
-    modalTitle.textContent = "☠️ FUD GOT YOU";
-    modalText.textContent = "The FUD skulls got too close. Try again or enter the site.";
-    modal.classList.add("active");
-    return;
-  }
-
-  requestAnimationFrame(gameLoop);
-}
-
-drawBackground();
-drawPlayer();
-drawHUD();
-
-document.querySelectorAll("[data-title]").forEach((item) => {
-  item.addEventListener("click", () => {
-    modalTitle.textContent = item.dataset.title;
-    modalText.textContent = item.dataset.text;
-    modal.classList.add("active");
+  window.addEventListener("keyup", (event) => {
+    keys[event.key] = false;
   });
-});
 
-closeModal.addEventListener("click", () => {
-  modal.classList.remove("active");
-});
+  if (canvas) {
+    canvas.addEventListener("pointermove", (event) => {
+      if (!gameRunning) return;
 
-modal.addEventListener("click", (event) => {
-  if (event.target === modal) {
-    modal.classList.remove("active");
+      const rect = canvas.getBoundingClientRect();
+      player.x = event.clientX - rect.left;
+      player.y = event.clientY - rect.top;
+    });
+
+    canvas.addEventListener("click", () => {
+      if (!gameRunning && !gameWon) {
+        startGame();
+      }
+    });
+  }
+
+  window.addEventListener("resize", resizeCanvas);
+
+  resizeCanvas();
+
+  if (canvas && ctx) {
+    drawBackground();
+
+    ctx.save();
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.font = "28px Arial, sans-serif";
+    ctx.fillStyle = "#00f5ff";
+    ctx.shadowColor = "#00f5ff";
+    ctx.shadowBlur = 18;
+    ctx.fillText("INSERT COIN", canvas.width / 2, canvas.height / 2 - 20);
+
+    ctx.font = "16px Arial, sans-serif";
+    ctx.fillStyle = "#ffffff";
+    ctx.shadowBlur = 0;
+    ctx.fillText("Collect emojis. Avoid the FUD skulls.", canvas.width / 2, canvas.height / 2 + 28);
+    ctx.restore();
+  }
+
+  /* ======================================================
+     SIMPLE POPUP MODALS FOR OLD HUB BUTTONS
+  ====================================================== */
+
+  const modal =
+    document.getElementById("modal") ||
+    document.getElementById("siteModal") ||
+    document.querySelector(".modal");
+
+  const modalTitle =
+    document.getElementById("modalTitle") ||
+    document.getElementById("siteModalTitle") ||
+    (modal ? modal.querySelector("h2") : null);
+
+  const modalText =
+    document.getElementById("modalText") ||
+    document.getElementById("siteModalText") ||
+    (modal ? modal.querySelector("p") : null);
+
+  const closeModal =
+    document.getElementById("closeModal") ||
+    document.querySelector(".close-modal") ||
+    document.querySelector(".modal-close");
+
+  document.querySelectorAll("[data-title][data-text]").forEach((button) => {
+    button.addEventListener("click", () => {
+      if (!modal || !modalTitle || !modalText) return;
+
+      modalTitle.textContent = button.dataset.title;
+      modalText.textContent = button.dataset.text;
+      modal.classList.add("active");
+    });
+  });
+
+  if (closeModal && modal) {
+    closeModal.addEventListener("click", () => {
+      modal.classList.remove("active");
+    });
+  }
+
+  if (modal) {
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) {
+        modal.classList.remove("active");
+      }
+    });
   }
 });
-
-function copyContract() {
-  const contract = document.getElementById("contractAddress").textContent;
-
-  navigator.clipboard.writeText(contract).then(() => {
-    modalTitle.textContent = "📋 CONTRACT COPIED";
-    modalText.textContent = contract;
-    modal.classList.add("active");
-  }).catch(() => {
-    modalTitle.textContent = "COPY THIS CONTRACT";
-    modalText.textContent = contract;
-    modal.classList.add("active");
-  });
-}
-
-document.getElementById("copyContract").addEventListener("click", copyContract);
-document.getElementById("copyContractTop").addEventListener("click", copyContract);
