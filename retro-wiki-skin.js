@@ -1,17 +1,28 @@
-
 /* ======================================================
-   $TEDDY RETRO WIKI SKIN
-   Forces all wiki/modal boxes into radical 80s style.
-   Add this AFTER wiki.js on pages that use wiki popups.
+   $TEDDY RETRO WIKI SKIN — SAFE VERSION
+   This does NOT control page loading or modal visibility.
+   It only injects fonts and styling.
 ====================================================== */
 
 (function () {
+  const fontLinkId = "retroWikiFonts";
+  const styleId = "retroWikiSkinSafe";
+
+  if (!document.getElementById(fontLinkId)) {
+    const link = document.createElement("link");
+    link.id = fontLinkId;
+    link.rel = "stylesheet";
+    link.href = "https://fonts.googleapis.com/css2?family=Bungee&family=Monoton&family=Orbitron:wght@500;700;900&family=Permanent+Marker&family=Space+Mono:wght@400;700&display=swap";
+    document.head.appendChild(link);
+  }
+
+  const oldStyle = document.getElementById(styleId);
+  if (oldStyle) oldStyle.remove();
+
   const style = document.createElement("style");
-  style.id = "retroWikiSkinForced";
+  style.id = styleId;
 
   style.textContent = `
-    @import url('https://fonts.googleapis.com/css2?family=Bungee&family=Monoton&family=Orbitron:wght@500;700;900&family=Permanent+Marker&family=Space+Mono:wght@400;700&display=swap');
-
     :root {
       --rw-cyan: #22f3ff;
       --rw-pink: #ff39b7;
@@ -23,34 +34,25 @@
     }
 
     #wikiModal,
+    #clueModal,
     .wiki-modal,
-    .modal,
-    #clueModal {
-      align-items: center !important;
-      justify-content: center !important;
-      padding: 24px !important;
+    .modal {
       background:
-        radial-gradient(circle at 50% 15%, rgba(34,243,255,.16), transparent 30%),
-        radial-gradient(circle at 50% 85%, rgba(255,57,183,.14), transparent 34%),
+        radial-gradient(circle at 50% 15%, rgba(34,243,255,.14), transparent 32%),
+        radial-gradient(circle at 50% 85%, rgba(255,57,183,.12), transparent 34%),
         rgba(0,0,0,.84) !important;
       backdrop-filter: blur(8px) saturate(1.1) !important;
     }
 
-    #wikiModal.active,
-    .wiki-modal.active,
-    .modal.active,
-    #clueModal.active {
-      display: flex !important;
-    }
-
+    #wikiModal .modal-box,
+    #wikiModal .wiki-modal-box,
     #wikiModal > div,
+    #clueModal .modal-box,
+    #clueModal .wiki-modal-box,
     #clueModal > div,
-    .wiki-modal > div,
-    .modal > div,
-    .wiki-modal-box,
-    .modal-box,
-    .wiki-box,
-    .clue-box {
+    .modal .modal-box,
+    .wiki-modal .wiki-modal-box,
+    .wiki-modal .modal-box {
       width: min(790px, 94vw) !important;
       max-width: 790px !important;
       margin: 0 auto !important;
@@ -71,85 +73,6 @@
         0 0 52px rgba(34,243,255,.28),
         0 0 88px rgba(255,57,183,.22),
         inset 0 0 24px rgba(34,243,255,.08) !important;
-    }
-
-    #wikiModal > div::before,
-    #clueModal > div::before,
-    .wiki-modal > div::before,
-    .modal > div::before,
-    .wiki-modal-box::before,
-    .modal-box::before,
-    .wiki-box::before,
-    .clue-box::before {
-      content: "" !important;
-      position: absolute !important;
-      inset: 9px !important;
-      border-radius: 22px !important;
-      pointer-events: none !important;
-      z-index: 0 !important;
-      border: 1px solid rgba(34,243,255,.24) !important;
-      box-shadow:
-        inset 0 0 20px rgba(34,243,255,.10),
-        inset 0 0 28px rgba(255,57,183,.08) !important;
-    }
-
-    #wikiModal > div::after,
-    #clueModal > div::after,
-    .wiki-modal > div::after,
-    .modal > div::after,
-    .wiki-modal-box::after,
-    .modal-box::after,
-    .wiki-box::after,
-    .clue-box::after {
-      content: "" !important;
-      position: absolute !important;
-      inset: 0 !important;
-      pointer-events: none !important;
-      z-index: 0 !important;
-      background:
-        repeating-linear-gradient(
-          to bottom,
-          rgba(255,255,255,.045) 0px,
-          rgba(255,255,255,.045) 1px,
-          transparent 2px,
-          transparent 5px
-        ) !important;
-      opacity: .2 !important;
-      mix-blend-mode: screen !important;
-    }
-
-    #wikiModal > div > *,
-    #clueModal > div > *,
-    .wiki-modal > div > *,
-    .modal > div > *,
-    .wiki-modal-box > *,
-    .modal-box > *,
-    .wiki-box > *,
-    .clue-box > * {
-      position: relative !important;
-      z-index: 2 !important;
-    }
-
-    #wikiClose,
-    #closeModal,
-    .close,
-    .modal-close,
-    .close-modal {
-      position: absolute !important;
-      top: 12px !important;
-      right: 18px !important;
-      z-index: 10 !important;
-      background: transparent !important;
-      border: 0 !important;
-      color: white !important;
-      font-family: "Orbitron", sans-serif !important;
-      font-size: 38px !important;
-      font-weight: 900 !important;
-      line-height: 1 !important;
-      cursor: pointer !important;
-      text-shadow:
-        0 0 8px var(--rw-pink),
-        0 0 18px var(--rw-pink) !important;
     }
 
     #wikiTag,
@@ -239,23 +162,6 @@
         0 0 18px rgba(255,57,183,.24) !important;
     }
 
-    #wikiDate::after,
-    .wiki-date::after,
-    .modal-date::after,
-    .modal-subtitle::after,
-    #wikiModal h3::after,
-    #clueModal h3::after,
-    .modal h3::after,
-    .wiki-modal h3::after {
-      content: "" !important;
-      display: block !important;
-      width: min(360px, 72%) !important;
-      height: 2px !important;
-      margin: 14px auto 0 !important;
-      background: linear-gradient(to right, transparent, var(--rw-cyan), var(--rw-pink), transparent) !important;
-      box-shadow: 0 0 10px rgba(34,243,255,.38) !important;
-    }
-
     #wikiText,
     #modalText,
     .wiki-text,
@@ -297,8 +203,11 @@
 
     #wikiTheoryInput,
     #theoryInput,
-    textarea,
-    .theory-input {
+    .theory-input,
+    #wikiModal textarea,
+    #clueModal textarea,
+    .modal textarea,
+    .wiki-modal textarea {
       width: min(590px, 100%) !important;
       min-height: 118px !important;
       display: block !important;
@@ -372,7 +281,6 @@
       font-weight: 900 !important;
       letter-spacing: .8px !important;
       text-transform: uppercase !important;
-      transition: transform .18s ease, filter .18s ease, border-color .18s ease !important;
     }
 
     #saveTheory,
@@ -400,78 +308,7 @@
         0 0 18px rgba(34,243,255,.45),
         inset 0 -3px 0 rgba(0,0,0,.25) !important;
     }
-
-    #wikiModal button:hover,
-    #clueModal button:hover,
-    .modal button:hover,
-    .wiki-modal button:hover,
-    #wikiModal a:hover,
-    #clueModal a:hover,
-    .modal a:hover,
-    .wiki-modal a:hover {
-      transform: translateY(-2px) scale(1.015) !important;
-      border-color: white !important;
-      filter: brightness(1.1) !important;
-    }
-
-    @media (max-width: 700px) {
-      #wikiModal > div,
-      #clueModal > div,
-      .wiki-modal > div,
-      .modal > div,
-      .wiki-modal-box,
-      .modal-box,
-      .wiki-box,
-      .clue-box {
-        width: min(94vw, 680px) !important;
-        padding: 24px 16px 22px !important;
-        border-radius: 24px !important;
-      }
-
-      #wikiTitle,
-      #modalTitle,
-      #wikiModal h1,
-      #wikiModal h2,
-      #clueModal h1,
-      #clueModal h2,
-      .modal h1,
-      .modal h2 {
-        font-size: 31px !important;
-      }
-
-      #wikiModal button:not(#wikiClose),
-      #clueModal button:not(#closeModal),
-      .modal button:not(.close):not(.modal-close):not(.close-modal),
-      .wiki-modal button:not(.close):not(.modal-close):not(.close-modal),
-      #wikiModal a,
-      #clueModal a,
-      .modal a,
-      .wiki-modal a {
-        width: 100% !important;
-        min-width: 100% !important;
-      }
-    }
   `;
 
   document.head.appendChild(style);
-
-  function markWikiCards() {
-    const candidates = document.querySelectorAll(
-      "#wikiModal, #clueModal, .wiki-modal, .modal"
-    );
-
-    candidates.forEach((modal) => {
-      modal.classList.add("retro-wiki-forced");
-    });
-  }
-
-  markWikiCards();
-
-  const observer = new MutationObserver(markWikiCards);
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true,
-    attributes: true,
-    attributeFilter: ["class", "style"]
-  });
 })();
