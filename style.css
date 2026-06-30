@@ -959,3 +959,348 @@ code {
     font-size: 16px;
   }
 }
+/* ======================================================
+   RABBIT HOLE ANIMATED LIGHTING
+   Paste at the very bottom of style.css
+====================================================== */
+
+.rabbit-stage {
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.rabbit-bg {
+  position: relative;
+  z-index: 1;
+}
+
+#rabbitHotspots {
+  z-index: 50;
+}
+
+/* Soft room-wide ambient glow */
+.rabbit-light {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 12;
+  background:
+    radial-gradient(circle at 10% 8%, rgba(255, 42, 90, .18), transparent 22%),
+    radial-gradient(circle at 85% 13%, rgba(0, 245, 255, .14), transparent 23%),
+    radial-gradient(circle at 92% 58%, rgba(80, 255, 150, .09), transparent 20%),
+    radial-gradient(circle at 50% 52%, rgba(255, 190, 80, .07), transparent 42%);
+  mix-blend-mode: screen;
+  animation: rabbitRoomBreathe 7s ease-in-out infinite;
+}
+
+/* Mouse-following flashlight glow */
+.rabbit-cursor-glow {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 18;
+  background:
+    radial-gradient(
+      circle at var(--rabbit-mouse-x, 50%) var(--rabbit-mouse-y, 50%),
+      rgba(255, 245, 190, .11),
+      rgba(255, 245, 190, .045) 7%,
+      transparent 22%
+    );
+  mix-blend-mode: screen;
+}
+
+/* Glow layer locked to the background image */
+.rabbit-glow-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.rabbit-glow {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+/* MOASS neon sign */
+.glow-moass {
+  left: 9%;
+  top: 7.8%;
+  width: 19%;
+  height: 10%;
+  background:
+    radial-gradient(ellipse at center, rgba(255, 24, 95, .72), rgba(255, 24, 95, .22) 44%, transparent 72%);
+  filter: blur(11px);
+  animation: neonFlicker 4.8s infinite;
+}
+
+/* Bunny neon */
+.glow-bunny {
+  left: 84.7%;
+  top: 12.8%;
+  width: 13%;
+  height: 15%;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(0, 245, 255, .68), rgba(0, 245, 255, .22) 45%, transparent 70%),
+    radial-gradient(circle at 50% 58%, rgba(255, 42, 210, .42), transparent 58%);
+  filter: blur(13px);
+  animation: bunnyPulse 5.4s ease-in-out infinite;
+}
+
+/* CRT television */
+.glow-tv {
+  left: 90.5%;
+  top: 35.6%;
+  width: 18%;
+  height: 20%;
+  background:
+    radial-gradient(ellipse at center, rgba(70, 210, 255, .38), rgba(20, 90, 255, .18) 48%, transparent 75%);
+  filter: blur(10px);
+  animation: tvFlicker 2.7s steps(6, end) infinite;
+}
+
+/* Arcade cabinet */
+.glow-arcade {
+  left: 9.5%;
+  top: 47.3%;
+  width: 18%;
+  height: 48%;
+  background:
+    radial-gradient(ellipse at center, rgba(255, 42, 163, .27), rgba(0, 245, 255, .13) 44%, transparent 74%);
+  filter: blur(14px);
+  animation: arcadeGlow 6.2s ease-in-out infinite;
+}
+
+/* Lava lamp */
+.glow-lava {
+  left: 20.7%;
+  top: 16.2%;
+  width: 5%;
+  height: 14%;
+  background:
+    radial-gradient(ellipse at center, rgba(255, 40, 190, .55), rgba(255, 80, 230, .20) 45%, transparent 76%);
+  filter: blur(8px);
+  animation: lavaPulse 3.8s ease-in-out infinite;
+}
+
+/* Desk lamp */
+.glow-lamp {
+  left: 96.8%;
+  top: 58.3%;
+  width: 14%;
+  height: 18%;
+  background:
+    radial-gradient(ellipse at center, rgba(120, 255, 150, .28), rgba(255, 235, 120, .18) 42%, transparent 76%);
+  filter: blur(13px);
+  animation: lampWarmth 4.9s ease-in-out infinite;
+}
+
+/* Stock chart / market clue */
+.glow-stock {
+  left: 69.6%;
+  top: 9%;
+  width: 12%;
+  height: 8%;
+  background:
+    radial-gradient(ellipse at center, rgba(255, 40, 40, .30), rgba(30, 255, 110, .16) 44%, transparent 74%);
+  filter: blur(8px);
+  animation: chartBlink 3.1s steps(4, end) infinite;
+}
+
+/* Rotary phone hint */
+.glow-phone {
+  left: 18.8%;
+  top: 81.3%;
+  width: 12%;
+  height: 11%;
+  background:
+    radial-gradient(ellipse at center, rgba(255, 234, 0, .16), transparent 70%);
+  filter: blur(11px);
+  animation: phonePulse 8s ease-in-out infinite;
+}
+
+/* Floating dust/smoke particles */
+.rabbit-dust {
+  position: absolute;
+  width: 42%;
+  height: 42%;
+  pointer-events: none;
+  opacity: .18;
+  filter: blur(1px);
+  background-image:
+    radial-gradient(circle, rgba(255,255,255,.28) 0 1px, transparent 2px),
+    radial-gradient(circle, rgba(0,245,255,.22) 0 1px, transparent 2px),
+    radial-gradient(circle, rgba(255,42,163,.18) 0 1px, transparent 2px);
+  background-size: 90px 90px, 130px 130px, 170px 170px;
+  mix-blend-mode: screen;
+}
+
+.dust-one {
+  left: 20%;
+  top: 8%;
+  animation: dustDriftOne 24s linear infinite;
+}
+
+.dust-two {
+  left: 48%;
+  top: 30%;
+  animation: dustDriftTwo 31s linear infinite;
+}
+
+/* Animations */
+@keyframes rabbitRoomBreathe {
+  0%, 100% {
+    opacity: .66;
+  }
+  45% {
+    opacity: .92;
+  }
+  52% {
+    opacity: .55;
+  }
+  58% {
+    opacity: .82;
+  }
+}
+
+@keyframes neonFlicker {
+  0%, 7%, 10%, 14%, 100% {
+    opacity: .92;
+  }
+  8%, 12% {
+    opacity: .36;
+  }
+  48% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .62;
+  }
+  52% {
+    opacity: .96;
+  }
+}
+
+@keyframes bunnyPulse {
+  0%, 100% {
+    opacity: .72;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.07);
+  }
+}
+
+@keyframes tvFlicker {
+  0%, 100% {
+    opacity: .56;
+  }
+  20% {
+    opacity: .82;
+  }
+  38% {
+    opacity: .42;
+  }
+  62% {
+    opacity: .92;
+  }
+  80% {
+    opacity: .50;
+  }
+}
+
+@keyframes arcadeGlow {
+  0%, 100% {
+    opacity: .54;
+  }
+  50% {
+    opacity: .88;
+  }
+}
+
+@keyframes lavaPulse {
+  0%, 100% {
+    opacity: .58;
+    transform: translate(-50%, -50%) scaleY(.94);
+  }
+  50% {
+    opacity: .95;
+    transform: translate(-50%, -50%) scaleY(1.12);
+  }
+}
+
+@keyframes lampWarmth {
+  0%, 100% {
+    opacity: .44;
+  }
+  47% {
+    opacity: .78;
+  }
+  51% {
+    opacity: .36;
+  }
+  55% {
+    opacity: .70;
+  }
+}
+
+@keyframes chartBlink {
+  0%, 100% {
+    opacity: .45;
+  }
+  30% {
+    opacity: .86;
+  }
+  55% {
+    opacity: .28;
+  }
+  75% {
+    opacity: .75;
+  }
+}
+
+@keyframes phonePulse {
+  0%, 82%, 100% {
+    opacity: .18;
+  }
+  86% {
+    opacity: .55;
+  }
+  90% {
+    opacity: .24;
+  }
+  94% {
+    opacity: .48;
+  }
+}
+
+@keyframes dustDriftOne {
+  from {
+    transform: translate3d(-2%, 2%, 0);
+  }
+  to {
+    transform: translate3d(6%, -4%, 0);
+  }
+}
+
+@keyframes dustDriftTwo {
+  from {
+    transform: translate3d(5%, -2%, 0);
+  }
+  to {
+    transform: translate3d(-4%, 5%, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rabbit-light,
+  .rabbit-cursor-glow,
+  .rabbit-glow,
+  .rabbit-dust {
+    animation: none !important;
+  }
+}
