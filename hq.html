@@ -567,9 +567,10 @@
 
   <script src="rabbit-hole.js"></script>
   <script>
+<script>
   /* ======================================================
-     FORCED BLINKING BLACK CLOCK BOX
-     This does NOT rely on style.css or pseudo-elements.
+     FINAL FORCED BLINKING 12:00 CLOCK
+     Black clock face stays. Red 12:00 blinks.
   ====================================================== */
 
   (function () {
@@ -579,39 +580,64 @@
     const oldBox = document.getElementById("forcedClockBlinkBox");
     if (oldBox) oldBox.remove();
 
-    const box = document.createElement("div");
-    box.id = "forcedClockBlinkBox";
-    document.body.appendChild(box);
+    const oldClock = document.getElementById("forcedBlinkingClock1200");
+    if (oldClock) oldClock.remove();
+
+    const clock = document.createElement("div");
+    clock.id = "forcedBlinkingClock1200";
+    clock.innerHTML = `<span>12:00</span>`;
+    document.body.appendChild(clock);
 
     const style = document.createElement("style");
     style.textContent = `
-      @keyframes forcedClockBlink {
-        0%, 49% {
+      @keyframes forcedClockTextBlink {
+        0%, 48% {
           opacity: 1;
         }
 
-        50%, 100% {
+        49%, 100% {
           opacity: 0;
         }
       }
 
       #forcedClockBlinkBox {
+        display: none !important;
+      }
+
+      #forcedBlinkingClock1200 {
         position: fixed;
-        background: #000;
-        border-radius: 6px;
+        background: #050000;
+        border-radius: 5px;
         pointer-events: none;
         z-index: 2147483647;
-        animation: forcedClockBlink 1s steps(1, end) infinite;
+        overflow: hidden;
 
-        /* temporary outline so we can confirm it exists */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
         box-shadow:
-          0 0 0 2px rgba(255, 42, 163, 0.85),
-          0 0 10px rgba(0, 0, 0, 1);
+          inset 0 0 5px rgba(0,0,0,1),
+          0 0 4px rgba(0,0,0,.8);
+      }
+
+      #forcedBlinkingClock1200 span {
+        display: block;
+        color: #ff1515;
+        font-family: "Courier New", monospace;
+        font-weight: 900;
+        line-height: 1;
+        letter-spacing: 0.02em;
+        text-shadow:
+          0 0 3px rgba(255, 0, 0, 1),
+          0 0 8px rgba(255, 0, 0, .95),
+          0 0 14px rgba(255, 0, 0, .55);
+        animation: forcedClockTextBlink 1.05s steps(1, end) infinite;
       }
     `;
     document.head.appendChild(style);
 
-    function positionClockBox() {
+    function positionClock() {
       const rect = stage.getBoundingClientRect();
 
       const leftPercent = 76.89;
@@ -619,17 +645,25 @@
       const widthPercent = 4.08;
       const heightPercent = 1.96;
 
-      box.style.left = rect.left + rect.width * (leftPercent / 100) + "px";
-      box.style.top = rect.top + rect.height * (topPercent / 100) + "px";
-      box.style.width = rect.width * (widthPercent / 100) + "px";
-      box.style.height = rect.height * (heightPercent / 100) + "px";
-      box.style.transform = "rotate(8.85deg)";
-      box.style.transformOrigin = "center center";
+      const boxLeft = rect.left + rect.width * (leftPercent / 100);
+      const boxTop = rect.top + rect.height * (topPercent / 100);
+      const boxWidth = rect.width * (widthPercent / 100);
+      const boxHeight = rect.height * (heightPercent / 100);
+
+      clock.style.left = boxLeft + "px";
+      clock.style.top = boxTop + "px";
+      clock.style.width = boxWidth + "px";
+      clock.style.height = boxHeight + "px";
+      clock.style.transform = "rotate(8.85deg)";
+      clock.style.transformOrigin = "center center";
+
+      const text = clock.querySelector("span");
+      text.style.fontSize = Math.max(8, boxHeight * 0.78) + "px";
     }
 
-    positionClockBox();
-    window.addEventListener("resize", positionClockBox);
-    window.addEventListener("orientationchange", positionClockBox);
+    positionClock();
+    window.addEventListener("resize", positionClock);
+    window.addEventListener("orientationchange", positionClock);
   })();
 </script>
 </body>
