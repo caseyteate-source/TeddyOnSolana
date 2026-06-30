@@ -10,9 +10,25 @@
 <body class="rabbit-page">
   <div class="scanlines"></div>
   <div class="rabbit-light"></div>
+  <div class="rabbit-cursor-glow"></div>
 
   <main class="rabbit-stage">
     <img src="rabbit-hole-bg.png" alt="$TEDDY The Rabbit Hole" class="rabbit-bg" />
+
+    <!-- Animated lighting layer -->
+    <div class="rabbit-glow-layer">
+      <div class="rabbit-glow glow-moass"></div>
+      <div class="rabbit-glow glow-bunny"></div>
+      <div class="rabbit-glow glow-tv"></div>
+      <div class="rabbit-glow glow-arcade"></div>
+      <div class="rabbit-glow glow-lava"></div>
+      <div class="rabbit-glow glow-lamp"></div>
+      <div class="rabbit-glow glow-stock"></div>
+      <div class="rabbit-glow glow-phone"></div>
+      <div class="rabbit-dust dust-one"></div>
+      <div class="rabbit-dust dust-two"></div>
+    </div>
+
     <div id="rabbitHotspots"></div>
   </main>
 
@@ -25,6 +41,13 @@
       <a id="rabbitLink" class="rabbit-link" href="#" target="_blank" rel="noopener">OPEN</a>
     </div>
   </div>
+
+  <script>
+    document.addEventListener("pointermove", (event) => {
+      document.documentElement.style.setProperty("--rabbit-mouse-x", event.clientX + "px");
+      document.documentElement.style.setProperty("--rabbit-mouse-y", event.clientY + "px");
+    });
+  </script>
 
   <script src="rabbit-hole.js"></script>
 </body>
