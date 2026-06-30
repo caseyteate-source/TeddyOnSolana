@@ -1,299 +1,14 @@
 /* ======================================================
-   $TEDDY RABBIT HOLE ANIMATION OVERLAYS
-   Movable overlay editor:
+   $TEDDY RABBIT HOLE TV + CLOCK OVERLAYS
+   Overlay editor:
    hq.html?overlays=1
 
-   Leave rabbit-hole.js alone.
+   Do not touch rabbit-hole.js.
 ====================================================== */
 
 const isOverlayEditMode = new URLSearchParams(window.location.search).has("overlays");
 
 const rabbitOverlaySettings = [
-  {
-    id: "moass-neon",
-    label: "MOASS Neon",
-    type: "simple",
-    className: "rabbit-overlay overlay-moass",
-    x: 1.4,
-    y: 4.8,
-    w: 19.5,
-    h: 12,
-    rotate: 0,
-    skewX: 0,
-    skewY: 0,
-    opacity: 1
-  },
-  {
-    id: "bunny-neon",
-    label: "Bunny Neon",
-    type: "simple",
-    className: "rabbit-overlay overlay-bunny",
-    x: 82.8,
-    y: 3.5,
-    w: 12.4,
-    h: 21,
-    rotate: 0,
-    skewX: 0,
-    skewY: 0,
-    opacity: 1
-  },
-  {
-    id: "arcade-glow",
-    label: "Arcade Glow",
-    type: "simple",
-    className: "rabbit-overlay overlay-arcade",
-    x: 1.8,
-    y: 24.2,
-    w: 21,
-    h: 39,
-    rotate: 0,
-    skewX: 0,
-    skewY: 0,
-    opacity: 1
-  },
-  {
-    id: "lava-glow",
-    label: "Lava Lamp Glow",
-    type: "simple",
-    className: "rabbit-overlay overlay-lava-glow",
-    x: 24.8,
-    y: 13.5,
-    w: 4.6,
-    h: 17,
-    rotate: 0,
-    skewX: 0,
-    skewY: 0,
-    opacity: 1
-  },
-  {
-    id: "lava-bubble-one",
-    label: "Lava Bubble 1",
-    type: "bubble",
-    className: "rabbit-overlay overlay-lava-bubble",
-    x: 25.75,
-    y: 16.5,
-    w: 0.9,
-    h: 1.8,
-    rotate: 0,
-    skewX: 0,
-    skewY: 0,
-    opacity: 1
-  },
-  {
-    id: "lava-bubble-two",
-    label: "Lava Bubble 2",
-    type: "bubble",
-    className: "rabbit-overlay overlay-lava-bubble yellow",
-    x: 26.9,
-    y: 22.5,
-    w: 0.7,
-    h: 1.4,
-    rotate: 0,
-    skewX: 0,
-    skewY: 0,
-    opacity: 1
-  },
-  {
-    id: "lava-bubble-three",
-    label: "Lava Bubble 3",
-    type: "bubble",
-    className: "rabbit-overlay overlay-lava-bubble blue",
-    x: 25.35,
-    y: 26,
-    w: 0.75,
-    h: 1.5,
-    rotate: 0,
-    skewX: 0,
-    skewY: 0,
-    opacity: 1
-  },
-  {
-    id: "phone-glow",
-    label: "Phone Glow",
-    type: "simple",
-    className: "rabbit-overlay overlay-phone",
-    x: 4.8,
-    y: 77,
-    w: 15,
-    h: 15,
-    rotate: 0,
-    skewX: 0,
-    skewY: 0,
-    opacity: 1
-  },
-  {
-    id: "heart-gme",
-    label: "I Heart GME Pulse",
-    type: "simple",
-    className: "rabbit-overlay overlay-heart-gme",
-    x: 22.1,
-    y: 52.2,
-    w: 5.2,
-    h: 6.4,
-    rotate: 0,
-    skewX: 0,
-    skewY: 0,
-    opacity: 1
-  },
-  {
-    id: "power-players",
-    label: "Power To Players Glow",
-    type: "simple",
-    className: "rabbit-overlay overlay-power",
-    x: 70.8,
-    y: 30.5,
-    w: 8.8,
-    h: 10.6,
-    rotate: 0,
-    skewX: 0,
-    skewY: 0,
-    opacity: 1
-  },
-  {
-    id: "hang-poster",
-    label: "Hang In There Poster",
-    type: "simple",
-    className: "rabbit-overlay overlay-hang-poster",
-    x: 5.9,
-    y: 13.2,
-    w: 8.4,
-    h: 17,
-    rotate: 0,
-    skewX: 0,
-    skewY: 0,
-    opacity: 1
-  },
-  {
-    id: "stock-chart",
-    label: "Stock Chart Shimmer",
-    type: "simple",
-    className: "rabbit-overlay overlay-chart",
-    x: 73.9,
-    y: 5.9,
-    w: 9.2,
-    h: 15.3,
-    rotate: 0,
-    skewX: 0,
-    skewY: 0,
-    opacity: 1
-  },
-  {
-    id: "magnify-glint",
-    label: "Magnifying Glass Glint",
-    type: "simple",
-    className: "rabbit-overlay overlay-magnify",
-    x: 63.5,
-    y: 82.4,
-    w: 5.8,
-    h: 6.8,
-    rotate: 0,
-    skewX: 0,
-    skewY: 0,
-    opacity: 1
-  },
-  {
-    id: "diamond-sparkle",
-    label: "Diamond Sparkle",
-    type: "simple",
-    className: "rabbit-overlay overlay-diamond",
-    x: 56.6,
-    y: 46.2,
-    w: 6,
-    h: 8.5,
-    rotate: 0,
-    skewX: 0,
-    skewY: 0,
-    opacity: 1
-  },
-  {
-    id: "kitty-pulse",
-    label: "Kitty Pulse",
-    type: "simple",
-    className: "rabbit-overlay overlay-kitty",
-    x: 54.7,
-    y: 60.3,
-    w: 8,
-    h: 14.5,
-    rotate: 0,
-    skewX: 0,
-    skewY: 0,
-    opacity: 1
-  },
-  {
-    id: "vhs-glow",
-    label: "VHS Glow",
-    type: "simple",
-    className: "rabbit-overlay overlay-vhs",
-    x: 45.4,
-    y: 77.2,
-    w: 15.8,
-    h: 6.4,
-    rotate: 0,
-    skewX: 0,
-    skewY: 0,
-    opacity: 1
-  },
-  {
-    id: "notebook-pulse",
-    label: "Notebook Pulse",
-    type: "simple",
-    className: "rabbit-overlay overlay-notebook",
-    x: 46.5,
-    y: 83.5,
-    w: 17,
-    h: 11,
-    rotate: 0,
-    skewX: 0,
-    skewY: 0,
-    opacity: 1
-  },
-  {
-    id: "coffee-steam",
-    label: "Coffee Steam",
-    type: "steam",
-    className: "rabbit-overlay overlay-coffee-steam",
-    x: 75.6,
-    y: 75,
-    w: 5,
-    h: 10,
-    rotate: 0,
-    skewX: 0,
-    skewY: 0,
-    opacity: 1
-  },
-  {
-    id: "dust-one",
-    label: "Dust 1",
-    type: "simple",
-    className: "rabbit-overlay overlay-dust",
-    x: 12,
-    y: 20,
-    w: 0.4,
-    h: 0.4,
-    rotate: 0,
-    skewX: 0,
-    skewY: 0,
-    opacity: 1
-  },
-  {
-    id: "dust-two",
-    label: "Dust 2",
-    type: "simple",
-    className: "rabbit-overlay overlay-dust two",
-    x: 42,
-    y: 31,
-    w: 0.4,
-    h: 0.4,
-    rotate: 0,
-    skewX: 0,
-    skewY: 0,
-    opacity: 1
-  },
-
-  /* ======================================================
-     OLD DIAL-IN TV STATIC STARTING POINT
-  ====================================================== */
-
   {
     id: "tv-static",
     label: "TV Static",
@@ -307,9 +22,13 @@ const rabbitOverlaySettings = [
     skewX: -1.5,
     skewY: 0,
     opacity: 0.42,
-    clipPath: "polygon(5% 5%, 98% 2%, 96% 96%, 7% 98%)"
+    clipCorners: {
+      tl: { x: 5, y: 5 },
+      tr: { x: 98, y: 2 },
+      br: { x: 96, y: 96 },
+      bl: { x: 7, y: 98 }
+    }
   },
-
   {
     id: "clock-1200",
     label: "Clock 12:00",
@@ -343,15 +62,18 @@ function renderRabbitOverlays() {
     applyOverlayStyle(el, overlay);
 
     if (isOverlayEditMode) {
-      el.dataset.label = overlay.label;
       el.addEventListener("pointerdown", (event) => {
-        selectOverlay(overlay, el);
+        selectOverlay(overlay.id);
         startOverlayDrag(event, overlay, el);
       });
     }
 
     overlayRoot.appendChild(el);
   });
+
+  if (isOverlayEditMode) {
+    renderOverlayLabels();
+  }
 
   setupTvStatic();
   updateOverlayEditorOutput();
@@ -398,15 +120,15 @@ function createOverlayElement(overlay) {
     `;
   }
 
-  if (overlay.type === "steam") {
-    el.innerHTML = `<span></span><span></span><span></span>`;
-  }
-
-  if (overlay.type === "bubble") {
-    el.innerHTML = `<span></span>`;
-  }
-
   return el;
+}
+
+function getClipPath(overlay) {
+  if (!overlay.clipCorners) return "";
+
+  const c = overlay.clipCorners;
+
+  return `polygon(${c.tl.x}% ${c.tl.y}%, ${c.tr.x}% ${c.tr.y}%, ${c.br.x}% ${c.br.y}%, ${c.bl.x}% ${c.bl.y}%)`;
 }
 
 function applyOverlayStyle(el, overlay) {
@@ -417,27 +139,78 @@ function applyOverlayStyle(el, overlay) {
   el.style.opacity = overlay.opacity;
   el.style.transform = `rotate(${overlay.rotate}deg) skewX(${overlay.skewX}deg) skewY(${overlay.skewY}deg)`;
 
-  if (overlay.clipPath) {
-    el.style.clipPath = overlay.clipPath;
+  const clipPath = getClipPath(overlay);
+  el.style.clipPath = clipPath || "";
+}
+
+function renderOverlayLabels() {
+  document.querySelectorAll(".overlay-floating-label").forEach((label) => label.remove());
+
+  rabbitOverlaySettings.forEach((overlay) => {
+    const label = document.createElement("button");
+    label.type = "button";
+    label.className = "overlay-floating-label";
+    label.id = `overlay-label-${overlay.id}`;
+    label.textContent = overlay.label;
+
+    label.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      selectOverlay(overlay.id);
+    });
+
+    overlayRoot.appendChild(label);
+    positionOverlayLabel(overlay);
+  });
+}
+
+function positionOverlayLabel(overlay) {
+  const label = document.getElementById(`overlay-label-${overlay.id}`);
+  if (!label) return;
+
+  const x = overlay.x + overlay.w / 2;
+  const y = Math.max(2.5, overlay.y - 2.8);
+
+  label.style.left = x + "%";
+  label.style.top = y + "%";
+
+  if (selectedOverlay && selectedOverlay.id === overlay.id) {
+    label.classList.add("selected");
   } else {
-    el.style.clipPath = "";
+    label.classList.remove("selected");
   }
 }
 
-function selectOverlay(overlay, el) {
-  selectedOverlay = overlay;
+function selectOverlay(overlayId) {
+  selectedOverlay = rabbitOverlaySettings.find((overlay) => overlay.id === overlayId);
 
   document.querySelectorAll(".rabbit-overlay").forEach((item) => {
     item.classList.remove("selected-overlay");
   });
 
-  el.classList.add("selected-overlay");
+  document.querySelectorAll(".overlay-floating-label").forEach((item) => {
+    item.classList.remove("selected");
+  });
+
+  if (!selectedOverlay) return;
+
+  const el = document.getElementById(selectedOverlay.id);
+  const label = document.getElementById(`overlay-label-${selectedOverlay.id}`);
+
+  if (el) el.classList.add("selected-overlay");
+  if (label) label.classList.add("selected");
 
   const selectedName = document.getElementById("overlaySelectedName");
   if (selectedName) {
-    selectedName.textContent = `Selected: ${overlay.label}`;
+    selectedName.textContent = `Selected: ${selectedOverlay.label}`;
   }
 
+  const selectBox = document.getElementById("overlaySelect");
+  if (selectBox) {
+    selectBox.value = selectedOverlay.id;
+  }
+
+  drawCornerHandles();
   updateOverlayEditorOutput();
 }
 
@@ -465,6 +238,8 @@ function startOverlayDrag(event, overlay, el) {
     overlay.y = Number((startTop + dy).toFixed(2));
 
     applyOverlayStyle(el, overlay);
+    positionOverlayLabel(overlay);
+    drawCornerHandles();
     updateOverlayEditorOutput();
   }
 
@@ -491,13 +266,27 @@ function createOverlayEditorPanel() {
   const panel = document.createElement("div");
   panel.className = "overlay-editor-panel";
 
+  const overlayOptions = rabbitOverlaySettings
+    .map((overlay) => `<option value="${overlay.id}">${overlay.label}</option>`)
+    .join("");
+
   panel.innerHTML = `
-    <strong>Overlay Editor</strong>
-    <p>Tap an overlay to select it. Drag it into place. Use the buttons to size, rotate, skew, or fade it.</p>
+    <strong>TV / Clock Overlay Editor</strong>
+    <p>Select TV Static or Clock. Drag the overlay to move it. For TV Static, drag the pink corner dots to bend the screen shape.</p>
+
+    <select id="overlaySelect">
+      <option value="">Choose overlay...</option>
+      ${overlayOptions}
+    </select>
 
     <div id="overlaySelectedName" class="selected-name">Selected: none</div>
 
     <div class="overlay-editor-buttons">
+      <button data-action="left">←</button>
+      <button data-action="up">↑</button>
+      <button data-action="down">↓</button>
+      <button data-action="right">→</button>
+
       <button data-action="w-minus">W-</button>
       <button data-action="w-plus">W+</button>
       <button data-action="h-minus">H-</button>
@@ -514,11 +303,17 @@ function createOverlayEditorPanel() {
       <button data-action="op-plus" class="yellow">OP+</button>
     </div>
 
-    <button id="copyOverlaySettings" class="copy" type="button">COPY UPDATED OVERLAYS</button>
+    <button id="copyOverlaySettings" class="copy" type="button">COPY UPDATED TV/CLOCK SETTINGS</button>
     <textarea id="overlayOutput" readonly></textarea>
   `;
 
   document.body.appendChild(panel);
+
+  document.getElementById("overlaySelect").addEventListener("change", (event) => {
+    if (event.target.value) {
+      selectOverlay(event.target.value);
+    }
+  });
 
   panel.querySelectorAll("[data-action]").forEach((button) => {
     button.addEventListener("click", () => {
@@ -536,7 +331,7 @@ function createOverlayEditorPanel() {
       document.getElementById("copyOverlaySettings").textContent = "COPIED!";
 
       setTimeout(() => {
-        document.getElementById("copyOverlaySettings").textContent = "COPY UPDATED OVERLAYS";
+        document.getElementById("copyOverlaySettings").textContent = "COPY UPDATED TV/CLOCK SETTINGS";
       }, 1200);
     } catch {
       alert("Could not auto-copy. Select the text box and copy manually.");
@@ -549,6 +344,11 @@ function adjustSelectedOverlay(action) {
 
   const el = document.getElementById(selectedOverlay.id);
   if (!el) return;
+
+  if (action === "left") selectedOverlay.x = Number((selectedOverlay.x - 0.25).toFixed(2));
+  if (action === "right") selectedOverlay.x = Number((selectedOverlay.x + 0.25).toFixed(2));
+  if (action === "up") selectedOverlay.y = Number((selectedOverlay.y - 0.25).toFixed(2));
+  if (action === "down") selectedOverlay.y = Number((selectedOverlay.y + 0.25).toFixed(2));
 
   if (action === "w-minus") selectedOverlay.w = Number((selectedOverlay.w - 0.25).toFixed(2));
   if (action === "w-plus") selectedOverlay.w = Number((selectedOverlay.w + 0.25).toFixed(2));
@@ -571,7 +371,81 @@ function adjustSelectedOverlay(action) {
   selectedOverlay.h = Math.max(0.1, selectedOverlay.h);
 
   applyOverlayStyle(el, selectedOverlay);
+  positionOverlayLabel(selectedOverlay);
+  drawCornerHandles();
   updateOverlayEditorOutput();
+}
+
+function drawCornerHandles() {
+  document.querySelectorAll(".overlay-corner-handle").forEach((handle) => handle.remove());
+
+  if (!isOverlayEditMode || !selectedOverlay || !selectedOverlay.clipCorners) return;
+
+  Object.entries(selectedOverlay.clipCorners).forEach(([cornerKey, point]) => {
+    const handle = document.createElement("button");
+    handle.type = "button";
+    handle.className = "overlay-corner-handle";
+    handle.dataset.corner = cornerKey.toUpperCase();
+    handle.setAttribute("aria-label", `${selectedOverlay.label} ${cornerKey}`);
+
+    positionCornerHandle(handle, selectedOverlay, point);
+
+    handle.addEventListener("pointerdown", (event) => {
+      startCornerDrag(event, selectedOverlay, cornerKey);
+    });
+
+    overlayRoot.appendChild(handle);
+  });
+}
+
+function positionCornerHandle(handle, overlay, point) {
+  const x = overlay.x + (overlay.w * point.x) / 100;
+  const y = overlay.y + (overlay.h * point.y) / 100;
+
+  handle.style.left = x + "%";
+  handle.style.top = y + "%";
+}
+
+function startCornerDrag(event, overlay, cornerKey) {
+  event.preventDefault();
+  event.stopPropagation();
+
+  const stage = document.querySelector(".rabbit-stage");
+  const rect = stage.getBoundingClientRect();
+
+  function moveCorner(e) {
+    const stageX = ((e.clientX - rect.left) / rect.width) * 100;
+    const stageY = ((e.clientY - rect.top) / rect.height) * 100;
+
+    const localX = ((stageX - overlay.x) / overlay.w) * 100;
+    const localY = ((stageY - overlay.y) / overlay.h) * 100;
+
+    overlay.clipCorners[cornerKey].x = Number(clamp(localX, 0, 100).toFixed(2));
+    overlay.clipCorners[cornerKey].y = Number(clamp(localY, 0, 100).toFixed(2));
+
+    const el = document.getElementById(overlay.id);
+    if (el) {
+      applyOverlayStyle(el, overlay);
+    }
+
+    drawCornerHandles();
+    updateOverlayEditorOutput();
+  }
+
+  function stopCorner() {
+    window.removeEventListener("pointermove", moveCorner);
+    window.removeEventListener("pointerup", stopCorner);
+    window.removeEventListener("pointercancel", stopCorner);
+    updateOverlayEditorOutput();
+  }
+
+  window.addEventListener("pointermove", moveCorner);
+  window.addEventListener("pointerup", stopCorner);
+  window.addEventListener("pointercancel", stopCorner);
+}
+
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
 }
 
 function updateOverlayEditorOutput() {
@@ -621,10 +495,6 @@ function setupTvStatic() {
 
   drawTvStatic();
 }
-
-/* ======================================================
-   OPTIONAL TV STATIC SOUND
-====================================================== */
 
 const staticSoundToggle = document.getElementById("staticSoundToggle");
 let audioContext = null;
@@ -692,10 +562,6 @@ if (staticSoundToggle) {
     }
   });
 }
-
-/* ======================================================
-   MOBILE START POSITION
-====================================================== */
 
 window.addEventListener("load", () => {
   const wrap = document.getElementById("rabbitScrollWrap");
