@@ -2295,3 +2295,61 @@ code {
   border-radius: 6px !important;
   --alarm-cover-opacity: 1 !important;
 }
+/* ======================================================
+   FINAL ALARM CLOCK BLINK BOX — FORCED BLINK
+   Paste at the VERY BOTTOM of style.css
+====================================================== */
+
+/* Kill the old fake 12:00 text overlay */
+.rabbit-stage::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* This black box covers/un-covers the existing 12:00 in the image */
+.alarm-blink-box {
+  position: absolute !important;
+
+  left: 76.89% !important;
+  top: 56.92% !important;
+  width: 4.08% !important;
+  height: 1.96% !important;
+
+  transform: rotate(8.85deg) !important;
+  border-radius: 6px !important;
+
+  z-index: 46 !important;
+  pointer-events: none !important;
+
+  background: rgba(0, 0, 0, 1) !important;
+  box-shadow:
+    inset 0 0 6px rgba(0,0,0,.95),
+    0 0 5px rgba(0,0,0,.85) !important;
+
+  animation: alarmCoverBlinkFinal 1.05s steps(1, end) infinite !important;
+}
+
+/* OFF = black cover visible. ON = black cover disappears and red 12:00 shows */
+@keyframes alarmCoverBlinkFinal {
+  0%, 48% {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  49%, 100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* In alarm edit mode, freeze the box so you can place it */
+.alarm-edit-mode .alarm-blink-box {
+  animation: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  cursor: move !important;
+  outline: 3px solid #ff2aa3 !important;
+  outline-offset: 2px !important;
+  z-index: 5200 !important;
+}
