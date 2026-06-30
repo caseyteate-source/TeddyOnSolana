@@ -19,7 +19,6 @@
   <main class="rabbit-stage">
     <img src="rabbit-hole-bg.png" alt="$TEDDY The Rabbit Hole" class="rabbit-bg" />
 
-    <!-- Animated lighting layer -->
     <div class="rabbit-glow-layer">
       <div class="rabbit-glow glow-moass"></div>
       <div class="rabbit-glow glow-bunny"></div>
@@ -30,8 +29,7 @@
       <div class="rabbit-glow glow-stock"></div>
       <div class="rabbit-glow glow-phone"></div>
 
-      <!-- Real animated TV static -->
-      <div class="tv-static-wrap">
+      <div id="tvStaticBox" class="tv-static-wrap">
         <canvas id="tvStaticCanvas" class="tv-static-canvas"></canvas>
         <div class="tv-static-lines"></div>
         <div class="tv-static-roll"></div>
@@ -84,17 +82,17 @@
         data[i] = flicker;
         data[i + 1] = flicker;
         data[i + 2] = flicker;
-        data[i + 3] = 165 + Math.random() * 90;
+        data[i + 3] = 145 + Math.random() * 85;
       }
 
       tvCtx.putImageData(imageData, 0, 0);
 
-      tvCtx.fillStyle = "rgba(80, 210, 255, 0.08)";
+      tvCtx.fillStyle = "rgba(80, 210, 255, 0.055)";
       tvCtx.fillRect(0, 0, staticWidth, staticHeight);
 
-      if (Math.random() > 0.88) {
-        tvCtx.fillStyle = "rgba(255,255,255,0.35)";
-        tvCtx.fillRect(0, Math.random() * staticHeight, staticWidth, 2 + Math.random() * 5);
+      if (Math.random() > 0.89) {
+        tvCtx.fillStyle = "rgba(255,255,255,0.24)";
+        tvCtx.fillRect(0, Math.random() * staticHeight, staticWidth, 2 + Math.random() * 4);
       }
 
       requestAnimationFrame(drawTvStatic);
@@ -104,7 +102,6 @@
 
     /* ======================================================
        OPTIONAL LOW-VOLUME TV STATIC SOUND
-       Starts only when user clicks the toggle.
     ====================================================== */
 
     const staticToggle = document.getElementById("staticSoundToggle");
@@ -170,6 +167,163 @@
         staticToggle.classList.remove("active");
       }
     });
+
+    /* ======================================================
+       TV STATIC PLACEMENT EDITOR
+       Use: hq.html?tvedit=1
+    ====================================================== */
+
+    const tvEditMode = new URLSearchParams(window.location.search).has("tvedit");
+    const tvBox = document.getElementById("tvStaticBox");
+
+    let tvState = {
+      left: 80.9,
+      top: 23.8,
+      width: 16.2,
+      height: 19.2,
+      rotate: -0.55,
+      skewX: -1.5,
+      skewY: 0,
+      opacity: 0.42
+    };
+
+    const savedTvState = localStorage.getItem("teddyTvStaticState");
+
+    if (savedTvState) {
+      try {
+        tvState = { ...tvState, ...JSON.parse(savedTvState) };
+      } catch {}
+    }
+
+    function applyTvState() {
+      tvBox.style.left = tvState.left + "%";
+      tvBox.style.top = tvState.top + "%";
+      tvBox.style.width = tvState.width + "%";
+      tvBox.style.height = tvState.height + "%";
+      tvBox.style.opacity = tvState.opacity;
+      tvBox.style.transform =
+        `rotate(${tvState.rotate}deg) skewX(${tvState.skewX}deg) skewY(${tvState.skewY}deg)`;
+
+      localStorage.setItem("teddyTvStaticState", JSON.stringify(tvState));
+      updateTvEditorOutput();
+    }
+
+    function createTvStaticEditor() {
+      document.body.classList.add("tv-static-edit-mode");
+
+      const panel = document.createElement("div");
+      panel.className = "tv-static-editor-panel";
+
+      panel.innerHTML = `
+        <strong>TV Static Box Editor</strong>
+        <p>Drag the static box over the TV. Use sliders to resize, skew, rotate, and fade it.</p>
+
+        <label>Width <input type="range" min="4" max="28" step="0.1" data-tv-key="width"></label>
+        <label>Height <input type="range" min="4" max="28" step="0.1" data-tv-key="height"></label>
+        <label>Rotate <input type="range" min="-8" max="8" step="0.05" data-tv-key="rotate"></label>
+        <label>Skew X <input type="range" min="-12" max="12" step="0.05" data-tv-key="skewX"></label>
+        <label>Skew Y <input type="range" min="-12" max="12" step="0.05" data-tv-key="skewY"></label>
+        <label>Opacity <input type="range" min="0.05" max="0.9" step="0.01" data-tv-key="opacity"></label>
+
+        <button id="copyTvStaticCss">COPY TV STATIC CSS</button>
+        <textarea id="tvStaticOutput" readonly></textarea>
+      `;
+
+      document.body.appendChild(panel);
+
+      panel.querySelectorAll("input[data-tv-key]").forEach((input) => {
+        const key = input.dataset.tvKey;
+        input.value = tvState[key];
+
+        input.addEventListener("input", () => {
+          tvState[key] = Number(input.value);
+          applyTvState();
+        });
+      });
+
+      document.getElementById("copyTvStaticCss").addEventListener("click", async () => {
+        updateTvEditorOutput();
+
+        const output = document.getElementById("tvStaticOutput").value;
+
+        try {
+          await navigator.clipboard.writeText(output);
+          document.getElementById("copyTvStaticCss").textContent = "COPIED!";
+          setTimeout(() => {
+            document.getElementById("copyTvStaticCss").textContent = "COPY TV STATIC CSS";
+          }, 1200);
+        } catch {
+          alert("Could not auto-copy. Select the text box and copy manually.");
+        }
+      });
+
+      enableTvDrag();
+      updateTvEditorOutput();
+    }
+
+    function enableTvDrag() {
+      let startX = 0;
+      let startY = 0;
+      let startLeft = 0;
+      let startTop = 0;
+
+      tvBox.addEventListener("pointerdown", (event) => {
+        event.preventDefault();
+        tvBox.setPointerCapture(event.pointerId);
+
+        const stage = document.querySelector(".rabbit-stage");
+        const rect = stage.getBoundingClientRect();
+
+        startX = event.clientX;
+        startY = event.clientY;
+        startLeft = tvState.left;
+        startTop = tvState.top;
+
+        function moveTvBox(e) {
+          const dx = ((e.clientX - startX) / rect.width) * 100;
+          const dy = ((e.clientY - startY) / rect.height) * 100;
+
+          tvState.left = Number((startLeft + dx).toFixed(2));
+          tvState.top = Number((startTop + dy).toFixed(2));
+
+          applyTvState();
+        }
+
+        function stopMove() {
+          tvBox.releasePointerCapture(event.pointerId);
+          tvBox.removeEventListener("pointermove", moveTvBox);
+          tvBox.removeEventListener("pointerup", stopMove);
+          tvBox.removeEventListener("pointercancel", stopMove);
+          updateTvEditorOutput();
+        }
+
+        tvBox.addEventListener("pointermove", moveTvBox);
+        tvBox.addEventListener("pointerup", stopMove);
+        tvBox.addEventListener("pointercancel", stopMove);
+      });
+    }
+
+    function updateTvEditorOutput() {
+      const output = document.getElementById("tvStaticOutput");
+      if (!output) return;
+
+      output.value =
+`/* TV STATIC CUSTOM PLACEMENT */
+.tv-static-wrap {
+  left: ${tvState.left}% !important;
+  top: ${tvState.top}% !important;
+  width: ${tvState.width}% !important;
+  height: ${tvState.height}% !important;
+  opacity: ${tvState.opacity} !important;
+  transform: rotate(${tvState.rotate}deg) skewX(${tvState.skewX}deg) skewY(${tvState.skewY}deg) !important;
+}`;
+    }
+
+    applyTvState();
+
+    if (tvEditMode) {
+      createTvStaticEditor();
+    }
   </script>
 
   <script src="rabbit-hole.js"></script>
