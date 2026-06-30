@@ -14,19 +14,31 @@ const rabbitOverlaySettings = [
     label: "TV Static",
     type: "tv",
     className: "rabbit-overlay tv-static-wrap",
-    x: 80.9,
-    y: 23.8,
-    w: 16.2,
-    h: 19.2,
+    x: 80.94,
+    y: 25.03,
+    w: 18.45,
+    h: 21.95,
     rotate: -0.55,
     skewX: -1.5,
-    skewY: 0,
-    opacity: 0.42,
+    skewY: -0.25,
+    opacity: 1,
     clipCorners: {
-      tl: { x: 5, y: 5 },
-      tr: { x: 98, y: 2 },
-      br: { x: 96, y: 96 },
-      bl: { x: 7, y: 98 }
+      tl: {
+        x: 6.06,
+        y: 3.66
+      },
+      tr: {
+        x: 100,
+        y: 7.76
+      },
+      br: {
+        x: 99.77,
+        y: 96.41
+      },
+      bl: {
+        x: 6.75,
+        y: 86.32
+      }
     }
   },
   {
@@ -34,14 +46,14 @@ const rabbitOverlaySettings = [
     label: "Clock 12:00",
     type: "clock",
     className: "rabbit-overlay clock-svg-wrap",
-    x: 80.08,
-    y: 67.06,
+    x: 76.9,
+    y: 56.68,
     w: 4.25,
     h: 2.2,
     rotate: 6,
     skewX: 0,
-    skewY: 0,
-    opacity: 1
+    skewY: -2.25,
+    opacity: 0
   }
 ];
 
