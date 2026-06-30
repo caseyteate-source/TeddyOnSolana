@@ -206,18 +206,42 @@
 
       localStorage.setItem("teddyTvStaticState", JSON.stringify(tvState));
       updateTvEditorOutput();
+      syncTvSliders();
     }
 
     function createTvStaticEditor() {
       document.body.classList.add("tv-static-edit-mode");
+
+      const glowLayer = document.querySelector(".rabbit-glow-layer");
+      const hotspotLayer = document.getElementById("rabbitHotspots");
+
+      if (glowLayer) {
+        glowLayer.style.pointerEvents = "auto";
+      }
+
+      if (hotspotLayer) {
+        hotspotLayer.style.pointerEvents = "none";
+      }
+
+      tvBox.style.pointerEvents = "auto";
+      tvBox.style.zIndex = "5000";
 
       const panel = document.createElement("div");
       panel.className = "tv-static-editor-panel";
 
       panel.innerHTML = `
         <strong>TV Static Box Editor</strong>
-        <p>Drag the static box over the TV. Use sliders to resize, skew, rotate, and fade it.</p>
+        <p>Drag the static box itself, or use left/top sliders and nudge buttons.</p>
 
+        <div class="tv-nudge-grid">
+          <button type="button" data-nudge-y="-0.15">UP</button>
+          <button type="button" data-nudge-x="-0.15">LEFT</button>
+          <button type="button" data-nudge-x="0.15">RIGHT</button>
+          <button type="button" data-nudge-y="0.15">DOWN</button>
+        </div>
+
+        <label>Left <input type="range" min="60" max="100" step="0.05" data-tv-key="left"></label>
+        <label>Top <input type="range" min="10" max="60" step="0.05" data-tv-key="top"></label>
         <label>Width <input type="range" min="4" max="28" step="0.1" data-tv-key="width"></label>
         <label>Height <input type="range" min="4" max="28" step="0.1" data-tv-key="height"></label>
         <label>Rotate <input type="range" min="-8" max="8" step="0.05" data-tv-key="rotate"></label>
@@ -225,7 +249,7 @@
         <label>Skew Y <input type="range" min="-12" max="12" step="0.05" data-tv-key="skewY"></label>
         <label>Opacity <input type="range" min="0.05" max="0.9" step="0.01" data-tv-key="opacity"></label>
 
-        <button id="copyTvStaticCss">COPY TV STATIC CSS</button>
+        <button id="copyTvStaticCss" type="button">COPY TV STATIC CSS</button>
         <textarea id="tvStaticOutput" readonly></textarea>
       `;
 
@@ -237,6 +261,18 @@
 
         input.addEventListener("input", () => {
           tvState[key] = Number(input.value);
+          applyTvState();
+        });
+      });
+
+      panel.querySelectorAll("[data-nudge-x], [data-nudge-y]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const xMove = Number(button.dataset.nudgeX || 0);
+          const yMove = Number(button.dataset.nudgeY || 0);
+
+          tvState.left = Number((tvState.left + xMove).toFixed(2));
+          tvState.top = Number((tvState.top + yMove).toFixed(2));
+
           applyTvState();
         });
       });
@@ -258,7 +294,15 @@
       });
 
       enableTvDrag();
+      applyTvState();
       updateTvEditorOutput();
+    }
+
+    function syncTvSliders() {
+      document.querySelectorAll("input[data-tv-key]").forEach((input) => {
+        const key = input.dataset.tvKey;
+        input.value = tvState[key];
+      });
     }
 
     function enableTvDrag() {
@@ -268,7 +312,11 @@
       let startTop = 0;
 
       tvBox.addEventListener("pointerdown", (event) => {
+        if (!tvEditMode) return;
+
         event.preventDefault();
+        event.stopPropagation();
+
         tvBox.setPointerCapture(event.pointerId);
 
         const stage = document.querySelector(".rabbit-stage");
@@ -290,10 +338,14 @@
         }
 
         function stopMove() {
-          tvBox.releasePointerCapture(event.pointerId);
+          try {
+            tvBox.releasePointerCapture(event.pointerId);
+          } catch {}
+
           tvBox.removeEventListener("pointermove", moveTvBox);
           tvBox.removeEventListener("pointerup", stopMove);
           tvBox.removeEventListener("pointercancel", stopMove);
+
           updateTvEditorOutput();
         }
 
