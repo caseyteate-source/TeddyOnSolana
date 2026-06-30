@@ -22,13 +22,13 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: 8px 14px 22px;
       box-sizing: border-box;
     }
 
     .arcade-shell {
       position: relative;
-      width: min(96vw, 860px);
+      width: min(99vw, 1180px);
       margin: 0 auto;
     }
 
@@ -44,8 +44,8 @@
     }
 
     /*
-      These numbers place the game inside the arcade screen.
-      If the screen is slightly off, we can adjust only these 4 values.
+      These place the game screen inside the cabinet.
+      Leave these alone unless the game screen is visually off-center.
     */
     .arcade-screen {
       position: absolute;
@@ -78,7 +78,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 14px;
+      gap: 16px;
       flex-wrap: wrap;
       z-index: 5;
     }
@@ -86,7 +86,7 @@
     .arcade-btn {
       border: 0;
       border-radius: 999px;
-      padding: 13px 20px;
+      padding: 14px 24px;
       color: white;
       font-weight: 900;
       letter-spacing: 1px;
@@ -95,7 +95,7 @@
       box-shadow:
         0 0 14px rgba(255,42,163,.95),
         inset 0 -3px 0 rgba(0,0,0,.25);
-      font-size: clamp(11px, 1.7vw, 15px);
+      font-size: clamp(12px, 1.45vw, 17px);
       text-transform: uppercase;
     }
 
@@ -122,10 +122,10 @@
       left: 50%;
       top: 75.5%;
       transform: translateX(-50%);
-      width: 66%;
+      width: 70%;
       text-align: center;
       color: #dffcff;
-      font-size: clamp(9px, 1.35vw, 13px);
+      font-size: clamp(10px, 1.15vw, 15px);
       line-height: 1.5;
       text-shadow: 0 0 8px rgba(0,0,0,.95);
       z-index: 5;
@@ -142,11 +142,12 @@
     @media (max-width: 700px) {
       .arcade-page {
         align-items: flex-start;
-        padding: 12px 8px 30px;
+        justify-content: flex-start;
+        padding: 10px 8px 30px;
       }
 
       .arcade-shell {
-        width: 1040px;
+        width: 1180px;
         max-width: none;
       }
 
