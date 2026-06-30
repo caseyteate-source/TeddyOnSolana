@@ -42,16 +42,6 @@
     <div id="rabbitHotspots"></div>
   </main>
 
-  <div id="rabbitModal" class="rabbit-modal">
-    <div class="rabbit-modal-box">
-      <button id="rabbitClose" class="rabbit-close">×</button>
-      <div id="rabbitTag" class="rabbit-tag"></div>
-      <h2 id="rabbitTitle"></h2>
-      <p id="rabbitText"></p>
-      <a id="rabbitLink" class="rabbit-link" href="#" target="_blank" rel="noopener">OPEN</a>
-    </div>
-  </div>
-
   <script>
     document.addEventListener("pointermove", (event) => {
       document.documentElement.style.setProperty("--rabbit-mouse-x", event.clientX + "px");
@@ -61,7 +51,6 @@
     /* ======================================================
        REALISTIC TV STATIC CANVAS
     ====================================================== */
-
     const tvCanvas = document.getElementById("tvStaticCanvas");
     const tvCtx = tvCanvas.getContext("2d", { willReadFrequently: true });
 
@@ -103,7 +92,6 @@
     /* ======================================================
        OPTIONAL LOW-VOLUME TV STATIC SOUND
     ====================================================== */
-
     const staticToggle = document.getElementById("staticSoundToggle");
 
     let audioCtx = null;
@@ -172,7 +160,6 @@
        TV STATIC PLACEMENT EDITOR
        Use: hq.html?tvedit=1
     ====================================================== */
-
     const tvEditMode = new URLSearchParams(window.location.search).has("tvedit");
     const tvBox = document.getElementById("tvStaticBox");
 
@@ -184,7 +171,17 @@
       rotate: -0.55,
       skewX: -1.5,
       skewY: 0,
-      opacity: 0.42
+      opacity: 0.42,
+
+      /* corner shaping */
+      tlx: 5,
+      tly: 5,
+      trx: 98,
+      tryy: 2,
+      brx: 96,
+      bry: 96,
+      blx: 7,
+      bly: 98
     };
 
     const savedTvState = localStorage.getItem("teddyTvStaticState");
@@ -204,6 +201,9 @@
       tvBox.style.transform =
         `rotate(${tvState.rotate}deg) skewX(${tvState.skewX}deg) skewY(${tvState.skewY}deg)`;
 
+      tvBox.style.clipPath =
+        `polygon(${tvState.tlx}% ${tvState.tly}%, ${tvState.trx}% ${tvState.tryy}%, ${tvState.brx}% ${tvState.bry}%, ${tvState.blx}% ${tvState.bly}%)`;
+
       localStorage.setItem("teddyTvStaticState", JSON.stringify(tvState));
       updateTvEditorOutput();
       syncTvSliders();
@@ -215,13 +215,8 @@
       const glowLayer = document.querySelector(".rabbit-glow-layer");
       const hotspotLayer = document.getElementById("rabbitHotspots");
 
-      if (glowLayer) {
-        glowLayer.style.pointerEvents = "auto";
-      }
-
-      if (hotspotLayer) {
-        hotspotLayer.style.pointerEvents = "none";
-      }
+      if (glowLayer) glowLayer.style.pointerEvents = "auto";
+      if (hotspotLayer) hotspotLayer.style.pointerEvents = "none";
 
       tvBox.style.pointerEvents = "auto";
       tvBox.style.zIndex = "5000";
@@ -231,7 +226,7 @@
 
       panel.innerHTML = `
         <strong>TV Static Box Editor</strong>
-        <p>Drag the static box itself, or use left/top sliders and nudge buttons.</p>
+        <p>Drag the static box. Use the sliders to move, size, rotate, skew, and shape the corners.</p>
 
         <div class="tv-nudge-grid">
           <button type="button" data-nudge-y="-0.15">UP</button>
@@ -248,6 +243,20 @@
         <label>Skew X <input type="range" min="-12" max="12" step="0.05" data-tv-key="skewX"></label>
         <label>Skew Y <input type="range" min="-12" max="12" step="0.05" data-tv-key="skewY"></label>
         <label>Opacity <input type="range" min="0.05" max="0.9" step="0.01" data-tv-key="opacity"></label>
+
+        <hr style="border-color: rgba(0,245,255,.25); margin: 12px 0;">
+
+        <label>Top Left X <input type="range" min="0" max="25" step="0.1" data-tv-key="tlx"></label>
+        <label>Top Left Y <input type="range" min="0" max="25" step="0.1" data-tv-key="tly"></label>
+
+        <label>Top Right X <input type="range" min="75" max="100" step="0.1" data-tv-key="trx"></label>
+        <label>Top Right Y <input type="range" min="0" max="25" step="0.1" data-tv-key="tryy"></label>
+
+        <label>Bottom Right X <input type="range" min="75" max="100" step="0.1" data-tv-key="brx"></label>
+        <label>Bottom Right Y <input type="range" min="75" max="100" step="0.1" data-tv-key="bry"></label>
+
+        <label>Bottom Left X <input type="range" min="0" max="25" step="0.1" data-tv-key="blx"></label>
+        <label>Bottom Left Y <input type="range" min="75" max="100" step="0.1" data-tv-key="bly"></label>
 
         <button id="copyTvStaticCss" type="button">COPY TV STATIC CSS</button>
         <textarea id="tvStaticOutput" readonly></textarea>
@@ -368,6 +377,7 @@
   height: ${tvState.height}% !important;
   opacity: ${tvState.opacity} !important;
   transform: rotate(${tvState.rotate}deg) skewX(${tvState.skewX}deg) skewY(${tvState.skewY}deg) !important;
+  clip-path: polygon(${tvState.tlx}% ${tvState.tly}%, ${tvState.trx}% ${tvState.tryy}%, ${tvState.brx}% ${tvState.bry}%, ${tvState.blx}% ${tvState.bly}%) !important;
 }`;
     }
 
