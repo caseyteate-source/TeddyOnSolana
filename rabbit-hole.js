@@ -1,6 +1,7 @@
 /* ======================================================
    $TEDDY RABBIT HOLE HOTSPOTS
    Circle hotspot version with editor mode
+   Includes 10 extra placeholder circles
 ====================================================== */
 
 const isEditMode = new URLSearchParams(window.location.search).has("edit");
@@ -203,6 +204,123 @@ const rabbitHotspots = [
     x: 32,
     y: 86,
     size: 48
+  },
+
+  /* ======================================================
+     10 NEW PLACEHOLDER CIRCLES
+     Drag these in editor mode.
+     We can rename and link them later.
+  ====================================================== */
+
+  {
+    id: "extra-1",
+    title: "Extra Circle 1",
+    tag: "New Clue",
+    text: "Placeholder circle. We will name and link this later.",
+    url: "#",
+    sameTab: true,
+    x: 18,
+    y: 14,
+    size: 54
+  },
+  {
+    id: "extra-2",
+    title: "Extra Circle 2",
+    tag: "New Clue",
+    text: "Placeholder circle. We will name and link this later.",
+    url: "#",
+    sameTab: true,
+    x: 28,
+    y: 14,
+    size: 54
+  },
+  {
+    id: "extra-3",
+    title: "Extra Circle 3",
+    tag: "New Clue",
+    text: "Placeholder circle. We will name and link this later.",
+    url: "#",
+    sameTab: true,
+    x: 38,
+    y: 14,
+    size: 54
+  },
+  {
+    id: "extra-4",
+    title: "Extra Circle 4",
+    tag: "New Clue",
+    text: "Placeholder circle. We will name and link this later.",
+    url: "#",
+    sameTab: true,
+    x: 48,
+    y: 14,
+    size: 54
+  },
+  {
+    id: "extra-5",
+    title: "Extra Circle 5",
+    tag: "New Clue",
+    text: "Placeholder circle. We will name and link this later.",
+    url: "#",
+    sameTab: true,
+    x: 58,
+    y: 14,
+    size: 54
+  },
+  {
+    id: "extra-6",
+    title: "Extra Circle 6",
+    tag: "New Clue",
+    text: "Placeholder circle. We will name and link this later.",
+    url: "#",
+    sameTab: true,
+    x: 68,
+    y: 14,
+    size: 54
+  },
+  {
+    id: "extra-7",
+    title: "Extra Circle 7",
+    tag: "New Clue",
+    text: "Placeholder circle. We will name and link this later.",
+    url: "#",
+    sameTab: true,
+    x: 78,
+    y: 14,
+    size: 54
+  },
+  {
+    id: "extra-8",
+    title: "Extra Circle 8",
+    tag: "New Clue",
+    text: "Placeholder circle. We will name and link this later.",
+    url: "#",
+    sameTab: true,
+    x: 88,
+    y: 14,
+    size: 54
+  },
+  {
+    id: "extra-9",
+    title: "Extra Circle 9",
+    tag: "New Clue",
+    text: "Placeholder circle. We will name and link this later.",
+    url: "#",
+    sameTab: true,
+    x: 43,
+    y: 82,
+    size: 54
+  },
+  {
+    id: "extra-10",
+    title: "Extra Circle 10",
+    tag: "New Clue",
+    text: "Placeholder circle. We will name and link this later.",
+    url: "#",
+    sameTab: true,
+    x: 52,
+    y: 82,
+    size: 54
   }
 ];
 
@@ -255,7 +373,7 @@ function openRabbitModal(spot) {
   text.textContent = spot.text;
 
   link.href = spot.url;
-  link.textContent = spot.sameTab ? "ENTER" : "OPEN LINK";
+  link.textContent = spot.url === "#" ? "NAME THIS LATER" : spot.sameTab ? "ENTER" : "OPEN LINK";
   link.target = spot.sameTab ? "_self" : "_blank";
   link.rel = spot.sameTab ? "" : "noopener noreferrer";
 
