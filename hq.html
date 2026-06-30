@@ -91,7 +91,7 @@
     drawTvStatic();
 
     /* ======================================================
-       OPTIONAL LOW-VOLUME TV STATIC SOUND
+       OPTIONAL LOW-VOLUME TV STATIC SOUND — MAC FIX
     ====================================================== */
 
     const staticToggle = document.getElementById("staticSoundToggle");
@@ -102,9 +102,7 @@
     let staticFilter = null;
     let staticPlaying = false;
 
-    function createStaticSound() {
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
+    function buildStaticNodes() {
       const bufferSize = audioCtx.sampleRate * 2;
       const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
       const output = noiseBuffer.getChannelData(0);
@@ -123,38 +121,58 @@
       staticFilter.Q.value = 0.55;
 
       staticGain = audioCtx.createGain();
-      staticGain.gain.value = 0.018;
+      staticGain.gain.value = 0.0001;
 
       staticSource.connect(staticFilter);
       staticFilter.connect(staticGain);
       staticGain.connect(audioCtx.destination);
 
-      staticSource.start();
+      staticSource.start(0);
     }
 
-    staticToggle.addEventListener("click", async () => {
+    async function startStaticSound() {
       if (!audioCtx) {
-        createStaticSound();
-        staticPlaying = true;
-        staticToggle.textContent = "TV STATIC: ON";
-        staticToggle.classList.add("active");
-        return;
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        buildStaticNodes();
       }
 
       if (audioCtx.state === "suspended") {
         await audioCtx.resume();
       }
 
-      staticPlaying = !staticPlaying;
+      staticGain.gain.cancelScheduledValues(audioCtx.currentTime);
+      staticGain.gain.setTargetAtTime(0.04, audioCtx.currentTime, 0.06);
 
-      if (staticPlaying) {
-        staticGain.gain.setTargetAtTime(0.018, audioCtx.currentTime, 0.08);
-        staticToggle.textContent = "TV STATIC: ON";
-        staticToggle.classList.add("active");
-      } else {
-        staticGain.gain.setTargetAtTime(0.0001, audioCtx.currentTime, 0.08);
-        staticToggle.textContent = "TV STATIC: OFF";
-        staticToggle.classList.remove("active");
+      staticPlaying = true;
+      staticToggle.textContent = "TV STATIC: ON";
+      staticToggle.classList.add("active");
+    }
+
+    async function stopStaticSound() {
+      if (!audioCtx || !staticGain) return;
+
+      if (audioCtx.state === "suspended") {
+        await audioCtx.resume();
+      }
+
+      staticGain.gain.cancelScheduledValues(audioCtx.currentTime);
+      staticGain.gain.setTargetAtTime(0.0001, audioCtx.currentTime, 0.06);
+
+      staticPlaying = false;
+      staticToggle.textContent = "TV STATIC: OFF";
+      staticToggle.classList.remove("active");
+    }
+
+    staticToggle.addEventListener("click", async () => {
+      try {
+        if (staticPlaying) {
+          await stopStaticSound();
+        } else {
+          await startStaticSound();
+        }
+      } catch (error) {
+        console.warn("Static sound could not start:", error);
+        staticToggle.textContent = "TV STATIC BLOCKED";
       }
     });
 
