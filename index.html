@@ -7,208 +7,198 @@
   <link rel="stylesheet" href="style.css" />
 
   <style>
-    .arcade-recovery-page {
-      min-height: 100vh;
-      background: #030306;
-      color: white;
-    }
-
-    .arcade-recovery-wrap {
-      width: min(1100px, 94vw);
-      margin: 0 auto;
-      padding: 34px 0 50px;
-      text-align: center;
-    }
-
-    .arcade-title {
-      color: #00f5ff;
-      text-shadow: 0 0 18px rgba(0,245,255,.9);
-      font-size: clamp(28px, 6vw, 64px);
-      margin: 0 0 10px;
-    }
-
-    .arcade-subtitle {
-      color: #ffea00;
-      text-shadow: 0 0 14px rgba(255,234,0,.75);
-      margin: 0 0 22px;
-      font-weight: 900;
-    }
-
-    .arcade-cabinet {
-      border: 4px solid #ff2aa3;
-      border-radius: 26px;
-      padding: 18px;
+    body {
+      margin: 0;
       background:
-        radial-gradient(circle at 50% 0%, rgba(0,245,255,.18), transparent 35%),
-        linear-gradient(180deg, #170020, #050510);
-      box-shadow:
-        0 0 28px rgba(255,42,163,.85),
-        0 0 55px rgba(0,245,255,.35);
+        radial-gradient(circle at 50% 0%, rgba(0,245,255,.16), transparent 34%),
+        radial-gradient(circle at 20% 20%, rgba(255,42,163,.18), transparent 28%),
+        #030306;
+      color: white;
+      overflow-x: hidden;
     }
 
-    .game-frame {
+    .arcade-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .arcade-shell {
+      position: relative;
+      width: min(96vw, 860px);
+      margin: 0 auto;
+    }
+
+    .arcade-cabinet-img {
       width: 100%;
-      border: 3px solid #00f5ff;
-      border-radius: 18px;
+      height: auto;
+      display: block;
+      filter:
+        drop-shadow(0 0 24px rgba(255,42,163,.75))
+        drop-shadow(0 0 42px rgba(0,245,255,.45));
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    /*
+      These numbers place the game inside the arcade screen.
+      If the screen is slightly off, we can adjust only these 4 values.
+    */
+    .arcade-screen {
+      position: absolute;
+      left: 22.6%;
+      top: 19.2%;
+      width: 54.8%;
+      height: 33.8%;
+      border-radius: 12px;
       overflow: hidden;
-      background: #04040a;
-      box-shadow: inset 0 0 28px rgba(0,245,255,.35);
+      background: #050510;
+      box-shadow:
+        inset 0 0 22px rgba(0,245,255,.5),
+        0 0 18px rgba(0,245,255,.55);
     }
 
     #gameCanvas {
       display: block;
       width: 100%;
-      height: auto;
+      height: 100%;
       background: #050510;
       cursor: crosshair;
     }
 
-    .arcade-controls {
+    .arcade-buttons {
+      position: absolute;
+      left: 50%;
+      top: 66.5%;
+      transform: translateX(-50%);
+      width: 62%;
       display: flex;
       justify-content: center;
       align-items: center;
       gap: 14px;
       flex-wrap: wrap;
-      margin-top: 22px;
+      z-index: 5;
     }
 
     .arcade-btn {
       border: 0;
       border-radius: 999px;
-      padding: 15px 24px;
+      padding: 13px 20px;
       color: white;
       font-weight: 900;
       letter-spacing: 1px;
       cursor: pointer;
       background: #ff2aa3;
-      box-shadow: 0 0 18px rgba(255,42,163,.85);
-      font-size: 16px;
+      box-shadow:
+        0 0 14px rgba(255,42,163,.95),
+        inset 0 -3px 0 rgba(0,0,0,.25);
+      font-size: clamp(11px, 1.7vw, 15px);
+      text-transform: uppercase;
     }
 
     .arcade-btn:hover {
       transform: translateY(-2px);
       background: #00aaff;
-      box-shadow: 0 0 22px rgba(0,245,255,.95);
+      box-shadow: 0 0 18px rgba(0,245,255,.95);
     }
 
     .arcade-btn.enter {
       background: #00aaff;
-      box-shadow: 0 0 18px rgba(0,245,255,.85);
+      box-shadow:
+        0 0 14px rgba(0,245,255,.95),
+        inset 0 -3px 0 rgba(0,0,0,.25);
     }
 
     .arcade-btn.enter:hover {
       background: #ff2aa3;
-      box-shadow: 0 0 22px rgba(255,42,163,.95);
+      box-shadow: 0 0 18px rgba(255,42,163,.95);
     }
 
     .arcade-rules {
-      margin: 20px auto 0;
-      max-width: 760px;
+      position: absolute;
+      left: 50%;
+      top: 75.5%;
+      transform: translateX(-50%);
+      width: 66%;
+      text-align: center;
       color: #dffcff;
-      line-height: 1.7;
-      font-size: 14px;
+      font-size: clamp(9px, 1.35vw, 13px);
+      line-height: 1.5;
+      text-shadow: 0 0 8px rgba(0,0,0,.95);
+      z-index: 5;
     }
 
     .arcade-rules strong {
       color: #ffea00;
     }
 
-    .fallback-hq {
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      text-align: center;
-      padding: 30px;
-    }
-
-    .fallback-hq-box {
-      border: 3px solid #00f5ff;
-      border-radius: 24px;
-      padding: 34px;
-      background: linear-gradient(180deg, #13001f, #050510);
-      box-shadow:
-        0 0 28px rgba(0,245,255,.75),
-        0 0 48px rgba(255,42,163,.45);
-    }
-
-    .fallback-hq-box h1 {
-      color: #00f5ff;
-      margin-top: 0;
-    }
-
-    .fallback-hq-box a {
-      display: inline-block;
-      margin-top: 12px;
-      color: white;
-      background: #ff2aa3;
-      padding: 14px 20px;
-      border-radius: 999px;
-      text-decoration: none;
-      font-weight: 900;
+    #siteContent {
+      display: none;
     }
 
     @media (max-width: 700px) {
-      .arcade-recovery-wrap {
-        width: 96vw;
-        padding-top: 18px;
+      .arcade-page {
+        align-items: flex-start;
+        padding: 12px 8px 30px;
       }
 
-      .arcade-cabinet {
-        padding: 10px;
-        border-radius: 18px;
+      .arcade-shell {
+        width: 1040px;
+        max-width: none;
+      }
+
+      body {
+        overflow-x: auto;
+      }
+
+      .arcade-buttons {
+        gap: 10px;
       }
 
       .arcade-btn {
-        width: min(280px, 90vw);
+        padding: 12px 18px;
       }
     }
   </style>
 </head>
 
-<body class="arcade-recovery-page">
+<body>
   <div class="scanlines"></div>
 
-  <main id="startScreen" class="arcade-recovery-wrap">
-    <h1 class="arcade-title">$TEDDY ARCADE</h1>
-    <p class="arcade-subtitle">COLLECT RK'S EMOJI TIMELINE. AVOID THE SHORTS.</p>
+  <main id="startScreen" class="arcade-page">
+    <div class="arcade-shell">
+      <img
+        src="teddy-arcade-cabinet.png"
+        alt="$TEDDY Arcade Cabinet"
+        class="arcade-cabinet-img"
+      />
 
-    <section class="arcade-cabinet">
-      <div class="game-frame">
+      <div class="arcade-screen">
         <canvas id="gameCanvas"></canvas>
       </div>
 
-      <div class="arcade-controls">
+      <div class="arcade-buttons">
         <button id="startGame" class="arcade-btn" type="button">
           START GAME
         </button>
 
-        <button
-          id="enterSite"
-          class="arcade-btn enter"
-          type="button"
-          onclick="window.location.href='hq.html'"
-        >
+        <button id="enterSite" class="arcade-btn enter" type="button">
           ENTER SITE
         </button>
       </div>
 
       <div class="arcade-rules">
-        <p>
-          <strong>HOW TO PLAY:</strong>
-          Move Teddy with arrow keys, WASD, or drag/touch.
-          Collect the emoji timeline. Avoid the flashing <strong>SHORT</strong> skulls.
-        </p>
+        <strong>HOW TO PLAY:</strong>
+        Move Teddy with arrows, WASD, or drag/touch.
+        Collect RK's emoji timeline. Avoid the flashing <strong>SHORT</strong> skulls.
       </div>
-    </section>
+    </div>
   </main>
 
-  <section id="siteContent" class="fallback-hq hidden" style="display:none;">
-    <div class="fallback-hq-box">
-      <h1>RABBIT HOLE UNLOCKED</h1>
-      <p>The old main page has been replaced by HQ.</p>
-      <a href="hq.html">ENTER THE RABBIT HOLE</a>
-    </div>
-  </section>
+  <section id="siteContent" class="hidden"></section>
 
   <script src="script.js"></script>
 </body>
