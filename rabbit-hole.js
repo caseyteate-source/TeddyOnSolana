@@ -1,7 +1,7 @@
 /* ======================================================
    $TEDDY RABBIT HOLE HOTSPOTS
    Circle hotspot version with editor mode
-   Includes 10 extra placeholder circles
+   Includes 16 extra placeholder circles
 ====================================================== */
 
 const isEditMode = new URLSearchParams(window.location.search).has("edit");
@@ -207,7 +207,7 @@ const rabbitHotspots = [
   },
 
   /* ======================================================
-     10 NEW PLACEHOLDER CIRCLES
+     16 NEW PLACEHOLDER CIRCLES
      Drag these in editor mode.
      We can rename and link them later.
   ====================================================== */
@@ -219,7 +219,7 @@ const rabbitHotspots = [
     text: "Placeholder circle. We will name and link this later.",
     url: "#",
     sameTab: true,
-    x: 18,
+    x: 14,
     y: 14,
     size: 54
   },
@@ -230,7 +230,7 @@ const rabbitHotspots = [
     text: "Placeholder circle. We will name and link this later.",
     url: "#",
     sameTab: true,
-    x: 28,
+    x: 22,
     y: 14,
     size: 54
   },
@@ -241,7 +241,7 @@ const rabbitHotspots = [
     text: "Placeholder circle. We will name and link this later.",
     url: "#",
     sameTab: true,
-    x: 38,
+    x: 30,
     y: 14,
     size: 54
   },
@@ -252,7 +252,7 @@ const rabbitHotspots = [
     text: "Placeholder circle. We will name and link this later.",
     url: "#",
     sameTab: true,
-    x: 48,
+    x: 38,
     y: 14,
     size: 54
   },
@@ -263,7 +263,7 @@ const rabbitHotspots = [
     text: "Placeholder circle. We will name and link this later.",
     url: "#",
     sameTab: true,
-    x: 58,
+    x: 46,
     y: 14,
     size: 54
   },
@@ -274,7 +274,7 @@ const rabbitHotspots = [
     text: "Placeholder circle. We will name and link this later.",
     url: "#",
     sameTab: true,
-    x: 68,
+    x: 54,
     y: 14,
     size: 54
   },
@@ -285,7 +285,7 @@ const rabbitHotspots = [
     text: "Placeholder circle. We will name and link this later.",
     url: "#",
     sameTab: true,
-    x: 78,
+    x: 62,
     y: 14,
     size: 54
   },
@@ -296,7 +296,7 @@ const rabbitHotspots = [
     text: "Placeholder circle. We will name and link this later.",
     url: "#",
     sameTab: true,
-    x: 88,
+    x: 70,
     y: 14,
     size: 54
   },
@@ -307,8 +307,8 @@ const rabbitHotspots = [
     text: "Placeholder circle. We will name and link this later.",
     url: "#",
     sameTab: true,
-    x: 43,
-    y: 82,
+    x: 78,
+    y: 14,
     size: 54
   },
   {
@@ -318,71 +318,74 @@ const rabbitHotspots = [
     text: "Placeholder circle. We will name and link this later.",
     url: "#",
     sameTab: true,
-    x: 52,
-    y: 82,
+    x: 86,
+    y: 14,
     size: 54
-  }  {
+  },
+  {
     id: "extra-11",
-    title: "Extra Circle 9",
+    title: "Extra Circle 11",
     tag: "New Clue",
     text: "Placeholder circle. We will name and link this later.",
     url: "#",
     sameTab: true,
-    x: 43,
-    y: 82,
+    x: 18,
+    y: 84,
     size: 54
   },
   {
     id: "extra-12",
-    title: "Extra Circle 10",
+    title: "Extra Circle 12",
     tag: "New Clue",
     text: "Placeholder circle. We will name and link this later.",
     url: "#",
     sameTab: true,
-    x: 52,
-    y: 82,
+    x: 28,
+    y: 84,
     size: 54
-  }  {
+  },
+  {
     id: "extra-13",
-    title: "Extra Circle 9",
+    title: "Extra Circle 13",
     tag: "New Clue",
     text: "Placeholder circle. We will name and link this later.",
     url: "#",
     sameTab: true,
-    x: 43,
-    y: 82,
+    x: 38,
+    y: 84,
     size: 54
   },
   {
     id: "extra-14",
-    title: "Extra Circle 10",
+    title: "Extra Circle 14",
     tag: "New Clue",
     text: "Placeholder circle. We will name and link this later.",
     url: "#",
     sameTab: true,
-    x: 52,
-    y: 82,
+    x: 48,
+    y: 84,
     size: 54
-  }  {
+  },
+  {
     id: "extra-15",
-    title: "Extra Circle 9",
+    title: "Extra Circle 15",
     tag: "New Clue",
     text: "Placeholder circle. We will name and link this later.",
     url: "#",
     sameTab: true,
-    x: 43,
-    y: 82,
+    x: 58,
+    y: 84,
     size: 54
   },
   {
     id: "extra-16",
-    title: "Extra Circle 10",
+    title: "Extra Circle 16",
     tag: "New Clue",
     text: "Placeholder circle. We will name and link this later.",
     url: "#",
     sameTab: true,
-    x: 52,
-    y: 82,
+    x: 68,
+    y: 84,
     size: 54
   }
 ];
