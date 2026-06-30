@@ -74,8 +74,8 @@ const rabbitHotspots = [
     "text": "The lamp leads to Norm Macdonald's legendary moth joke.",
     "url": "https://youtu.be/jJN9mBRX3uo",
     "sameTab": false,
-    "x": 97.38,
-    "y": 59.29,
+    "x": 96.8,
+    "y": 58.34,
     "size": 58
   },
   {
@@ -85,8 +85,8 @@ const rabbitHotspots = [
     "text": "Sometimes the rabbit hole calls you back.",
     "url": "tel:7192662837",
     "sameTab": true,
-    "x": 13,
-    "y": 80,
+    "x": 18.84,
+    "y": 81.26,
     "size": 62
   },
   {
@@ -96,8 +96,8 @@ const rabbitHotspots = [
     "text": "Open GameStop's official investor relations page.",
     "url": "https://investor.gamestop.com/",
     "sameTab": false,
-    "x": 52,
-    "y": 9,
+    "x": 57.72,
+    "y": 7.39,
     "size": 58
   },
   {
@@ -108,7 +108,7 @@ const rabbitHotspots = [
     "url": "teddy.html",
     "sameTab": true,
     "x": 21.26,
-    "y": 28.3,
+    "y": 28.81,
     "size": 60
   },
   {
@@ -162,8 +162,8 @@ const rabbitHotspots = [
     "text": "What could GMEBAY become?",
     "url": "gmebay.html",
     "sameTab": true,
-    "x": 62.87,
-    "y": 56.76,
+    "x": 62.04,
+    "y": 56.37,
     "size": 58
   },
   {
@@ -195,11 +195,10 @@ const rabbitHotspots = [
     "text": "You found something that probably should not be here.",
     "url": "secret.html",
     "sameTab": true,
-    "x": 32,
-    "y": 86,
+    "x": 31.04,
+    "y": 88.16,
     "size": 48
   },
-
   {
     "id": "hang-in-there",
     "title": "Hang In There",
@@ -207,8 +206,8 @@ const rabbitHotspots = [
     "text": "The classic cat signal. Hang in there. Follow the thread.",
     "url": "kitty.html",
     "sameTab": true,
-    "x": 30.2,
-    "y": 17.8,
+    "x": 31.57,
+    "y": 14.83,
     "size": 62
   },
   {
@@ -218,8 +217,8 @@ const rabbitHotspots = [
     "text": "A future launch-plan page for the rocket, the timeline, and the moon mission.",
     "url": "rocket.html",
     "sameTab": true,
-    "x": 65.6,
-    "y": 47.8,
+    "x": 63.39,
+    "y": 45.52,
     "size": 58
   },
   {
@@ -229,8 +228,8 @@ const rabbitHotspots = [
     "text": "The marketplace clue. Open the GMEBAY theory page.",
     "url": "gmebay.html",
     "sameTab": true,
-    "x": 84.4,
-    "y": 20.6,
+    "x": 93.02,
+    "y": 20.16,
     "size": 62
   },
   {
@@ -240,8 +239,8 @@ const rabbitHotspots = [
     "text": "The controller opens the retro room.",
     "url": "retro-room.html",
     "sameTab": true,
-    "x": 91.2,
-    "y": 76.2,
+    "x": 94.95,
+    "y": 74.76,
     "size": 54
   },
   {
@@ -262,8 +261,8 @@ const rabbitHotspots = [
     "text": "A glowing clue from the old room.",
     "url": "https://youtu.be/jJN9mBRX3uo",
     "sameTab": false,
-    "x": 21.9,
-    "y": 12.7,
+    "x": 20.66,
+    "y": 16.18,
     "size": 50
   },
   {
@@ -273,19 +272,13 @@ const rabbitHotspots = [
     "text": "Open the GME stock chart.",
     "url": "https://finance.yahoo.com/quote/GME/",
     "sameTab": false,
-    "x": 65.7,
-    "y": 8.6,
+    "x": 69.63,
+    "y": 8.97,
     "size": 54
   }
 ];
 
 const container = document.getElementById("rabbitHotspots");
-const modal = document.getElementById("rabbitModal");
-const closeBtn = document.getElementById("rabbitClose");
-const tag = document.getElementById("rabbitTag");
-const title = document.getElementById("rabbitTitle");
-const text = document.getElementById("rabbitText");
-const link = document.getElementById("rabbitLink");
 
 if (isEditMode) {
   document.body.classList.add("rabbit-edit-mode");
@@ -293,15 +286,19 @@ if (isEditMode) {
 }
 
 function renderHotspots() {
+  if (!container) return;
+
   container.innerHTML = "";
 
   rabbitHotspots.forEach((spot) => {
     const button = document.createElement("button");
+
     button.className = `rabbit-hotspot ${spot.id}`;
     button.style.left = spot.x + "%";
     button.style.top = spot.y + "%";
     button.style.width = spot.size + "px";
     button.style.height = spot.size + "px";
+
     button.setAttribute("aria-label", spot.title);
     button.title = spot.title;
     button.dataset.label = spot.title;
@@ -309,22 +306,21 @@ function renderHotspots() {
     if (isEditMode) {
       makeDraggable(button, spot);
     } else {
-      button.addEventListener("click", () => openRabbitModal(spot));
+      button.addEventListener("click", () => goToHotspot(spot));
     }
 
     container.appendChild(button);
   });
 }
 
-function openRabbitModal(spot) {
-  tag.textContent = spot.tag;
-  title.textContent = spot.title;
-  text.textContent = spot.text;
-  link.href = spot.url;
-  link.textContent = spot.sameTab ? "ENTER" : "OPEN LINK";
-  link.target = spot.sameTab ? "_self" : "_blank";
+function goToHotspot(spot) {
+  if (!spot.url) return;
 
-  modal.classList.add("active");
+  if (spot.sameTab) {
+    window.location.href = spot.url;
+  } else {
+    window.open(spot.url, "_blank", "noopener,noreferrer");
+  }
 }
 
 function makeDraggable(button, spot) {
@@ -409,16 +405,6 @@ function updateEditorOutput() {
 
   output.value = `const rabbitHotspots = ${JSON.stringify(rabbitHotspots, null, 2)};`;
 }
-
-closeBtn.addEventListener("click", () => {
-  modal.classList.remove("active");
-});
-
-modal.addEventListener("click", (event) => {
-  if (event.target === modal) {
-    modal.classList.remove("active");
-  }
-});
 
 renderHotspots();
 updateEditorOutput();
