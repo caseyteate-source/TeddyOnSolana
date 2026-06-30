@@ -35,6 +35,8 @@
         <div class="tv-static-roll"></div>
       </div>
 
+      <div id="alarmBlinkBox" class="alarm-blink-box"></div>
+
       <div class="rabbit-dust dust-one"></div>
       <div class="rabbit-dust dust-two"></div>
     </div>
@@ -51,6 +53,7 @@
     /* ======================================================
        REALISTIC TV STATIC CANVAS
     ====================================================== */
+
     const tvCanvas = document.getElementById("tvStaticCanvas");
     const tvCtx = tvCanvas.getContext("2d", { willReadFrequently: true });
 
@@ -92,6 +95,7 @@
     /* ======================================================
        OPTIONAL LOW-VOLUME TV STATIC SOUND
     ====================================================== */
+
     const staticToggle = document.getElementById("staticSoundToggle");
 
     let audioCtx = null;
@@ -160,28 +164,27 @@
        TV STATIC PLACEMENT EDITOR
        Use: hq.html?tvedit=1
     ====================================================== */
+
     const tvEditMode = new URLSearchParams(window.location.search).has("tvedit");
     const tvBox = document.getElementById("tvStaticBox");
 
     let tvState = {
-      left: 80.9,
-      top: 23.8,
-      width: 16.2,
-      height: 19.2,
-      rotate: -0.55,
-      skewX: -1.5,
-      skewY: 0,
-      opacity: 0.42,
-
-      /* corner shaping */
-      tlx: 5,
-      tly: 5,
-      trx: 98,
-      tryy: 2,
-      brx: 96,
-      bry: 96,
-      blx: 7,
-      bly: 98
+      left: 80.91,
+      top: 25.22,
+      width: 19,
+      height: 19.7,
+      rotate: -0.1,
+      skewX: -0.65,
+      skewY: 0.35,
+      opacity: 0.9,
+      tlx: 6.4,
+      tly: 4.4,
+      trx: 97.4,
+      tryy: 5.4,
+      brx: 95.8,
+      bry: 100,
+      blx: 5.6,
+      bly: 90.6
     };
 
     const savedTvState = localStorage.getItem("teddyTvStaticState");
@@ -226,13 +229,13 @@
 
       panel.innerHTML = `
         <strong>TV Static Box Editor</strong>
-        <p>Drag the static box. Use the sliders to move, size, rotate, skew, and shape the corners.</p>
+        <p>Drag the static box. Use sliders to move, size, rotate, skew, and shape corners.</p>
 
         <div class="tv-nudge-grid">
-          <button type="button" data-nudge-y="-0.15">UP</button>
-          <button type="button" data-nudge-x="-0.15">LEFT</button>
-          <button type="button" data-nudge-x="0.15">RIGHT</button>
-          <button type="button" data-nudge-y="0.15">DOWN</button>
+          <button type="button" data-tv-nudge-y="-0.15">UP</button>
+          <button type="button" data-tv-nudge-x="-0.15">LEFT</button>
+          <button type="button" data-tv-nudge-x="0.15">RIGHT</button>
+          <button type="button" data-tv-nudge-y="0.15">DOWN</button>
         </div>
 
         <label>Left <input type="range" min="60" max="100" step="0.05" data-tv-key="left"></label>
@@ -243,20 +246,6 @@
         <label>Skew X <input type="range" min="-12" max="12" step="0.05" data-tv-key="skewX"></label>
         <label>Skew Y <input type="range" min="-12" max="12" step="0.05" data-tv-key="skewY"></label>
         <label>Opacity <input type="range" min="0.05" max="0.9" step="0.01" data-tv-key="opacity"></label>
-
-        <hr style="border-color: rgba(0,245,255,.25); margin: 12px 0;">
-
-        <label>Top Left X <input type="range" min="0" max="25" step="0.1" data-tv-key="tlx"></label>
-        <label>Top Left Y <input type="range" min="0" max="25" step="0.1" data-tv-key="tly"></label>
-
-        <label>Top Right X <input type="range" min="75" max="100" step="0.1" data-tv-key="trx"></label>
-        <label>Top Right Y <input type="range" min="0" max="25" step="0.1" data-tv-key="tryy"></label>
-
-        <label>Bottom Right X <input type="range" min="75" max="100" step="0.1" data-tv-key="brx"></label>
-        <label>Bottom Right Y <input type="range" min="75" max="100" step="0.1" data-tv-key="bry"></label>
-
-        <label>Bottom Left X <input type="range" min="0" max="25" step="0.1" data-tv-key="blx"></label>
-        <label>Bottom Left Y <input type="range" min="75" max="100" step="0.1" data-tv-key="bly"></label>
 
         <button id="copyTvStaticCss" type="button">COPY TV STATIC CSS</button>
         <textarea id="tvStaticOutput" readonly></textarea>
@@ -274,21 +263,16 @@
         });
       });
 
-      panel.querySelectorAll("[data-nudge-x], [data-nudge-y]").forEach((button) => {
+      panel.querySelectorAll("[data-tv-nudge-x], [data-tv-nudge-y]").forEach((button) => {
         button.addEventListener("click", () => {
-          const xMove = Number(button.dataset.nudgeX || 0);
-          const yMove = Number(button.dataset.nudgeY || 0);
-
-          tvState.left = Number((tvState.left + xMove).toFixed(2));
-          tvState.top = Number((tvState.top + yMove).toFixed(2));
-
+          tvState.left = Number((tvState.left + Number(button.dataset.tvNudgeX || 0)).toFixed(2));
+          tvState.top = Number((tvState.top + Number(button.dataset.tvNudgeY || 0)).toFixed(2));
           applyTvState();
         });
       });
 
       document.getElementById("copyTvStaticCss").addEventListener("click", async () => {
         updateTvEditorOutput();
-
         const output = document.getElementById("tvStaticOutput").value;
 
         try {
@@ -304,7 +288,6 @@
 
       enableTvDrag();
       applyTvState();
-      updateTvEditorOutput();
     }
 
     function syncTvSliders() {
@@ -354,8 +337,6 @@
           tvBox.removeEventListener("pointermove", moveTvBox);
           tvBox.removeEventListener("pointerup", stopMove);
           tvBox.removeEventListener("pointercancel", stopMove);
-
-          updateTvEditorOutput();
         }
 
         tvBox.addEventListener("pointermove", moveTvBox);
@@ -385,6 +366,202 @@
 
     if (tvEditMode) {
       createTvStaticEditor();
+    }
+
+    /* ======================================================
+       ALARM CLOCK BLINK BOX EDITOR
+       Use: hq.html?alarmedit=1
+    ====================================================== */
+
+    const alarmEditMode = new URLSearchParams(window.location.search).has("alarmedit");
+    const alarmBox = document.getElementById("alarmBlinkBox");
+
+    let alarmState = {
+      left: 78.75,
+      top: 65.8,
+      width: 5.8,
+      height: 2.6,
+      rotate: -1.2,
+      radius: 6,
+      opacity: 0.95
+    };
+
+    const savedAlarmState = localStorage.getItem("teddyAlarmBlinkState");
+
+    if (savedAlarmState) {
+      try {
+        alarmState = { ...alarmState, ...JSON.parse(savedAlarmState) };
+      } catch {}
+    }
+
+    function applyAlarmState() {
+      alarmBox.style.left = alarmState.left + "%";
+      alarmBox.style.top = alarmState.top + "%";
+      alarmBox.style.width = alarmState.width + "%";
+      alarmBox.style.height = alarmState.height + "%";
+      alarmBox.style.transform = `rotate(${alarmState.rotate}deg)`;
+      alarmBox.style.borderRadius = alarmState.radius + "px";
+      alarmBox.style.setProperty("--alarm-cover-opacity", alarmState.opacity);
+
+      localStorage.setItem("teddyAlarmBlinkState", JSON.stringify(alarmState));
+      syncAlarmSliders();
+      updateAlarmEditorOutput();
+    }
+
+    function createAlarmEditor() {
+      document.body.classList.add("alarm-edit-mode");
+
+      const glowLayer = document.querySelector(".rabbit-glow-layer");
+      const hotspotLayer = document.getElementById("rabbitHotspots");
+
+      if (glowLayer) glowLayer.style.pointerEvents = "auto";
+      if (hotspotLayer) hotspotLayer.style.pointerEvents = "none";
+
+      alarmBox.style.pointerEvents = "auto";
+      alarmBox.style.zIndex = "5200";
+
+      const panel = document.createElement("div");
+      panel.className = "alarm-editor-panel";
+
+      panel.innerHTML = `
+        <strong>Alarm Blink Box Editor</strong>
+        <p>Drag the black box over the red 12:00. It blinks by covering/uncovering the clock.</p>
+
+        <div class="tv-nudge-grid">
+          <button type="button" data-alarm-nudge-y="-0.08">UP</button>
+          <button type="button" data-alarm-nudge-x="-0.08">LEFT</button>
+          <button type="button" data-alarm-nudge-x="0.08">RIGHT</button>
+          <button type="button" data-alarm-nudge-y="0.08">DOWN</button>
+        </div>
+
+        <label>Left <input type="range" min="65" max="95" step="0.02" data-alarm-key="left"></label>
+        <label>Top <input type="range" min="45" max="85" step="0.02" data-alarm-key="top"></label>
+        <label>Width <input type="range" min="1" max="12" step="0.02" data-alarm-key="width"></label>
+        <label>Height <input type="range" min="0.5" max="7" step="0.02" data-alarm-key="height"></label>
+        <label>Rotate <input type="range" min="-10" max="10" step="0.05" data-alarm-key="rotate"></label>
+        <label>Round <input type="range" min="0" max="18" step="1" data-alarm-key="radius"></label>
+        <label>Opacity <input type="range" min="0.25" max="1" step="0.01" data-alarm-key="opacity"></label>
+
+        <button id="copyAlarmCss" type="button">COPY ALARM CSS</button>
+        <textarea id="alarmOutput" readonly></textarea>
+      `;
+
+      document.body.appendChild(panel);
+
+      panel.querySelectorAll("input[data-alarm-key]").forEach((input) => {
+        const key = input.dataset.alarmKey;
+        input.value = alarmState[key];
+
+        input.addEventListener("input", () => {
+          alarmState[key] = Number(input.value);
+          applyAlarmState();
+        });
+      });
+
+      panel.querySelectorAll("[data-alarm-nudge-x], [data-alarm-nudge-y]").forEach((button) => {
+        button.addEventListener("click", () => {
+          alarmState.left = Number((alarmState.left + Number(button.dataset.alarmNudgeX || 0)).toFixed(2));
+          alarmState.top = Number((alarmState.top + Number(button.dataset.alarmNudgeY || 0)).toFixed(2));
+          applyAlarmState();
+        });
+      });
+
+      document.getElementById("copyAlarmCss").addEventListener("click", async () => {
+        updateAlarmEditorOutput();
+
+        const output = document.getElementById("alarmOutput").value;
+
+        try {
+          await navigator.clipboard.writeText(output);
+          document.getElementById("copyAlarmCss").textContent = "COPIED!";
+          setTimeout(() => {
+            document.getElementById("copyAlarmCss").textContent = "COPY ALARM CSS";
+          }, 1200);
+        } catch {
+          alert("Could not auto-copy. Select the text box and copy manually.");
+        }
+      });
+
+      enableAlarmDrag();
+      applyAlarmState();
+    }
+
+    function syncAlarmSliders() {
+      document.querySelectorAll("input[data-alarm-key]").forEach((input) => {
+        const key = input.dataset.alarmKey;
+        input.value = alarmState[key];
+      });
+    }
+
+    function enableAlarmDrag() {
+      let startX = 0;
+      let startY = 0;
+      let startLeft = 0;
+      let startTop = 0;
+
+      alarmBox.addEventListener("pointerdown", (event) => {
+        if (!alarmEditMode) return;
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        alarmBox.setPointerCapture(event.pointerId);
+
+        const stage = document.querySelector(".rabbit-stage");
+        const rect = stage.getBoundingClientRect();
+
+        startX = event.clientX;
+        startY = event.clientY;
+        startLeft = alarmState.left;
+        startTop = alarmState.top;
+
+        function moveAlarmBox(e) {
+          const dx = ((e.clientX - startX) / rect.width) * 100;
+          const dy = ((e.clientY - startY) / rect.height) * 100;
+
+          alarmState.left = Number((startLeft + dx).toFixed(2));
+          alarmState.top = Number((startTop + dy).toFixed(2));
+
+          applyAlarmState();
+        }
+
+        function stopAlarmMove() {
+          try {
+            alarmBox.releasePointerCapture(event.pointerId);
+          } catch {}
+
+          alarmBox.removeEventListener("pointermove", moveAlarmBox);
+          alarmBox.removeEventListener("pointerup", stopAlarmMove);
+          alarmBox.removeEventListener("pointercancel", stopAlarmMove);
+        }
+
+        alarmBox.addEventListener("pointermove", moveAlarmBox);
+        alarmBox.addEventListener("pointerup", stopAlarmMove);
+        alarmBox.addEventListener("pointercancel", stopAlarmMove);
+      });
+    }
+
+    function updateAlarmEditorOutput() {
+      const output = document.getElementById("alarmOutput");
+      if (!output) return;
+
+      output.value =
+`/* ALARM CLOCK BLINK BOX CUSTOM PLACEMENT */
+.alarm-blink-box {
+  left: ${alarmState.left}% !important;
+  top: ${alarmState.top}% !important;
+  width: ${alarmState.width}% !important;
+  height: ${alarmState.height}% !important;
+  transform: rotate(${alarmState.rotate}deg) !important;
+  border-radius: ${alarmState.radius}px !important;
+  --alarm-cover-opacity: ${alarmState.opacity} !important;
+}`;
+    }
+
+    applyAlarmState();
+
+    if (alarmEditMode) {
+      createAlarmEditor();
     }
   </script>
 
