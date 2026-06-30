@@ -110,10 +110,6 @@
       overflow: hidden !important;
     }
 
-    /* ======================================================
-       OVERLAY ROOT
-    ====================================================== */
-
     #rabbitOverlayRoot {
       position: absolute;
       inset: 0;
@@ -125,193 +121,8 @@
       position: absolute;
       pointer-events: none;
       z-index: 80;
-      mix-blend-mode: screen;
       transform-origin: center center;
     }
-
-    .overlay-moass {
-      background: rgba(255, 20, 120, .18);
-      border-radius: 20px;
-      filter: blur(8px);
-      animation: neonFlicker 4.5s infinite;
-    }
-
-    .overlay-bunny {
-      background: rgba(0, 245, 255, .22);
-      border-radius: 999px;
-      filter: blur(7px);
-      animation: bunnyFlicker 3.6s infinite;
-    }
-
-    .overlay-arcade {
-      border-radius: 22px;
-      background:
-        radial-gradient(circle at 50% 32%, rgba(255,42,163,.28), transparent 38%),
-        radial-gradient(circle at 52% 58%, rgba(0,245,255,.17), transparent 42%);
-      filter: blur(8px);
-      animation: softPulse 3.2s infinite ease-in-out;
-    }
-
-    .overlay-lava-glow {
-      border-radius: 999px;
-      background:
-        radial-gradient(circle at 50% 25%, rgba(255,230,80,.42), transparent 24%),
-        radial-gradient(circle at 45% 60%, rgba(255,42,163,.38), transparent 34%),
-        radial-gradient(circle at 60% 85%, rgba(0,245,255,.20), transparent 28%);
-      filter: blur(5px);
-      animation: lavaPulse 2.7s infinite ease-in-out;
-    }
-
-    .overlay-lava-bubble {
-      overflow: visible;
-    }
-
-    .overlay-lava-bubble span {
-      display: block;
-      width: 100%;
-      height: 100%;
-      border-radius: 999px;
-      background: rgba(255, 90, 190, .65);
-      box-shadow:
-        0 0 8px rgba(255,42,163,.9),
-        0 0 16px rgba(255,42,163,.5);
-      animation: lavaBubbleRise 4.2s infinite ease-in-out;
-    }
-
-    .overlay-lava-bubble.yellow span {
-      background: rgba(255, 226, 80, .62);
-      animation-delay: -1.4s;
-    }
-
-    .overlay-lava-bubble.blue span {
-      background: rgba(0, 245, 255, .38);
-      animation-delay: -2.4s;
-    }
-
-    .overlay-phone {
-      border-radius: 999px;
-      background: rgba(0, 245, 255, .08);
-      filter: blur(8px);
-      animation: phonePulse 5s infinite ease-in-out;
-    }
-
-    .overlay-heart-gme {
-      border-radius: 999px;
-      background: rgba(255, 50, 80, .2);
-      filter: blur(5px);
-      animation: heartPulse 1.4s infinite;
-    }
-
-    .overlay-power {
-      border-radius: 10px;
-      background: rgba(255, 231, 70, .13);
-      filter: blur(4px);
-      animation: paperPulse 3.4s infinite ease-in-out;
-    }
-
-    .overlay-hang-poster {
-      border-radius: 8px;
-      background: rgba(255, 230, 80, .10);
-      filter: blur(4px);
-      animation: posterPulse 4.2s infinite ease-in-out;
-    }
-
-    .overlay-chart {
-      overflow: hidden;
-      opacity: .9;
-      clip-path: polygon(5% 3%, 95% 0, 98% 96%, 2% 100%);
-    }
-
-    .overlay-chart::after {
-      content: "";
-      position: absolute;
-      top: -30%;
-      left: -90%;
-      width: 42%;
-      height: 160%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,.38), transparent);
-      transform: rotate(18deg);
-      animation: shimmerSweep 4.2s infinite;
-    }
-
-    .overlay-magnify {
-      border-radius: 999px;
-      background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.55), transparent 36%);
-      filter: blur(1px);
-      animation: magnifyGlint 3.1s infinite;
-    }
-
-    .overlay-diamond {
-      border-radius: 999px;
-      background: radial-gradient(circle, rgba(255,255,255,.38), rgba(0,245,255,.12), transparent 55%);
-      filter: blur(2px);
-      animation: diamondFlash 2.8s infinite;
-    }
-
-    .overlay-kitty {
-      border-radius: 999px;
-      background: rgba(255, 210, 55, .12);
-      filter: blur(5px);
-      animation: kittyPulse 2.1s infinite ease-in-out;
-    }
-
-    .overlay-vhs {
-      border-radius: 12px;
-      background: rgba(255, 42, 163, .08);
-      filter: blur(5px);
-      animation: softPulse 4.6s infinite ease-in-out;
-    }
-
-    .overlay-notebook {
-      border-radius: 14px;
-      background: rgba(255, 232, 150, .07);
-      filter: blur(4px);
-      animation: paperPulse 4.9s infinite ease-in-out;
-    }
-
-    .overlay-coffee-steam {
-      overflow: visible;
-      opacity: .55;
-    }
-
-    .overlay-coffee-steam span {
-      position: absolute;
-      bottom: 0;
-      width: 2px;
-      height: 30px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.5);
-      filter: blur(3px);
-      animation: steamRise 3.4s infinite ease-in-out;
-    }
-
-    .overlay-coffee-steam span:nth-child(1) { left: 20%; animation-delay: 0s; }
-    .overlay-coffee-steam span:nth-child(2) { left: 48%; animation-delay: .9s; }
-    .overlay-coffee-steam span:nth-child(3) { left: 72%; animation-delay: 1.6s; }
-
-    .overlay-dust {
-      width: 4px !important;
-      height: 4px !important;
-      border-radius: 50%;
-      background: rgba(255,255,255,.5);
-      box-shadow:
-        90px 70px rgba(255,255,255,.2),
-        220px 40px rgba(0,245,255,.22),
-        360px 125px rgba(255,42,163,.2),
-        540px 80px rgba(255,255,255,.16),
-        780px 170px rgba(255,255,255,.16),
-        980px 100px rgba(0,245,255,.15);
-      animation: dustFloat 13s linear infinite;
-    }
-
-    .overlay-dust.two {
-      opacity: .55;
-      animation-delay: -6s;
-    }
-
-    /* ======================================================
-       TV STATIC — OLD SOFTER LOOK
-    ====================================================== */
 
     .tv-static-wrap {
       overflow: hidden !important;
@@ -325,7 +136,6 @@
       box-shadow:
         inset 0 0 18px rgba(255,255,255,.12),
         0 0 12px rgba(80,210,255,.15) !important;
-      pointer-events: none !important;
     }
 
     .tv-static-canvas {
@@ -363,10 +173,6 @@
       animation: tvRoll 3.1s linear infinite;
     }
 
-    /* ======================================================
-       CLOCK SVG
-    ====================================================== */
-
     .clock-svg-wrap {
       mix-blend-mode: screen;
       filter:
@@ -392,10 +198,6 @@
       animation: colonBlink 1.08s steps(1, end) infinite;
     }
 
-    /* ======================================================
-       OVERLAY EDIT MODE
-    ====================================================== */
-
     .overlay-edit-mode #rabbitOverlayRoot {
       pointer-events: auto;
       z-index: 500;
@@ -408,7 +210,7 @@
     .overlay-edit-mode .rabbit-overlay {
       pointer-events: auto !important;
       cursor: move;
-      outline: 2px solid rgba(255, 234, 0, .85);
+      outline: 2px solid rgba(255, 234, 0, .95);
       background-color: rgba(255, 234, 0, .08);
     }
 
@@ -419,22 +221,71 @@
         inset 0 0 14px rgba(255,42,163,.25);
     }
 
-    .overlay-edit-mode .rabbit-overlay::before {
-      content: attr(data-label);
+    .overlay-floating-label {
+      display: none;
+      position: absolute;
+      z-index: 1600;
+      transform: translate(-50%, -50%);
+      border: 1px solid rgba(255,255,255,.55);
+      border-radius: 999px;
+      padding: 5px 8px;
+      background: rgba(0,0,0,.9);
+      color: #ffea00;
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .03em;
+      white-space: nowrap;
+      pointer-events: auto;
+      cursor: pointer;
+      box-shadow:
+        0 0 10px rgba(255,234,0,.55),
+        0 0 18px rgba(0,245,255,.25);
+    }
+
+    .overlay-edit-mode .overlay-floating-label {
+      display: block;
+    }
+
+    .overlay-floating-label.selected {
+      color: #00f5ff;
+      border-color: #00f5ff;
+      box-shadow:
+        0 0 14px rgba(0,245,255,.9),
+        0 0 24px rgba(255,42,163,.35);
+    }
+
+    .overlay-corner-handle {
+      display: none;
+      position: absolute;
+      z-index: 2200;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      border: 2px solid #fff;
+      background: #ff2aa3;
+      box-shadow:
+        0 0 12px rgba(255,42,163,.9),
+        0 0 18px rgba(0,245,255,.45);
+      pointer-events: auto;
+      cursor: grab;
+    }
+
+    .overlay-edit-mode .overlay-corner-handle {
+      display: block;
+    }
+
+    .overlay-corner-handle::after {
+      content: attr(data-corner);
       position: absolute;
       left: 50%;
-      top: -22px;
-      transform: translateX(-50%);
-      white-space: nowrap;
-      font-size: 10px;
-      font-family: Arial, sans-serif;
+      top: 50%;
+      transform: translate(-50%, -50%);
       color: white;
-      background: rgba(0,0,0,.78);
-      border: 1px solid rgba(255,255,255,.35);
-      border-radius: 999px;
-      padding: 4px 7px;
-      pointer-events: none;
-      z-index: 9999;
+      font-size: 8px;
+      font-weight: 900;
+      font-family: Arial, sans-serif;
     }
 
     .overlay-editor-panel {
@@ -442,7 +293,7 @@
       right: 12px;
       bottom: 12px;
       z-index: 11000;
-      width: min(430px, calc(100vw - 24px));
+      width: min(450px, calc(100vw - 24px));
       background: rgba(0,0,0,.94);
       border: 2px solid #ffea00;
       border-radius: 14px;
@@ -463,6 +314,17 @@
       color: #fff7b0;
       font-size: 13px;
       line-height: 1.35;
+    }
+
+    .overlay-editor-panel select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 8px;
+      border-radius: 10px;
+      border: 1px solid #00f5ff;
+      background: #050510;
+      color: #fff;
+      font-weight: 900;
     }
 
     .overlay-editor-panel .selected-name {
@@ -517,10 +379,6 @@
       box-sizing: border-box;
     }
 
-    /* ======================================================
-       HOTSPOTS
-    ====================================================== */
-
     #rabbitHotspots {
       position: absolute !important;
       inset: 0 !important;
@@ -567,10 +425,6 @@
       padding: 4px 7px;
       pointer-events: none;
     }
-
-    /* ======================================================
-       MODAL
-    ====================================================== */
 
     .rabbit-modal {
       position: fixed !important;
@@ -719,98 +573,6 @@
       box-sizing: border-box;
     }
 
-    /* ======================================================
-       KEYFRAMES
-    ====================================================== */
-
-    @keyframes neonFlicker {
-      0%, 100% { opacity: .78; }
-      3% { opacity: .25; }
-      4% { opacity: .9; }
-      8% { opacity: .38; }
-      10% { opacity: .85; }
-      64% { opacity: .7; }
-      65% { opacity: .2; }
-      66% { opacity: .9; }
-    }
-
-    @keyframes bunnyFlicker {
-      0%, 100% { opacity: .72; }
-      44% { opacity: .48; }
-      45% { opacity: .95; }
-      46% { opacity: .45; }
-      47% { opacity: .9; }
-    }
-
-    @keyframes softPulse {
-      0%, 100% { opacity: .32; }
-      50% { opacity: .75; }
-    }
-
-    @keyframes lavaPulse {
-      0%, 100% { opacity: .28; }
-      50% { opacity: .95; }
-    }
-
-    @keyframes lavaBubbleRise {
-      0% { transform: translateY(28px) scale(.7); opacity: .12; }
-      25% { opacity: .72; }
-      65% { opacity: .9; }
-      100% { transform: translateY(-52px) scale(1.12); opacity: .05; }
-    }
-
-    @keyframes phonePulse {
-      0%, 100% { opacity: .14; }
-      50% { opacity: .55; }
-    }
-
-    @keyframes heartPulse {
-      0%, 100% { opacity: .25; }
-      50% { opacity: .9; }
-    }
-
-    @keyframes paperPulse {
-      0%, 100% { opacity: .22; }
-      50% { opacity: .62; }
-    }
-
-    @keyframes posterPulse {
-      0%, 100% { opacity: .14; }
-      50% { opacity: .58; }
-    }
-
-    @keyframes shimmerSweep {
-      0% { left: -90%; }
-      45%, 100% { left: 140%; }
-    }
-
-    @keyframes magnifyGlint {
-      0%, 100% { opacity: .08; }
-      40% { opacity: .8; }
-    }
-
-    @keyframes diamondFlash {
-      0%, 100% { opacity: .12; }
-      50% { opacity: .9; }
-    }
-
-    @keyframes kittyPulse {
-      0%, 100% { opacity: .18; }
-      50% { opacity: .7; }
-    }
-
-    @keyframes steamRise {
-      0% { transform: translateY(18px) translateX(0); opacity: 0; }
-      30% { opacity: .55; }
-      100% { transform: translateY(-52px) translateX(10px); opacity: 0; }
-    }
-
-    @keyframes dustFloat {
-      from { transform: translateY(0); opacity: .2; }
-      50% { opacity: .7; }
-      to { transform: translateY(-110px); opacity: .1; }
-    }
-
     @keyframes tvLines {
       from { transform: translateY(0); }
       to { transform: translateY(8px); }
@@ -865,6 +627,13 @@
         left: 10px;
         right: auto;
         bottom: 10px;
+        max-height: 48vh;
+        overflow-y: auto;
+      }
+
+      .overlay-floating-label {
+        font-size: 10px;
+        padding: 4px 7px;
       }
     }
   </style>
