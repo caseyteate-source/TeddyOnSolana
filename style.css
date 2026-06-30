@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Audiowide&family=Orbitron:wght@500;700;900&family=Press+Start+2P&display=swap');
 
 * {
   box-sizing: border-box;
@@ -1750,4 +1750,468 @@ code {
   padding: 10px;
   font-family: monospace;
   font-size: 11px;
+  /* ======================================================
+   FINAL ALARM CLOCK BLINK BOX PLACEMENT
+====================================================== */
+
+/* Kill the old bad 12:00 overlay */
+.rabbit-stage::after {
+  content: none !important;
+  display: none !important;
+}
+
+.alarm-blink-box {
+  left: 76.89% !important;
+  top: 56.92% !important;
+  width: 4.08% !important;
+  height: 1.96% !important;
+  transform: rotate(8.85deg) !important;
+  border-radius: 6px !important;
+  --alarm-cover-opacity: 1 !important;
+}
+
+
+/* ======================================================
+   GLOBAL WIKI / MODAL BOX 80s ARCADE STYLE
+   Applies across Kitty, Emoji, Rabbit Hole, and other popups
+====================================================== */
+
+:root {
+  --teddy-neon-cyan: #19f0ff;
+  --teddy-neon-pink: #ff2aa3;
+  --teddy-neon-yellow: #ffe44d;
+  --teddy-deep-purple: #080012;
+  --teddy-panel-purple: rgba(10, 0, 30, 0.96);
+  --teddy-panel-purple-2: rgba(22, 0, 48, 0.96);
+}
+
+/* Modal backdrop */
+.modal,
+.wiki-modal,
+#modal,
+#wikiModal,
+#clueModal,
+.rabbit-modal {
+  backdrop-filter: blur(7px) saturate(1.1);
+  background:
+    radial-gradient(circle at 50% 30%, rgba(25,240,255,.12), transparent 35%),
+    rgba(0, 0, 0, 0.82) !important;
+}
+
+/* Main popup container */
+.modal-box,
+.wiki-modal-box,
+.wiki-box,
+.clue-box,
+.rabbit-modal-box,
+#modal .modal-box,
+#wikiModal .modal-box,
+#clueModal .modal-box,
+#modalContent,
+#wikiContent {
+  width: min(740px, 92vw) !important;
+  border: 3px solid var(--teddy-neon-pink) !important;
+  border-radius: 28px !important;
+  padding: 28px 28px 25px !important;
+  position: relative !important;
+  overflow: hidden !important;
+
+  background:
+    linear-gradient(135deg, rgba(25, 240, 255, 0.08), transparent 28%),
+    linear-gradient(315deg, rgba(255, 42, 163, 0.10), transparent 34%),
+    linear-gradient(180deg, var(--teddy-panel-purple-2), var(--teddy-panel-purple)) !important;
+
+  box-shadow:
+    0 0 18px rgba(255, 42, 163, 0.95),
+    0 0 40px rgba(25, 240, 255, 0.38),
+    0 0 75px rgba(255, 42, 163, 0.18),
+    inset 0 0 24px rgba(25, 240, 255, 0.08) !important;
+}
+
+/* Scanline texture inside every wiki box */
+.modal-box::before,
+.wiki-modal-box::before,
+.wiki-box::before,
+.clue-box::before,
+.rabbit-modal-box::before,
+#modalContent::before,
+#wikiContent::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.045) 0px,
+      rgba(255,255,255,0.045) 1px,
+      transparent 2px,
+      transparent 5px
+    );
+  opacity: .35;
+  mix-blend-mode: screen;
+}
+
+/* Inner neon edge */
+.modal-box::after,
+.wiki-modal-box::after,
+.wiki-box::after,
+.clue-box::after,
+.rabbit-modal-box::after,
+#modalContent::after,
+#wikiContent::after {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 21px;
+  border: 1px solid rgba(25,240,255,.22);
+  box-shadow:
+    inset 0 0 22px rgba(25,240,255,.08),
+    inset 0 0 28px rgba(255,42,163,.06);
+}
+
+/* Keep actual content above textures */
+.modal-box > *,
+.wiki-modal-box > *,
+.wiki-box > *,
+.clue-box > *,
+.rabbit-modal-box > *,
+#modalContent > *,
+#wikiContent > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* Close X */
+.close,
+.close-modal,
+.modal-close,
+#wikiClose,
+#closeModal,
+#rabbitClose {
+  position: absolute !important;
+  top: 12px !important;
+  right: 16px !important;
+  z-index: 5 !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: white !important;
+  font-family: "Orbitron", sans-serif !important;
+  font-size: 34px !important;
+  font-weight: 900 !important;
+  cursor: pointer !important;
+  text-shadow:
+    0 0 8px var(--teddy-neon-pink),
+    0 0 18px var(--teddy-neon-pink) !important;
+}
+
+.close:hover,
+.close-modal:hover,
+.modal-close:hover,
+#wikiClose:hover,
+#closeModal:hover,
+#rabbitClose:hover {
+  color: var(--teddy-neon-cyan) !important;
+  text-shadow:
+    0 0 8px var(--teddy-neon-cyan),
+    0 0 18px var(--teddy-neon-cyan) !important;
+}
+
+/* Small top label/tag */
+#wikiTag,
+#rabbitTag,
+.modal-tag,
+.wiki-tag,
+.clue-tag,
+.tag,
+.tagline {
+  font-family: "Press Start 2P", monospace !important;
+  font-size: clamp(9px, 1.2vw, 12px) !important;
+  line-height: 1.6 !important;
+  letter-spacing: 1px !important;
+  text-transform: uppercase !important;
+  color: var(--teddy-neon-yellow) !important;
+  margin-bottom: 10px !important;
+  text-shadow:
+    0 0 8px rgba(255, 228, 77, .75),
+    0 0 14px rgba(255, 228, 77, .35) !important;
+}
+
+/* Main wiki title */
+#wikiTitle,
+#modalTitle,
+#rabbitTitle,
+.modal-box h2,
+.wiki-modal-box h2,
+.wiki-box h2,
+.clue-box h2,
+.rabbit-modal-box h2 {
+  font-family: "Orbitron", sans-serif !important;
+  font-weight: 900 !important;
+  font-size: clamp(34px, 4.5vw, 58px) !important;
+  line-height: .98 !important;
+  letter-spacing: 1px !important;
+  text-transform: uppercase !important;
+  margin: 0 0 10px !important;
+
+  color: var(--teddy-neon-cyan) !important;
+  text-shadow:
+    0 0 8px rgba(25,240,255,.95),
+    0 0 20px rgba(25,240,255,.55),
+    0 0 38px rgba(25,240,255,.25) !important;
+}
+
+/* Subtitle/date/category line */
+#wikiDate,
+.modal-subtitle,
+.wiki-subtitle,
+.clue-subtitle,
+.modal-box h3,
+.wiki-modal-box h3,
+.wiki-box h3,
+.clue-box h3 {
+  font-family: "Audiowide", sans-serif !important;
+  font-size: clamp(16px, 2vw, 24px) !important;
+  font-weight: 400 !important;
+  letter-spacing: .5px !important;
+  color: #ff7cc9 !important;
+  margin: 0 0 22px !important;
+  text-shadow: 0 0 12px rgba(255, 42, 163, .55) !important;
+}
+
+/* Body copy */
+#wikiText,
+#modalText,
+#rabbitText,
+.modal-box p,
+.wiki-modal-box p,
+.wiki-box p,
+.clue-box p,
+.rabbit-modal-box p {
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: clamp(17px, 1.45vw, 20px) !important;
+  line-height: 1.65 !important;
+  color: #f4f4f4 !important;
+}
+
+/* Section headers like Community Theory / Saved Theories */
+.modal-box h4,
+.wiki-modal-box h4,
+.wiki-box h4,
+.clue-box h4,
+.wiki-section-title,
+.section-label,
+.modal-section-title {
+  font-family: "Orbitron", sans-serif !important;
+  font-size: 16px !important;
+  letter-spacing: 1px !important;
+  text-transform: uppercase !important;
+  color: white !important;
+  margin: 24px 0 12px !important;
+  text-shadow:
+    0 0 8px rgba(25,240,255,.45),
+    0 0 16px rgba(255,42,163,.25) !important;
+}
+
+/* Textareas */
+.modal-box textarea,
+.wiki-modal-box textarea,
+.wiki-box textarea,
+.clue-box textarea,
+#wikiTheoryInput,
+#theoryInput,
+.theory-input {
+  width: 100% !important;
+  min-height: 96px !important;
+  box-sizing: border-box !important;
+
+  background:
+    linear-gradient(180deg, rgba(0, 5, 28, .95), rgba(0, 0, 18, .98)) !important;
+
+  color: #dffcff !important;
+  border: 2px solid var(--teddy-neon-cyan) !important;
+  border-radius: 17px !important;
+  padding: 15px 16px !important;
+
+  font-family: "Courier New", monospace !important;
+  font-size: clamp(16px, 1.3vw, 19px) !important;
+  line-height: 1.45 !important;
+
+  outline: none !important;
+  resize: vertical !important;
+
+  box-shadow:
+    inset 0 0 20px rgba(0,245,255,.08),
+    0 0 16px rgba(25,240,255,.16) !important;
+}
+
+.modal-box textarea::placeholder,
+.wiki-modal-box textarea::placeholder,
+.wiki-box textarea::placeholder,
+.clue-box textarea::placeholder {
+  color: rgba(223,252,255,.55) !important;
+  font-style: italic !important;
+}
+
+/* Button rows */
+.modal-actions,
+.wiki-actions,
+.button-row,
+.modal-buttons,
+.wiki-buttons {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 12px !important;
+  margin-top: 16px !important;
+}
+
+/* Modal buttons and links */
+.modal-box button:not(.close):not(.close-modal):not(.modal-close),
+.modal-box a,
+.wiki-modal-box button:not(.close):not(.close-modal):not(.modal-close),
+.wiki-modal-box a,
+.wiki-box button:not(.close):not(.close-modal):not(.modal-close),
+.wiki-box a,
+.clue-box button:not(.close):not(.close-modal):not(.modal-close),
+.clue-box a,
+.rabbit-modal-box button:not(#rabbitClose),
+.rabbit-modal-box a,
+.wiki-btn,
+.modal-btn {
+  flex: 1 1 220px !important;
+  min-height: 54px !important;
+  display: inline-flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+
+  border: 2px solid transparent !important;
+  border-radius: 16px !important;
+  padding: 14px 18px !important;
+
+  font-family: "Orbitron", sans-serif !important;
+  font-size: clamp(15px, 1.45vw, 20px) !important;
+  font-weight: 900 !important;
+  letter-spacing: .5px !important;
+  text-transform: uppercase !important;
+  text-decoration: none !important;
+
+  color: white !important;
+  cursor: pointer !important;
+  transition:
+    transform .18s ease,
+    box-shadow .18s ease,
+    border-color .18s ease,
+    filter .18s ease !important;
+}
+
+/* Default first/save/pink button */
+#saveTheory,
+.save-btn,
+.primary,
+.modal-box button:first-of-type:not(.close):not(.close-modal):not(.modal-close),
+.wiki-modal-box button:first-of-type:not(.close):not(.close-modal):not(.modal-close),
+.wiki-box button:first-of-type:not(.close):not(.close-modal):not(.modal-close),
+.clue-box button:first-of-type:not(.close):not(.close-modal):not(.modal-close) {
+  background: linear-gradient(180deg, #ff35aa, #ee1687) !important;
+  box-shadow:
+    0 0 16px rgba(255,42,163,.65),
+    inset 0 -3px 0 rgba(0,0,0,.25) !important;
+}
+
+/* Default link/blue button */
+#openXPost,
+#rabbitLink,
+.xpost-btn,
+.secondary,
+.modal-link,
+.wiki-link,
+.modal-box a,
+.wiki-modal-box a,
+.wiki-box a,
+.clue-box a,
+.rabbit-modal-box a {
+  background: linear-gradient(180deg, #22bdff, #138de0) !important;
+  box-shadow:
+    0 0 16px rgba(25,240,255,.5),
+    inset 0 -3px 0 rgba(0,0,0,.25) !important;
+}
+
+/* Hover effect */
+.modal-box button:hover,
+.modal-box a:hover,
+.wiki-modal-box button:hover,
+.wiki-modal-box a:hover,
+.wiki-box button:hover,
+.wiki-box a:hover,
+.clue-box button:hover,
+.clue-box a:hover,
+.rabbit-modal-box button:hover,
+.rabbit-modal-box a:hover {
+  transform: translateY(-2px) scale(1.01) !important;
+  border-color: white !important;
+  filter: brightness(1.12) !important;
+}
+
+/* Divider lines */
+.modal-box hr,
+.wiki-modal-box hr,
+.wiki-box hr,
+.clue-box hr,
+.rabbit-modal-box hr {
+  border: 0 !important;
+  height: 1px !important;
+  margin: 18px 0 !important;
+  background:
+    linear-gradient(
+      to right,
+      transparent,
+      rgba(25,240,255,.7),
+      rgba(255,42,163,.75),
+      transparent
+    ) !important;
+}
+
+/* Saved theories / lists */
+.saved-theories,
+#savedTheories,
+.theory-list {
+  margin-top: 12px !important;
+}
+
+.saved-theories p,
+#savedTheories p,
+.saved-theories li,
+#savedTheories li,
+.theory-list p,
+.theory-list li {
+  font-size: clamp(16px, 1.25vw, 18px) !important;
+  line-height: 1.55 !important;
+  color: #f5f5f5 !important;
+}
+
+/* Mobile cleanup */
+@media (max-width: 700px) {
+  .modal-box,
+  .wiki-modal-box,
+  .wiki-box,
+  .clue-box,
+  .rabbit-modal-box {
+    width: min(94vw, 640px) !important;
+    padding: 22px 18px 20px !important;
+    border-radius: 22px !important;
+  }
+
+  #wikiTitle,
+  #modalTitle,
+  #rabbitTitle,
+  .modal-box h2,
+  .wiki-modal-box h2,
+  .wiki-box h2,
+  .clue-box h2 {
+    font-size: 28px !important;
+  }
+}
 }
