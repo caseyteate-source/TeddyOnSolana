@@ -1772,33 +1772,35 @@ code {
 
 
 /* ======================================================
-   GLOBAL WIKI / MODAL BOX 80s ARCADE STYLE
-   Applies across Kitty, Emoji, Rabbit Hole, and other popups
+   GLOBAL WIKI / MODAL BOX - RADICAL 80s OVERHAUL
+   Paste at the VERY BOTTOM of style.css
 ====================================================== */
 
 :root {
-  --teddy-neon-cyan: #19f0ff;
-  --teddy-neon-pink: #ff2aa3;
-  --teddy-neon-yellow: #ffe44d;
-  --teddy-deep-purple: #080012;
-  --teddy-panel-purple: rgba(10, 0, 30, 0.96);
-  --teddy-panel-purple-2: rgba(22, 0, 48, 0.96);
+  --rv-cyan: #20f3ff;
+  --rv-pink: #ff2ea6;
+  --rv-yellow: #ffe766;
+  --rv-purple: #130021;
+  --rv-purple-2: #22003b;
+  --rv-deep: #06000f;
+  --rv-white: #f8fbff;
 }
 
-/* Modal backdrop */
+/* modal backdrop */
 .modal,
 .wiki-modal,
 #modal,
 #wikiModal,
 #clueModal,
 .rabbit-modal {
-  backdrop-filter: blur(7px) saturate(1.1);
+  backdrop-filter: blur(8px) saturate(1.1);
   background:
-    radial-gradient(circle at 50% 30%, rgba(25,240,255,.12), transparent 35%),
+    radial-gradient(circle at 50% 20%, rgba(32,243,255,.12), transparent 28%),
+    radial-gradient(circle at 50% 80%, rgba(255,46,166,.10), transparent 30%),
     rgba(0, 0, 0, 0.82) !important;
 }
 
-/* Main popup container */
+/* main popup shell */
 .modal-box,
 .wiki-modal-box,
 .wiki-box,
@@ -1809,26 +1811,27 @@ code {
 #clueModal .modal-box,
 #modalContent,
 #wikiContent {
-  width: min(740px, 92vw) !important;
-  border: 3px solid var(--teddy-neon-pink) !important;
+  width: min(760px, 92vw) !important;
+  max-width: 760px !important;
+  margin: 0 auto !important;
+  padding: 28px 28px 26px !important;
   border-radius: 28px !important;
-  padding: 28px 28px 25px !important;
+  border: 3px solid var(--rv-pink) !important;
+  text-align: center !important;
   position: relative !important;
   overflow: hidden !important;
-
   background:
-    linear-gradient(135deg, rgba(25, 240, 255, 0.08), transparent 28%),
-    linear-gradient(315deg, rgba(255, 42, 163, 0.10), transparent 34%),
-    linear-gradient(180deg, var(--teddy-panel-purple-2), var(--teddy-panel-purple)) !important;
-
+    linear-gradient(135deg, rgba(32,243,255,.10), transparent 25%),
+    linear-gradient(315deg, rgba(255,46,166,.12), transparent 30%),
+    linear-gradient(180deg, var(--rv-purple-2), var(--rv-purple) 55%, var(--rv-deep)) !important;
   box-shadow:
-    0 0 18px rgba(255, 42, 163, 0.95),
-    0 0 40px rgba(25, 240, 255, 0.38),
-    0 0 75px rgba(255, 42, 163, 0.18),
-    inset 0 0 24px rgba(25, 240, 255, 0.08) !important;
+    0 0 18px rgba(255,46,166,.95),
+    0 0 42px rgba(32,243,255,.30),
+    0 0 80px rgba(255,46,166,.18),
+    inset 0 0 24px rgba(32,243,255,.06) !important;
 }
 
-/* Scanline texture inside every wiki box */
+/* scanlines */
 .modal-box::before,
 .wiki-modal-box::before,
 .wiki-box::before,
@@ -1844,16 +1847,16 @@ code {
   background:
     repeating-linear-gradient(
       to bottom,
-      rgba(255,255,255,0.045) 0px,
-      rgba(255,255,255,0.045) 1px,
+      rgba(255,255,255,.045) 0px,
+      rgba(255,255,255,.045) 1px,
       transparent 2px,
       transparent 5px
     );
-  opacity: .35;
+  opacity: .25;
   mix-blend-mode: screen;
 }
 
-/* Inner neon edge */
+/* inner frame */
 .modal-box::after,
 .wiki-modal-box::after,
 .wiki-box::after,
@@ -1863,17 +1866,17 @@ code {
 #wikiContent::after {
   content: "";
   position: absolute;
-  inset: 7px;
+  inset: 8px;
   pointer-events: none;
   z-index: 0;
-  border-radius: 21px;
-  border: 1px solid rgba(25,240,255,.22);
+  border-radius: 20px;
+  border: 1px solid rgba(32,243,255,.24);
   box-shadow:
-    inset 0 0 22px rgba(25,240,255,.08),
-    inset 0 0 28px rgba(255,42,163,.06);
+    inset 0 0 20px rgba(32,243,255,.08),
+    inset 0 0 28px rgba(255,46,166,.08);
 }
 
-/* Keep actual content above textures */
+/* keep content above effects */
 .modal-box > *,
 .wiki-modal-box > *,
 .wiki-box > *,
@@ -1885,7 +1888,7 @@ code {
   z-index: 2;
 }
 
-/* Close X */
+/* close button */
 .close,
 .close-modal,
 .modal-close,
@@ -1893,19 +1896,19 @@ code {
 #closeModal,
 #rabbitClose {
   position: absolute !important;
-  top: 12px !important;
+  top: 10px !important;
   right: 16px !important;
   z-index: 5 !important;
   border: 0 !important;
   background: transparent !important;
   color: white !important;
   font-family: "Orbitron", sans-serif !important;
-  font-size: 34px !important;
+  font-size: 36px !important;
   font-weight: 900 !important;
   cursor: pointer !important;
   text-shadow:
-    0 0 8px var(--teddy-neon-pink),
-    0 0 18px var(--teddy-neon-pink) !important;
+    0 0 8px var(--rv-pink),
+    0 0 18px var(--rv-pink) !important;
 }
 
 .close:hover,
@@ -1914,13 +1917,13 @@ code {
 #wikiClose:hover,
 #closeModal:hover,
 #rabbitClose:hover {
-  color: var(--teddy-neon-cyan) !important;
+  color: var(--rv-cyan) !important;
   text-shadow:
-    0 0 8px var(--teddy-neon-cyan),
-    0 0 18px var(--teddy-neon-cyan) !important;
+    0 0 8px var(--rv-cyan),
+    0 0 18px var(--rv-cyan) !important;
 }
 
-/* Small top label/tag */
+/* top mini label */
 #wikiTag,
 #rabbitTag,
 .modal-tag,
@@ -1928,19 +1931,22 @@ code {
 .clue-tag,
 .tag,
 .tagline {
-  font-family: "Press Start 2P", monospace !important;
-  font-size: clamp(9px, 1.2vw, 12px) !important;
-  line-height: 1.6 !important;
-  letter-spacing: 1px !important;
+  display: block !important;
+  width: 100% !important;
+  margin: 0 auto 12px !important;
+  text-align: center !important;
+  font-family: "Orbitron", sans-serif !important;
+  font-size: clamp(12px, 1.2vw, 14px) !important;
+  font-weight: 800 !important;
+  letter-spacing: 2px !important;
   text-transform: uppercase !important;
-  color: var(--teddy-neon-yellow) !important;
-  margin-bottom: 10px !important;
+  color: var(--rv-yellow) !important;
   text-shadow:
-    0 0 8px rgba(255, 228, 77, .75),
-    0 0 14px rgba(255, 228, 77, .35) !important;
+    0 0 8px rgba(255,231,102,.75),
+    0 0 14px rgba(255,231,102,.35) !important;
 }
 
-/* Main wiki title */
+/* main title - big radical centered 80s look */
 #wikiTitle,
 #modalTitle,
 #rabbitTitle,
@@ -1949,22 +1955,39 @@ code {
 .wiki-box h2,
 .clue-box h2,
 .rabbit-modal-box h2 {
-  font-family: "Orbitron", sans-serif !important;
-  font-weight: 900 !important;
-  font-size: clamp(34px, 4.5vw, 58px) !important;
-  line-height: .98 !important;
+  display: block !important;
+  width: 100% !important;
+  margin: 0 auto 10px !important;
+  text-align: center !important;
+  line-height: .95 !important;
   letter-spacing: 1px !important;
   text-transform: uppercase !important;
-  margin: 0 0 10px !important;
 
-  color: var(--teddy-neon-cyan) !important;
+  font-family: "Bungee", sans-serif !important;
+  font-size: clamp(34px, 4.4vw, 62px) !important;
+  font-weight: 400 !important;
+
+  background: linear-gradient(
+    180deg,
+    #fff7fb 0%,
+    #ffd7ec 12%,
+    #ff7dc8 28%,
+    #ff44b0 45%,
+    #35ecff 68%,
+    #168cff 100%
+  ) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+
   text-shadow:
-    0 0 8px rgba(25,240,255,.95),
-    0 0 20px rgba(25,240,255,.55),
-    0 0 38px rgba(25,240,255,.25) !important;
+    0 2px 0 rgba(255,255,255,.08),
+    0 6px 0 rgba(16,18,38,.22),
+    0 12px 18px rgba(0,0,0,.35);
+  filter: drop-shadow(0 0 6px rgba(255,46,166,.25));
 }
 
-/* Subtitle/date/category line */
+/* secondary line / date */
 #wikiDate,
 .modal-subtitle,
 .wiki-subtitle,
@@ -1973,16 +1996,22 @@ code {
 .wiki-modal-box h3,
 .wiki-box h3,
 .clue-box h3 {
-  font-family: "Audiowide", sans-serif !important;
-  font-size: clamp(16px, 2vw, 24px) !important;
+  display: block !important;
+  width: 100% !important;
+  margin: 0 auto 18px !important;
+  text-align: center !important;
+  font-family: "Permanent Marker", cursive !important;
+  font-size: clamp(18px, 2vw, 28px) !important;
   font-weight: 400 !important;
-  letter-spacing: .5px !important;
-  color: #ff7cc9 !important;
-  margin: 0 0 22px !important;
-  text-shadow: 0 0 12px rgba(255, 42, 163, .55) !important;
+  line-height: 1.1 !important;
+  letter-spacing: .4px !important;
+  color: #ff61bd !important;
+  text-shadow:
+    0 0 10px rgba(255,46,166,.55),
+    0 0 18px rgba(255,46,166,.22) !important;
 }
 
-/* Body copy */
+/* body copy centered but readable */
 #wikiText,
 #modalText,
 #rabbitText,
@@ -1991,13 +2020,17 @@ code {
 .wiki-box p,
 .clue-box p,
 .rabbit-modal-box p {
-  font-family: Arial, Helvetica, sans-serif !important;
-  font-size: clamp(17px, 1.45vw, 20px) !important;
-  line-height: 1.65 !important;
-  color: #f4f4f4 !important;
+  max-width: 620px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  text-align: center !important;
+  font-family: "Space Mono", monospace !important;
+  font-size: clamp(16px, 1.3vw, 19px) !important;
+  line-height: 1.72 !important;
+  color: var(--rv-white) !important;
 }
 
-/* Section headers like Community Theory / Saved Theories */
+/* section labels like Community Theory */
 .modal-box h4,
 .wiki-modal-box h4,
 .wiki-box h4,
@@ -2005,18 +2038,22 @@ code {
 .wiki-section-title,
 .section-label,
 .modal-section-title {
-  font-family: "Orbitron", sans-serif !important;
-  font-size: 16px !important;
+  display: block !important;
+  width: 100% !important;
+  margin: 24px auto 12px !important;
+  text-align: center !important;
+  font-family: "Monoton", cursive !important;
+  font-size: clamp(18px, 2vw, 28px) !important;
+  font-weight: 400 !important;
   letter-spacing: 1px !important;
-  text-transform: uppercase !important;
-  color: white !important;
-  margin: 24px 0 12px !important;
+  line-height: 1.15 !important;
+  color: var(--rv-cyan) !important;
   text-shadow:
-    0 0 8px rgba(25,240,255,.45),
-    0 0 16px rgba(255,42,163,.25) !important;
+    0 0 8px rgba(32,243,255,.75),
+    0 0 20px rgba(32,243,255,.35) !important;
 }
 
-/* Textareas */
+/* textareas */
 .modal-box textarea,
 .wiki-modal-box textarea,
 .wiki-box textarea,
@@ -2024,39 +2061,37 @@ code {
 #wikiTheoryInput,
 #theoryInput,
 .theory-input {
-  width: 100% !important;
-  min-height: 96px !important;
+  width: min(560px, 100%) !important;
+  min-height: 110px !important;
   box-sizing: border-box !important;
-
+  display: block !important;
+  margin: 0 auto !important;
+  padding: 16px 18px !important;
+  border-radius: 18px !important;
+  border: 2px solid var(--rv-cyan) !important;
   background:
-    linear-gradient(180deg, rgba(0, 5, 28, .95), rgba(0, 0, 18, .98)) !important;
-
+    linear-gradient(180deg, rgba(0, 8, 28, .96), rgba(0, 0, 16, .98)) !important;
   color: #dffcff !important;
-  border: 2px solid var(--teddy-neon-cyan) !important;
-  border-radius: 17px !important;
-  padding: 15px 16px !important;
-
-  font-family: "Courier New", monospace !important;
-  font-size: clamp(16px, 1.3vw, 19px) !important;
-  line-height: 1.45 !important;
-
   outline: none !important;
   resize: vertical !important;
-
+  font-family: "Space Mono", monospace !important;
+  font-size: clamp(15px, 1.2vw, 18px) !important;
+  line-height: 1.5 !important;
+  text-align: left !important;
   box-shadow:
-    inset 0 0 20px rgba(0,245,255,.08),
-    0 0 16px rgba(25,240,255,.16) !important;
+    inset 0 0 18px rgba(0,245,255,.08),
+    0 0 15px rgba(32,243,255,.14) !important;
 }
 
 .modal-box textarea::placeholder,
 .wiki-modal-box textarea::placeholder,
 .wiki-box textarea::placeholder,
 .clue-box textarea::placeholder {
-  color: rgba(223,252,255,.55) !important;
+  color: rgba(223,252,255,.5) !important;
   font-style: italic !important;
 }
 
-/* Button rows */
+/* section wrappers centered */
 .modal-actions,
 .wiki-actions,
 .button-row,
@@ -2064,11 +2099,13 @@ code {
 .wiki-buttons {
   display: flex !important;
   flex-wrap: wrap !important;
+  justify-content: center !important;
+  align-items: center !important;
   gap: 12px !important;
   margin-top: 16px !important;
 }
 
-/* Modal buttons and links */
+/* general buttons */
 .modal-box button:not(.close):not(.close-modal):not(.modal-close),
 .modal-box a,
 .wiki-modal-box button:not(.close):not(.close-modal):not(.modal-close),
@@ -2081,25 +2118,23 @@ code {
 .rabbit-modal-box a,
 .wiki-btn,
 .modal-btn {
-  flex: 1 1 220px !important;
-  min-height: 54px !important;
+  min-width: 220px !important;
+  min-height: 56px !important;
+  flex: 0 1 auto !important;
   display: inline-flex !important;
   justify-content: center !important;
   align-items: center !important;
-
+  padding: 14px 22px !important;
+  border-radius: 18px !important;
   border: 2px solid transparent !important;
-  border-radius: 16px !important;
-  padding: 14px 18px !important;
-
-  font-family: "Orbitron", sans-serif !important;
-  font-size: clamp(15px, 1.45vw, 20px) !important;
-  font-weight: 900 !important;
-  letter-spacing: .5px !important;
-  text-transform: uppercase !important;
   text-decoration: none !important;
-
-  color: white !important;
   cursor: pointer !important;
+  text-transform: uppercase !important;
+  letter-spacing: .8px !important;
+  font-family: "Orbitron", sans-serif !important;
+  font-size: clamp(14px, 1.3vw, 18px) !important;
+  font-weight: 900 !important;
+  color: white !important;
   transition:
     transform .18s ease,
     box-shadow .18s ease,
@@ -2107,7 +2142,7 @@ code {
     filter .18s ease !important;
 }
 
-/* Default first/save/pink button */
+/* pink action */
 #saveTheory,
 .save-btn,
 .primary,
@@ -2115,13 +2150,13 @@ code {
 .wiki-modal-box button:first-of-type:not(.close):not(.close-modal):not(.modal-close),
 .wiki-box button:first-of-type:not(.close):not(.close-modal):not(.modal-close),
 .clue-box button:first-of-type:not(.close):not(.close-modal):not(.modal-close) {
-  background: linear-gradient(180deg, #ff35aa, #ee1687) !important;
+  background: linear-gradient(180deg, #ff46b6, #ef198b) !important;
   box-shadow:
-    0 0 16px rgba(255,42,163,.65),
-    inset 0 -3px 0 rgba(0,0,0,.25) !important;
+    0 0 18px rgba(255,46,166,.6),
+    inset 0 -3px 0 rgba(0,0,0,.28) !important;
 }
 
-/* Default link/blue button */
+/* blue action */
 #openXPost,
 #rabbitLink,
 .xpost-btn,
@@ -2133,13 +2168,12 @@ code {
 .wiki-box a,
 .clue-box a,
 .rabbit-modal-box a {
-  background: linear-gradient(180deg, #22bdff, #138de0) !important;
+  background: linear-gradient(180deg, #25c5ff, #0f86de) !important;
   box-shadow:
-    0 0 16px rgba(25,240,255,.5),
-    inset 0 -3px 0 rgba(0,0,0,.25) !important;
+    0 0 18px rgba(32,243,255,.48),
+    inset 0 -3px 0 rgba(0,0,0,.28) !important;
 }
 
-/* Hover effect */
 .modal-box button:hover,
 .modal-box a:hover,
 .wiki-modal-box button:hover,
@@ -2150,35 +2184,38 @@ code {
 .clue-box a:hover,
 .rabbit-modal-box button:hover,
 .rabbit-modal-box a:hover {
-  transform: translateY(-2px) scale(1.01) !important;
+  transform: translateY(-2px) scale(1.015) !important;
   border-color: white !important;
-  filter: brightness(1.12) !important;
+  filter: brightness(1.1) !important;
 }
 
-/* Divider lines */
+/* divider */
 .modal-box hr,
 .wiki-modal-box hr,
 .wiki-box hr,
 .clue-box hr,
 .rabbit-modal-box hr {
+  width: min(560px, 100%) !important;
+  margin: 22px auto !important;
   border: 0 !important;
   height: 1px !important;
-  margin: 18px 0 !important;
   background:
     linear-gradient(
       to right,
       transparent,
-      rgba(25,240,255,.7),
-      rgba(255,42,163,.75),
+      rgba(32,243,255,.85),
+      rgba(255,46,166,.9),
       transparent
     ) !important;
 }
 
-/* Saved theories / lists */
+/* saved theories / list area */
 .saved-theories,
 #savedTheories,
 .theory-list {
-  margin-top: 12px !important;
+  width: min(560px, 100%) !important;
+  margin: 14px auto 0 !important;
+  text-align: center !important;
 }
 
 .saved-theories p,
@@ -2187,18 +2224,31 @@ code {
 #savedTheories li,
 .theory-list p,
 .theory-list li {
-  font-size: clamp(16px, 1.25vw, 18px) !important;
-  line-height: 1.55 !important;
+  text-align: center !important;
+  font-family: "Space Mono", monospace !important;
+  font-size: clamp(15px, 1.15vw, 17px) !important;
+  line-height: 1.6 !important;
   color: #f5f5f5 !important;
 }
 
-/* Mobile cleanup */
+/* make random left-indented wrappers center too */
+.modal-box > div,
+.wiki-modal-box > div,
+.wiki-box > div,
+.clue-box > div,
+.rabbit-modal-box > div {
+  text-align: center;
+}
+
+/* mobile */
 @media (max-width: 700px) {
   .modal-box,
   .wiki-modal-box,
   .wiki-box,
   .clue-box,
-  .rabbit-modal-box {
+  .rabbit-modal-box,
+  #modalContent,
+  #wikiContent {
     width: min(94vw, 640px) !important;
     padding: 22px 18px 20px !important;
     border-radius: 22px !important;
@@ -2210,8 +2260,38 @@ code {
   .modal-box h2,
   .wiki-modal-box h2,
   .wiki-box h2,
-  .clue-box h2 {
-    font-size: 28px !important;
+  .clue-box h2,
+  .rabbit-modal-box h2 {
+    font-size: 30px !important;
+  }
+
+  .modal-box button:not(.close):not(.close-modal):not(.modal-close),
+  .modal-box a,
+  .wiki-modal-box button:not(.close):not(.close-modal):not(.modal-close),
+  .wiki-modal-box a,
+  .wiki-box button:not(.close):not(.close-modal):not(.modal-close),
+  .wiki-box a,
+  .clue-box button:not(.close):not(.close-modal):not(.modal-close),
+  .clue-box a,
+  .rabbit-modal-box button:not(#rabbitClose),
+  .rabbit-modal-box a {
+    min-width: 100% !important;
   }
 }
+  }
+}
+}/* FINAL ALARM CLOCK BLINK BOX PLACEMENT */
+.rabbit-stage::after {
+  content: none !important;
+  display: none !important;
+}
+
+.alarm-blink-box {
+  left: 76.89% !important;
+  top: 56.92% !important;
+  width: 4.08% !important;
+  height: 1.96% !important;
+  transform: rotate(8.85deg) !important;
+  border-radius: 6px !important;
+  --alarm-cover-opacity: 1 !important;
 }
