@@ -33,9 +33,8 @@ setInterval(() => {
 
 function enterSite() {
   gameRunning = false;
-  startScreen.classList.add("hidden");
-  siteContent.classList.remove("hidden");
-  window.scrollTo(0, 0);
+  window.location.href = "hq.html";
+}
 }
 
 enterSiteBtn.addEventListener("click", enterSite);
