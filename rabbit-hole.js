@@ -2,202 +2,202 @@ const isEditMode = new URLSearchParams(window.location.search).has("edit");
 
 const rabbitHotspots = [
   {
-    id: "arcade",
-    title: "Arcade Cabinet",
-    tag: "Play Again",
-    text: "Return to the $TEDDY arcade game.",
-    url: "index.html",
-    sameTab: true,
-    x: 11,
-    y: 44,
-    size: 64
+    "id": "arcade",
+    "title": "Arcade Cabinet",
+    "tag": "Play Again",
+    "text": "Return to the $TEDDY arcade game.",
+    "url": "index.html",
+    "sameTab": true,
+    "x": 9.53,
+    "y": 47.35,
+    "size": 64
   },
   {
-    id: "kitty-files",
-    title: "Kitty Files",
-    tag: "Case File",
-    text: "Open the Roaring Kitty investigation board.",
-    url: "kitty.html",
-    sameTab: true,
-    x: 82,
-    y: 86,
-    size: 58
+    "id": "kitty-files",
+    "title": "Kitty Files",
+    "tag": "Case File",
+    "text": "Open the Roaring Kitty investigation board.",
+    "url": "kitty.html",
+    "sameTab": true,
+    "x": 84.63,
+    "y": 82.42,
+    "size": 58
   },
   {
-    id: "emoji",
-    title: "Emoji Timeline",
-    tag: "VHS Tape",
-    text: "Follow the emoji timeline.",
-    url: "emoji.html",
-    sameTab: true,
-    x: 25,
-    y: 62,
-    size: 58
+    "id": "emoji",
+    "title": "Emoji Timeline",
+    "tag": "VHS Tape",
+    "text": "Follow the emoji timeline.",
+    "url": "emoji.html",
+    "sameTab": true,
+    "x": 25,
+    "y": 62,
+    "size": 58
   },
   {
-    id: "memory",
-    title: "Memory Room",
-    tag: "VHS Tape",
-    text: "Enter the 1980s memory room.",
-    url: "imagination-room.html",
-    sameTab: true,
-    x: 79,
-    y: 73,
-    size: 58
+    "id": "memory",
+    "title": "Memory Room",
+    "tag": "VHS Tape",
+    "text": "Enter the 1980s memory room.",
+    "url": "imagination-room.html",
+    "sameTab": true,
+    "x": 82.99,
+    "y": 71.44,
+    "size": 58
   },
   {
-    id: "tv",
-    title: "CRT Television",
-    tag: "Memory Room",
-    text: "The screen is waiting. Step inside the past.",
-    url: "imagination-room.html",
-    sameTab: true,
-    x: 83,
-    y: 35,
-    size: 70
+    "id": "tv",
+    "title": "CRT Television",
+    "tag": "Memory Room",
+    "text": "The screen is waiting. Step inside the past.",
+    "url": "imagination-room.html",
+    "sameTab": true,
+    "x": 90.55,
+    "y": 35.61,
+    "size": 70
   },
   {
-    id: "moass",
-    title: "MOASS",
-    tag: "Easter Egg",
-    text: "Click the MOASS sign to hear Mr. T's Mother.",
-    url: "https://youtu.be/RO6JiFztJdg?si=BqHPez0QepkQeCkz",
-    sameTab: false,
-    x: 8,
-    y: 8,
-    size: 70
+    "id": "moass",
+    "title": "MOASS",
+    "tag": "Easter Egg",
+    "text": "Click the MOASS sign to hear Mr. T's Mother.",
+    "url": "https://youtu.be/RO6JiFztJdg?si=BqHPez0QepkQeCkz",
+    "sameTab": false,
+    "x": 9.07,
+    "y": 7.79,
+    "size": 70
   },
   {
-    id: "desk-lamp",
-    title: "The Lamp",
-    tag: "Easter Egg",
-    text: "The lamp leads to Norm Macdonald's legendary moth joke.",
-    url: "https://youtu.be/jJN9mBRX3uo",
-    sameTab: false,
-    x: 96,
-    y: 54,
-    size: 58
+    "id": "desk-lamp",
+    "title": "The Lamp",
+    "tag": "Easter Egg",
+    "text": "The lamp leads to Norm Macdonald's legendary moth joke.",
+    "url": "https://youtu.be/jJN9mBRX3uo",
+    "sameTab": false,
+    "x": 97.38,
+    "y": 59.29,
+    "size": 58
   },
   {
-    id: "phone",
-    title: "Rotary Phone",
-    tag: "Callin' Oates",
-    text: "Sometimes the rabbit hole calls you back.",
-    url: "tel:7192662837",
-    sameTab: true,
-    x: 13,
-    y: 80,
-    size: 62
+    "id": "phone",
+    "title": "Rotary Phone",
+    "tag": "Callin' Oates",
+    "text": "Sometimes the rabbit hole calls you back.",
+    "url": "tel:7192662837",
+    "sameTab": true,
+    "x": 13,
+    "y": 80,
+    "size": 62
   },
   {
-    id: "gamestop",
-    title: "GameStop",
-    tag: "Official Link",
-    text: "Open GameStop's official investor relations page.",
-    url: "https://investor.gamestop.com/",
-    sameTab: false,
-    x: 52,
-    y: 9,
-    size: 58
+    "id": "gamestop",
+    "title": "GameStop",
+    "tag": "Official Link",
+    "text": "Open GameStop's official investor relations page.",
+    "url": "https://investor.gamestop.com/",
+    "sameTab": false,
+    "x": 52,
+    "y": 9,
+    "size": 58
   },
   {
-    id: "teddy",
-    title: "The Teddy Files",
-    tag: "Coming Soon",
-    text: "A future page for Teddy, Ryan Cohen's books, and community theories.",
-    url: "teddy.html",
-    sameTab: true,
-    x: 19,
-    y: 25,
-    size: 60
+    "id": "teddy",
+    "title": "The Teddy Files",
+    "tag": "Coming Soon",
+    "text": "A future page for Teddy, Ryan Cohen's books, and community theories.",
+    "url": "teddy.html",
+    "sameTab": true,
+    "x": 21.26,
+    "y": 28.3,
+    "size": 60
   },
   {
-    id: "ryan",
-    title: "Ryan Cohen Files",
-    tag: "Coming Soon",
-    text: "Ryan Cohen biography, timeline, Teddy theories, and GameStop connections.",
-    url: "ryan.html",
-    sameTab: true,
-    x: 43,
-    y: 14,
-    size: 54
+    "id": "ryan",
+    "title": "Ryan Cohen Files",
+    "tag": "Coming Soon",
+    "text": "Ryan Cohen biography, timeline, Teddy theories, and GameStop connections.",
+    "url": "ryan.html",
+    "sameTab": true,
+    "x": 44.75,
+    "y": 10.74,
+    "size": 54
   },
   {
-    id: "greg",
-    title: "Greg",
-    tag: "Tinfoil Thread",
-    text: "A future page for the Greg rabbit hole.",
-    url: "greg.html",
-    sameTab: true,
-    x: 53,
-    y: 25,
-    size: 54
+    "id": "greg",
+    "title": "Greg",
+    "tag": "Tinfoil Thread",
+    "text": "A future page for the Greg rabbit hole.",
+    "url": "greg.html",
+    "sameTab": true,
+    "x": 54.29,
+    "y": 25.69,
+    "size": 54
   },
   {
-    id: "keith",
-    title: "Keith Gill",
-    tag: "Roaring Kitty",
-    text: "Open the Keith Gill / Roaring Kitty file.",
-    url: "kitty-bio.html",
-    sameTab: true,
-    x: 43,
-    y: 42,
-    size: 54
+    "id": "keith",
+    "title": "Keith Gill",
+    "tag": "Roaring Kitty",
+    "text": "Open the Keith Gill / Roaring Kitty file.",
+    "url": "kitty-bio.html",
+    "sameTab": true,
+    "x": 43.07,
+    "y": 39.38,
+    "size": 54
   },
   {
-    id: "buck",
-    title: "Buck the Bunny",
-    tag: "Easter Egg",
-    text: "The rabbit was here first.",
-    url: "buck.html",
-    sameTab: true,
-    x: 86,
-    y: 9,
-    size: 58
+    "id": "buck",
+    "title": "Buck the Bunny",
+    "tag": "Easter Egg",
+    "text": "The rabbit was here first.",
+    "url": "buck.html",
+    "sameTab": true,
+    "x": 84.7,
+    "y": 12.82,
+    "size": 58
   },
   {
-    id: "gmebay",
-    title: "GMEBAY",
-    tag: "Theory Tape",
-    text: "What could GMEBAY become?",
-    url: "gmebay.html",
-    sameTab: true,
-    x: 59,
-    y: 55,
-    size: 58
+    "id": "gmebay",
+    "title": "GMEBAY",
+    "tag": "Theory Tape",
+    "text": "What could GMEBAY become?",
+    "url": "gmebay.html",
+    "sameTab": true,
+    "x": 62.87,
+    "y": 56.76,
+    "size": 58
   },
   {
-    id: "roaring-kitty-vhs",
-    title: "Roaring Kitty VHS",
-    tag: "VHS Tape",
-    text: "Open the Roaring Kitty tinfoil collection.",
-    url: "kitty.html",
-    sameTab: true,
-    x: 45,
-    y: 67,
-    size: 58
+    "id": "roaring-kitty-vhs",
+    "title": "Roaring Kitty VHS",
+    "tag": "VHS Tape",
+    "text": "Open the Roaring Kitty tinfoil collection.",
+    "url": "kitty.html",
+    "sameTab": true,
+    "x": 45,
+    "y": 67,
+    "size": 58
   },
   {
-    id: "wonka",
-    title: "Willy Wonka VHS",
-    tag: "Pure Imagination",
-    text: "A path toward the Memory Room.",
-    url: "imagination-room.html",
-    sameTab: true,
-    x: 84,
-    y: 51,
-    size: 54
+    "id": "wonka",
+    "title": "Willy Wonka VHS",
+    "tag": "Pure Imagination",
+    "text": "A path toward the Memory Room.",
+    "url": "imagination-room.html",
+    "sameTab": true,
+    "x": 84.16,
+    "y": 51.55,
+    "size": 54
   },
   {
-    id: "floppy",
-    title: "Floppy Disk",
-    tag: "Secret",
-    text: "You found something that probably should not be here.",
-    url: "secret.html",
-    sameTab: true,
-    x: 32,
-    y: 86,
-    size: 48
+    "id": "floppy",
+    "title": "Floppy Disk",
+    "tag": "Secret",
+    "text": "You found something that probably should not be here.",
+    "url": "secret.html",
+    "sameTab": true,
+    "x": 32,
+    "y": 86,
+    "size": 48
   }
 ];
 
@@ -217,7 +217,7 @@ if (isEditMode) {
 function renderHotspots() {
   container.innerHTML = "";
 
-  rabbitHotspots.forEach((spot, index) => {
+  rabbitHotspots.forEach((spot) => {
     const button = document.createElement("button");
     button.className = `rabbit-hotspot ${spot.id}`;
     button.style.left = spot.x + "%";
@@ -229,7 +229,7 @@ function renderHotspots() {
     button.dataset.label = spot.title;
 
     if (isEditMode) {
-      makeDraggable(button, spot, index);
+      makeDraggable(button, spot);
     } else {
       button.addEventListener("click", () => openRabbitModal(spot));
     }
@@ -245,6 +245,7 @@ function openRabbitModal(spot) {
   link.href = spot.url;
   link.textContent = spot.sameTab ? "ENTER" : "OPEN LINK";
   link.target = spot.sameTab ? "_self" : "_blank";
+
   modal.classList.add("active");
 }
 
@@ -314,6 +315,7 @@ function createEditorPanel() {
     try {
       await navigator.clipboard.writeText(output);
       document.getElementById("copyRabbitHotspots").textContent = "COPIED!";
+
       setTimeout(() => {
         document.getElementById("copyRabbitHotspots").textContent = "COPY UPDATED HOTSPOTS";
       }, 1200);
@@ -327,8 +329,7 @@ function updateEditorOutput() {
   const output = document.getElementById("rabbitHotspotOutput");
   if (!output) return;
 
-  output.value =
-`const rabbitHotspots = ${JSON.stringify(rabbitHotspots, null, 2)};`;
+  output.value = `const rabbitHotspots = ${JSON.stringify(rabbitHotspots, null, 2)};`;
 }
 
 closeBtn.addEventListener("click", () => {
