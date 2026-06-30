@@ -2413,3 +2413,60 @@ code {
   outline-offset: 2px !important;
   z-index: 5200 !important;
 }
+/* ======================================================
+   SIMPLE BLINKING BLACK BOX — GUARANTEED CSS VERSION
+   Paste at the VERY BOTTOM of style.css
+====================================================== */
+
+/* Remove the old fake 12:00 text */
+.rabbit-stage::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Hide the old alarm div if it exists */
+.alarm-blink-box {
+  display: none !important;
+}
+
+/* Make sure the stage can hold the blinking overlay */
+.rabbit-stage {
+  position: relative !important;
+}
+
+/* This is the actual blinking black box */
+.rabbit-stage::before {
+  content: "" !important;
+  position: absolute !important;
+
+  left: 76.89% !important;
+  top: 56.92% !important;
+  width: 4.08% !important;
+  height: 1.96% !important;
+
+  transform: rotate(8.85deg) !important;
+  transform-origin: center center !important;
+
+  z-index: 9999 !important;
+  pointer-events: none !important;
+
+  background: #000 !important;
+  border-radius: 6px !important;
+
+  /* temporary faint outline so you can actually see the box blinking */
+  box-shadow:
+    0 0 0 1px rgba(255, 42, 163, 0.55),
+    0 0 8px rgba(0, 0, 0, 0.9) !important;
+
+  animation: simpleBlackBoxBlink 1s steps(1, end) infinite !important;
+}
+
+@keyframes simpleBlackBoxBlink {
+  0%, 49% {
+    opacity: 1 !important;
+  }
+
+  50%, 100% {
+    opacity: 0 !important;
+  }
+}
