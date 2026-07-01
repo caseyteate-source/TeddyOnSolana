@@ -38,12 +38,12 @@ const rabbitOverlaySettings = [
     className: "rabbit-overlay stage-blink-plaque",
 
     /* These are locked to the room image, not the browser window */
-    x: 76.9,
-    y: 56.68,
-    w: 6.6,
-    h: 3.4,
+    x: 77.14,
+    y: 57.07,
+    w: 3.35,
+    h: 1.9,
 
-    rotate: 0,
+    rotate: 9.75,
     skewX: 0,
     skewY: 0,
 
@@ -410,7 +410,7 @@ function createOverlayEditorPanel() {
 
     <strong>Overlay Editor</strong>
     <p>
-      The black box now blinks in editor mode and normal mode.
+      The black box blinks in editor mode and normal mode.
       The selected item coordinates are shown below even if clipboard copy fails.
     </p>
 
