@@ -15,9 +15,7 @@
       --dark: #020207;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html,
     body {
@@ -42,7 +40,7 @@
       inset: 0;
       pointer-events: none;
       z-index: 9999;
-      opacity: .14;
+      opacity: .13;
       background: repeating-linear-gradient(
         to bottom,
         rgba(255,255,255,.16) 0,
@@ -85,7 +83,7 @@
       z-index: 9000;
       width: 100%;
       padding: 9px 10px;
-      background: rgba(0,0,0,.94);
+      background: rgba(0,0,0,.95);
       border-bottom: 2px solid rgba(255,42,163,.76);
       box-shadow:
         0 0 18px rgba(255,42,163,.45),
@@ -212,9 +210,14 @@
       background: #020207;
     }
 
+    /*
+      This stage crops the baked-in top menu from the generated image.
+      Use teddy-umbrella-bg.png as the clean background image.
+    */
     .teddy-stage {
       position: relative;
       width: min(100vw, 1672px);
+      aspect-ratio: 1536 / 1042;
       margin: 0 auto;
       isolation: isolate;
       background: #020207;
@@ -222,27 +225,16 @@
     }
 
     .teddy-bg {
-      display: block;
+      position: absolute;
+      left: 0;
+      top: -10.55%;
       width: 100%;
-      height: auto;
+      height: 110.55%;
+      object-fit: cover;
       user-select: none;
       -webkit-user-drag: none;
       pointer-events: none;
-    }
-
-    .baked-ca-mask {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      height: 9.4%;
-      z-index: 8;
-      pointer-events: none;
-      background:
-        radial-gradient(circle at 18% 50%, rgba(255,42,163,.18), transparent 34%),
-        radial-gradient(circle at 62% 42%, rgba(0,245,255,.14), transparent 32%),
-        linear-gradient(180deg, rgba(1,1,8,1) 0%, rgba(1,1,8,.99) 84%, rgba(1,1,8,.78) 100%);
-      border-bottom: 1px solid rgba(255,42,163,.30);
+      z-index: 1;
     }
 
     #realRainCanvas {
@@ -255,12 +247,30 @@
       mix-blend-mode: screen;
     }
 
+    .dry-zone-softener {
+      position: absolute;
+      left: 43%;
+      top: 13%;
+      width: 45%;
+      height: 67%;
+      z-index: 11;
+      pointer-events: none;
+      border-radius: 44% 48% 40% 44%;
+      background:
+        radial-gradient(ellipse at 50% 43%,
+          rgba(255,198,84,.16) 0%,
+          rgba(255,198,84,.10) 32%,
+          rgba(0,0,0,.10) 66%,
+          transparent 75%);
+      mix-blend-mode: soft-light;
+    }
+
     .umbrella-glow {
       position: absolute;
-      left: 47.2%;
-      top: 20.5%;
-      width: 40.2%;
-      height: 48.5%;
+      left: 43.8%;
+      top: 11.4%;
+      width: 45.5%;
+      height: 52%;
       z-index: 12;
       pointer-events: none;
       border-radius: 50%;
@@ -274,27 +284,39 @@
       animation: umbrellaFlicker 3.6s ease-in-out infinite;
     }
 
-    .arcade-screen-anim {
+    .arcade-screen-anim,
+    .tv-screen-anim {
       position: absolute;
       z-index: 31;
       overflow: hidden;
       border-radius: 8px;
       pointer-events: none;
       background: #010801;
-      box-shadow:
-        inset 0 0 18px rgba(124,255,79,.50),
-        0 0 12px rgba(124,255,79,.22);
       mix-blend-mode: screen;
     }
 
-    #arcadeGameCanvas {
+    .arcade-screen-anim {
+      box-shadow:
+        inset 0 0 18px rgba(124,255,79,.50),
+        0 0 12px rgba(124,255,79,.22);
+    }
+
+    .tv-screen-anim {
+      box-shadow:
+        inset 0 0 18px rgba(0,245,255,.42),
+        0 0 12px rgba(0,245,255,.22);
+      opacity: .88;
+    }
+
+    #arcadeGameCanvas,
+    #tvStaticCanvas {
       width: 100%;
       height: 100%;
       display: block;
       image-rendering: pixelated;
     }
 
-    .arcade-glass-scan {
+    .screen-scan {
       position: absolute;
       inset: 0;
       pointer-events: none;
@@ -307,17 +329,29 @@
           transparent 4px
         );
       opacity: .65;
-      animation: arcadeLines .9s linear infinite;
+      animation: screenLines .9s linear infinite;
     }
 
-    .teddy-edit-mode .arcade-screen-anim {
+    .tv-screen-anim .screen-scan {
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          rgba(0,245,255,.12) 0,
+          rgba(0,245,255,.12) 1px,
+          transparent 1px,
+          transparent 4px
+        );
+    }
+
+    .teddy-edit-mode .arcade-screen-anim,
+    .teddy-edit-mode .tv-screen-anim {
       outline: 3px solid rgba(255,234,0,.95);
       outline-offset: 2px;
       pointer-events: auto;
       cursor: move;
     }
 
-    .teddy-edit-mode .arcade-screen-anim.selected-arcade {
+    .teddy-edit-mode .selected-screen {
       outline: 3px solid rgba(0,245,255,.95);
       box-shadow:
         inset 0 0 18px rgba(124,255,79,.50),
@@ -396,12 +430,12 @@
         drop-shadow(0 0 10px rgba(0,245,255,.65));
     }
 
-    .teddy-hotspot-editor {
+    .teddy-editor {
       position: fixed;
       right: 12px;
       bottom: 12px;
       z-index: 12000;
-      width: min(560px, calc(100vw - 24px));
+      width: min(570px, calc(100vw - 24px));
       max-height: 70vh;
       overflow-y: auto;
       background: rgba(0,0,0,.94);
@@ -413,20 +447,20 @@
       font-family: Arial, Helvetica, sans-serif;
     }
 
-    .teddy-hotspot-editor strong {
+    .teddy-editor strong {
       color: #00f5ff;
       display: block;
       margin-bottom: 6px;
     }
 
-    .teddy-hotspot-editor p {
+    .teddy-editor p {
       margin: 6px 0 10px;
       color: #dffcff;
       font-size: 13px;
       line-height: 1.35;
     }
 
-    .teddy-hotspot-editor select {
+    .teddy-editor select {
       width: 100%;
       padding: 10px;
       margin-bottom: 8px;
@@ -437,14 +471,14 @@
       font-weight: 900;
     }
 
-    .teddy-hotspot-editor .hotspot-buttons {
+    .teddy-editor .editor-buttons {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 6px;
       margin-bottom: 8px;
     }
 
-    .teddy-hotspot-editor button {
+    .teddy-editor button {
       border: 0;
       border-radius: 9px;
       padding: 9px 6px;
@@ -455,21 +489,21 @@
       font-size: 11px;
     }
 
-    .teddy-hotspot-editor button.blue {
+    .teddy-editor button.blue {
       background: #00aaff;
     }
 
-    .teddy-hotspot-editor button.yellow {
+    .teddy-editor button.yellow {
       background: #c49b00;
     }
 
-    .teddy-hotspot-editor button.copy {
+    .teddy-editor button.copy {
       width: 100%;
       background: #00aaff;
       margin-bottom: 8px;
     }
 
-    .teddy-hotspot-editor textarea {
+    .teddy-editor textarea {
       width: 100%;
       height: 170px;
       background: #050510;
@@ -561,7 +595,7 @@
       66% { opacity: .68; filter: brightness(.96); }
     }
 
-    @keyframes arcadeLines {
+    @keyframes screenLines {
       from { transform: translateY(0); }
       to { transform: translateY(8px); }
     }
@@ -590,7 +624,7 @@
         margin: 0;
       }
 
-      .teddy-hotspot-editor {
+      .teddy-editor {
         left: 10px;
         right: auto;
         bottom: 10px;
@@ -622,14 +656,18 @@
     <main class="teddy-stage" id="teddyStage">
       <img src="teddy-umbrella-bg.png" alt="$TEDDY teddy bear under umbrella neon 80s crypto project graphic" class="teddy-bg" />
 
-      <div class="baked-ca-mask"></div>
       <canvas id="realRainCanvas"></canvas>
-
+      <div class="dry-zone-softener"></div>
       <div class="umbrella-glow"></div>
 
       <div id="arcadeScreenAnim" class="arcade-screen-anim">
         <canvas id="arcadeGameCanvas" width="160" height="120"></canvas>
-        <div class="arcade-glass-scan"></div>
+        <div class="screen-scan"></div>
+      </div>
+
+      <div id="tvScreenAnim" class="tv-screen-anim">
+        <canvas id="tvStaticCanvas" width="160" height="120"></canvas>
+        <div class="screen-scan"></div>
       </div>
 
       <div id="teddyHotspotRoot"></div>
@@ -759,13 +797,14 @@
       const wrap = document.getElementById("teddyScrollWrap");
 
       if (window.innerWidth <= 760 && wrap) {
-        wrap.scrollLeft = 420;
+        wrap.scrollLeft = 360;
       }
     });
 
     /* ======================================================
        REALISTIC RAIN CANVAS
-       Does not draw inside the umbrella protected zone.
+       Code rain skips the umbrella/teddy dry zone.
+       Note: this cannot erase rain baked into the image itself.
     ====================================================== */
 
     const rainCanvas = document.getElementById("realRainCanvas");
@@ -792,7 +831,7 @@
       rainCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       if (rainDrops.length === 0) {
-        for (let i = 0; i < 185; i++) {
+        for (let i = 0; i < 230; i++) {
           rainDrops.push(createRainDrop(true));
         }
       }
@@ -802,11 +841,11 @@
       return {
         x: Math.random() * rainW,
         y: randomY ? Math.random() * rainH : -30 - Math.random() * 150,
-        len: 16 + Math.random() * 38,
-        speed: 8 + Math.random() * 11,
-        drift: -3.8 - Math.random() * 3.2,
-        width: Math.random() > .82 ? 1.35 : .75,
-        opacity: .20 + Math.random() * .38
+        len: 18 + Math.random() * 48,
+        speed: 8 + Math.random() * 14,
+        drift: -3.9 - Math.random() * 3.8,
+        width: Math.random() > .82 ? 1.25 : .72,
+        opacity: .16 + Math.random() * .34
       };
     }
 
@@ -816,29 +855,24 @@
       const px = x / rainW;
       const py = y / rainH;
 
-      /*
-        Dry protected zone:
-        wall + teddy + floor under the umbrella.
-        Rain still appears left/right/top outside this area.
-      */
-      const mainDry =
-        px > 0.435 &&
-        px < 0.885 &&
+      const umbrellaInterior =
+        py > 0.145 &&
+        py < 0.565 &&
+        Math.pow((px - 0.655) / 0.285, 2) + Math.pow((py - 0.333) / 0.215, 2) < 1;
+
+      const teddyAndFloor =
+        px > 0.492 &&
+        px < 0.777 &&
+        py > 0.275 &&
+        py < 0.875;
+
+      const wallUnderUmbrella =
+        px > 0.425 &&
+        px < 0.895 &&
         py > 0.265 &&
-        py < 0.825;
+        py < 0.705;
 
-      const teddyBody =
-        px > 0.515 &&
-        px < 0.735 &&
-        py > 0.345 &&
-        py < 0.900;
-
-      const umbrellaUnderCurve =
-        py > 0.215 &&
-        py < 0.470 &&
-        Math.pow((px - 0.665) / 0.255, 2) + Math.pow((py - 0.345) / 0.155, 2) < 1;
-
-      return mainDry || teddyBody || umbrellaUnderCurve;
+      return umbrellaInterior || teddyAndFloor || wallUnderUmbrella;
     }
 
     function drawRainSplashes() {
@@ -847,16 +881,16 @@
       rainCtx.save();
       rainCtx.globalCompositeOperation = "lighter";
 
-      for (let i = 0; i < 18; i++) {
+      for (let i = 0; i < 14; i++) {
         const side = i % 2 === 0 ? "left" : "right";
         const x = side === "left"
-          ? Math.random() * rainW * 0.42
-          : rainW * (0.89 + Math.random() * 0.10);
-        const y = rainH * (0.74 + Math.random() * 0.20);
+          ? Math.random() * rainW * 0.40
+          : rainW * (0.88 + Math.random() * 0.11);
+        const y = rainH * (0.72 + Math.random() * 0.22);
 
         if (isUnderUmbrellaDryZone(x, y)) continue;
 
-        rainCtx.strokeStyle = "rgba(180,230,255,.10)";
+        rainCtx.strokeStyle = "rgba(180,230,255,.11)";
         rainCtx.lineWidth = 1;
         rainCtx.beginPath();
         rainCtx.moveTo(x - 4, y);
@@ -881,7 +915,12 @@
         const y2 = drop.y + drop.len;
 
         if (!isUnderUmbrellaDryZone(drop.x, drop.y) && !isUnderUmbrellaDryZone(x2, y2)) {
-          rainCtx.strokeStyle = `rgba(205,235,255,${drop.opacity})`;
+          const grad = rainCtx.createLinearGradient(drop.x, drop.y, x2, y2);
+          grad.addColorStop(0, `rgba(255,255,255,0)`);
+          grad.addColorStop(.35, `rgba(205,235,255,${drop.opacity})`);
+          grad.addColorStop(1, `rgba(120,190,255,0)`);
+
+          rainCtx.strokeStyle = grad;
           rainCtx.lineWidth = drop.width;
           rainCtx.beginPath();
           rainCtx.moveTo(drop.x, drop.y);
@@ -892,9 +931,9 @@
         drop.x += drop.drift;
         drop.y += drop.speed;
 
-        if (drop.y > rainH + 60 || drop.x < -80) {
+        if (drop.y > rainH + 70 || drop.x < -90) {
           Object.assign(drop, createRainDrop(false));
-          drop.x = Math.random() * (rainW + 120);
+          drop.x = Math.random() * (rainW + 140);
         }
       }
 
@@ -949,10 +988,10 @@
         arcadeCtx.stroke();
       }
 
-      const bearX = 24 + Math.sin(arcadeTick * 0.06) * 8;
-      const bearY = 78 + Math.sin(arcadeTick * 0.12) * 4;
+      const bearX = 22 + Math.sin(arcadeTick * 0.06) * 8;
+      const bearY = 80 + Math.sin(arcadeTick * 0.12) * 4;
 
-      for (let i = 0; i < 9; i++) {
+      for (let i = 0; i < 11; i++) {
         const rx = (i * 23 + arcadeTick * 2) % (w + 20) - 10;
         const ry = (i * 31 + arcadeTick * 3) % (h + 20) - 10;
 
@@ -977,7 +1016,7 @@
       arcadeCtx.fillRect(bearX + 4, bearY + 6, 3, 3);
       arcadeCtx.fillRect(bearX + 12, bearY + 6, 3, 3);
 
-      const rocketY = 78 - ((arcadeTick * 1.25) % 100);
+      const rocketY = 82 - ((arcadeTick * 1.35) % 110);
 
       arcadeCtx.fillStyle = "#00f5ff";
       arcadeCtx.fillRect(120, rocketY, 10, 22);
@@ -1000,6 +1039,49 @@
     }
 
     drawArcadeGame();
+
+    /* ======================================================
+       TV STATIC / MEMORY SCREEN OVERLAY
+    ====================================================== */
+
+    const tvCanvas = document.getElementById("tvStaticCanvas");
+    const tvCtx = tvCanvas ? tvCanvas.getContext("2d", { willReadFrequently: true }) : null;
+    let tvTick = 0;
+
+    function drawTvStatic() {
+      if (!tvCtx || !tvCanvas) return;
+
+      tvTick++;
+
+      const w = tvCanvas.width;
+      const h = tvCanvas.height;
+      const imageData = tvCtx.createImageData(w, h);
+      const data = imageData.data;
+
+      for (let i = 0; i < data.length; i += 4) {
+        const shade = Math.random() * 90;
+        data[i] = shade * 0.45;
+        data[i + 1] = shade * 1.35;
+        data[i + 2] = shade * 1.65;
+        data[i + 3] = 155;
+      }
+
+      tvCtx.putImageData(imageData, 0, 0);
+
+      tvCtx.fillStyle = "rgba(0, 245, 255, 0.06)";
+      tvCtx.fillRect(0, 0, w, h);
+
+      if (Math.floor(tvTick / 42) % 2 === 0) {
+        tvCtx.fillStyle = "#00f5ff";
+        tvCtx.font = "bold 14px monospace";
+        tvCtx.fillText("FUTURE", 46, 45);
+        tvCtx.fillText("UNLOCKED", 34, 64);
+      }
+
+      requestAnimationFrame(drawTvStatic);
+    }
+
+    drawTvStatic();
   </script>
 </body>
 </html>
