@@ -182,6 +182,26 @@
       }
     }
   </style>
+
+  <script>
+    /*
+      Hard override:
+      Keeps the arcade page/game the same, but forces ENTER SITE to teddy.html
+      even if script.js still has older hq.html routing inside it.
+    */
+    document.addEventListener("click", function (event) {
+      const enterLink = event.target.closest(".arcade-btn.enter, #enterSite, #enterWebsite");
+      if (!enterLink) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+
+      window.location.href = "teddy.html";
+    }, true);
+
+    window.TEDDY_ENTER_SITE_URL = "teddy.html";
+  </script>
 </head>
 
 <body>
@@ -200,7 +220,12 @@
           START GAME
         </button>
 
-        <a class="arcade-btn enter" href="teddy.html">
+        <a
+          id="enterSite"
+          class="arcade-btn enter"
+          href="teddy.html"
+          onclick="event.preventDefault(); event.stopPropagation(); window.location.href='teddy.html'; return false;"
+        >
           ENTER SITE
         </a>
       </div>
@@ -222,5 +247,24 @@
   <section id="siteContent" class="hidden"></section>
 
   <script src="script.js"></script>
+
+  <script>
+    /*
+      Second pass after script.js loads:
+      If script.js rewrites the href back to hq.html, this changes it back.
+    */
+    (function () {
+      const enterLink = document.querySelector(".arcade-btn.enter, #enterSite, #enterWebsite");
+      if (!enterLink) return;
+
+      enterLink.setAttribute("href", "teddy.html");
+      enterLink.onclick = function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        window.location.href = "teddy.html";
+        return false;
+      };
+    })();
+  </script>
 </body>
 </html>
