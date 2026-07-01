@@ -1,1 +1,678 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>$TEDDY | Get Under the Umbrella</title>
+
+  <style>
+    :root {
+      --hot-pink: #ff2aa3;
+      --cyan: #00f5ff;
+      --yellow: #ffea00;
+      --green: #7cff4f;
+      --dark: #020207;
+      --panel: rgba(0, 0, 0, 0.78);
+      --contract: "8KJEWtuq1c1699nAup7WatZfgodS3YFnadBq46FDpump";
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--dark);
+      color: white;
+      font-family: Arial, Helvetica, sans-serif;
+      overflow-x: hidden;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(255,42,163,.18), transparent 35%),
+        radial-gradient(circle at 80% 35%, rgba(0,245,255,.12), transparent 34%),
+        #020207;
+    }
+
+    .scanlines {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: .16;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,.16) 0,
+        rgba(255,255,255,.16) 1px,
+        transparent 1px,
+        transparent 4px
+      );
+      mix-blend-mode: overlay;
+    }
+
+    .copy-toast {
+      position: fixed;
+      left: 50%;
+      top: 86px;
+      transform: translateX(-50%) translateY(-8px);
+      z-index: 99999;
+      opacity: 0;
+      pointer-events: none;
+      padding: 12px 16px;
+      border: 2px solid var(--cyan);
+      border-radius: 999px;
+      background: rgba(0,0,0,.92);
+      color: white;
+      font-weight: 900;
+      letter-spacing: .08em;
+      box-shadow:
+        0 0 18px rgba(0,245,255,.75),
+        0 0 28px rgba(255,42,163,.35);
+      transition: opacity .22s ease, transform .22s ease;
+    }
+
+    .copy-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .top-contract-bar {
+      position: sticky;
+      top: 0;
+      z-index: 9000;
+      width: 100%;
+      padding: 10px 10px;
+      background: rgba(0,0,0,.92);
+      border-bottom: 2px solid rgba(255,42,163,.75);
+      box-shadow:
+        0 0 18px rgba(255,42,163,.5),
+        0 0 24px rgba(0,245,255,.2);
+    }
+
+    .contract-button {
+      width: min(1280px, calc(100vw - 20px));
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border: 2px solid var(--hot-pink);
+      border-radius: 14px;
+      padding: 10px 12px;
+      cursor: pointer;
+      color: var(--cyan);
+      background: rgba(0,0,0,.72);
+      font-size: clamp(12px, 2.15vw, 32px);
+      font-weight: 900;
+      letter-spacing: .045em;
+      line-height: 1.1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-shadow:
+        0 0 8px currentColor,
+        0 0 20px rgba(0,245,255,.55);
+      box-shadow:
+        inset 0 0 18px rgba(255,42,163,.2),
+        0 0 18px rgba(255,42,163,.5);
+      animation: contractColorCycle 5s linear infinite;
+    }
+
+    .contract-button.copied {
+      color: var(--green);
+      border-color: var(--green);
+      box-shadow:
+        inset 0 0 18px rgba(124,255,79,.18),
+        0 0 18px rgba(124,255,79,.6);
+    }
+
+    .contract-label {
+      color: white;
+      font-size: .52em;
+      letter-spacing: .12em;
+      opacity: .8;
+    }
+
+    .site-nav {
+      position: sticky;
+      top: 70px;
+      z-index: 8500;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding: 10px;
+      background: linear-gradient(180deg, rgba(0,0,0,.86), rgba(0,0,0,.45));
+      backdrop-filter: blur(6px);
+    }
+
+    .site-nav a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      padding: 9px 12px;
+      border: 1px solid rgba(0,245,255,.7);
+      border-radius: 999px;
+      background: rgba(0,0,0,.66);
+      color: white;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      box-shadow: 0 0 10px rgba(0,245,255,.26);
+    }
+
+    .site-nav a:hover,
+    .site-nav a:focus {
+      color: #020207;
+      background: var(--cyan);
+      box-shadow: 0 0 18px rgba(0,245,255,.85);
+    }
+
+    .mobile-hint {
+      display: none;
+      position: sticky;
+      top: 122px;
+      z-index: 8400;
+      padding: 9px 12px;
+      text-align: center;
+      background: linear-gradient(90deg, rgba(255,42,163,.92), rgba(0,245,255,.86));
+      color: white;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .09em;
+      text-shadow: 0 1px 2px rgba(0,0,0,.75);
+    }
+
+    .teddy-scroll-wrap {
+      width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-x: contain;
+      background: #020207;
+    }
+
+    .teddy-stage {
+      position: relative;
+      width: min(100vw, 1672px);
+      margin: 0 auto;
+      isolation: isolate;
+      background: #020207;
+      overflow: hidden;
+    }
+
+    .teddy-bg {
+      display: block;
+      width: 100%;
+      height: auto;
+      user-select: none;
+      -webkit-user-drag: none;
+      pointer-events: none;
+    }
+
+    .rain-layer {
+      position: absolute;
+      inset: -20% 0;
+      z-index: 10;
+      pointer-events: none;
+      opacity: .34;
+      background-image:
+        repeating-linear-gradient(
+          105deg,
+          rgba(255,255,255,0) 0px,
+          rgba(255,255,255,0) 12px,
+          rgba(255,255,255,.48) 13px,
+          rgba(255,255,255,0) 15px
+        );
+      background-size: 220px 220px;
+      animation: rainMove .58s linear infinite;
+      mix-blend-mode: screen;
+    }
+
+    .umbrella-glow {
+      position: absolute;
+      left: 47.4%;
+      top: 21.5%;
+      width: 39.5%;
+      height: 48%;
+      z-index: 12;
+      pointer-events: none;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 50% 44%,
+          rgba(255,226,112,.30) 0%,
+          rgba(255,194,50,.20) 26%,
+          rgba(255,126,0,.08) 48%,
+          rgba(255,126,0,0) 72%);
+      mix-blend-mode: screen;
+      animation: umbrellaFlicker 3.6s ease-in-out infinite;
+    }
+
+    .arcade-screen-anim {
+      position: absolute;
+      left: 42.65%;
+      top: 57.4%;
+      width: 7.2%;
+      height: 7.55%;
+      z-index: 30;
+      overflow: hidden;
+      border-radius: 8px;
+      transform: rotate(-2deg) skewX(-1deg);
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 50% 55%, rgba(124,255,79,.18), rgba(0,0,0,.95) 65%),
+        #020802;
+      box-shadow:
+        inset 0 0 18px rgba(124,255,79,.55),
+        0 0 12px rgba(124,255,79,.22);
+      opacity: .88;
+      mix-blend-mode: screen;
+    }
+
+    .arcade-screen-anim::before {
+      content: "LEVEL UP";
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #7cff4f;
+      font-size: clamp(8px, 1.35vw, 22px);
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-shadow:
+        0 0 6px #7cff4f,
+        0 0 14px rgba(124,255,79,.8);
+      animation: arcadePulse 1.2s steps(2, end) infinite;
+    }
+
+    .arcade-screen-anim::after {
+      content: "";
+      position: absolute;
+      left: -70%;
+      top: 0;
+      width: 45%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(124,255,79,.42), transparent);
+      animation: arcadeScan 1.9s linear infinite;
+    }
+
+    .arcade-sprite {
+      position: absolute;
+      left: 12%;
+      bottom: 12%;
+      width: 12%;
+      height: 18%;
+      background: #ffea00;
+      box-shadow:
+        0 0 0 2px rgba(0,0,0,.6),
+        0 0 8px rgba(255,234,0,.75);
+      animation: spriteHop .95s steps(2, end) infinite;
+    }
+
+    .hotspot {
+      position: absolute;
+      z-index: 55;
+      display: block;
+      transform: translate(-50%, -50%);
+      border-radius: 18px;
+      text-indent: -9999px;
+      overflow: hidden;
+      background: rgba(0,245,255,0);
+      outline: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .hotspot:hover,
+    .hotspot:focus-visible {
+      background: rgba(0,245,255,.10);
+      box-shadow:
+        0 0 18px rgba(0,245,255,.9),
+        inset 0 0 22px rgba(255,42,163,.32);
+    }
+
+    .hotspot.dex-title {
+      left: 20%;
+      top: 24%;
+      width: 40%;
+      height: 28%;
+      transform: none;
+    }
+
+    .hotspot.arcade {
+      left: 44.3%;
+      top: 58.8%;
+      width: 10%;
+      height: 22%;
+    }
+
+    .hotspot.kitty {
+      left: 87.3%;
+      top: 14.8%;
+      width: 17%;
+      height: 13%;
+    }
+
+    .hotspot.emoji {
+      left: 86.7%;
+      top: 68.5%;
+      width: 15%;
+      height: 25%;
+    }
+
+    .hotspot.hq {
+      left: 18%;
+      top: 63%;
+      width: 31%;
+      height: 20%;
+    }
+
+    .hotspot.gmebay {
+      left: 74.3%;
+      top: 43%;
+      width: 16%;
+      height: 15%;
+    }
+
+    .about-panel {
+      position: relative;
+      z-index: 20;
+      width: min(1180px, calc(100vw - 24px));
+      margin: 18px auto 34px;
+      padding: 20px;
+      border: 2px solid rgba(255,42,163,.75);
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(13,0,22,.9), rgba(0,0,0,.92));
+      box-shadow:
+        0 0 22px rgba(255,42,163,.42),
+        inset 0 0 20px rgba(0,245,255,.08);
+    }
+
+    .about-panel h1 {
+      margin: 0 0 10px;
+      color: var(--cyan);
+      font-size: clamp(26px, 4vw, 56px);
+      line-height: 1;
+      text-shadow: 0 0 14px rgba(0,245,255,.8);
+    }
+
+    .about-panel p {
+      max-width: 980px;
+      margin: 0 0 14px;
+      color: #f3f3f3;
+      font-size: clamp(15px, 1.6vw, 19px);
+      line-height: 1.55;
+    }
+
+    .about-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .about-actions a,
+    .about-actions button {
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 16px;
+      color: white;
+      background: var(--hot-pink);
+      text-decoration: none;
+      font-weight: 900;
+      letter-spacing: .05em;
+      cursor: pointer;
+      box-shadow: 0 0 14px rgba(255,42,163,.75);
+    }
+
+    .about-actions a.secondary,
+    .about-actions button.secondary {
+      background: var(--cyan);
+      color: #020207;
+      box-shadow: 0 0 14px rgba(0,245,255,.75);
+    }
+
+    @keyframes contractColorCycle {
+      0% { color: #00f5ff; }
+      25% { color: #ff2aa3; }
+      50% { color: #ffea00; }
+      75% { color: #7cff4f; }
+      100% { color: #00f5ff; }
+    }
+
+    @keyframes rainMove {
+      from { transform: translate3d(0, -80px, 0); }
+      to { transform: translate3d(-60px, 80px, 0); }
+    }
+
+    @keyframes umbrellaFlicker {
+      0%, 100% { opacity: .72; filter: brightness(1); }
+      9% { opacity: .62; filter: brightness(.92); }
+      12% { opacity: .88; filter: brightness(1.18); }
+      14% { opacity: .66; filter: brightness(.95); }
+      18% { opacity: .92; filter: brightness(1.22); }
+      58% { opacity: .72; filter: brightness(1); }
+      64% { opacity: .82; filter: brightness(1.12); }
+      66% { opacity: .68; filter: brightness(.96); }
+    }
+
+    @keyframes arcadePulse {
+      0%, 48% { opacity: 1; transform: scale(1); }
+      49%, 100% { opacity: .55; transform: scale(.98); }
+    }
+
+    @keyframes arcadeScan {
+      from { transform: translateX(0); }
+      to { transform: translateX(380%); }
+    }
+
+    @keyframes spriteHop {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-16%); }
+    }
+
+    @media (max-width: 760px) {
+      .contract-button {
+        justify-content: flex-start;
+        overflow-x: auto;
+        text-overflow: clip;
+        font-size: 13px;
+      }
+
+      .contract-label {
+        flex: 0 0 auto;
+      }
+
+      .site-nav {
+        top: 58px;
+        justify-content: flex-start;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+      }
+
+      .site-nav a {
+        flex: 0 0 auto;
+      }
+
+      .mobile-hint {
+        display: block;
+        top: 112px;
+      }
+
+      .teddy-stage {
+        width: 1180px;
+        max-width: none;
+        margin: 0;
+      }
+
+      .about-panel {
+        margin-top: 12px;
+      }
+
+      .about-actions a,
+      .about-actions button {
+        width: 100%;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="scanlines"></div>
+  <div id="copyToast" class="copy-toast">CONTRACT COPIED</div>
+
+  <header class="top-contract-bar">
+    <button id="contractCopyButton" class="contract-button" type="button" aria-label="Copy $TEDDY contract address">
+      <span class="contract-label">CA</span>
+      <span id="contractText">8KJEWtuq1c1699nAup7WatZfgodS3YFnadBq46FDpump</span>
+    </button>
+  </header>
+
+  <nav class="site-nav" aria-label="$TEDDY site navigation">
+    <a href="index.html">Arcade</a>
+    <a href="hq.html">Rabbit Hole</a>
+    <a href="kitty.html">Kitty Files</a>
+    <a href="emoji.html">Emoji Timeline</a>
+    <a href="imagination-room.html">Memory Room</a>
+    <a href="gmebay.html">GMEBAY</a>
+    <a href="https://dexscreener.com/solana/8kjewtuq1c1699naup7watzfgods3yfnadbq46fdpump" target="_blank" rel="noopener">Buy $TEDDY</a>
+  </nav>
+
+  <div class="mobile-hint">← SWIPE THE ART • TAP THE ARCADE, $TEDDY, KITTY, OR EMOJI AREAS →</div>
+
+  <div class="teddy-scroll-wrap" id="teddyScrollWrap">
+    <main class="teddy-stage" id="teddyStage">
+      <img src="teddy-umbrella-bg.png" alt="$TEDDY teddy bear under umbrella neon 80s crypto project graphic" class="teddy-bg" />
+
+      <div class="rain-layer"></div>
+      <div class="umbrella-glow"></div>
+
+      <div class="arcade-screen-anim">
+        <div class="arcade-sprite"></div>
+      </div>
+
+      <a class="hotspot dex-title" href="https://dexscreener.com/solana/8kjewtuq1c1699naup7watzfgods3yfnadbq46fdpump" target="_blank" rel="noopener" aria-label="Open $TEDDY on Dexscreener">$TEDDY Dex</a>
+      <a class="hotspot arcade" href="index.html" aria-label="Go to the $TEDDY arcade page">Arcade</a>
+      <a class="hotspot kitty" href="kitty.html" aria-label="Open Kitty Files">Kitty Files</a>
+      <a class="hotspot emoji" href="emoji.html" aria-label="Open Emoji Timeline">Emoji Timeline</a>
+      <a class="hotspot hq" href="hq.html" aria-label="Open the Rabbit Hole main hub">Rabbit Hole</a>
+      <a class="hotspot gmebay" href="gmebay.html" aria-label="Open GMEBAY page">GMEBAY</a>
+    </main>
+  </div>
+
+  <section class="about-panel" id="about">
+    <h1>Come, Get Under the Umbrella</h1>
+
+    <p>
+      $TEDDY is a community-powered crypto project built around timing, conviction, nostalgia, and the belief that rare opportunities appear before the crowd understands the story.
+    </p>
+
+    <p>
+      The spirit of Teddy is bigger than a ticker. It is an ode to family, legacy, and the heart behind Ryan Cohen’s tribute to his father. Around that idea, the community imagines a future where GameStop, eBay-style commerce, collectibles, gaming culture, and digital ownership all gather under one umbrella.
+    </p>
+
+    <p>
+      Nothing here claims official endorsement from GameStop, eBay, Ryan Cohen, or Teddy Holdings. This is community lore, tinfoil energy, and a high-conviction meme-token story. Do your own research.
+    </p>
+
+    <div class="about-actions">
+      <a href="https://dexscreener.com/solana/8kjewtuq1c1699naup7watzfgods3yfnadbq46fdpump" target="_blank" rel="noopener">View $TEDDY on Dexscreener</a>
+      <button id="contractCopyButtonBottom" class="secondary" type="button">Copy Contract Address</button>
+      <a class="secondary" href="index.html">Play the Arcade</a>
+      <a class="secondary" href="kitty.html">Open Kitty Files</a>
+      <a class="secondary" href="emoji.html">Follow Emoji Timeline</a>
+    </div>
+  </section>
+
+  <script>
+    const TEDDY_CONTRACT = "8KJEWtuq1c1699nAup7WatZfgodS3YFnadBq46FDpump";
+
+    const copyButtons = [
+      document.getElementById("contractCopyButton"),
+      document.getElementById("contractCopyButtonBottom")
+    ].filter(Boolean);
+
+    const copyToast = document.getElementById("copyToast");
+    const contractCopyButton = document.getElementById("contractCopyButton");
+    const contractText = document.getElementById("contractText");
+
+    async function copyContract() {
+      let copied = false;
+
+      try {
+        await navigator.clipboard.writeText(TEDDY_CONTRACT);
+        copied = true;
+      } catch {
+        copied = fallbackCopyContract();
+      }
+
+      showCopiedState(copied);
+    }
+
+    function fallbackCopyContract() {
+      const textarea = document.createElement("textarea");
+      textarea.value = TEDDY_CONTRACT;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.left = "-9999px";
+      textarea.style.top = "0";
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+
+      let copied = false;
+
+      try {
+        copied = document.execCommand("copy");
+      } catch {
+        copied = false;
+      }
+
+      document.body.removeChild(textarea);
+      return copied;
+    }
+
+    function showCopiedState(copied) {
+      if (contractCopyButton && contractText) {
+        contractCopyButton.classList.add("copied");
+        contractText.textContent = copied ? "COPIED" : TEDDY_CONTRACT;
+
+        setTimeout(() => {
+          contractCopyButton.classList.remove("copied");
+          contractText.textContent = TEDDY_CONTRACT;
+        }, 1300);
+      }
+
+      if (copyToast) {
+        copyToast.textContent = copied ? "CONTRACT COPIED" : "COPY FAILED — LONG PRESS ADDRESS";
+        copyToast.classList.add("show");
+
+        setTimeout(() => {
+          copyToast.classList.remove("show");
+        }, 1400);
+      }
+    }
+
+    copyButtons.forEach((button) => {
+      button.addEventListener("click", copyContract);
+    });
+
+    window.addEventListener("load", () => {
+      const wrap = document.getElementById("teddyScrollWrap");
+
+      if (window.innerWidth <= 760 && wrap) {
+        wrap.scrollLeft = 420;
+      }
+    });
+  </script>
+</body>
+</html>
