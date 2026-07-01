@@ -210,10 +210,6 @@
       background: #020207;
     }
 
-    /*
-      This stage crops the baked-in top menu from the generated image.
-      Use teddy-umbrella-bg.png as the clean background image.
-    */
     .teddy-stage {
       position: relative;
       width: min(100vw, 1672px);
@@ -284,36 +280,38 @@
       animation: umbrellaFlicker 3.6s ease-in-out infinite;
     }
 
-    .arcade-screen-anim,
-    .tv-screen-anim {
+    .screen-overlay {
       position: absolute;
       z-index: 31;
       overflow: hidden;
-      border-radius: 8px;
       pointer-events: none;
       background: #010801;
       mix-blend-mode: screen;
+      border: 0 !important;
+      outline: 0 !important;
     }
 
-    .arcade-screen-anim {
-      box-shadow:
-        inset 0 0 18px rgba(124,255,79,.50),
-        0 0 12px rgba(124,255,79,.22);
-    }
-
-    .tv-screen-anim {
-      box-shadow:
-        inset 0 0 18px rgba(0,245,255,.42),
-        0 0 12px rgba(0,245,255,.22);
-      opacity: .88;
-    }
-
-    #arcadeGameCanvas,
-    #tvStaticCanvas {
+    .screen-overlay canvas,
+    .screen-overlay video,
+    .screen-overlay iframe {
       width: 100%;
       height: 100%;
       display: block;
+      object-fit: cover;
       image-rendering: pixelated;
+      border: 0;
+      outline: 0;
+    }
+
+    .tv-youtube-frame {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      transform: scale(1.18);
+      transform-origin: center center;
+      filter: contrast(1.08) brightness(.86) saturate(1.15);
     }
 
     .screen-scan {
@@ -328,34 +326,67 @@
           transparent 1px,
           transparent 4px
         );
-      opacity: .65;
+      opacity: .55;
       animation: screenLines .9s linear infinite;
+      mix-blend-mode: screen;
     }
 
     .tv-screen-anim .screen-scan {
       background:
         repeating-linear-gradient(
           to bottom,
-          rgba(0,245,255,.12) 0,
-          rgba(0,245,255,.12) 1px,
+          rgba(0,245,255,.11) 0,
+          rgba(0,245,255,.11) 1px,
           transparent 1px,
           transparent 4px
         );
     }
 
-    .teddy-edit-mode .arcade-screen-anim,
-    .teddy-edit-mode .tv-screen-anim {
-      outline: 3px solid rgba(255,234,0,.95);
-      outline-offset: 2px;
-      pointer-events: auto;
-      cursor: move;
+    .video-fallback-label {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      color: #00f5ff;
+      font-size: clamp(8px, 1.1vw, 18px);
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-align: center;
+      text-shadow: 0 0 8px rgba(0,245,255,.9);
+      pointer-events: none;
+      opacity: .0;
     }
 
-    .teddy-edit-mode .selected-screen {
-      outline: 3px solid rgba(0,245,255,.95);
-      box-shadow:
-        inset 0 0 18px rgba(124,255,79,.50),
-        0 0 20px rgba(0,245,255,.8);
+    .tv-screen-anim.video-missing .video-fallback-label {
+      opacity: .88;
+    }
+
+    .teddy-edit-mode .screen-overlay {
+      pointer-events: auto;
+      cursor: move;
+      outline: 0 !important;
+      border: 0 !important;
+      box-shadow: none !important;
+    }
+
+    .screen-corner-handle {
+      display: none;
+      position: absolute;
+      z-index: 140;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #00f5ff;
+      border-radius: 50%;
+      background: rgba(0,0,0,.75);
+      box-shadow: 0 0 12px rgba(0,245,255,.85);
+      transform: translate(-50%, -50%);
+      cursor: grab;
+      pointer-events: auto;
+      touch-action: none;
+    }
+
+    .teddy-edit-mode .screen-corner-handle {
+      display: block;
     }
 
     #teddyHotspotRoot {
@@ -387,6 +418,20 @@
       outline: none;
     }
 
+    .secret-hotspot,
+    .secret-hotspot:hover,
+    .secret-hotspot:focus-visible {
+      background: transparent !important;
+      box-shadow: none !important;
+      outline: none !important;
+    }
+
+    .teddy-edit-mode .secret-hotspot {
+      background: rgba(255,234,0,.25) !important;
+      border: 2px dashed #ffea00 !important;
+      box-shadow: 0 0 18px rgba(255,234,0,.78) !important;
+    }
+
     .teddy-edit-mode .teddy-hotspot {
       background: rgba(0,245,255,.28) !important;
       border: 2px solid #00f5ff !important;
@@ -410,32 +455,12 @@
       font-weight: 900;
     }
 
-    .teddy-hotspot.bunny-hotspot {
-      background: transparent;
-      overflow: visible;
-    }
-
-    .teddy-hotspot.bunny-hotspot:hover,
-    .teddy-hotspot.bunny-hotspot:focus-visible {
-      background: rgba(255,255,255,.08);
-    }
-
-    .pixel-bunny-svg {
-      width: 100%;
-      height: 100%;
-      display: block;
-      image-rendering: pixelated;
-      filter:
-        drop-shadow(0 0 4px rgba(255,255,255,.9))
-        drop-shadow(0 0 10px rgba(0,245,255,.65));
-    }
-
     .teddy-editor {
       position: fixed;
       right: 12px;
       bottom: 12px;
       z-index: 12000;
-      width: min(570px, calc(100vw - 24px));
+      width: min(585px, calc(100vw - 24px));
       max-height: 70vh;
       overflow-y: auto;
       background: rgba(0,0,0,.94);
@@ -445,6 +470,34 @@
       color: white;
       box-shadow: 0 0 24px rgba(0,245,255,.65);
       font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .editor-drag-handle {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      margin: -4px 0 8px;
+      padding: 9px 10px;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #ff2aa3, #00aaff);
+      color: white;
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-align: center;
+      cursor: grab;
+      user-select: none;
+      touch-action: none;
+    }
+
+    .editor-drag-handle:active {
+      cursor: grabbing;
+    }
+
+    .teddy-editor.is-dragging {
+      opacity: .84;
+      user-select: none;
     }
 
     .teddy-editor strong {
@@ -505,7 +558,7 @@
 
     .teddy-editor textarea {
       width: 100%;
-      height: 170px;
+      height: 185px;
       background: #050510;
       color: #dffcff;
       border: 1px solid #00f5ff;
@@ -660,16 +713,26 @@
       <div class="dry-zone-softener"></div>
       <div class="umbrella-glow"></div>
 
-      <div id="arcadeScreenAnim" class="arcade-screen-anim">
+      <div id="arcadeScreenAnim" class="screen-overlay arcade-screen-anim">
         <canvas id="arcadeGameCanvas" width="160" height="120"></canvas>
         <div class="screen-scan"></div>
       </div>
 
-      <div id="tvScreenAnim" class="tv-screen-anim">
-        <canvas id="tvStaticCanvas" width="160" height="120"></canvas>
+      <div id="tvScreenAnim" class="screen-overlay tv-screen-anim">
+        <iframe
+          id="tvYoutubeFrame"
+          class="tv-youtube-frame"
+          src="https://www.youtube.com/embed/W9Tdw5nG4dQ?si=49KYo2DYZdmPQrT-&autoplay=1&mute=1&loop=1&playlist=W9Tdw5nG4dQ&controls=0&rel=0&modestbranding=1&playsinline=1"
+          title="TV video"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen>
+        </iframe>
         <div class="screen-scan"></div>
       </div>
 
+      <div id="screenHandleRoot"></div>
       <div id="teddyHotspotRoot"></div>
     </main>
   </div>
@@ -802,9 +865,38 @@
     });
 
     /* ======================================================
+       HIDDEN TV EASTER EGG
+       Called from an invisible hotspot in teddy-hotspots.js.
+    ====================================================== */
+
+    const DEFAULT_TV_VIDEO =
+      "https://www.youtube.com/embed/W9Tdw5nG4dQ?si=49KYo2DYZdmPQrT-&autoplay=1&mute=1&loop=1&playlist=W9Tdw5nG4dQ&controls=0&rel=0&modestbranding=1&playsinline=1";
+
+    const SECRET_TV_VIDEO =
+      "https://www.youtube.com/embed/WaxCWFUmEiY?si=MPwe-8QgNCFdaGhM&autoplay=1&mute=1&loop=1&playlist=WaxCWFUmEiY&controls=0&rel=0&modestbranding=1&playsinline=1";
+
+    let secretTvUnlocked = false;
+
+    window.switchTeddyTvVideo = function switchTeddyTvVideo() {
+      const frame = document.getElementById("tvYoutubeFrame");
+      const tvBox = document.getElementById("tvScreenAnim");
+
+      if (!frame) return;
+
+      secretTvUnlocked = !secretTvUnlocked;
+      frame.src = secretTvUnlocked ? SECRET_TV_VIDEO : DEFAULT_TV_VIDEO;
+
+      if (tvBox) {
+        tvBox.style.filter = "brightness(1.35) saturate(1.25)";
+        setTimeout(() => {
+          tvBox.style.filter = "";
+        }, 450);
+      }
+    };
+
+    /* ======================================================
        REALISTIC RAIN CANVAS
        Code rain skips the umbrella/teddy dry zone.
-       Note: this cannot erase rain baked into the image itself.
     ====================================================== */
 
     const rainCanvas = document.getElementById("realRainCanvas");
@@ -1040,48 +1132,6 @@
 
     drawArcadeGame();
 
-    /* ======================================================
-       TV STATIC / MEMORY SCREEN OVERLAY
-    ====================================================== */
-
-    const tvCanvas = document.getElementById("tvStaticCanvas");
-    const tvCtx = tvCanvas ? tvCanvas.getContext("2d", { willReadFrequently: true }) : null;
-    let tvTick = 0;
-
-    function drawTvStatic() {
-      if (!tvCtx || !tvCanvas) return;
-
-      tvTick++;
-
-      const w = tvCanvas.width;
-      const h = tvCanvas.height;
-      const imageData = tvCtx.createImageData(w, h);
-      const data = imageData.data;
-
-      for (let i = 0; i < data.length; i += 4) {
-        const shade = Math.random() * 90;
-        data[i] = shade * 0.45;
-        data[i + 1] = shade * 1.35;
-        data[i + 2] = shade * 1.65;
-        data[i + 3] = 155;
-      }
-
-      tvCtx.putImageData(imageData, 0, 0);
-
-      tvCtx.fillStyle = "rgba(0, 245, 255, 0.06)";
-      tvCtx.fillRect(0, 0, w, h);
-
-      if (Math.floor(tvTick / 42) % 2 === 0) {
-        tvCtx.fillStyle = "#00f5ff";
-        tvCtx.font = "bold 14px monospace";
-        tvCtx.fillText("FUTURE", 46, 45);
-        tvCtx.fillText("UNLOCKED", 34, 64);
-      }
-
-      requestAnimationFrame(drawTvStatic);
-    }
-
-    drawTvStatic();
   </script>
 </body>
 </html>
