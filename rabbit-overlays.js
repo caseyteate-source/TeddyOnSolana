@@ -37,8 +37,8 @@ const rabbitOverlaySettings = [
     type: "plaque",
     className: "rabbit-overlay stage-blink-plaque",
 
-    x: 77.14,
-    y: 57.07,
+    x: 77.32,
+    y: 56.94,
     w: 3.35,
     h: 1.9,
 
