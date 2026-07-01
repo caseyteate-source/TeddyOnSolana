@@ -275,6 +275,71 @@
       filter: contrast(1.9) brightness(1.05);
     }
 
+
+    .tv-static-layer::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(
+          90deg,
+          #d9d9d9 0 14.2%,
+          #e6e600 14.2% 28.4%,
+          #00d6d6 28.4% 42.6%,
+          #00d600 42.6% 56.8%,
+          #d600d6 56.8% 71%,
+          #d60000 71% 85.2%,
+          #003bd6 85.2% 100%
+        );
+      opacity: 0;
+      filter: saturate(1.35) contrast(1.18) brightness(.72);
+      animation: tvBarsCycle 7.5s steps(1, end) infinite;
+    }
+
+    .tv-static-layer::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          rgba(255,255,255,.16) 0,
+          rgba(255,255,255,.16) 1px,
+          transparent 1px,
+          transparent 4px
+        ),
+        radial-gradient(circle at 50% 50%, transparent 48%, rgba(0,0,0,.45) 100%);
+      opacity: .55;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    #tvScreenAnim.ready-to-play .tv-click-hint {
+      display: none !important;
+    }
+
+    @keyframes tvBarsCycle {
+      0%, 42%, 100% {
+        opacity: 0;
+      }
+
+      43%, 68% {
+        opacity: .94;
+      }
+
+      69%, 76% {
+        opacity: .18;
+      }
+
+      77%, 84% {
+        opacity: .72;
+      }
+
+      85%, 99% {
+        opacity: 0;
+      }
+    }
+
     .tv-video {
       position: absolute;
       inset: 0;
@@ -343,12 +408,17 @@
     }
 
     #tvScreenAnim.ready-to-play .tv-click-hint {
-      display: flex;
+      display: none;
     }
 
     #tvScreenAnim.video-on .tv-click-hint,
     #tvScreenAnim.video-switching .tv-click-hint {
       display: none;
+    }
+
+
+    #arcadeGameCanvas {
+      background: #020802;
     }
 
     #arcadeGameCanvas {
@@ -423,6 +493,14 @@
         0 0 18px rgba(0,245,255,.9),
         inset 0 0 22px rgba(255,42,163,.32);
       outline: none;
+    }
+
+
+    body:not(.edit-mode) .teddy-hotspot:hover,
+    body:not(.edit-mode) .teddy-hotspot:focus-visible {
+      background: transparent !important;
+      box-shadow: none !important;
+      outline: none !important;
     }
 
     .edit-mode .teddy-hotspot {
@@ -792,7 +870,7 @@
           <source src="secret-video.mp4" type="video/mp4">
         </video>
         <div class="tv-video-vhs"></div>
-        <div class="tv-click-hint">CLICK TV<br>FOR PERFECT STORM</div>
+        <div class="tv-click-hint"></div>
       </div>
 
       <div id="teddyHotspotRoot"></div>
@@ -1962,53 +2040,78 @@ const rainDryZone = ${JSON.stringify(rainDryZone, null, 2)};`;
       arcadeCtx.fillStyle = "#020802";
       arcadeCtx.fillRect(0, 0, w, h);
 
-      arcadeCtx.strokeStyle = "rgba(124,255,79,.22)";
+      /*
+        The arcade overlay is angled/clipped to match the cabinet.
+        The game is drawn inside a smaller safe viewport, so shrinking
+        the editable overlay box will not chop off the mini-game.
+      */
+      const vx = 18;
+      const vy = 28;
+      const vw = 124;
+      const vh = 78;
+
+      arcadeCtx.save();
+      arcadeCtx.beginPath();
+      arcadeCtx.rect(vx, vy, vw, vh);
+      arcadeCtx.clip();
+
+      arcadeCtx.fillStyle = "#010601";
+      arcadeCtx.fillRect(vx, vy, vw, vh);
+
+      arcadeCtx.strokeStyle = "rgba(124,255,79,.24)";
       arcadeCtx.lineWidth = 1;
 
-      for (let x = 0; x < w; x += 16) {
+      for (let x = vx; x <= vx + vw; x += 12) {
         arcadeCtx.beginPath();
-        arcadeCtx.moveTo(x, 0);
-        arcadeCtx.lineTo(x, h);
+        arcadeCtx.moveTo(x, vy);
+        arcadeCtx.lineTo(x, vy + vh);
         arcadeCtx.stroke();
       }
 
-      for (let y = 0; y < h; y += 16) {
+      for (let y = vy; y <= vy + vh; y += 10) {
         arcadeCtx.beginPath();
-        arcadeCtx.moveTo(0, y);
-        arcadeCtx.lineTo(w, y);
+        arcadeCtx.moveTo(vx, y);
+        arcadeCtx.lineTo(vx + vw, y);
         arcadeCtx.stroke();
-      }
-
-      for (let i = 0; i < 18; i++) {
-        const alienX = 15 + (i % 6) * 20;
-        const alienY = 28 + Math.floor(i / 6) * 16 + Math.sin((arcadeTick + i * 5) * 0.08) * 2;
-
-        arcadeCtx.fillStyle = i % 3 === 0 ? "#ff2aa3" : i % 3 === 1 ? "#00f5ff" : "#7cff4f";
-        arcadeCtx.fillRect(alienX, alienY, 10, 7);
-        arcadeCtx.fillRect(alienX + 2, alienY - 3, 6, 3);
-      }
-
-      const playerX = 72 + Math.sin(arcadeTick * 0.08) * 48;
-
-      arcadeCtx.fillStyle = "#ffea00";
-      arcadeCtx.fillRect(playerX, 100, 18, 7);
-      arcadeCtx.fillRect(playerX + 7, 93, 4, 7);
-
-      arcadeCtx.fillStyle = "#00f5ff";
-      for (let i = 0; i < 3; i++) {
-        const shotY = 95 - ((arcadeTick * 4 + i * 37) % 95);
-        arcadeCtx.fillRect(playerX + 8, shotY, 2, 8);
       }
 
       arcadeCtx.fillStyle = "#7cff4f";
-      arcadeCtx.font = "bold 12px monospace";
-      arcadeCtx.fillText("$TEDDY", 46, 14);
+      arcadeCtx.font = "bold 10px monospace";
+      arcadeCtx.fillText("$TEDDY", vx + 38, vy + 11);
+
+      for (let i = 0; i < 18; i++) {
+        const alienX = vx + 13 + (i % 6) * 17;
+        const alienY = vy + 22 + Math.floor(i / 6) * 12 + Math.sin((arcadeTick + i * 5) * 0.08) * 2;
+
+        arcadeCtx.fillStyle = i % 3 === 0 ? "#ff2aa3" : i % 3 === 1 ? "#00f5ff" : "#7cff4f";
+        arcadeCtx.fillRect(alienX, alienY, 8, 6);
+        arcadeCtx.fillRect(alienX + 2, alienY - 2, 4, 2);
+      }
+
+      const playerX = vx + 48 + Math.sin(arcadeTick * 0.08) * 36;
+      const playerY = vy + vh - 13;
+
+      arcadeCtx.fillStyle = "#ffea00";
+      arcadeCtx.fillRect(playerX, playerY, 16, 6);
+      arcadeCtx.fillRect(playerX + 6, playerY - 6, 4, 6);
+
+      arcadeCtx.fillStyle = "#00f5ff";
+      for (let i = 0; i < 3; i++) {
+        const shotY = vy + vh - 19 - ((arcadeTick * 4 + i * 29) % (vh - 18));
+        arcadeCtx.fillRect(playerX + 7, shotY, 2, 7);
+      }
 
       if (Math.floor(arcadeTick / 24) % 2 === 0) {
         arcadeCtx.fillStyle = "#ffea00";
-        arcadeCtx.font = "bold 10px monospace";
-        arcadeCtx.fillText("LEVEL UP", 50, 114);
+        arcadeCtx.font = "bold 9px monospace";
+        arcadeCtx.fillText("LEVEL UP", vx + 40, vy + vh - 4);
       }
+
+      arcadeCtx.restore();
+
+      arcadeCtx.strokeStyle = "rgba(124,255,79,.58)";
+      arcadeCtx.lineWidth = 2;
+      arcadeCtx.strokeRect(vx + 1, vy + 1, vw - 2, vh - 2);
 
       requestAnimationFrame(drawArcadeGame);
     }
