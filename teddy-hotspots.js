@@ -7,10 +7,12 @@
    Editor:
    teddy.html?edit=1
 
-   This controls:
+   Controls:
    - circle links
    - arcade gameplay screen overlay
-   - TV screen overlay
+   - TV video screen overlay
+   - screen bend/warp corners
+   - editor panel location
 ====================================================== */
 
 const teddyEditMode = new URLSearchParams(window.location.search).has("edit");
@@ -81,6 +83,18 @@ const teddyHotspots = [
     y: 83.2,
     size: 98,
     kind: "circle"
+  },
+  {
+    id: "secret-tv-switch",
+    label: "Secret TV Switch",
+    title: "",
+    url: "#",
+    sameTab: true,
+    x: 95.4,
+    y: 11.8,
+    size: 42,
+    kind: "secret",
+    action: "switch-tv-easter-egg"
   }
 ];
 
@@ -96,11 +110,17 @@ const screenOverlays = [
     rotate: -1.25,
     skewX: -1.25,
     skewY: 0,
-    opacity: 0.93
+    opacity: 0.93,
+    clipCorners: {
+      tl: { x: 4, y: 4 },
+      tr: { x: 97, y: 3 },
+      br: { x: 96, y: 96 },
+      bl: { x: 5, y: 97 }
+    }
   },
   {
     id: "tv-screen",
-    label: "TV Screen",
+    label: "TV Video Screen",
     elementId: "tvScreenAnim",
     x: 85.9,
     y: 53.25,
@@ -109,11 +129,18 @@ const screenOverlays = [
     rotate: -1.0,
     skewX: 0,
     skewY: 0,
-    opacity: 0.86
+    opacity: 0.86,
+    clipCorners: {
+      tl: { x: 5, y: 5 },
+      tr: { x: 96, y: 3 },
+      br: { x: 96, y: 96 },
+      bl: { x: 5, y: 97 }
+    }
   }
 ];
 
 const teddyHotspotRoot = document.getElementById("teddyHotspotRoot");
+const screenHandleRoot = document.getElementById("screenHandleRoot");
 
 let selectedType = null;
 let selectedHotspot = null;
@@ -131,7 +158,7 @@ function renderTeddyHotspots() {
   teddyHotspots.forEach((spot) => {
     const link = document.createElement("a");
 
-    link.className = `teddy-hotspot ${spot.kind === "bunny" ? "bunny-hotspot" : ""}`;
+    link.className = `teddy-hotspot ${spot.kind === "secret" ? "secret-hotspot" : ""}`;
     link.href = spot.url;
     link.title = spot.title;
     link.dataset.id = spot.id;
@@ -141,13 +168,19 @@ function renderTeddyHotspots() {
     link.style.width = spot.size + "px";
     link.style.height = spot.size + "px";
 
-    if (spot.kind === "bunny") {
-      link.innerHTML = getPixelBunnySvg();
-    }
-
     if (!spot.sameTab) {
       link.target = "_blank";
       link.rel = "noopener";
+    }
+
+    if (!teddyEditMode && spot.action === "switch-tv-easter-egg") {
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+
+        if (typeof window.switchTeddyTvVideo === "function") {
+          window.switchTeddyTvVideo();
+        }
+      });
     }
 
     if (teddyEditMode) {
@@ -168,31 +201,19 @@ function renderTeddyHotspots() {
   updateEditorOutput();
 }
 
-function getPixelBunnySvg() {
-  return `
-    <svg class="pixel-bunny-svg" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <rect width="32" height="32" fill="transparent"/>
-      <rect x="9" y="2" width="4" height="11" fill="#ffffff"/>
-      <rect x="19" y="2" width="4" height="11" fill="#ffffff"/>
-      <rect x="8" y="12" width="16" height="13" fill="#ffffff"/>
-      <rect x="6" y="16" width="20" height="8" fill="#ffffff"/>
-      <rect x="10" y="14" width="3" height="3" fill="#00f5ff"/>
-      <rect x="19" y="14" width="3" height="3" fill="#00f5ff"/>
-      <rect x="15" y="18" width="3" height="3" fill="#ff2aa3"/>
-      <rect x="12" y="23" width="8" height="3" fill="#ffffff"/>
-      <rect x="5" y="25" width="8" height="4" fill="#ffffff"/>
-      <rect x="19" y="25" width="8" height="4" fill="#ffffff"/>
-      <rect x="9" y="4" width="2" height="7" fill="#d7f6ff"/>
-      <rect x="21" y="4" width="2" height="7" fill="#d7f6ff"/>
-      <rect x="7" y="28" width="18" height="2" fill="#00f5ff" opacity=".55"/>
-    </svg>
-  `;
-}
-
 function applyAllScreenOverlays() {
   screenOverlays.forEach((overlay) => {
     applyScreenOverlay(overlay);
   });
+
+  drawScreenCornerHandles();
+}
+
+function getClipPath(overlay) {
+  if (!overlay.clipCorners) return "";
+
+  const c = overlay.clipCorners;
+  return `polygon(${c.tl.x}% ${c.tl.y}%, ${c.tr.x}% ${c.tr.y}%, ${c.br.x}% ${c.br.y}%, ${c.bl.x}% ${c.bl.y}%)`;
 }
 
 function applyScreenOverlay(overlay) {
@@ -205,6 +226,7 @@ function applyScreenOverlay(overlay) {
   el.style.height = overlay.h + "%";
   el.style.opacity = overlay.opacity;
   el.style.transform = `rotate(${overlay.rotate}deg) skewX(${overlay.skewX}deg) skewY(${overlay.skewY}deg)`;
+  el.style.clipPath = getClipPath(overlay);
 
   if (teddyEditMode && !el.dataset.editorReady) {
     el.dataset.editorReady = "true";
@@ -222,7 +244,7 @@ function selectTeddyItem(type, id) {
     link.classList.remove("selected");
   });
 
-  document.querySelectorAll(".arcade-screen-anim, .tv-screen-anim").forEach((el) => {
+  document.querySelectorAll(".screen-overlay").forEach((el) => {
     el.classList.remove("selected-screen");
   });
 
@@ -258,6 +280,7 @@ function selectTeddyItem(type, id) {
     if (select) select.value = id;
   }
 
+  drawScreenCornerHandles();
   updateEditorOutput();
 }
 
@@ -333,6 +356,7 @@ function startScreenDrag(event, overlay, element) {
     overlay.y = Number((startOverlayY + dy).toFixed(2));
 
     applyScreenOverlay(overlay);
+    drawScreenCornerHandles();
     updateEditorOutput();
   }
 
@@ -353,6 +377,71 @@ function startScreenDrag(event, overlay, element) {
   element.addEventListener("pointercancel", stopScreen);
 }
 
+function drawScreenCornerHandles() {
+  if (!screenHandleRoot) return;
+
+  screenHandleRoot.innerHTML = "";
+
+  if (!teddyEditMode || selectedType !== "screen" || !selectedScreen || !selectedScreen.clipCorners) return;
+
+  Object.entries(selectedScreen.clipCorners).forEach(([cornerKey, point]) => {
+    const handle = document.createElement("button");
+    handle.type = "button";
+    handle.className = "screen-corner-handle";
+    handle.dataset.corner = cornerKey;
+
+    positionScreenCornerHandle(handle, selectedScreen, point);
+
+    handle.addEventListener("pointerdown", (event) => {
+      startScreenCornerDrag(event, selectedScreen, cornerKey);
+    });
+
+    screenHandleRoot.appendChild(handle);
+  });
+}
+
+function positionScreenCornerHandle(handle, overlay, point) {
+  const x = overlay.x + (overlay.w * point.x) / 100;
+  const y = overlay.y + (overlay.h * point.y) / 100;
+
+  handle.style.left = x + "%";
+  handle.style.top = y + "%";
+}
+
+function startScreenCornerDrag(event, overlay, cornerKey) {
+  event.preventDefault();
+  event.stopPropagation();
+
+  const stage = document.getElementById("teddyStage");
+  const rect = stage.getBoundingClientRect();
+
+  function moveCorner(e) {
+    const stageX = ((e.clientX - rect.left) / rect.width) * 100;
+    const stageY = ((e.clientY - rect.top) / rect.height) * 100;
+
+    const localX = ((stageX - overlay.x) / overlay.w) * 100;
+    const localY = ((stageY - overlay.y) / overlay.h) * 100;
+
+    overlay.clipCorners[cornerKey].x = Number(clamp(localX, 0, 100).toFixed(2));
+    overlay.clipCorners[cornerKey].y = Number(clamp(localY, 0, 100).toFixed(2));
+
+    applyScreenOverlay(overlay);
+    drawScreenCornerHandles();
+    updateEditorOutput();
+  }
+
+  function stopCorner() {
+    window.removeEventListener("pointermove", moveCorner);
+    window.removeEventListener("pointerup", stopCorner);
+    window.removeEventListener("pointercancel", stopCorner);
+    updateEditorOutput();
+  }
+
+  window.addEventListener("pointermove", moveCorner);
+  window.addEventListener("pointerup", stopCorner);
+  window.addEventListener("pointercancel", stopCorner);
+}
+
 function createEditor() {
   if (!teddyEditMode) return;
 
@@ -365,8 +454,10 @@ function createEditor() {
   ].join("");
 
   editor.innerHTML = `
+    <div id="teddyEditorDragHandle" class="editor-drag-handle">DRAG THIS EDIT BOX</div>
+
     <strong>$TEDDY Page Editor</strong>
-    <p>Select an item. Drag it on the image, or use buttons. Copy the full settings when done.</p>
+    <p>Select an item. Drag screens or circles on the image. For screens, use the blue corner dots to bend the shape.</p>
 
     <select id="teddyItemSelect">
       <option value="">Choose item...</option>
@@ -390,6 +481,11 @@ function createEditor() {
       <button data-action="rot-plus" class="yellow">R+</button>
       <button data-action="sx-minus" class="yellow">SX-</button>
       <button data-action="sx-plus" class="yellow">SX+</button>
+
+      <button data-action="sy-minus" class="yellow">SY-</button>
+      <button data-action="sy-plus" class="yellow">SY+</button>
+      <button data-action="op-minus" class="yellow">OP-</button>
+      <button data-action="op-plus" class="yellow">OP+</button>
     </div>
 
     <button id="copyTeddySettings" class="copy" type="button">COPY SETTINGS</button>
@@ -397,6 +493,9 @@ function createEditor() {
   `;
 
   document.body.appendChild(editor);
+
+  restoreEditorPosition(editor);
+  makeEditorMoveable(editor);
 
   document.getElementById("teddyItemSelect").addEventListener("change", (event) => {
     const value = event.target.value;
@@ -439,8 +538,76 @@ function createEditor() {
   });
 
   setTimeout(() => {
-    selectTeddyItem("screen", "arcade-gameplay");
+    selectTeddyItem("screen", "tv-screen");
   }, 200);
+}
+
+function restoreEditorPosition(editor) {
+  const saved = localStorage.getItem("teddyPageEditorPosition");
+  if (!saved) return;
+
+  try {
+    const pos = JSON.parse(saved);
+
+    if (typeof pos.left === "number" && typeof pos.top === "number") {
+      editor.style.left = pos.left + "px";
+      editor.style.top = pos.top + "px";
+      editor.style.right = "auto";
+      editor.style.bottom = "auto";
+    }
+  } catch {}
+}
+
+function makeEditorMoveable(editor) {
+  const handle = document.getElementById("teddyEditorDragHandle");
+  if (!handle) return;
+
+  handle.addEventListener("pointerdown", (event) => {
+    event.preventDefault();
+
+    editor.classList.add("is-dragging");
+
+    const rect = editor.getBoundingClientRect();
+    const startX = event.clientX;
+    const startY = event.clientY;
+    const startLeft = rect.left;
+    const startTop = rect.top;
+
+    editor.style.left = startLeft + "px";
+    editor.style.top = startTop + "px";
+    editor.style.right = "auto";
+    editor.style.bottom = "auto";
+
+    function moveEditor(e) {
+      const newLeft = startLeft + (e.clientX - startX);
+      const newTop = startTop + (e.clientY - startY);
+
+      const maxLeft = window.innerWidth - editor.offsetWidth - 8;
+      const maxTop = window.innerHeight - editor.offsetHeight - 8;
+
+      const clampedLeft = clamp(newLeft, 8, Math.max(8, maxLeft));
+      const clampedTop = clamp(newTop, 8, Math.max(8, maxTop));
+
+      editor.style.left = clampedLeft + "px";
+      editor.style.top = clampedTop + "px";
+
+      localStorage.setItem(
+        "teddyPageEditorPosition",
+        JSON.stringify({ left: clampedLeft, top: clampedTop })
+      );
+    }
+
+    function stopEditor() {
+      editor.classList.remove("is-dragging");
+      window.removeEventListener("pointermove", moveEditor);
+      window.removeEventListener("pointerup", stopEditor);
+      window.removeEventListener("pointercancel", stopEditor);
+    }
+
+    window.addEventListener("pointermove", moveEditor);
+    window.addEventListener("pointerup", stopEditor);
+    window.addEventListener("pointercancel", stopEditor);
+  });
 }
 
 function adjustSelectedItem(action) {
@@ -506,10 +673,17 @@ function adjustScreenOverlay(action) {
   if (action === "sx-minus") selectedScreen.skewX = Number((selectedScreen.skewX - 0.25).toFixed(2));
   if (action === "sx-plus") selectedScreen.skewX = Number((selectedScreen.skewX + 0.25).toFixed(2));
 
+  if (action === "sy-minus") selectedScreen.skewY = Number((selectedScreen.skewY - 0.25).toFixed(2));
+  if (action === "sy-plus") selectedScreen.skewY = Number((selectedScreen.skewY + 0.25).toFixed(2));
+
+  if (action === "op-minus") selectedScreen.opacity = Math.max(0, Number((selectedScreen.opacity - 0.05).toFixed(2)));
+  if (action === "op-plus") selectedScreen.opacity = Math.min(1, Number((selectedScreen.opacity + 0.05).toFixed(2)));
+
   selectedScreen.w = Math.max(1, selectedScreen.w);
   selectedScreen.h = Math.max(1, selectedScreen.h);
 
   applyScreenOverlay(selectedScreen);
+  drawScreenCornerHandles();
   updateEditorOutput();
 }
 
@@ -521,6 +695,10 @@ function updateEditorOutput() {
 `const teddyHotspots = ${JSON.stringify(teddyHotspots, null, 2)};
 
 const screenOverlays = ${JSON.stringify(screenOverlays, null, 2)};`;
+}
+
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
 }
 
 renderTeddyHotspots();
