@@ -1,10 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>$TEDDY | Get Under the Umbrella</title>
+
+  <title>$TEDDY | Come, Get Under the Umbrella</title>
 
   <style>
     :root {
@@ -13,8 +13,6 @@
       --yellow: #ffea00;
       --green: #7cff4f;
       --dark: #020207;
-      --panel: rgba(0, 0, 0, 0.78);
-      --contract: "8KJEWtuq1c1699nAup7WatZfgodS3YFnadBq46FDpump";
     }
 
     * {
@@ -34,8 +32,8 @@
     body {
       min-height: 100vh;
       background:
-        radial-gradient(circle at 50% 0%, rgba(255,42,163,.18), transparent 35%),
-        radial-gradient(circle at 80% 35%, rgba(0,245,255,.12), transparent 34%),
+        radial-gradient(circle at 50% 0%, rgba(255,42,163,.16), transparent 35%),
+        radial-gradient(circle at 83% 36%, rgba(0,245,255,.10), transparent 35%),
         #020207;
     }
 
@@ -44,7 +42,7 @@
       inset: 0;
       pointer-events: none;
       z-index: 9999;
-      opacity: .16;
+      opacity: .14;
       background: repeating-linear-gradient(
         to bottom,
         rgba(255,255,255,.16) 0,
@@ -58,7 +56,7 @@
     .copy-toast {
       position: fixed;
       left: 50%;
-      top: 86px;
+      top: 84px;
       transform: translateX(-50%) translateY(-8px);
       z-index: 99999;
       opacity: 0;
@@ -66,7 +64,7 @@
       padding: 12px 16px;
       border: 2px solid var(--cyan);
       border-radius: 999px;
-      background: rgba(0,0,0,.92);
+      background: rgba(0,0,0,.94);
       color: white;
       font-weight: 900;
       letter-spacing: .08em;
@@ -86,12 +84,12 @@
       top: 0;
       z-index: 9000;
       width: 100%;
-      padding: 10px 10px;
-      background: rgba(0,0,0,.92);
-      border-bottom: 2px solid rgba(255,42,163,.75);
+      padding: 9px 10px;
+      background: rgba(0,0,0,.94);
+      border-bottom: 2px solid rgba(255,42,163,.76);
       box-shadow:
-        0 0 18px rgba(255,42,163,.5),
-        0 0 24px rgba(0,245,255,.2);
+        0 0 18px rgba(255,42,163,.45),
+        0 0 24px rgba(0,245,255,.20);
     }
 
     .contract-button {
@@ -118,48 +116,51 @@
         0 0 8px currentColor,
         0 0 20px rgba(0,245,255,.55);
       box-shadow:
-        inset 0 0 18px rgba(255,42,163,.2),
-        0 0 18px rgba(255,42,163,.5);
+        inset 0 0 18px rgba(255,42,163,.18),
+        0 0 18px rgba(255,42,163,.48);
       animation: contractColorCycle 5s linear infinite;
     }
 
     .contract-button.copied {
       color: var(--green);
       border-color: var(--green);
+      animation: none;
       box-shadow:
         inset 0 0 18px rgba(124,255,79,.18),
-        0 0 18px rgba(124,255,79,.6);
+        0 0 18px rgba(124,255,79,.62);
     }
 
     .contract-label {
       color: white;
       font-size: .52em;
       letter-spacing: .12em;
-      opacity: .8;
+      opacity: .82;
+      flex: 0 0 auto;
     }
 
     .site-nav {
       position: sticky;
-      top: 70px;
+      top: 68px;
       z-index: 8500;
       display: flex;
       justify-content: center;
       gap: 8px;
       flex-wrap: wrap;
       padding: 10px;
-      background: linear-gradient(180deg, rgba(0,0,0,.86), rgba(0,0,0,.45));
+      background: linear-gradient(180deg, rgba(0,0,0,.88), rgba(0,0,0,.45));
       backdrop-filter: blur(6px);
     }
 
-    .site-nav a {
+    .site-nav a,
+    .site-nav button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       min-height: 38px;
       padding: 9px 12px;
-      border: 1px solid rgba(0,245,255,.7);
+      border: 1px solid rgba(0,245,255,.70);
       border-radius: 999px;
-      background: rgba(0,0,0,.66);
+      background: rgba(0,0,0,.68);
       color: white;
       text-decoration: none;
       font-size: 12px;
@@ -167,19 +168,30 @@
       letter-spacing: .06em;
       text-transform: uppercase;
       box-shadow: 0 0 10px rgba(0,245,255,.26);
+      cursor: pointer;
+      font-family: Arial, Helvetica, sans-serif;
     }
 
     .site-nav a:hover,
-    .site-nav a:focus {
+    .site-nav a:focus,
+    .site-nav button:hover,
+    .site-nav button:focus {
       color: #020207;
       background: var(--cyan);
       box-shadow: 0 0 18px rgba(0,245,255,.85);
     }
 
+    .site-nav .buy-link {
+      color: #020207;
+      background: var(--yellow);
+      border-color: var(--yellow);
+      box-shadow: 0 0 14px rgba(255,234,0,.65);
+    }
+
     .mobile-hint {
       display: none;
       position: sticky;
-      top: 122px;
+      top: 120px;
       z-index: 8400;
       padding: 9px 12px;
       text-align: center;
@@ -218,39 +230,60 @@
       pointer-events: none;
     }
 
+    /*
+      Temporary cover for the baked-in CA strip on the current image.
+      Once the clean background image is edited, this can be removed.
+    */
+    .baked-ca-mask {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 9.6%;
+      z-index: 8;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 62% 40%, rgba(0,245,255,.13), transparent 32%),
+        radial-gradient(circle at 18% 50%, rgba(255,42,163,.16), transparent 34%),
+        linear-gradient(180deg, rgba(1,1,8,.98), rgba(1,1,8,.86) 70%, rgba(1,1,8,.08));
+    }
+
     .rain-layer {
       position: absolute;
       inset: -20% 0;
       z-index: 10;
       pointer-events: none;
-      opacity: .34;
+      opacity: .42;
       background-image:
         repeating-linear-gradient(
           105deg,
           rgba(255,255,255,0) 0px,
           rgba(255,255,255,0) 12px,
-          rgba(255,255,255,.48) 13px,
+          rgba(255,255,255,.50) 13px,
           rgba(255,255,255,0) 15px
         );
       background-size: 220px 220px;
       animation: rainMove .58s linear infinite;
       mix-blend-mode: screen;
+
+      -webkit-mask-image: radial-gradient(ellipse 33% 32% at 69% 38%, transparent 0 58%, black 68%);
+      mask-image: radial-gradient(ellipse 33% 32% at 69% 38%, transparent 0 58%, black 68%);
     }
 
     .umbrella-glow {
       position: absolute;
-      left: 47.4%;
-      top: 21.5%;
-      width: 39.5%;
-      height: 48%;
+      left: 47.2%;
+      top: 20.5%;
+      width: 40.2%;
+      height: 48.5%;
       z-index: 12;
       pointer-events: none;
       border-radius: 50%;
       background:
-        radial-gradient(circle at 50% 44%,
+        radial-gradient(circle at 50% 43%,
           rgba(255,226,112,.30) 0%,
-          rgba(255,194,50,.20) 26%,
-          rgba(255,126,0,.08) 48%,
+          rgba(255,194,50,.21) 25%,
+          rgba(255,126,0,.09) 48%,
           rgba(255,126,0,0) 72%);
       mix-blend-mode: screen;
       animation: umbrellaFlicker 3.6s ease-in-out infinite;
@@ -258,186 +291,238 @@
 
     .arcade-screen-anim {
       position: absolute;
-      left: 42.65%;
-      top: 57.4%;
-      width: 7.2%;
-      height: 7.55%;
-      z-index: 30;
+      left: 42.58%;
+      top: 56.35%;
+      width: 7.22%;
+      height: 8.38%;
+      z-index: 31;
       overflow: hidden;
       border-radius: 8px;
       transform: rotate(-2deg) skewX(-1deg);
       pointer-events: none;
-      background:
-        radial-gradient(circle at 50% 55%, rgba(124,255,79,.18), rgba(0,0,0,.95) 65%),
-        #020802;
+      background: #010801;
       box-shadow:
-        inset 0 0 18px rgba(124,255,79,.55),
+        inset 0 0 18px rgba(124,255,79,.50),
         0 0 12px rgba(124,255,79,.22);
-      opacity: .88;
+      opacity: .92;
       mix-blend-mode: screen;
     }
 
-    .arcade-screen-anim::before {
-      content: "LEVEL UP";
+    #arcadeGameCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      image-rendering: pixelated;
+    }
+
+    .arcade-glass-scan {
       position: absolute;
       inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #7cff4f;
-      font-size: clamp(8px, 1.35vw, 22px);
-      font-weight: 900;
-      letter-spacing: .08em;
-      text-shadow:
-        0 0 6px #7cff4f,
-        0 0 14px rgba(124,255,79,.8);
-      animation: arcadePulse 1.2s steps(2, end) infinite;
+      pointer-events: none;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          rgba(124,255,79,.14) 0,
+          rgba(124,255,79,.14) 1px,
+          transparent 1px,
+          transparent 4px
+        );
+      opacity: .65;
+      animation: arcadeLines .9s linear infinite;
     }
 
-    .arcade-screen-anim::after {
-      content: "";
+    #teddyHotspotRoot {
       position: absolute;
-      left: -70%;
-      top: 0;
-      width: 45%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(124,255,79,.42), transparent);
-      animation: arcadeScan 1.9s linear infinite;
+      inset: 0;
+      z-index: 70;
+      pointer-events: none;
     }
 
-    .arcade-sprite {
+    .teddy-hotspot {
       position: absolute;
-      left: 12%;
-      bottom: 12%;
-      width: 12%;
-      height: 18%;
-      background: #ffea00;
-      box-shadow:
-        0 0 0 2px rgba(0,0,0,.6),
-        0 0 8px rgba(255,234,0,.75);
-      animation: spriteHop .95s steps(2, end) infinite;
-    }
-
-    .hotspot {
-      position: absolute;
-      z-index: 55;
-      display: block;
-      transform: translate(-50%, -50%);
-      border-radius: 18px;
-      text-indent: -9999px;
-      overflow: hidden;
+      z-index: 80;
+      border: 0;
       background: rgba(0,245,255,0);
-      outline: 0;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+      pointer-events: auto;
       -webkit-tap-highlight-color: transparent;
+      text-decoration: none;
     }
 
-    .hotspot:hover,
-    .hotspot:focus-visible {
-      background: rgba(0,245,255,.10);
+    .teddy-hotspot:hover,
+    .teddy-hotspot:focus-visible {
+      background: rgba(0,245,255,.13);
       box-shadow:
         0 0 18px rgba(0,245,255,.9),
         inset 0 0 22px rgba(255,42,163,.32);
+      outline: none;
     }
 
-    .hotspot.dex-title {
-      left: 20%;
-      top: 24%;
-      width: 40%;
-      height: 28%;
-      transform: none;
+    .teddy-edit-mode .teddy-hotspot {
+      background: rgba(0,245,255,.28) !important;
+      border: 2px solid #00f5ff !important;
+      box-shadow: 0 0 18px rgba(0,245,255,.9) !important;
     }
 
-    .hotspot.arcade {
-      left: 44.3%;
-      top: 58.8%;
-      width: 10%;
-      height: 22%;
+    .teddy-edit-mode .teddy-hotspot::after {
+      content: attr(data-label);
+      position: absolute;
+      left: 50%;
+      top: 110%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      font-size: 10px;
+      color: white;
+      background: rgba(0,0,0,.78);
+      border: 1px solid rgba(255,255,255,.35);
+      border-radius: 999px;
+      padding: 4px 7px;
+      pointer-events: none;
+      font-weight: 900;
     }
 
-    .hotspot.kitty {
-      left: 87.3%;
-      top: 14.8%;
-      width: 17%;
-      height: 13%;
+    .teddy-hotspot-editor {
+      position: fixed;
+      right: 12px;
+      bottom: 12px;
+      z-index: 12000;
+      width: min(540px, calc(100vw - 24px));
+      max-height: 70vh;
+      overflow-y: auto;
+      background: rgba(0,0,0,.94);
+      border: 2px solid #00f5ff;
+      border-radius: 16px;
+      padding: 12px;
+      color: white;
+      box-shadow: 0 0 24px rgba(0,245,255,.65);
+      font-family: Arial, Helvetica, sans-serif;
     }
 
-    .hotspot.emoji {
-      left: 86.7%;
-      top: 68.5%;
-      width: 15%;
-      height: 25%;
+    .teddy-hotspot-editor strong {
+      color: #00f5ff;
+      display: block;
+      margin-bottom: 6px;
     }
 
-    .hotspot.hq {
-      left: 18%;
-      top: 63%;
-      width: 31%;
-      height: 20%;
+    .teddy-hotspot-editor p {
+      margin: 6px 0 10px;
+      color: #dffcff;
+      font-size: 13px;
+      line-height: 1.35;
     }
 
-    .hotspot.gmebay {
-      left: 74.3%;
-      top: 43%;
-      width: 16%;
-      height: 15%;
+    .teddy-hotspot-editor select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 8px;
+      border-radius: 10px;
+      border: 1px solid #00f5ff;
+      background: #050510;
+      color: #fff;
+      font-weight: 900;
     }
 
-    .about-panel {
-      position: relative;
-      z-index: 20;
-      width: min(1180px, calc(100vw - 24px));
-      margin: 18px auto 34px;
-      padding: 20px;
-      border: 2px solid rgba(255,42,163,.75);
-      border-radius: 20px;
-      background: linear-gradient(180deg, rgba(13,0,22,.9), rgba(0,0,0,.92));
+    .teddy-hotspot-editor .hotspot-buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .teddy-hotspot-editor button {
+      border: 0;
+      border-radius: 9px;
+      padding: 9px 6px;
+      color: white;
+      font-weight: 900;
+      cursor: pointer;
+      background: #ff2aa3;
+      font-size: 11px;
+    }
+
+    .teddy-hotspot-editor button.blue {
+      background: #00aaff;
+    }
+
+    .teddy-hotspot-editor button.copy {
+      width: 100%;
+      background: #00aaff;
+      margin-bottom: 8px;
+    }
+
+    .teddy-hotspot-editor textarea {
+      width: 100%;
+      height: 160px;
+      background: #050510;
+      color: #dffcff;
+      border: 1px solid #00f5ff;
+      border-radius: 10px;
+      padding: 10px;
+      font-family: monospace;
+      font-size: 11px;
+      box-sizing: border-box;
+    }
+
+    .about-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 13000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: rgba(0,0,0,.82);
+    }
+
+    .about-modal.active {
+      display: flex;
+    }
+
+    .about-box {
+      width: min(760px, 94vw);
+      max-height: 84vh;
+      overflow-y: auto;
+      border: 3px solid var(--hot-pink);
+      border-radius: 24px;
+      padding: 26px;
+      background: linear-gradient(180deg, rgba(18,0,31,.97), rgba(0,0,0,.98));
       box-shadow:
-        0 0 22px rgba(255,42,163,.42),
-        inset 0 0 20px rgba(0,245,255,.08);
+        0 0 28px rgba(255,42,163,.75),
+        0 0 54px rgba(0,245,255,.38);
+      position: relative;
     }
 
-    .about-panel h1 {
-      margin: 0 0 10px;
-      color: var(--cyan);
-      font-size: clamp(26px, 4vw, 56px);
+    .about-close {
+      position: absolute;
+      top: 8px;
+      right: 14px;
+      border: 0;
+      background: transparent;
+      color: white;
+      font-size: 34px;
       line-height: 1;
-      text-shadow: 0 0 14px rgba(0,245,255,.8);
+      cursor: pointer;
     }
 
-    .about-panel p {
-      max-width: 980px;
+    .about-box h1 {
+      margin: 0 40px 12px 0;
+      color: var(--cyan);
+      font-size: clamp(28px, 5vw, 54px);
+      text-shadow: 0 0 14px rgba(0,245,255,.75);
+    }
+
+    .about-box p {
       margin: 0 0 14px;
       color: #f3f3f3;
-      font-size: clamp(15px, 1.6vw, 19px);
+      font-size: 17px;
       line-height: 1.55;
     }
 
-    .about-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 16px;
-    }
-
-    .about-actions a,
-    .about-actions button {
-      border: 0;
-      border-radius: 999px;
-      padding: 12px 16px;
-      color: white;
-      background: var(--hot-pink);
-      text-decoration: none;
-      font-weight: 900;
-      letter-spacing: .05em;
-      cursor: pointer;
-      box-shadow: 0 0 14px rgba(255,42,163,.75);
-    }
-
-    .about-actions a.secondary,
-    .about-actions button.secondary {
-      background: var(--cyan);
-      color: #020207;
-      box-shadow: 0 0 14px rgba(0,245,255,.75);
+    .about-disclaimer {
+      color: #ffdf7a !important;
+      font-size: 14px !important;
     }
 
     @keyframes contractColorCycle {
@@ -464,19 +549,9 @@
       66% { opacity: .68; filter: brightness(.96); }
     }
 
-    @keyframes arcadePulse {
-      0%, 48% { opacity: 1; transform: scale(1); }
-      49%, 100% { opacity: .55; transform: scale(.98); }
-    }
-
-    @keyframes arcadeScan {
-      from { transform: translateX(0); }
-      to { transform: translateX(380%); }
-    }
-
-    @keyframes spriteHop {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-16%); }
+    @keyframes arcadeLines {
+      from { transform: translateY(0); }
+      to { transform: translateY(8px); }
     }
 
     @media (max-width: 760px) {
@@ -487,10 +562,6 @@
         font-size: 13px;
       }
 
-      .contract-label {
-        flex: 0 0 auto;
-      }
-
       .site-nav {
         top: 58px;
         justify-content: flex-start;
@@ -498,7 +569,8 @@
         flex-wrap: nowrap;
       }
 
-      .site-nav a {
+      .site-nav a,
+      .site-nav button {
         flex: 0 0 auto;
       }
 
@@ -513,14 +585,11 @@
         margin: 0;
       }
 
-      .about-panel {
-        margin-top: 12px;
-      }
-
-      .about-actions a,
-      .about-actions button {
-        width: 100%;
-        text-align: center;
+      .teddy-hotspot-editor {
+        left: 10px;
+        right: auto;
+        bottom: 10px;
+        max-height: 54vh;
       }
     }
   </style>
@@ -538,68 +607,59 @@
   </header>
 
   <nav class="site-nav" aria-label="$TEDDY site navigation">
-    <a href="index.html">Arcade</a>
+    <button id="aboutButton" type="button">About</button>
     <a href="hq.html">Rabbit Hole</a>
-    <a href="kitty.html">Kitty Files</a>
-    <a href="emoji.html">Emoji Timeline</a>
     <a href="imagination-room.html">Memory Room</a>
-    <a href="gmebay.html">GMEBAY</a>
-    <a href="https://dexscreener.com/solana/8kjewtuq1c1699naup7watzfgods3yfnadbq46fdpump" target="_blank" rel="noopener">Buy $TEDDY</a>
+    <a class="buy-link" href="https://pump.fun/coin/8KJEWtuq1c1699nAup7WatZfgodS3YFnadBq46FDpump" target="_blank" rel="noopener">Buy $TEDDY</a>
   </nav>
 
-  <div class="mobile-hint">← SWIPE THE ART • TAP THE ARCADE, $TEDDY, KITTY, OR EMOJI AREAS →</div>
+  <div class="mobile-hint">← SWIPE THE ART • TAP THE $TEDDY TITLE, ARCADE, KITTY, EMOJI, OR TV →</div>
 
   <div class="teddy-scroll-wrap" id="teddyScrollWrap">
     <main class="teddy-stage" id="teddyStage">
       <img src="teddy-umbrella-bg.png" alt="$TEDDY teddy bear under umbrella neon 80s crypto project graphic" class="teddy-bg" />
 
+      <div class="baked-ca-mask"></div>
       <div class="rain-layer"></div>
       <div class="umbrella-glow"></div>
 
       <div class="arcade-screen-anim">
-        <div class="arcade-sprite"></div>
+        <canvas id="arcadeGameCanvas" width="160" height="120"></canvas>
+        <div class="arcade-glass-scan"></div>
       </div>
 
-      <a class="hotspot dex-title" href="https://dexscreener.com/solana/8kjewtuq1c1699naup7watzfgods3yfnadbq46fdpump" target="_blank" rel="noopener" aria-label="Open $TEDDY on Dexscreener">$TEDDY Dex</a>
-      <a class="hotspot arcade" href="index.html" aria-label="Go to the $TEDDY arcade page">Arcade</a>
-      <a class="hotspot kitty" href="kitty.html" aria-label="Open Kitty Files">Kitty Files</a>
-      <a class="hotspot emoji" href="emoji.html" aria-label="Open Emoji Timeline">Emoji Timeline</a>
-      <a class="hotspot hq" href="hq.html" aria-label="Open the Rabbit Hole main hub">Rabbit Hole</a>
-      <a class="hotspot gmebay" href="gmebay.html" aria-label="Open GMEBAY page">GMEBAY</a>
+      <div id="teddyHotspotRoot"></div>
     </main>
   </div>
 
-  <section class="about-panel" id="about">
-    <h1>Come, Get Under the Umbrella</h1>
+  <div id="aboutModal" class="about-modal" aria-hidden="true">
+    <div class="about-box">
+      <button id="aboutClose" class="about-close" type="button">×</button>
 
-    <p>
-      $TEDDY is a community-powered crypto project built around timing, conviction, nostalgia, and the belief that rare opportunities appear before the crowd understands the story.
-    </p>
+      <h1>Come, Get Under the Umbrella</h1>
 
-    <p>
-      The spirit of Teddy is bigger than a ticker. It is an ode to family, legacy, and the heart behind Ryan Cohen’s tribute to his father. Around that idea, the community imagines a future where GameStop, eBay-style commerce, collectibles, gaming culture, and digital ownership all gather under one umbrella.
-    </p>
+      <p>
+        $TEDDY is a community-powered crypto project built around timing, conviction, nostalgia, and the belief that rare opportunities appear before the crowd understands the story.
+      </p>
 
-    <p>
-      Nothing here claims official endorsement from GameStop, eBay, Ryan Cohen, or Teddy Holdings. This is community lore, tinfoil energy, and a high-conviction meme-token story. Do your own research.
-    </p>
+      <p>
+        The spirit of Teddy is bigger than a ticker. It is an ode to family, legacy, and the heart behind Ryan Cohen’s tribute to his father. Around that idea, the community imagines a future where GameStop, eBay-style commerce, collectibles, gaming culture, and digital ownership all gather under one umbrella.
+      </p>
 
-    <div class="about-actions">
-      <a href="https://dexscreener.com/solana/8kjewtuq1c1699naup7watzfgods3yfnadbq46fdpump" target="_blank" rel="noopener">View $TEDDY on Dexscreener</a>
-      <button id="contractCopyButtonBottom" class="secondary" type="button">Copy Contract Address</button>
-      <a class="secondary" href="index.html">Play the Arcade</a>
-      <a class="secondary" href="kitty.html">Open Kitty Files</a>
-      <a class="secondary" href="emoji.html">Follow Emoji Timeline</a>
+      <p>
+        This is the story: get ahead of time before the rocket launches, find shelter before the storm passes, and follow the clues before everyone else sees the umbrella.
+      </p>
+
+      <p class="about-disclaimer">
+        Nothing here claims official endorsement from GameStop, eBay, Ryan Cohen, Teddy Holdings, or any related company. This is community lore, tinfoil energy, and a meme-token story. Do your own research.
+      </p>
     </div>
-  </section>
+  </div>
+
+  <script src="teddy-hotspots.js"></script>
 
   <script>
     const TEDDY_CONTRACT = "8KJEWtuq1c1699nAup7WatZfgodS3YFnadBq46FDpump";
-
-    const copyButtons = [
-      document.getElementById("contractCopyButton"),
-      document.getElementById("contractCopyButtonBottom")
-    ].filter(Boolean);
 
     const copyToast = document.getElementById("copyToast");
     const contractCopyButton = document.getElementById("contractCopyButton");
@@ -662,8 +722,33 @@
       }
     }
 
-    copyButtons.forEach((button) => {
-      button.addEventListener("click", copyContract);
+    if (contractCopyButton) {
+      contractCopyButton.addEventListener("click", copyContract);
+    }
+
+    const aboutButton = document.getElementById("aboutButton");
+    const aboutModal = document.getElementById("aboutModal");
+    const aboutClose = document.getElementById("aboutClose");
+
+    function openAbout() {
+      aboutModal.classList.add("active");
+      aboutModal.setAttribute("aria-hidden", "false");
+    }
+
+    function closeAbout() {
+      aboutModal.classList.remove("active");
+      aboutModal.setAttribute("aria-hidden", "true");
+    }
+
+    aboutButton?.addEventListener("click", openAbout);
+    aboutClose?.addEventListener("click", closeAbout);
+
+    aboutModal?.addEventListener("click", (event) => {
+      if (event.target === aboutModal) closeAbout();
+    });
+
+    window.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeAbout();
     });
 
     window.addEventListener("load", () => {
@@ -673,6 +758,99 @@
         wrap.scrollLeft = 420;
       }
     });
+
+    /* ======================================================
+       BETTER ARCADE GAMEPLAY OVERLAY
+    ====================================================== */
+
+    const arcadeCanvas = document.getElementById("arcadeGameCanvas");
+    const arcadeCtx = arcadeCanvas ? arcadeCanvas.getContext("2d") : null;
+
+    let arcadeTick = 0;
+
+    function drawArcadeGame() {
+      if (!arcadeCtx) return;
+
+      const w = arcadeCanvas.width;
+      const h = arcadeCanvas.height;
+
+      arcadeTick += 1;
+
+      arcadeCtx.fillStyle = "#020802";
+      arcadeCtx.fillRect(0, 0, w, h);
+
+      arcadeCtx.strokeStyle = "rgba(124,255,79,.22)";
+      arcadeCtx.lineWidth = 1;
+
+      for (let x = 0; x < w; x += 16) {
+        arcadeCtx.beginPath();
+        arcadeCtx.moveTo(x, 0);
+        arcadeCtx.lineTo(x, h);
+        arcadeCtx.stroke();
+      }
+
+      for (let y = 0; y < h; y += 16) {
+        arcadeCtx.beginPath();
+        arcadeCtx.moveTo(0, y);
+        arcadeCtx.lineTo(w, y);
+        arcadeCtx.stroke();
+      }
+
+      const bearX = 24 + Math.sin(arcadeTick * 0.06) * 8;
+      const bearY = 78 + Math.sin(arcadeTick * 0.12) * 4;
+
+      // rain/fud falling outside mini umbrella
+      for (let i = 0; i < 9; i++) {
+        const rx = (i * 23 + arcadeTick * 2) % (w + 20) - 10;
+        const ry = (i * 31 + arcadeTick * 3) % (h + 20) - 10;
+
+        arcadeCtx.fillStyle = i % 2 ? "#00f5ff" : "#ff2aa3";
+        arcadeCtx.fillRect(rx, ry, 2, 9);
+      }
+
+      // tiny umbrella
+      arcadeCtx.fillStyle = "#ffea00";
+      arcadeCtx.beginPath();
+      arcadeCtx.arc(bearX + 10, bearY - 10, 18, Math.PI, Math.PI * 2);
+      arcadeCtx.fill();
+
+      arcadeCtx.fillStyle = "#7cff4f";
+      arcadeCtx.fillRect(bearX + 8, bearY - 10, 3, 25);
+
+      // tiny teddy/player
+      arcadeCtx.fillStyle = "#d08a48";
+      arcadeCtx.fillRect(bearX, bearY, 18, 18);
+      arcadeCtx.fillRect(bearX - 4, bearY - 3, 7, 7);
+      arcadeCtx.fillRect(bearX + 15, bearY - 3, 7, 7);
+
+      arcadeCtx.fillStyle = "#020207";
+      arcadeCtx.fillRect(bearX + 4, bearY + 6, 3, 3);
+      arcadeCtx.fillRect(bearX + 12, bearY + 6, 3, 3);
+
+      // rocket / level up animation
+      const rocketY = 78 - ((arcadeTick * 1.25) % 100);
+
+      arcadeCtx.fillStyle = "#00f5ff";
+      arcadeCtx.fillRect(120, rocketY, 10, 22);
+      arcadeCtx.fillStyle = "#ff2aa3";
+      arcadeCtx.fillRect(117, rocketY + 14, 16, 8);
+      arcadeCtx.fillStyle = "#ffea00";
+      arcadeCtx.fillRect(122, rocketY + 22, 6, 10);
+
+      arcadeCtx.fillStyle = "#7cff4f";
+      arcadeCtx.font = "bold 12px monospace";
+      arcadeCtx.fillText("$TEDDY", 48, 18);
+
+      if (Math.floor(arcadeTick / 24) % 2 === 0) {
+        arcadeCtx.fillStyle = "#ffea00";
+        arcadeCtx.font = "bold 10px monospace";
+        arcadeCtx.fillText("LEVEL UP", 50, 34);
+      }
+
+      requestAnimationFrame(drawArcadeGame);
+    }
+
+    drawArcadeGame();
   </script>
 </body>
 </html>
