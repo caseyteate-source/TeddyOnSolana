@@ -1,166 +1,337 @@
 /* ======================================================
-   $TEDDY PAGE HOTSPOTS + SCREEN OVERLAY EDITOR
+   $TEDDY PAGE HOTSPOTS + SCREEN EDITOR
 
-   Normal:
+   Normal page:
    teddy.html
 
-   Editor:
+   Edit mode:
    teddy.html?edit=1
 
-   Controls:
-   - circle links
-   - arcade gameplay screen overlay
-   - TV video screen overlay
-   - screen bend/warp corners
-   - editor panel location
+   This version applies your saved coordinates and keeps:
+   - editable circle links
+   - editable arcade gameplay overlay
+   - editable TV overlay
+   - yellow draggable corner handles for edge/skew fitting
+   - editable rain dry zone
 ====================================================== */
 
-const teddyEditMode = new URLSearchParams(window.location.search).has("edit");
+const TEDDY_CONTRACT = "8KJEWtuq1c1699nAup7WatZfgodS3YFnadBq46FDpump";
+const TEDDY_DEX = "https://dexscreener.com/solana/8kjewtuq1c1699naup7watzfgods3yfnadbq46fdpump";
+const TEDDY_PUMP = "https://pump.fun/coin/8KJEWtuq1c1699nAup7WatZfgodS3YFnadBq46FDpump";
+
+const editMode = new URLSearchParams(window.location.search).has("edit");
 
 const teddyHotspots = [
   {
-    id: "teddy-dex",
-    label: "$TEDDY Dex",
-    title: "$TEDDY",
-    url: "https://dexscreener.com/solana/8kjewtuq1c1699naup7watzfgods3yfnadbq46fdpump",
-    sameTab: false,
-    x: 18.5,
-    y: 25.1,
-    size: 310,
-    kind: "circle"
+    "id": "teddy-dex",
+    "label": "$TEDDY Dex",
+    "title": "$TEDDY",
+    "url": "https://dexscreener.com/solana/8kjewtuq1c1699naup7watzfgods3yfnadbq46fdpump",
+    "sameTab": false,
+    "x": 23.32,
+    "y": 13.79,
+    "size": 310,
+    "kind": "circle"
   },
   {
-    id: "arcade",
-    label: "Arcade Play",
-    title: "Arcade Play",
-    url: "index.html",
-    sameTab: true,
-    x: 13.0,
-    y: 84.4,
-    size: 92,
-    kind: "circle"
+    "id": "about-button",
+    "label": "About",
+    "title": "About $TEDDY",
+    "url": "#",
+    "sameTab": true,
+    "x": 74.95,
+    "y": 4.72,
+    "size": 116,
+    "kind": "circle",
+    "action": "open-about"
   },
   {
-    id: "kitty",
-    label: "Kitty Files",
-    title: "Kitty Files",
-    url: "kitty.html",
-    sameTab: true,
-    x: 30.5,
-    y: 84.4,
-    size: 92,
-    kind: "circle"
+    "id": "buy-teddy",
+    "label": "Buy $TEDDY",
+    "title": "Buy $TEDDY",
+    "url": "https://pump.fun/coin/8KJEWtuq1c1699nAup7WatZfgodS3YFnadBq46FDpump",
+    "sameTab": false,
+    "x": 88.45,
+    "y": 4.72,
+    "size": 150,
+    "kind": "circle"
   },
   {
-    id: "white-rabbit",
-    label: "Rabbit Hole",
-    title: "Follow the White Rabbit",
-    url: "hq.html",
-    sameTab: true,
-    x: 48.0,
-    y: 83.7,
-    size: 96,
-    kind: "circle"
+    "id": "arcade",
+    "label": "Arcade Play",
+    "title": "Arcade Play",
+    "url": "index.html",
+    "sameTab": true,
+    "x": 12.52,
+    "y": 81.75,
+    "size": 92,
+    "kind": "circle"
   },
   {
-    id: "emoji",
-    label: "Emoji Timeline",
-    title: "Emoji Timeline",
-    url: "emoji.html",
-    sameTab: true,
-    x: 66.0,
-    y: 83.9,
-    size: 92,
-    kind: "circle"
+    "id": "kitty",
+    "label": "Kitty Files",
+    "title": "Kitty Files",
+    "url": "kitty.html",
+    "sameTab": true,
+    "x": 28.27,
+    "y": 81.73,
+    "size": 92,
+    "kind": "circle"
   },
   {
-    id: "gmebay",
-    label: "GMEBAY",
-    title: "GMEBAY",
-    url: "gmebay.html",
-    sameTab: true,
-    x: 84.0,
-    y: 83.2,
-    size: 98,
-    kind: "circle"
+    "id": "white-rabbit",
+    "label": "Rabbit Hole",
+    "title": "Follow the White Rabbit",
+    "url": "hq.html",
+    "sameTab": true,
+    "x": 44.74,
+    "y": 81.65,
+    "size": 96,
+    "kind": "circle"
   },
   {
-    id: "secret-tv-switch",
-    label: "Secret TV Switch",
-    title: "",
-    url: "#",
-    sameTab: true,
-    x: 95.4,
-    y: 11.8,
-    size: 42,
-    kind: "secret",
-    action: "switch-tv-easter-egg"
+    "id": "emoji",
+    "label": "Emoji Timeline",
+    "title": "Emoji Timeline",
+    "url": "emoji.html",
+    "sameTab": true,
+    "x": 61.12,
+    "y": 81.87,
+    "size": 92,
+    "kind": "circle"
+  },
+  {
+    "id": "gmebay",
+    "label": "GMEBAY",
+    "title": "GMEBAY",
+    "url": "gmebay.html",
+    "sameTab": true,
+    "x": 78.03,
+    "y": 81.7,
+    "size": 98,
+    "kind": "circle"
+  },
+  {
+    "id": "secret-tv-switch",
+    "label": "Secret TV Switch",
+    "title": "",
+    "url": "#",
+    "sameTab": true,
+    "x": 83.22,
+    "y": 2.39,
+    "size": 42,
+    "kind": "secret",
+    "action": "switch-tv-easter-egg"
+  },
+  {
+    "id": "secret-video-switch",
+    "label": "Secret Video Switch",
+    "title": "",
+    "url": "#",
+    "sameTab": true,
+    "x": 86.12,
+    "y": 2.39,
+    "size": 42,
+    "kind": "secret",
+    "action": "switch-secret-video"
   }
 ];
 
 const screenOverlays = [
   {
-    id: "arcade-gameplay",
-    label: "Arcade Gameplay",
-    elementId: "arcadeScreenAnim",
-    x: 27.95,
-    y: 41.65,
-    w: 16.3,
-    h: 18.3,
-    rotate: -1.25,
-    skewX: -1.25,
-    skewY: 0,
-    opacity: 0.93,
-    clipCorners: {
-      tl: { x: 4, y: 4 },
-      tr: { x: 97, y: 3 },
-      br: { x: 96, y: 96 },
-      bl: { x: 5, y: 97 }
+    "id": "arcade-gameplay",
+    "label": "Arcade Gameplay",
+    "elementId": "arcadeScreenAnim",
+    "x": 22.78,
+    "y": 42.42,
+    "w": 14.8,
+    "h": 16.8,
+    "rotate": 0.5,
+    "skewX": -1.25,
+    "skewY": 0,
+    "opacity": 0.93,
+    "clipCorners": {
+      "tl": {
+        "x": 2.95,
+        "y": 21.45
+      },
+      "tr": {
+        "x": 85.91,
+        "y": 22.1
+      },
+      "br": {
+        "x": 94.18,
+        "y": 100
+      },
+      "bl": {
+        "x": 13.33,
+        "y": 100
+      }
     }
   },
   {
-    id: "tv-screen",
-    label: "TV Video Screen",
-    elementId: "tvScreenAnim",
-    x: 85.9,
-    y: 53.25,
-    w: 10.0,
-    h: 11.3,
-    rotate: -1.0,
-    skewX: 0,
-    skewY: 0,
-    opacity: 0.86,
-    clipCorners: {
-      tl: { x: 5, y: 5 },
-      tr: { x: 96, y: 3 },
-      br: { x: 96, y: 96 },
-      bl: { x: 5, y: 97 }
+    "id": "tv-screen",
+    "label": "TV Video Screen",
+    "elementId": "tvScreenAnim",
+    "x": 80.41,
+    "y": 53.38,
+    "w": 10,
+    "h": 11.3,
+    "rotate": -1,
+    "skewX": 0,
+    "skewY": 0,
+    "opacity": 0.86,
+    "clipCorners": {
+      "tl": {
+        "x": 5,
+        "y": 5
+      },
+      "tr": {
+        "x": 96,
+        "y": 3
+      },
+      "br": {
+        "x": 96,
+        "y": 96
+      },
+      "bl": {
+        "x": 5,
+        "y": 97
+      }
     }
   }
 ];
 
-const teddyHotspotRoot = document.getElementById("teddyHotspotRoot");
-const screenHandleRoot = document.getElementById("screenHandleRoot");
+const rainDryZone = {
+  id: "rain-dry-zone",
+  label: "Rain Dry Zone",
+  x: 35.4,
+  y: 16.7,
+  w: 50.8,
+  h: 61.4
+};
+
+const stage = document.getElementById("teddyStage");
+const hotspotRoot = document.getElementById("teddyHotspotRoot");
+const visualRoot = document.getElementById("editorVisualRoot");
+const dryMask = document.getElementById("umbrellaDryMask");
 
 let selectedType = null;
-let selectedHotspot = null;
-let selectedScreen = null;
+let selectedId = null;
 
-if (teddyEditMode) {
-  document.body.classList.add("teddy-edit-mode");
+if (editMode) {
+  document.body.classList.add("edit-mode");
 }
 
-function renderTeddyHotspots() {
-  if (!teddyHotspotRoot) return;
+/* ======================================================
+   CONTRACT COPY
+====================================================== */
 
-  teddyHotspotRoot.innerHTML = "";
+const copyToast = document.getElementById("copyToast");
+const contractCopyButton = document.getElementById("contractCopyButton");
+const contractText = document.getElementById("contractText");
+
+async function copyContract() {
+  let copied = false;
+
+  try {
+    await navigator.clipboard.writeText(TEDDY_CONTRACT);
+    copied = true;
+  } catch {
+    copied = fallbackCopyContract();
+  }
+
+  showCopiedState(copied);
+}
+
+function fallbackCopyContract() {
+  const textarea = document.createElement("textarea");
+  textarea.value = TEDDY_CONTRACT;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.left = "-9999px";
+  textarea.style.top = "0";
+  document.body.appendChild(textarea);
+  textarea.focus();
+  textarea.select();
+
+  let copied = false;
+
+  try {
+    copied = document.execCommand("copy");
+  } catch {
+    copied = false;
+  }
+
+  document.body.removeChild(textarea);
+  return copied;
+}
+
+function showCopiedState(copied) {
+  if (contractCopyButton && contractText) {
+    contractCopyButton.classList.add("copied");
+    contractText.textContent = copied ? "COPIED" : TEDDY_CONTRACT;
+
+    setTimeout(() => {
+      contractCopyButton.classList.remove("copied");
+      contractText.textContent = TEDDY_CONTRACT;
+    }, 1300);
+  }
+
+  if (copyToast) {
+    copyToast.textContent = copied ? "CONTRACT COPIED" : "COPY FAILED — LONG PRESS ADDRESS";
+    copyToast.classList.add("show");
+
+    setTimeout(() => {
+      copyToast.classList.remove("show");
+    }, 1400);
+  }
+}
+
+contractCopyButton?.addEventListener("click", copyContract);
+
+/* ======================================================
+   ABOUT MODAL
+====================================================== */
+
+const aboutModal = document.getElementById("aboutModal");
+const aboutClose = document.getElementById("aboutClose");
+
+function openAbout() {
+  aboutModal.classList.add("active");
+  aboutModal.setAttribute("aria-hidden", "false");
+}
+
+function closeAbout() {
+  aboutModal.classList.remove("active");
+  aboutModal.setAttribute("aria-hidden", "true");
+}
+
+aboutClose?.addEventListener("click", closeAbout);
+
+aboutModal?.addEventListener("click", (event) => {
+  if (event.target === aboutModal) closeAbout();
+});
+
+window.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") closeAbout();
+});
+
+/* ======================================================
+   HOTSPOTS
+====================================================== */
+
+function renderHotspots() {
+  if (!hotspotRoot) return;
+
+  hotspotRoot.innerHTML = "";
 
   teddyHotspots.forEach((spot) => {
     const link = document.createElement("a");
 
-    link.className = `teddy-hotspot ${spot.kind === "secret" ? "secret-hotspot" : ""}`;
-    link.href = spot.url;
-    link.title = spot.title;
+    link.className = "teddy-hotspot";
+    link.href = spot.url || "#";
+    link.title = spot.title || spot.label;
     link.dataset.id = spot.id;
     link.dataset.label = spot.label;
     link.style.left = spot.x + "%";
@@ -168,538 +339,663 @@ function renderTeddyHotspots() {
     link.style.width = spot.size + "px";
     link.style.height = spot.size + "px";
 
-    if (!spot.sameTab) {
+    if (!spot.sameTab && !spot.action) {
       link.target = "_blank";
       link.rel = "noopener";
     }
 
-    if (!teddyEditMode && spot.action === "switch-tv-easter-egg") {
-      link.addEventListener("click", (event) => {
+    link.addEventListener("click", (event) => {
+      if (editMode) {
         event.preventDefault();
+        return;
+      }
 
-        if (typeof window.switchTeddyTvVideo === "function") {
-          window.switchTeddyTvVideo();
-        }
-      });
-    }
-
-    if (teddyEditMode) {
-      link.addEventListener("click", (event) => {
+      if (spot.action === "open-about") {
         event.preventDefault();
-      });
+        openAbout();
+        return;
+      }
 
+      if (spot.action === "switch-tv-easter-egg") {
+        event.preventDefault();
+        toggleTvEasterEgg();
+        return;
+      }
+
+      if (spot.action === "switch-secret-video") {
+        event.preventDefault();
+        playTvVideo("secretVideo");
+        return;
+      }
+    });
+
+    if (editMode) {
       link.addEventListener("pointerdown", (event) => {
-        selectTeddyItem("hotspot", spot.id);
+        selectItem("hotspot", spot.id);
         startHotspotDrag(event, spot, link);
       });
     }
 
-    teddyHotspotRoot.appendChild(link);
+    hotspotRoot.appendChild(link);
   });
-
-  applyAllScreenOverlays();
-  updateEditorOutput();
 }
 
-function applyAllScreenOverlays() {
-  screenOverlays.forEach((overlay) => {
-    applyScreenOverlay(overlay);
+async function toggleTvEasterEgg() {
+  await playTvVideo("angryReporterVideo");
+}
+
+function getTvVideoElements() {
+  return [
+    document.getElementById("perfectStormVideo"),
+    document.getElementById("angryReporterVideo"),
+    document.getElementById("secretVideo")
+  ].filter(Boolean);
+}
+
+function turnOffEveryTvVideo() {
+  getTvVideoElements().forEach((video) => {
+    try { video.pause(); } catch {}
+    video.currentTime = 0;
+    video.classList.remove("is-playing");
   });
-
-  drawScreenCornerHandles();
 }
 
-function getClipPath(overlay) {
-  if (!overlay.clipCorners) return "";
+async function showTvStaticThenPlay(videoId) {
+  const tv = document.getElementById("tvScreenAnim");
 
-  const c = overlay.clipCorners;
-  return `polygon(${c.tl.x}% ${c.tl.y}%, ${c.tr.x}% ${c.tr.y}%, ${c.br.x}% ${c.br.y}%, ${c.bl.x}% ${c.bl.y}%)`;
+  if (!tv) return;
+
+  tv.classList.remove("video-on");
+  tv.classList.remove("ready-to-play");
+  tv.classList.add("video-switching");
+
+  await new Promise((resolve) => setTimeout(resolve, 650));
+
+  tv.classList.remove("video-switching");
 }
 
-function applyScreenOverlay(overlay) {
-  const el = document.getElementById(overlay.elementId);
-  if (!el) return;
+async function playTvVideo(videoId) {
+  const tv = document.getElementById("tvScreenAnim");
+  const selectedVideo = document.getElementById(videoId);
 
-  el.style.left = overlay.x + "%";
-  el.style.top = overlay.y + "%";
-  el.style.width = overlay.w + "%";
-  el.style.height = overlay.h + "%";
-  el.style.opacity = overlay.opacity;
-  el.style.transform = `rotate(${overlay.rotate}deg) skewX(${overlay.skewX}deg) skewY(${overlay.skewY}deg)`;
-  el.style.clipPath = getClipPath(overlay);
+  if (!tv || !selectedVideo) return;
 
-  if (teddyEditMode && !el.dataset.editorReady) {
-    el.dataset.editorReady = "true";
+  const sameVideoAlreadyPlaying =
+    selectedVideo.classList.contains("is-playing") &&
+    !selectedVideo.paused;
 
-    el.addEventListener("pointerdown", (event) => {
-      startScreenDrag(event, overlay, el);
-    });
+  turnOffEveryTvVideo();
+
+  if (sameVideoAlreadyPlaying) {
+    tv.classList.remove("video-on");
+    tv.classList.remove("video-switching");
+    tv.classList.add("ready-to-play");
+    return;
+  }
+
+  await showTvStaticThenPlay(videoId);
+
+  tv.classList.remove("ready-to-play");
+  tv.classList.add("video-on");
+
+  selectedVideo.classList.add("is-playing");
+  selectedVideo.muted = false;
+  selectedVideo.volume = 1;
+  selectedVideo.currentTime = 0;
+
+  try {
+    await selectedVideo.play();
+  } catch {
+    tv.classList.remove("video-on");
+    tv.classList.add("ready-to-play");
   }
 }
 
-function selectTeddyItem(type, id) {
-  selectedType = type;
+function stopTvVideos() {
+  const tv = document.getElementById("tvScreenAnim");
 
-  document.querySelectorAll(".teddy-hotspot").forEach((link) => {
-    link.classList.remove("selected");
-  });
+  turnOffEveryTvVideo();
 
-  document.querySelectorAll(".screen-overlay").forEach((el) => {
-    el.classList.remove("selected-screen");
-  });
+  if (tv) {
+    tv.classList.remove("video-on");
+    tv.classList.remove("video-switching");
+    tv.classList.add("ready-to-play");
+  }
+}
 
-  if (type === "hotspot") {
-    selectedHotspot = teddyHotspots.find((spot) => spot.id === id);
-    selectedScreen = null;
+function prepareTvVideos() {
+  const tv = document.getElementById("tvScreenAnim");
 
-    const selectedLink = document.querySelector(`.teddy-hotspot[data-id="${id}"]`);
-    if (selectedLink) selectedLink.classList.add("selected");
+  if (!tv) return;
 
-    const selectedName = document.getElementById("teddySelectedItem");
-    if (selectedName && selectedHotspot) {
-      selectedName.textContent = `Selected: ${selectedHotspot.label}`;
+  tv.classList.add("ready-to-play");
+
+  tv.addEventListener("click", async () => {
+    if (editMode) return;
+
+    const activeVideo = tv.querySelector(".tv-video.is-playing");
+
+    if (activeVideo && !activeVideo.paused) {
+      stopTvVideos();
+      return;
     }
 
-    const select = document.getElementById("teddyItemSelect");
-    if (select) select.value = id;
-  }
+    await playTvVideo("perfectStormVideo");
+  });
+
+  getTvVideoElements().forEach((video) => {
+    video.addEventListener("ended", stopTvVideos);
+  });
+}
+
+/* ======================================================
+   EDITOR PANEL
+====================================================== */
+
+function selectItem(type, id) {
+  selectedType = type;
+  selectedId = id;
+
+  document.querySelectorAll(".screen-overlay").forEach((item) => {
+    item.classList.remove("selected-screen");
+  });
 
   if (type === "screen") {
-    selectedScreen = screenOverlays.find((screen) => screen.id === id);
-    selectedHotspot = null;
-
-    const el = selectedScreen ? document.getElementById(selectedScreen.elementId) : null;
-    if (el) el.classList.add("selected-screen");
-
-    const selectedName = document.getElementById("teddySelectedItem");
-    if (selectedName && selectedScreen) {
-      selectedName.textContent = `Selected: ${selectedScreen.label}`;
-    }
-
-    const select = document.getElementById("teddyItemSelect");
-    if (select) select.value = id;
+    const setting = screenOverlays.find((item) => item.id === id);
+    document.getElementById(setting.elementId)?.classList.add("selected-screen");
   }
 
-  drawScreenCornerHandles();
+  const select = document.getElementById("editorSelect");
+  if (select) select.value = `${type}:${id}`;
+
+  const selectedName = document.getElementById("selectedName");
+  if (selectedName) selectedName.textContent = "Selected: " + getSelectedLabel();
+
+  drawEditorVisuals();
   updateEditorOutput();
 }
 
-function startHotspotDrag(event, spot, element) {
-  if (!teddyEditMode) return;
-
-  event.preventDefault();
-  event.stopPropagation();
-
-  element.setPointerCapture(event.pointerId);
-
-  const stage = document.getElementById("teddyStage");
-  const rect = stage.getBoundingClientRect();
-
-  const startX = event.clientX;
-  const startY = event.clientY;
-  const startSpotX = spot.x;
-  const startSpotY = spot.y;
-
-  function moveSpot(e) {
-    const dx = ((e.clientX - startX) / rect.width) * 100;
-    const dy = ((e.clientY - startY) / rect.height) * 100;
-
-    spot.x = Number((startSpotX + dx).toFixed(2));
-    spot.y = Number((startSpotY + dy).toFixed(2));
-
-    element.style.left = spot.x + "%";
-    element.style.top = spot.y + "%";
-
-    updateEditorOutput();
+function getSelectedLabel() {
+  if (selectedType === "hotspot") {
+    return teddyHotspots.find((item) => item.id === selectedId)?.label || "none";
   }
 
-  function stopSpot() {
-    try {
-      element.releasePointerCapture(event.pointerId);
-    } catch {}
-
-    element.removeEventListener("pointermove", moveSpot);
-    element.removeEventListener("pointerup", stopSpot);
-    element.removeEventListener("pointercancel", stopSpot);
-
-    updateEditorOutput();
+  if (selectedType === "screen") {
+    return screenOverlays.find((item) => item.id === selectedId)?.label || "none";
   }
 
-  element.addEventListener("pointermove", moveSpot);
-  element.addEventListener("pointerup", stopSpot);
-  element.addEventListener("pointercancel", stopSpot);
+  if (selectedType === "dry") {
+    return "Rain Dry Zone";
+  }
+
+  return "none";
 }
 
-function startScreenDrag(event, overlay, element) {
-  if (!teddyEditMode) return;
+function createEditorPanel() {
+  if (!editMode) return;
 
-  event.preventDefault();
-  event.stopPropagation();
+  const panel = document.createElement("div");
+  panel.className = "edit-panel";
 
-  selectTeddyItem("screen", overlay.id);
+  const screenOptions = screenOverlays
+    .map((item) => `<option value="screen:${item.id}">${item.label}</option>`)
+    .join("");
 
-  element.setPointerCapture(event.pointerId);
+  const hotspotOptions = teddyHotspots
+    .map((item) => `<option value="hotspot:${item.id}">${item.label}</option>`)
+    .join("");
 
-  const stage = document.getElementById("teddyStage");
-  const rect = stage.getBoundingClientRect();
-
-  const startX = event.clientX;
-  const startY = event.clientY;
-  const startOverlayX = overlay.x;
-  const startOverlayY = overlay.y;
-
-  function moveScreen(e) {
-    const dx = ((e.clientX - startX) / rect.width) * 100;
-    const dy = ((e.clientY - startY) / rect.height) * 100;
-
-    overlay.x = Number((startOverlayX + dx).toFixed(2));
-    overlay.y = Number((startOverlayY + dy).toFixed(2));
-
-    applyScreenOverlay(overlay);
-    drawScreenCornerHandles();
-    updateEditorOutput();
-  }
-
-  function stopScreen() {
-    try {
-      element.releasePointerCapture(event.pointerId);
-    } catch {}
-
-    element.removeEventListener("pointermove", moveScreen);
-    element.removeEventListener("pointerup", stopScreen);
-    element.removeEventListener("pointercancel", stopScreen);
-
-    updateEditorOutput();
-  }
-
-  element.addEventListener("pointermove", moveScreen);
-  element.addEventListener("pointerup", stopScreen);
-  element.addEventListener("pointercancel", stopScreen);
-}
-
-function drawScreenCornerHandles() {
-  if (!screenHandleRoot) return;
-
-  screenHandleRoot.innerHTML = "";
-
-  if (!teddyEditMode || selectedType !== "screen" || !selectedScreen || !selectedScreen.clipCorners) return;
-
-  Object.entries(selectedScreen.clipCorners).forEach(([cornerKey, point]) => {
-    const handle = document.createElement("button");
-    handle.type = "button";
-    handle.className = "screen-corner-handle";
-    handle.dataset.corner = cornerKey;
-
-    positionScreenCornerHandle(handle, selectedScreen, point);
-
-    handle.addEventListener("pointerdown", (event) => {
-      startScreenCornerDrag(event, selectedScreen, cornerKey);
-    });
-
-    screenHandleRoot.appendChild(handle);
-  });
-}
-
-function positionScreenCornerHandle(handle, overlay, point) {
-  const x = overlay.x + (overlay.w * point.x) / 100;
-  const y = overlay.y + (overlay.h * point.y) / 100;
-
-  handle.style.left = x + "%";
-  handle.style.top = y + "%";
-}
-
-function startScreenCornerDrag(event, overlay, cornerKey) {
-  event.preventDefault();
-  event.stopPropagation();
-
-  const stage = document.getElementById("teddyStage");
-  const rect = stage.getBoundingClientRect();
-
-  function moveCorner(e) {
-    const stageX = ((e.clientX - rect.left) / rect.width) * 100;
-    const stageY = ((e.clientY - rect.top) / rect.height) * 100;
-
-    const localX = ((stageX - overlay.x) / overlay.w) * 100;
-    const localY = ((stageY - overlay.y) / overlay.h) * 100;
-
-    overlay.clipCorners[cornerKey].x = Number(clamp(localX, 0, 100).toFixed(2));
-    overlay.clipCorners[cornerKey].y = Number(clamp(localY, 0, 100).toFixed(2));
-
-    applyScreenOverlay(overlay);
-    drawScreenCornerHandles();
-    updateEditorOutput();
-  }
-
-  function stopCorner() {
-    window.removeEventListener("pointermove", moveCorner);
-    window.removeEventListener("pointerup", stopCorner);
-    window.removeEventListener("pointercancel", stopCorner);
-    updateEditorOutput();
-  }
-
-  window.addEventListener("pointermove", moveCorner);
-  window.addEventListener("pointerup", stopCorner);
-  window.addEventListener("pointercancel", stopCorner);
-}
-
-function createEditor() {
-  if (!teddyEditMode) return;
-
-  const editor = document.createElement("div");
-  editor.className = "teddy-editor";
-
-  const options = [
-    ...screenOverlays.map((screen) => `<option value="${screen.id}" data-type="screen">${screen.label}</option>`),
-    ...teddyHotspots.map((spot) => `<option value="${spot.id}" data-type="hotspot">${spot.label}</option>`)
-  ].join("");
-
-  editor.innerHTML = `
-    <div id="teddyEditorDragHandle" class="editor-drag-handle">DRAG THIS EDIT BOX</div>
+  panel.innerHTML = `
+    <div id="panelDragHandle" class="panel-drag-handle">DRAG THIS EDIT BOX</div>
 
     <strong>$TEDDY Page Editor</strong>
-    <p>Select an item. Drag screens or circles on the image. For screens, use the blue corner dots to bend the shape.</p>
+    <p>
+      Select arcade/TV to move, resize, rotate, skew, or drag yellow corners.
+      Select links to move/resize circles. Select Rain Dry Zone if rain touches Teddy.
+    </p>
 
-    <select id="teddyItemSelect">
+    <select id="editorSelect">
       <option value="">Choose item...</option>
-      ${options}
+      ${screenOptions}
+      <option value="dry:rain-dry-zone">Rain Dry Zone</option>
+      ${hotspotOptions}
     </select>
 
-    <p id="teddySelectedItem">Selected: none</p>
+    <p id="selectedName">Selected: none</p>
 
-    <div class="editor-buttons">
+    <div class="button-grid">
       <button data-action="left">←</button>
       <button data-action="up">↑</button>
       <button data-action="down">↓</button>
       <button data-action="right">→</button>
 
-      <button data-action="smaller" class="blue">Size -</button>
-      <button data-action="bigger" class="blue">Size +</button>
-      <button data-action="wide" class="blue">Wide +</button>
-      <button data-action="tall" class="blue">Tall +</button>
+      <button data-action="w-minus" class="blue">W -</button>
+      <button data-action="w-plus" class="blue">W +</button>
+      <button data-action="h-minus" class="blue">H -</button>
+      <button data-action="h-plus" class="blue">H +</button>
 
-      <button data-action="rot-minus" class="yellow">R-</button>
-      <button data-action="rot-plus" class="yellow">R+</button>
-      <button data-action="sx-minus" class="yellow">SX-</button>
-      <button data-action="sx-plus" class="yellow">SX+</button>
+      <button data-action="rot-minus" class="yellow">R -</button>
+      <button data-action="rot-plus" class="yellow">R +</button>
+      <button data-action="sx-minus" class="yellow">SX -</button>
+      <button data-action="sx-plus" class="yellow">SX +</button>
 
-      <button data-action="sy-minus" class="yellow">SY-</button>
-      <button data-action="sy-plus" class="yellow">SY+</button>
-      <button data-action="op-minus" class="yellow">OP-</button>
-      <button data-action="op-plus" class="yellow">OP+</button>
+      <button data-action="sy-minus" class="yellow">SY -</button>
+      <button data-action="sy-plus" class="yellow">SY +</button>
+      <button data-action="op-minus" class="yellow">OP -</button>
+      <button data-action="op-plus" class="yellow">OP +</button>
     </div>
 
-    <button id="copyTeddySettings" class="copy" type="button">COPY SETTINGS</button>
-    <textarea id="teddyEditorOutput" readonly></textarea>
+    <button id="copySettings" class="copy" type="button">COPY SETTINGS</button>
+    <div id="copyStatus" class="copy-status"></div>
+    <textarea id="editorOutput" readonly></textarea>
   `;
 
-  document.body.appendChild(editor);
+  document.body.appendChild(panel);
 
-  restoreEditorPosition(editor);
-  makeEditorMoveable(editor);
+  restorePanelPosition(panel);
+  makePanelDraggable(panel);
 
-  document.getElementById("teddyItemSelect").addEventListener("change", (event) => {
-    const value = event.target.value;
+  document.getElementById("editorSelect").addEventListener("change", (event) => {
+    if (!event.target.value) return;
 
-    if (!value) return;
-
-    if (screenOverlays.some((screen) => screen.id === value)) {
-      selectTeddyItem("screen", value);
-      return;
-    }
-
-    selectTeddyItem("hotspot", value);
+    const [type, id] = event.target.value.split(":");
+    selectItem(type, id);
   });
 
-  editor.querySelectorAll("[data-action]").forEach((button) => {
-    button.addEventListener("click", () => {
-      adjustSelectedItem(button.dataset.action);
-    });
+  panel.querySelectorAll("[data-action]").forEach((button) => {
+    button.addEventListener("click", () => adjustSelected(button.dataset.action));
   });
 
-  document.getElementById("copyTeddySettings").addEventListener("click", async () => {
-    updateEditorOutput();
+  document.getElementById("copySettings").addEventListener("click", copySettings);
 
-    const output = document.getElementById("teddyEditorOutput");
-
-    output.focus();
-    output.select();
-    output.setSelectionRange(0, output.value.length);
-
-    try {
-      await navigator.clipboard.writeText(output.value);
-      document.getElementById("copyTeddySettings").textContent = "COPIED!";
-
-      setTimeout(() => {
-        document.getElementById("copyTeddySettings").textContent = "COPY SETTINGS";
-      }, 1200);
-    } catch {
-      alert("The code is selected. Press Command+C or Ctrl+C to copy it.");
-    }
-  });
-
-  setTimeout(() => {
-    selectTeddyItem("screen", "tv-screen");
-  }, 200);
+  setTimeout(() => selectItem("screen", "arcade-gameplay"), 200);
 }
 
-function restoreEditorPosition(editor) {
-  const saved = localStorage.getItem("teddyPageEditorPosition");
+function restorePanelPosition(panel) {
+  const saved = localStorage.getItem("teddyEditorPanelPosition");
   if (!saved) return;
 
   try {
-    const pos = JSON.parse(saved);
+    const position = JSON.parse(saved);
 
-    if (typeof pos.left === "number" && typeof pos.top === "number") {
-      editor.style.left = pos.left + "px";
-      editor.style.top = pos.top + "px";
-      editor.style.right = "auto";
-      editor.style.bottom = "auto";
+    if (typeof position.left === "number" && typeof position.top === "number") {
+      panel.style.left = position.left + "px";
+      panel.style.top = position.top + "px";
+      panel.style.right = "auto";
+      panel.style.bottom = "auto";
     }
   } catch {}
 }
 
-function makeEditorMoveable(editor) {
-  const handle = document.getElementById("teddyEditorDragHandle");
+function makePanelDraggable(panel) {
+  const handle = document.getElementById("panelDragHandle");
   if (!handle) return;
 
   handle.addEventListener("pointerdown", (event) => {
     event.preventDefault();
 
-    editor.classList.add("is-dragging");
-
-    const rect = editor.getBoundingClientRect();
+    const rect = panel.getBoundingClientRect();
     const startX = event.clientX;
     const startY = event.clientY;
     const startLeft = rect.left;
     const startTop = rect.top;
 
-    editor.style.left = startLeft + "px";
-    editor.style.top = startTop + "px";
-    editor.style.right = "auto";
-    editor.style.bottom = "auto";
+    panel.style.left = startLeft + "px";
+    panel.style.top = startTop + "px";
+    panel.style.right = "auto";
+    panel.style.bottom = "auto";
 
-    function moveEditor(e) {
+    function move(e) {
       const newLeft = startLeft + (e.clientX - startX);
       const newTop = startTop + (e.clientY - startY);
 
-      const maxLeft = window.innerWidth - editor.offsetWidth - 8;
-      const maxTop = window.innerHeight - editor.offsetHeight - 8;
+      const maxLeft = window.innerWidth - panel.offsetWidth - 8;
+      const maxTop = window.innerHeight - panel.offsetHeight - 8;
 
-      const clampedLeft = clamp(newLeft, 8, Math.max(8, maxLeft));
-      const clampedTop = clamp(newTop, 8, Math.max(8, maxTop));
+      const left = clamp(newLeft, 8, Math.max(8, maxLeft));
+      const top = clamp(newTop, 8, Math.max(8, maxTop));
 
-      editor.style.left = clampedLeft + "px";
-      editor.style.top = clampedTop + "px";
+      panel.style.left = left + "px";
+      panel.style.top = top + "px";
 
-      localStorage.setItem(
-        "teddyPageEditorPosition",
-        JSON.stringify({ left: clampedLeft, top: clampedTop })
-      );
+      localStorage.setItem("teddyEditorPanelPosition", JSON.stringify({ left, top }));
     }
 
-    function stopEditor() {
-      editor.classList.remove("is-dragging");
-      window.removeEventListener("pointermove", moveEditor);
-      window.removeEventListener("pointerup", stopEditor);
-      window.removeEventListener("pointercancel", stopEditor);
+    function stop() {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", stop);
+      window.removeEventListener("pointercancel", stop);
     }
 
-    window.addEventListener("pointermove", moveEditor);
-    window.addEventListener("pointerup", stopEditor);
-    window.addEventListener("pointercancel", stopEditor);
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", stop);
+    window.addEventListener("pointercancel", stop);
   });
 }
 
-function adjustSelectedItem(action) {
-  if (selectedType === "screen" && selectedScreen) {
-    adjustScreenOverlay(action);
+function adjustSelected(action) {
+  if (!selectedType) return;
+
+  if (selectedType === "screen") {
+    const item = screenOverlays.find((setting) => setting.id === selectedId);
+    if (!item) return;
+
+    adjustBox(item, action, true);
+    applyScreenOverlayStyle(item);
+    drawEditorVisuals();
+    updateEditorOutput();
     return;
   }
 
-  if (selectedType === "hotspot" && selectedHotspot) {
-    adjustHotspot(action);
+  if (selectedType === "dry") {
+    adjustBox(rainDryZone, action, false);
+    applyDryMaskStyle();
+    drawEditorVisuals();
+    updateEditorOutput();
+    return;
+  }
+
+  if (selectedType === "hotspot") {
+    const item = teddyHotspots.find((setting) => setting.id === selectedId);
+    if (!item) return;
+
+    adjustHotspot(item, action);
+    renderHotspots();
+    selectItem("hotspot", item.id);
+    updateEditorOutput();
   }
 }
 
-function adjustHotspot(action) {
-  if (!selectedHotspot) return;
+function adjustBox(item, action, allowTransform) {
+  if (action === "left") item.x = Number((item.x - 0.25).toFixed(2));
+  if (action === "right") item.x = Number((item.x + 0.25).toFixed(2));
+  if (action === "up") item.y = Number((item.y - 0.25).toFixed(2));
+  if (action === "down") item.y = Number((item.y + 0.25).toFixed(2));
 
-  if (action === "left") selectedHotspot.x = Number((selectedHotspot.x - 0.25).toFixed(2));
-  if (action === "right") selectedHotspot.x = Number((selectedHotspot.x + 0.25).toFixed(2));
-  if (action === "up") selectedHotspot.y = Number((selectedHotspot.y - 0.25).toFixed(2));
-  if (action === "down") selectedHotspot.y = Number((selectedHotspot.y + 0.25).toFixed(2));
+  if (action === "w-minus") item.w = Number((item.w - 0.25).toFixed(2));
+  if (action === "w-plus") item.w = Number((item.w + 0.25).toFixed(2));
+  if (action === "h-minus") item.h = Number((item.h - 0.25).toFixed(2));
+  if (action === "h-plus") item.h = Number((item.h + 0.25).toFixed(2));
 
-  if (action === "smaller") selectedHotspot.size = Math.max(20, selectedHotspot.size - 4);
-  if (action === "bigger") selectedHotspot.size = selectedHotspot.size + 4;
-  if (action === "wide") selectedHotspot.size = selectedHotspot.size + 6;
-  if (action === "tall") selectedHotspot.size = selectedHotspot.size + 6;
+  if (allowTransform) {
+    if (action === "rot-minus") item.rotate = Number((item.rotate - 0.25).toFixed(2));
+    if (action === "rot-plus") item.rotate = Number((item.rotate + 0.25).toFixed(2));
 
-  const link = document.querySelector(`.teddy-hotspot[data-id="${selectedHotspot.id}"]`);
+    if (action === "sx-minus") item.skewX = Number((item.skewX - 0.25).toFixed(2));
+    if (action === "sx-plus") item.skewX = Number((item.skewX + 0.25).toFixed(2));
 
-  if (link) {
-    link.style.left = selectedHotspot.x + "%";
-    link.style.top = selectedHotspot.y + "%";
-    link.style.width = selectedHotspot.size + "px";
-    link.style.height = selectedHotspot.size + "px";
+    if (action === "sy-minus") item.skewY = Number((item.skewY - 0.25).toFixed(2));
+    if (action === "sy-plus") item.skewY = Number((item.skewY + 0.25).toFixed(2));
+
+    if (action === "op-minus") item.opacity = Math.max(0, Number((item.opacity - 0.05).toFixed(2)));
+    if (action === "op-plus") item.opacity = Math.min(1, Number((item.opacity + 0.05).toFixed(2)));
   }
 
-  updateEditorOutput();
+  item.w = Math.max(0.5, item.w);
+  item.h = Math.max(0.5, item.h);
 }
 
-function adjustScreenOverlay(action) {
-  if (!selectedScreen) return;
+function adjustHotspot(item, action) {
+  if (action === "left") item.x = Number((item.x - 0.25).toFixed(2));
+  if (action === "right") item.x = Number((item.x + 0.25).toFixed(2));
+  if (action === "up") item.y = Number((item.y - 0.25).toFixed(2));
+  if (action === "down") item.y = Number((item.y + 0.25).toFixed(2));
 
-  if (action === "left") selectedScreen.x = Number((selectedScreen.x - 0.25).toFixed(2));
-  if (action === "right") selectedScreen.x = Number((selectedScreen.x + 0.25).toFixed(2));
-  if (action === "up") selectedScreen.y = Number((selectedScreen.y - 0.25).toFixed(2));
-  if (action === "down") selectedScreen.y = Number((selectedScreen.y + 0.25).toFixed(2));
-
-  if (action === "smaller") {
-    selectedScreen.w = Number((selectedScreen.w - 0.25).toFixed(2));
-    selectedScreen.h = Number((selectedScreen.h - 0.25).toFixed(2));
-  }
-
-  if (action === "bigger") {
-    selectedScreen.w = Number((selectedScreen.w + 0.25).toFixed(2));
-    selectedScreen.h = Number((selectedScreen.h + 0.25).toFixed(2));
-  }
-
-  if (action === "wide") selectedScreen.w = Number((selectedScreen.w + 0.25).toFixed(2));
-  if (action === "tall") selectedScreen.h = Number((selectedScreen.h + 0.25).toFixed(2));
-
-  if (action === "rot-minus") selectedScreen.rotate = Number((selectedScreen.rotate - 0.25).toFixed(2));
-  if (action === "rot-plus") selectedScreen.rotate = Number((selectedScreen.rotate + 0.25).toFixed(2));
-
-  if (action === "sx-minus") selectedScreen.skewX = Number((selectedScreen.skewX - 0.25).toFixed(2));
-  if (action === "sx-plus") selectedScreen.skewX = Number((selectedScreen.skewX + 0.25).toFixed(2));
-
-  if (action === "sy-minus") selectedScreen.skewY = Number((selectedScreen.skewY - 0.25).toFixed(2));
-  if (action === "sy-plus") selectedScreen.skewY = Number((selectedScreen.skewY + 0.25).toFixed(2));
-
-  if (action === "op-minus") selectedScreen.opacity = Math.max(0, Number((selectedScreen.opacity - 0.05).toFixed(2)));
-  if (action === "op-plus") selectedScreen.opacity = Math.min(1, Number((selectedScreen.opacity + 0.05).toFixed(2)));
-
-  selectedScreen.w = Math.max(1, selectedScreen.w);
-  selectedScreen.h = Math.max(1, selectedScreen.h);
-
-  applyScreenOverlay(selectedScreen);
-  drawScreenCornerHandles();
-  updateEditorOutput();
+  if (action === "w-minus" || action === "h-minus") item.size = Math.max(20, item.size - 4);
+  if (action === "w-plus" || action === "h-plus") item.size = item.size + 4;
 }
 
 function updateEditorOutput() {
-  const output = document.getElementById("teddyEditorOutput");
+  const output = document.getElementById("editorOutput");
   if (!output) return;
 
   output.value =
 `const teddyHotspots = ${JSON.stringify(teddyHotspots, null, 2)};
 
-const screenOverlays = ${JSON.stringify(screenOverlays, null, 2)};`;
+const screenOverlays = ${JSON.stringify(screenOverlays, null, 2)};
+
+const rainDryZone = ${JSON.stringify(rainDryZone, null, 2)};`;
 }
+
+async function copySettings() {
+  updateEditorOutput();
+
+  const output = document.getElementById("editorOutput");
+  const status = document.getElementById("copyStatus");
+
+  output.focus();
+  output.select();
+  output.setSelectionRange(0, output.value.length);
+
+  let copied = false;
+
+  try {
+    await navigator.clipboard.writeText(output.value);
+    copied = true;
+  } catch {
+    try {
+      copied = document.execCommand("copy");
+    } catch {}
+  }
+
+  if (status) {
+    status.textContent = copied
+      ? "Copied."
+      : "Could not auto-copy. Text is selected — press Command+C / Ctrl+C.";
+  }
+}
+
+/* ======================================================
+   REALISTIC RAIN
+====================================================== */
+
+const rainCanvas = document.getElementById("realRainCanvas");
+const rainCtx = rainCanvas ? rainCanvas.getContext("2d") : null;
+const rainDrops = [];
+let rainW = 0;
+let rainH = 0;
+
+function resizeRainCanvas() {
+  if (!rainCanvas || !rainCtx || !stage) return;
+
+  const rect = stage.getBoundingClientRect();
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+  rainW = rect.width;
+  rainH = rect.height;
+
+  rainCanvas.width = Math.floor(rainW * dpr);
+  rainCanvas.height = Math.floor(rainH * dpr);
+  rainCanvas.style.width = rainW + "px";
+  rainCanvas.style.height = rainH + "px";
+
+  rainCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  if (rainDrops.length === 0) {
+    for (let i = 0; i < 240; i++) {
+      rainDrops.push(createRainDrop(true));
+    }
+  }
+}
+
+function createRainDrop(randomY = false) {
+  return {
+    x: Math.random() * rainW,
+    y: randomY ? Math.random() * rainH : -30 - Math.random() * 170,
+    len: 14 + Math.random() * 46,
+    speed: 8 + Math.random() * 12,
+    drift: -3.2 - Math.random() * 3.8,
+    width: Math.random() > .82 ? 1.25 : .7,
+    opacity: .16 + Math.random() * .36
+  };
+}
+
+function isInsideDryZone(x, y) {
+  if (!rainW || !rainH) return false;
+
+  const px = (x / rainW) * 100;
+  const py = (y / rainH) * 100;
+
+  const inBox =
+    px >= rainDryZone.x &&
+    px <= rainDryZone.x + rainDryZone.w &&
+    py >= rainDryZone.y &&
+    py <= rainDryZone.y + rainDryZone.h;
+
+  if (!inBox) return false;
+
+  const centerX = rainDryZone.x + rainDryZone.w * 0.52;
+  const centerY = rainDryZone.y + rainDryZone.h * 0.46;
+  const rx = rainDryZone.w * 0.56;
+  const ry = rainDryZone.h * 0.62;
+
+  const oval =
+    Math.pow((px - centerX) / rx, 2) +
+    Math.pow((py - centerY) / ry, 2) < 1.08;
+
+  const teddyColumn =
+    px > rainDryZone.x + rainDryZone.w * 0.33 &&
+    px < rainDryZone.x + rainDryZone.w * 0.74 &&
+    py > rainDryZone.y + rainDryZone.h * 0.28 &&
+    py < rainDryZone.y + rainDryZone.h * 0.98;
+
+  return oval || teddyColumn;
+}
+
+function animateRain() {
+  if (!rainCtx || !rainCanvas) return;
+
+  rainCtx.clearRect(0, 0, rainW, rainH);
+  rainCtx.save();
+  rainCtx.globalCompositeOperation = "lighter";
+
+  for (let i = 0; i < rainDrops.length; i++) {
+    const drop = rainDrops[i];
+
+    const x2 = drop.x + drop.drift;
+    const y2 = drop.y + drop.len;
+
+    if (!isInsideDryZone(drop.x, drop.y) && !isInsideDryZone(x2, y2)) {
+      const grad = rainCtx.createLinearGradient(drop.x, drop.y, x2, y2);
+      grad.addColorStop(0, `rgba(255,255,255,0)`);
+      grad.addColorStop(.35, `rgba(210,235,255,${drop.opacity})`);
+      grad.addColorStop(1, `rgba(120,210,255,0)`);
+
+      rainCtx.strokeStyle = grad;
+      rainCtx.lineWidth = drop.width;
+      rainCtx.beginPath();
+      rainCtx.moveTo(drop.x, drop.y);
+      rainCtx.lineTo(x2, y2);
+      rainCtx.stroke();
+    }
+
+    drop.x += drop.drift;
+    drop.y += drop.speed;
+
+    if (drop.y > rainH + 80 || drop.x < -90) {
+      Object.assign(drop, createRainDrop(false));
+      drop.x = Math.random() * (rainW + 130);
+    }
+  }
+
+  rainCtx.restore();
+  requestAnimationFrame(animateRain);
+}
+
+window.addEventListener("resize", resizeRainCanvas);
+
+/* ======================================================
+   ARCADE GAMEPLAY
+====================================================== */
+
+const arcadeCanvas = document.getElementById("arcadeGameCanvas");
+const arcadeCtx = arcadeCanvas ? arcadeCanvas.getContext("2d") : null;
+let arcadeTick = 0;
+
+function drawArcadeGame() {
+  if (!arcadeCtx) return;
+
+  const w = arcadeCanvas.width;
+  const h = arcadeCanvas.height;
+
+  arcadeTick += 1;
+
+  arcadeCtx.fillStyle = "#020802";
+  arcadeCtx.fillRect(0, 0, w, h);
+
+  arcadeCtx.strokeStyle = "rgba(124,255,79,.22)";
+  arcadeCtx.lineWidth = 1;
+
+  for (let x = 0; x < w; x += 16) {
+    arcadeCtx.beginPath();
+    arcadeCtx.moveTo(x, 0);
+    arcadeCtx.lineTo(x, h);
+    arcadeCtx.stroke();
+  }
+
+  for (let y = 0; y < h; y += 16) {
+    arcadeCtx.beginPath();
+    arcadeCtx.moveTo(0, y);
+    arcadeCtx.lineTo(w, y);
+    arcadeCtx.stroke();
+  }
+
+  for (let i = 0; i < 18; i++) {
+    const alienX = 15 + (i % 6) * 20;
+    const alienY = 28 + Math.floor(i / 6) * 16 + Math.sin((arcadeTick + i * 5) * 0.08) * 2;
+
+    arcadeCtx.fillStyle = i % 3 === 0 ? "#ff2aa3" : i % 3 === 1 ? "#00f5ff" : "#7cff4f";
+    arcadeCtx.fillRect(alienX, alienY, 10, 7);
+    arcadeCtx.fillRect(alienX + 2, alienY - 3, 6, 3);
+  }
+
+  const playerX = 72 + Math.sin(arcadeTick * 0.08) * 48;
+
+  arcadeCtx.fillStyle = "#ffea00";
+  arcadeCtx.fillRect(playerX, 100, 18, 7);
+  arcadeCtx.fillRect(playerX + 7, 93, 4, 7);
+
+  arcadeCtx.fillStyle = "#00f5ff";
+  for (let i = 0; i < 3; i++) {
+    const shotY = 95 - ((arcadeTick * 4 + i * 37) % 95);
+    arcadeCtx.fillRect(playerX + 8, shotY, 2, 8);
+  }
+
+  arcadeCtx.fillStyle = "#7cff4f";
+  arcadeCtx.font = "bold 12px monospace";
+  arcadeCtx.fillText("$TEDDY", 46, 14);
+
+  if (Math.floor(arcadeTick / 24) % 2 === 0) {
+    arcadeCtx.fillStyle = "#ffea00";
+    arcadeCtx.font = "bold 10px monospace";
+    arcadeCtx.fillText("LEVEL UP", 50, 114);
+  }
+
+  requestAnimationFrame(drawArcadeGame);
+}
+
+/* ======================================================
+   UTILITIES + START
+====================================================== */
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
 
-renderTeddyHotspots();
-createEditor();
+window.addEventListener("load", () => {
+  const wrap = document.getElementById("teddyScrollWrap");
+
+  if (window.innerWidth <= 760 && wrap) {
+    wrap.scrollLeft = 380;
+  }
+
+  resizeRainCanvas();
+  animateRain();
+});
+
+renderHotspots();
+renderScreenOverlays();
+applyDryMaskStyle();
+prepareTvVideos();
+createEditorPanel();
+drawArcadeGame();
