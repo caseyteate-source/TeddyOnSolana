@@ -1,10 +1,9 @@
 /* ======================================================
-   $TEDDY RABBIT HOLE TV STATIC + STAGE-LOCKED BLINK PLAQUE
+   $TEDDY RABBIT HOLE TV STATIC + BLINKING BLACK BOX
 
-   Overlay editor:
-   hq.html?overlays=1
+   Replace this whole file:
+   rabbit-overlays.js
 
-   Replace this whole file.
    Do not touch hq.html.
    Do not touch rabbit-hole.js.
 ====================================================== */
@@ -38,7 +37,7 @@ const rabbitOverlaySettings = [
     type: "plaque",
     className: "rabbit-overlay stage-blink-plaque",
 
-    /* These are image/stage percentages, so it stays locked to the room image */
+    /* These are locked to the room image, not the browser window */
     x: 76.9,
     y: 56.68,
     w: 6.6,
@@ -68,15 +67,15 @@ if (isOverlayEditMode) {
 }
 
 /* ======================================================
-   EXTRA PLAQUE + EDITOR STYLES
+   STYLES
 ====================================================== */
 
-function injectStagePlaqueStyles() {
-  const oldStyle = document.getElementById("stagePlaqueStyles");
+function injectExtraOverlayStyles() {
+  const oldStyle = document.getElementById("extraOverlayStyles");
   if (oldStyle) oldStyle.remove();
 
   const style = document.createElement("style");
-  style.id = "stagePlaqueStyles";
+  style.id = "extraOverlayStyles";
 
   style.textContent = `
     .stage-blink-plaque {
@@ -108,15 +107,12 @@ function injectStagePlaqueStyles() {
     }
 
     .overlay-edit-mode .stage-blink-plaque {
-      opacity: 1 !important;
-      animation: none !important;
       outline: 4px solid #ffea00 !important;
       outline-offset: 2px;
       border: 2px solid rgba(255,0,0,.9) !important;
       box-shadow:
         0 0 18px rgba(255,234,0,.95),
         0 0 30px rgba(255,0,0,.85) !important;
-      background: rgba(0,0,0,.98) !important;
     }
 
     .overlay-edit-mode .stage-blink-plaque.selected-overlay {
@@ -157,6 +153,28 @@ function injectStagePlaqueStyles() {
     .overlay-edit-mode .overlay-editor-panel {
       max-height: 72vh;
       overflow-y: auto;
+    }
+
+    .selected-coords-box {
+      width: 100%;
+      height: 90px;
+      background: #050510;
+      color: #ffea00;
+      border: 1px solid #00f5ff;
+      border-radius: 10px;
+      padding: 10px;
+      font-family: monospace;
+      font-size: 10px;
+      box-sizing: border-box;
+      margin: 8px 0;
+    }
+
+    .copy-status-line {
+      color: #ffea00;
+      font-size: 12px;
+      font-weight: 900;
+      margin: 6px 0;
+      min-height: 16px;
     }
 
     @media (max-width: 760px) {
@@ -317,14 +335,10 @@ function selectOverlay(overlayId) {
   if (label) label.classList.add("selected");
 
   const selectedName = document.getElementById("overlaySelectedName");
-  if (selectedName) {
-    selectedName.textContent = `Selected: ${selectedOverlay.label}`;
-  }
+  if (selectedName) selectedName.textContent = `Selected: ${selectedOverlay.label}`;
 
   const selectBox = document.getElementById("overlaySelect");
-  if (selectBox) {
-    selectBox.value = selectedOverlay.id;
-  }
+  if (selectBox) selectBox.value = selectedOverlay.id;
 
   drawCornerHandles();
   updateEditorOutput();
@@ -367,7 +381,6 @@ function startOverlayDrag(event, overlay, el) {
     el.removeEventListener("pointermove", moveOverlay);
     el.removeEventListener("pointerup", stopOverlay);
     el.removeEventListener("pointercancel", stopOverlay);
-
     updateEditorOutput();
   }
 
@@ -397,8 +410,8 @@ function createOverlayEditorPanel() {
 
     <strong>Overlay Editor</strong>
     <p>
-      Black Blink Box is locked to the room image. It should show with a yellow outline in editor mode.
-      Move this editor box by dragging the top bar.
+      The black box now blinks in editor mode and normal mode.
+      The selected item coordinates are shown below even if clipboard copy fails.
     </p>
 
     <select id="overlaySelect">
@@ -407,6 +420,8 @@ function createOverlayEditorPanel() {
     </select>
 
     <div id="overlaySelectedName" class="selected-name">Selected: none</div>
+
+    <textarea id="selectedCoordsBox" class="selected-coords-box" readonly></textarea>
 
     <div class="overlay-editor-buttons">
       <button data-action="left">←</button>
@@ -430,7 +445,9 @@ function createOverlayEditorPanel() {
       <button data-action="op-plus" class="yellow">OP+</button>
     </div>
 
-    <button id="copyOverlaySettings" class="copy" type="button">COPY UPDATED SETTINGS</button>
+    <button id="copySelectedSettings" class="copy" type="button">COPY SELECTED ITEM ONLY</button>
+    <button id="copyOverlaySettings" class="copy" type="button">COPY ALL SETTINGS</button>
+    <div id="copyStatusLine" class="copy-status-line"></div>
     <textarea id="overlayOutput" readonly></textarea>
   `;
 
@@ -440,9 +457,7 @@ function createOverlayEditorPanel() {
   makeEditorPanelMoveable(panel);
 
   document.getElementById("overlaySelect").addEventListener("change", (event) => {
-    if (event.target.value) {
-      selectOverlay(event.target.value);
-    }
+    if (event.target.value) selectOverlay(event.target.value);
   });
 
   panel.querySelectorAll("[data-action]").forEach((button) => {
@@ -451,21 +466,16 @@ function createOverlayEditorPanel() {
     });
   });
 
-  document.getElementById("copyOverlaySettings").addEventListener("click", async () => {
+  document.getElementById("copySelectedSettings").addEventListener("click", () => {
     updateEditorOutput();
+    const text = getSelectedOutputText();
+    copyTextWithFallback(text, "selectedCoordsBox", "COPY SELECTED ITEM ONLY");
+  });
 
-    const output = document.getElementById("overlayOutput").value;
-
-    try {
-      await navigator.clipboard.writeText(output);
-      document.getElementById("copyOverlaySettings").textContent = "COPIED!";
-
-      setTimeout(() => {
-        document.getElementById("copyOverlaySettings").textContent = "COPY UPDATED SETTINGS";
-      }, 1200);
-    } catch {
-      alert("Could not auto-copy. Select the text box and copy manually.");
-    }
+  document.getElementById("copyOverlaySettings").addEventListener("click", () => {
+    updateEditorOutput();
+    const text = document.getElementById("overlayOutput").value;
+    copyTextWithFallback(text, "overlayOutput", "COPY ALL SETTINGS");
   });
 
   setTimeout(() => {
@@ -475,7 +485,6 @@ function createOverlayEditorPanel() {
 
 function restoreEditorPanelPosition(panel) {
   const saved = localStorage.getItem("teddyOverlayEditorPanelPosition");
-
   if (!saved) return;
 
   try {
@@ -525,10 +534,7 @@ function makeEditorPanelMoveable(panel) {
 
       localStorage.setItem(
         "teddyOverlayEditorPanelPosition",
-        JSON.stringify({
-          left: clampedLeft,
-          top: clampedTop
-        })
+        JSON.stringify({ left: clampedLeft, top: clampedTop })
       );
     }
 
@@ -643,9 +649,7 @@ function startCornerDrag(event, overlay, cornerKey) {
     overlay.clipCorners[cornerKey].y = Number(clamp(localY, 0, 100).toFixed(2));
 
     const el = document.getElementById(overlay.id);
-    if (el) {
-      applyOverlayStyle(el, overlay);
-    }
+    if (el) applyOverlayStyle(el, overlay);
 
     drawCornerHandles();
     updateEditorOutput();
@@ -671,11 +675,75 @@ function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
 
+function getSelectedOutputText() {
+  if (!selectedOverlay) return "";
+
+  return `{
+  id: "${selectedOverlay.id}",
+  label: "${selectedOverlay.label}",
+  type: "${selectedOverlay.type}",
+  x: ${selectedOverlay.x},
+  y: ${selectedOverlay.y},
+  w: ${selectedOverlay.w},
+  h: ${selectedOverlay.h},
+  rotate: ${selectedOverlay.rotate},
+  skewX: ${selectedOverlay.skewX},
+  skewY: ${selectedOverlay.skewY}${selectedOverlay.type === "plaque" ? `,
+  opacityHigh: ${selectedOverlay.opacityHigh},
+  opacityLow: ${selectedOverlay.opacityLow},
+  blinkSpeed: ${selectedOverlay.blinkSpeed}` : `,
+  opacity: ${selectedOverlay.opacity}`}
+}`;
+}
+
 function updateEditorOutput() {
   const output = document.getElementById("overlayOutput");
-  if (!output) return;
+  const selectedCoordsBox = document.getElementById("selectedCoordsBox");
 
-  output.value = `const rabbitOverlaySettings = ${JSON.stringify(rabbitOverlaySettings, null, 2)};`;
+  const fullText = `const rabbitOverlaySettings = ${JSON.stringify(rabbitOverlaySettings, null, 2)};`;
+  const selectedText = getSelectedOutputText();
+
+  if (output) output.value = fullText;
+  if (selectedCoordsBox) selectedCoordsBox.value = selectedText;
+}
+
+async function copyTextWithFallback(text, textareaId, buttonOriginalText) {
+  const textarea = document.getElementById(textareaId);
+  const status = document.getElementById("copyStatusLine");
+
+  if (textarea) {
+    textarea.value = text;
+    textarea.focus();
+    textarea.select();
+    textarea.setSelectionRange(0, textarea.value.length);
+  }
+
+  let copied = false;
+
+  try {
+    await navigator.clipboard.writeText(text);
+    copied = true;
+  } catch {}
+
+  if (!copied) {
+    try {
+      copied = document.execCommand("copy");
+    } catch {}
+  }
+
+  if (status) {
+    status.textContent = copied
+      ? "Copied."
+      : "Could not auto-copy. The text is selected now — press Command+C / Ctrl+C, or long-press and copy.";
+  }
+
+  const button = [...document.querySelectorAll("button")].find((btn) => btn.textContent === buttonOriginalText);
+  if (button && copied) {
+    button.textContent = "COPIED!";
+    setTimeout(() => {
+      button.textContent = buttonOriginalText;
+    }, 1200);
+  }
 }
 
 /* ======================================================
@@ -742,9 +810,7 @@ function startStaticSound() {
   const noiseBuffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
   const output = noiseBuffer.getChannelData(0);
 
-  for (let i = 0; i < bufferSize; i++) {
-    output[i] = Math.random() * 2 - 1;
-  }
+  for (let i = 0; i < bufferSize; i++) output[i] = Math.random() * 2 - 1;
 
   staticNode = audioContext.createBufferSource();
   staticNode.buffer = noiseBuffer;
@@ -786,11 +852,8 @@ function stopStaticSound() {
 
 if (staticSoundToggle) {
   staticSoundToggle.addEventListener("click", () => {
-    if (staticPlaying) {
-      stopStaticSound();
-    } else {
-      startStaticSound();
-    }
+    if (staticPlaying) stopStaticSound();
+    else startStaticSound();
   });
 }
 
@@ -810,6 +873,6 @@ window.addEventListener("load", () => {
    START
 ====================================================== */
 
-injectStagePlaqueStyles();
+injectExtraOverlayStyles();
 renderRabbitOverlays();
 createOverlayEditorPanel();
