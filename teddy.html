@@ -17,35 +17,45 @@
       background: #030007;
       overflow-x: hidden;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: white;
     }
 
     body {
       display: flex;
       justify-content: center;
       align-items: flex-start;
-      color: white;
     }
 
     .page-wrap {
       width: 100%;
       max-width: 1600px;
       position: relative;
+      overflow: hidden;
     }
 
     .stage {
-      width: 100%;
       position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
       overflow: hidden;
       background: #050008;
+      touch-action: pan-y;
+    }
+
+    body.edit-mode .stage {
       touch-action: none;
     }
 
     .bg-image {
+      position: absolute;
+      inset: 0;
       display: block;
       width: 100%;
-      height: auto;
+      height: 100%;
+      object-fit: cover;
       user-select: none;
       pointer-events: none;
+      z-index: 1;
     }
 
     #rainCanvas {
@@ -99,6 +109,7 @@
       object-fit: cover;
       display: none;
       background: #000;
+      z-index: 2;
     }
 
     .hotspot {
@@ -125,7 +136,7 @@
     }
 
     .hotspot.secret {
-      z-index: 20;
+      z-index: 30;
     }
 
     body.edit-mode .hotspot {
@@ -150,10 +161,6 @@
       overflow: visible;
     }
 
-    body.edit-mode .edit-label {
-      display: block;
-    }
-
     .edit-label {
       display: none;
       position: absolute;
@@ -167,6 +174,10 @@
       white-space: nowrap;
       pointer-events: none;
       z-index: 40;
+    }
+
+    body.edit-mode .edit-label {
+      display: block;
     }
 
     .corner-handle,
@@ -301,10 +312,6 @@
       .stage {
         width: 100vw;
       }
-
-      #editPanel {
-        font-size: 12px;
-      }
     }
   </style>
 </head>
@@ -328,9 +335,9 @@
         <div id="tvScreenAnim">
           <canvas id="tvIdleCanvas" width="320" height="240"></canvas>
 
-          <video class="tv-video" id="perfectStormVideo" src="perfect-storm.mp4" playsinline preload="metadata"></video>
-          <video class="tv-video" id="angryReporterVideo" src="angry-reporter.mp4" playsinline preload="metadata"></video>
-          <video class="tv-video" id="secretVideo" src="secret-video.mp4" playsinline preload="metadata"></video>
+          <video class="tv-video" id="perfectStormVideo" src="perfect-storm.mp4" playsinline webkit-playsinline preload="auto"></video>
+          <video class="tv-video" id="angryReporterVideo" src="angry-reporter.mp4" playsinline webkit-playsinline preload="auto"></video>
+          <video class="tv-video" id="secretVideo" src="secret-video.mp4" playsinline webkit-playsinline preload="auto"></video>
         </div>
       </div>
     </main>
@@ -354,9 +361,9 @@
   <div id="editPanel">
     <h3>EDIT MODE</h3>
     <p>Drag circles to move links.</p>
-    <p>Drag overlay boxes to move the arcade/TV screens.</p>
-    <p>Drag pink handle to resize an overlay.</p>
-    <p>Drag yellow handles to skew/bend the screen corners.</p>
+    <p>Drag arcade/TV boxes to move them.</p>
+    <p>Drag pink handle to resize.</p>
+    <p>Drag yellow handles to bend/skew corners.</p>
     <button id="copyCoords">Copy updated coordinates</button>
     <button id="closeEditor">Leave edit mode</button>
     <textarea id="editOutput" spellcheck="false"></textarea>
@@ -530,7 +537,8 @@
     };
 
     const BASE_WIDTH = 1536;
-    const editMode = new URLSearchParams(window.location.search).get("edit") === "1";
+    const params = new URLSearchParams(window.location.search);
+    const editMode = params.get("edit") === "1";
 
     if (editMode) {
       document.body.classList.add("edit-mode");
@@ -549,6 +557,20 @@
 
     function getStageScale() {
       return stage.clientWidth / BASE_WIDTH;
+    }
+
+    function lockStageToImageRatio() {
+      if (bgImage.naturalWidth && bgImage.naturalHeight) {
+        stage.style.aspectRatio = `${bgImage.naturalWidth} / ${bgImage.naturalHeight}`;
+      }
+
+      layoutEverything();
+    }
+
+    if (bgImage.complete) {
+      lockStageToImageRatio();
+    } else {
+      bgImage.addEventListener("load", lockStageToImageRatio);
     }
 
     function applyClip(el, overlay) {
@@ -580,6 +602,17 @@
       el.style.top = `${hotspot.y}%`;
       el.style.width = `${size}px`;
       el.style.height = `${size}px`;
+    }
+
+    function layoutEverything() {
+      screenOverlays.forEach(applyOverlayPosition);
+
+      teddyHotspots.forEach(h => {
+        const el = document.getElementById(h.id);
+        if (el) applyHotspotPosition(h, el);
+      });
+
+      resizeRainCanvas();
     }
 
     function buildHotspots() {
@@ -620,11 +653,11 @@
       }
 
       if (action === "switch-angry-reporter") {
-        playTvVideo("angryReporterVideo");
+        playTvVideo("angryReporterVideo", false);
       }
 
       if (action === "switch-secret-video") {
-        playTvVideo("secretVideo");
+        playTvVideo("secretVideo", false);
       }
     }
 
@@ -638,26 +671,12 @@
       }
     });
 
-    function layoutEverything() {
-      screenOverlays.forEach(applyOverlayPosition);
-
-      teddyHotspots.forEach(h => {
-        const el = document.getElementById(h.id);
-        if (el) applyHotspotPosition(h, el);
-      });
-
-      resizeRainCanvas();
-    }
-
-    bgImage.addEventListener("load", layoutEverything);
-    window.addEventListener("resize", layoutEverything);
-
     buildHotspots();
-    layoutEverything();
+    window.addEventListener("resize", layoutEverything);
+    requestAnimationFrame(layoutEverything);
 
     /*
       RAIN
-      This skips the umbrella/dry-zone rectangle so rain no longer passes over Teddy.
     */
     const rainCanvas = document.getElementById("rainCanvas");
     const rainCtx = rainCanvas.getContext("2d");
@@ -666,6 +685,8 @@
     function resizeRainCanvas() {
       const rect = stage.getBoundingClientRect();
       const dpr = window.devicePixelRatio || 1;
+
+      if (!rect.width || !rect.height) return;
 
       rainCanvas.width = Math.max(1, Math.floor(rect.width * dpr));
       rainCanvas.height = Math.max(1, Math.floor(rect.height * dpr));
@@ -701,34 +722,36 @@
       const w = stage.clientWidth;
       const h = stage.clientHeight;
 
-      rainCtx.clearRect(0, 0, w, h);
-      rainCtx.lineWidth = 1;
+      if (w && h) {
+        rainCtx.clearRect(0, 0, w, h);
+        rainCtx.lineWidth = 1;
 
-      rainDrops.forEach(d => {
-        d.x += d.drift;
-        d.y += d.speed;
+        rainDrops.forEach(d => {
+          d.x += d.drift;
+          d.y += d.speed;
 
-        if (d.y > h + 40) {
-          d.y = -40;
-          d.x = Math.random() * w;
-        }
+          if (d.y > h + 40) {
+            d.y = -40;
+            d.x = Math.random() * w;
+          }
 
-        if (d.x < -30) d.x = w + 30;
-        if (d.x > w + 30) d.x = -30;
+          if (d.x < -30) d.x = w + 30;
+          if (d.x > w + 30) d.x = -30;
 
-        const x2 = d.x + d.drift * 2;
-        const y2 = d.y + d.len;
+          const x2 = d.x + d.drift * 2;
+          const y2 = d.y + d.len;
 
-        if (pointInsideDryZone(d.x, d.y) || pointInsideDryZone(x2, y2)) {
-          return;
-        }
+          if (pointInsideDryZone(d.x, d.y) || pointInsideDryZone(x2, y2)) {
+            return;
+          }
 
-        rainCtx.strokeStyle = `rgba(180,235,255,${d.alpha})`;
-        rainCtx.beginPath();
-        rainCtx.moveTo(d.x, d.y);
-        rainCtx.lineTo(x2, y2);
-        rainCtx.stroke();
-      });
+          rainCtx.strokeStyle = `rgba(180,235,255,${d.alpha})`;
+          rainCtx.beginPath();
+          rainCtx.moveTo(d.x, d.y);
+          rainCtx.lineTo(x2, y2);
+          rainCtx.stroke();
+        });
+      }
 
       requestAnimationFrame(drawRain);
     }
@@ -738,15 +761,11 @@
 
     /*
       ARCADE GAME
-      Important fix:
-      The canvas is a full 640x480 game, but everything is drawn inside a safe inset.
-      So when the editable overlay box gets smaller, the game scales down instead of clipping.
     */
     const arcadeCanvas = document.getElementById("arcadeCanvas");
     const ac = arcadeCanvas.getContext("2d");
 
     let arcadeFrame = 0;
-    const player = { x: 320, y: 380 };
     const emojis = ["🐻", "🧸", "🚀", "🍦", "🎮", "🕹️", "💎", "🧩"];
     const falling = Array.from({ length: 9 }, (_, i) => ({
       x: 60 + Math.random() * 520,
@@ -789,6 +808,7 @@
 
       ac.strokeStyle = "rgba(0,255,255,0.28)";
       ac.lineWidth = 2;
+
       for (let y = 40; y < H; y += 34) {
         ac.beginPath();
         ac.moveTo(0, y + Math.sin((arcadeFrame + y) * 0.04) * 3);
@@ -807,6 +827,7 @@
 
       falling.forEach(o => {
         o.y += o.speed;
+
         if (o.y > H + 40) {
           o.y = -40;
           o.x = 50 + Math.random() * 540;
@@ -820,6 +841,7 @@
 
       skulls.forEach(s => {
         s.y += s.speed;
+
         if (s.y > H + 40) {
           s.y = -80;
           s.x = 50 + Math.random() * 540;
@@ -830,10 +852,10 @@
         ac.fillText("💀", s.x, s.y);
       });
 
-      player.x = 320 + Math.sin(arcadeFrame * 0.035) * 170;
+      const playerX = 320 + Math.sin(arcadeFrame * 0.035) * 170;
 
       ac.font = "54px serif";
-      ac.fillText("🧸", player.x, player.y);
+      ac.fillText("🧸", playerX, 380);
 
       ac.fillStyle = "rgba(0,255,255,0.16)";
       ac.fillRect(0, H - 48, W, 48);
@@ -855,20 +877,43 @@
     drawArcadeScene();
 
     /*
-      TV IDLE: STATIC / COLOR BARS
-      TV click plays Perfect Storm.
-      Hidden switches play other videos.
+      TV STATIC / COLOR BARS / VIDEOS
+
+      Perfect Storm auto-plays muted because iPhone/browser autoplay
+      usually blocks sound without a user tap.
+
+      Angry Reporter and Secret Video play with sound because those are
+      triggered by hidden user-click switches.
     */
     const tvScreen = document.getElementById("tvScreenAnim");
     const tvIdleCanvas = document.getElementById("tvIdleCanvas");
     const tvc = tvIdleCanvas.getContext("2d");
+
+    const perfectStormVideo = document.getElementById("perfectStormVideo");
+    const angryReporterVideo = document.getElementById("angryReporterVideo");
+    const secretVideo = document.getElementById("secretVideo");
+
     const tvVideos = [
-      document.getElementById("perfectStormVideo"),
-      document.getElementById("angryReporterVideo"),
-      document.getElementById("secretVideo")
+      perfectStormVideo,
+      angryReporterVideo,
+      secretVideo
     ];
 
     let tvBurstUntil = 0;
+    let perfectStormAutoTried = false;
+
+    function returnToTvIdle() {
+      tvVideos.forEach(v => {
+        v.pause();
+        try { v.currentTime = 0; } catch (e) {}
+        v.style.display = "none";
+        v.style.opacity = "1";
+        v.controls = false;
+      });
+
+      tvIdleCanvas.style.display = "block";
+      tvBurstUntil = performance.now() + 320;
+    }
 
     function stopAllVideos() {
       tvVideos.forEach(v => {
@@ -876,12 +921,13 @@
         try { v.currentTime = 0; } catch (e) {}
         v.style.display = "none";
         v.style.opacity = "1";
-        v.muted = false;
-        v.volume = 1;
+        v.controls = false;
       });
+
+      tvIdleCanvas.style.display = "block";
     }
 
-    function playTvVideo(videoId) {
+    function playTvVideo(videoId, mutedForAutoplay) {
       const video = document.getElementById(videoId);
       if (!video) return;
 
@@ -890,10 +936,16 @@
       tvBurstUntil = performance.now() + 420;
       tvIdleCanvas.style.display = "block";
 
-      video.muted = false;
-      video.volume = 1;
+      video.muted = !!mutedForAutoplay;
+      video.defaultMuted = !!mutedForAutoplay;
+      video.volume = mutedForAutoplay ? 0 : 1;
+      video.controls = false;
       video.style.display = "block";
       video.style.opacity = "0";
+
+      try {
+        video.currentTime = 0;
+      } catch (e) {}
 
       const playPromise = video.play();
 
@@ -904,24 +956,39 @@
 
       if (playPromise && playPromise.catch) {
         playPromise.catch(() => {
-          video.controls = true;
+          video.style.display = "none";
           video.style.opacity = "1";
-          tvIdleCanvas.style.display = "none";
+          tvIdleCanvas.style.display = "block";
         });
       }
     }
 
-    tvScreen.addEventListener("click", e => {
+    function tryAutoplayPerfectStorm() {
+      if (perfectStormAutoTried || editMode) return;
+      perfectStormAutoTried = true;
+
+      setTimeout(() => {
+        playTvVideo("perfectStormVideo", true);
+      }, 600);
+    }
+
+    tvScreen.addEventListener("click", () => {
       if (editMode) return;
-      playTvVideo("perfectStormVideo");
+
+      /*
+        A direct TV click plays Perfect Storm with sound.
+        This is separate from the muted autoplay.
+      */
+      playTvVideo("perfectStormVideo", false);
     });
 
     tvVideos.forEach(v => {
-      v.addEventListener("ended", () => {
-        v.style.display = "none";
-        tvIdleCanvas.style.display = "block";
-      });
+      v.addEventListener("ended", returnToTvIdle);
+      v.addEventListener("error", returnToTvIdle);
     });
+
+    window.addEventListener("load", tryAutoplayPerfectStorm);
+    document.addEventListener("DOMContentLoaded", tryAutoplayPerfectStorm);
 
     function drawStatic() {
       const W = tvIdleCanvas.width;
@@ -948,6 +1015,7 @@
     function drawColorBars() {
       const W = tvIdleCanvas.width;
       const H = tvIdleCanvas.height;
+
       const bars = [
         "#ffffff",
         "#ffff00",
@@ -982,7 +1050,10 @@
     function animateTvIdle() {
       const now = performance.now();
 
-      const anyVideoVisible = tvVideos.some(v => v.style.display === "block" && v.style.opacity === "1");
+      const anyVideoVisible = tvVideos.some(v => {
+        return v.style.display === "block" && v.style.opacity === "1";
+      });
+
       if (!anyVideoVisible) {
         tvIdleCanvas.style.display = "block";
       }
@@ -1003,7 +1074,7 @@
     animateTvIdle();
 
     /*
-      EDITOR
+      EDIT MODE
     */
     function addOverlayEditorHandles() {
       screenOverlays.forEach(overlay => {
@@ -1078,7 +1149,6 @@
             corner: cornerEl.dataset.corner,
             el: document.getElementById(`overlay-${overlay.id}`)
           };
-          cornerEl.setPointerCapture(e.pointerId);
           return;
         }
 
@@ -1093,7 +1163,6 @@
             startW: overlay.w,
             startH: overlay.h
           };
-          resizeEl.setPointerCapture(e.pointerId);
           return;
         }
 
@@ -1104,7 +1173,6 @@
             type: "hotspot",
             hotspot: h
           };
-          hotspotEl.setPointerCapture(e.pointerId);
           return;
         }
 
@@ -1120,7 +1188,6 @@
             startX: overlay.x,
             startY: overlay.y
           };
-          overlayEl.setPointerCapture(e.pointerId);
         }
       });
 
@@ -1184,7 +1251,7 @@ const rainDryZone = ${JSON.stringify(rainDryZone, null, 2)};`;
       });
 
       document.getElementById("closeEditor").addEventListener("click", () => {
-        window.location.href = window.location.pathname + "?v=teddy11";
+        window.location.href = window.location.pathname + "?v=teddy13";
       });
     }
 
