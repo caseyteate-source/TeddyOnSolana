@@ -1,15 +1,16 @@
 /* ======================================================
-   $TEDDY PAGE HOTSPOTS + ARCADE OVERLAY EDITOR
+   $TEDDY PAGE HOTSPOTS + SCREEN OVERLAY EDITOR
 
-   Normal page:
+   Normal:
    teddy.html
 
    Editor:
    teddy.html?edit=1
 
-   This editor controls:
-   - circle link locations
-   - arcade gameplay overlay location/size/tilt
+   This controls:
+   - circle links
+   - arcade gameplay screen overlay
+   - TV screen overlay
 ====================================================== */
 
 const teddyEditMode = new URLSearchParams(window.location.search).has("edit");
@@ -21,32 +22,54 @@ const teddyHotspots = [
     title: "$TEDDY",
     url: "https://dexscreener.com/solana/8kjewtuq1c1699naup7watzfgods3yfnadbq46fdpump",
     sameTab: false,
-    x: 20.4,
-    y: 27.8,
-    size: 300,
+    x: 18.5,
+    y: 25.1,
+    size: 310,
     kind: "circle"
   },
   {
     id: "arcade",
-    label: "Arcade",
-    title: "Arcade",
+    label: "Arcade Play",
+    title: "Arcade Play",
     url: "index.html",
     sameTab: true,
-    x: 44.35,
-    y: 64.1,
-    size: 88,
+    x: 13.0,
+    y: 84.4,
+    size: 92,
+    kind: "circle"
+  },
+  {
+    id: "kitty",
+    label: "Kitty Files",
+    title: "Kitty Files",
+    url: "kitty.html",
+    sameTab: true,
+    x: 30.5,
+    y: 84.4,
+    size: 92,
     kind: "circle"
   },
   {
     id: "white-rabbit",
-    label: "White Rabbit",
+    label: "Rabbit Hole",
     title: "Follow the White Rabbit",
     url: "hq.html",
     sameTab: true,
-    x: 89.7,
-    y: 82.4,
-    size: 66,
-    kind: "bunny"
+    x: 48.0,
+    y: 83.7,
+    size: 96,
+    kind: "circle"
+  },
+  {
+    id: "emoji",
+    label: "Emoji Timeline",
+    title: "Emoji Timeline",
+    url: "emoji.html",
+    sameTab: true,
+    x: 66.0,
+    y: 83.9,
+    size: 92,
+    kind: "circle"
   },
   {
     id: "gmebay",
@@ -54,29 +77,47 @@ const teddyHotspots = [
     title: "GMEBAY",
     url: "gmebay.html",
     sameTab: true,
-    x: 75.25,
-    y: 42.85,
-    size: 82,
+    x: 84.0,
+    y: 83.2,
+    size: 98,
     kind: "circle"
   }
 ];
 
-const arcadeGameplayOverlay = {
-  id: "arcade-gameplay",
-  label: "Arcade Gameplay",
-  x: 42.58,
-  y: 56.35,
-  w: 7.22,
-  h: 8.38,
-  rotate: -2,
-  skewX: -1,
-  skewY: 0,
-  opacity: 0.92
-};
+const screenOverlays = [
+  {
+    id: "arcade-gameplay",
+    label: "Arcade Gameplay",
+    elementId: "arcadeScreenAnim",
+    x: 27.95,
+    y: 41.65,
+    w: 16.3,
+    h: 18.3,
+    rotate: -1.25,
+    skewX: -1.25,
+    skewY: 0,
+    opacity: 0.93
+  },
+  {
+    id: "tv-screen",
+    label: "TV Screen",
+    elementId: "tvScreenAnim",
+    x: 85.9,
+    y: 53.25,
+    w: 10.0,
+    h: 11.3,
+    rotate: -1.0,
+    skewX: 0,
+    skewY: 0,
+    opacity: 0.86
+  }
+];
 
 const teddyHotspotRoot = document.getElementById("teddyHotspotRoot");
-let selectedTeddyItemType = null;
-let selectedTeddyHotspot = null;
+
+let selectedType = null;
+let selectedHotspot = null;
+let selectedScreen = null;
 
 if (teddyEditMode) {
   document.body.classList.add("teddy-edit-mode");
@@ -116,15 +157,15 @@ function renderTeddyHotspots() {
 
       link.addEventListener("pointerdown", (event) => {
         selectTeddyItem("hotspot", spot.id);
-        startTeddyHotspotDrag(event, spot, link);
+        startHotspotDrag(event, spot, link);
       });
     }
 
     teddyHotspotRoot.appendChild(link);
   });
 
-  applyArcadeGameplayOverlay();
-  updateTeddyEditorOutput();
+  applyAllScreenOverlays();
+  updateEditorOutput();
 }
 
 function getPixelBunnySvg() {
@@ -148,64 +189,79 @@ function getPixelBunnySvg() {
   `;
 }
 
-function applyArcadeGameplayOverlay() {
-  const arcade = document.getElementById("arcadeScreenAnim");
-  if (!arcade) return;
+function applyAllScreenOverlays() {
+  screenOverlays.forEach((overlay) => {
+    applyScreenOverlay(overlay);
+  });
+}
 
-  arcade.style.left = arcadeGameplayOverlay.x + "%";
-  arcade.style.top = arcadeGameplayOverlay.y + "%";
-  arcade.style.width = arcadeGameplayOverlay.w + "%";
-  arcade.style.height = arcadeGameplayOverlay.h + "%";
-  arcade.style.opacity = arcadeGameplayOverlay.opacity;
-  arcade.style.transform = `rotate(${arcadeGameplayOverlay.rotate}deg) skewX(${arcadeGameplayOverlay.skewX}deg) skewY(${arcadeGameplayOverlay.skewY}deg)`;
+function applyScreenOverlay(overlay) {
+  const el = document.getElementById(overlay.elementId);
+  if (!el) return;
 
-  if (teddyEditMode) {
-    arcade.addEventListener("pointerdown", startArcadeOverlayDrag);
+  el.style.left = overlay.x + "%";
+  el.style.top = overlay.y + "%";
+  el.style.width = overlay.w + "%";
+  el.style.height = overlay.h + "%";
+  el.style.opacity = overlay.opacity;
+  el.style.transform = `rotate(${overlay.rotate}deg) skewX(${overlay.skewX}deg) skewY(${overlay.skewY}deg)`;
+
+  if (teddyEditMode && !el.dataset.editorReady) {
+    el.dataset.editorReady = "true";
+
+    el.addEventListener("pointerdown", (event) => {
+      startScreenDrag(event, overlay, el);
+    });
   }
 }
 
 function selectTeddyItem(type, id) {
-  selectedTeddyItemType = type;
+  selectedType = type;
 
   document.querySelectorAll(".teddy-hotspot").forEach((link) => {
     link.classList.remove("selected");
   });
 
-  document.getElementById("arcadeScreenAnim")?.classList.remove("selected-arcade");
+  document.querySelectorAll(".arcade-screen-anim, .tv-screen-anim").forEach((el) => {
+    el.classList.remove("selected-screen");
+  });
 
   if (type === "hotspot") {
-    selectedTeddyHotspot = teddyHotspots.find((spot) => spot.id === id);
+    selectedHotspot = teddyHotspots.find((spot) => spot.id === id);
+    selectedScreen = null;
 
     const selectedLink = document.querySelector(`.teddy-hotspot[data-id="${id}"]`);
     if (selectedLink) selectedLink.classList.add("selected");
 
-    const selectedName = document.getElementById("teddySelectedHotspot");
-    if (selectedName && selectedTeddyHotspot) {
-      selectedName.textContent = `Selected: ${selectedTeddyHotspot.label}`;
+    const selectedName = document.getElementById("teddySelectedItem");
+    if (selectedName && selectedHotspot) {
+      selectedName.textContent = `Selected: ${selectedHotspot.label}`;
     }
 
-    const select = document.getElementById("teddyHotspotSelect");
+    const select = document.getElementById("teddyItemSelect");
     if (select) select.value = id;
   }
 
-  if (type === "arcade") {
-    selectedTeddyHotspot = null;
+  if (type === "screen") {
+    selectedScreen = screenOverlays.find((screen) => screen.id === id);
+    selectedHotspot = null;
 
-    document.getElementById("arcadeScreenAnim")?.classList.add("selected-arcade");
+    const el = selectedScreen ? document.getElementById(selectedScreen.elementId) : null;
+    if (el) el.classList.add("selected-screen");
 
-    const selectedName = document.getElementById("teddySelectedHotspot");
-    if (selectedName) {
-      selectedName.textContent = "Selected: Arcade Gameplay";
+    const selectedName = document.getElementById("teddySelectedItem");
+    if (selectedName && selectedScreen) {
+      selectedName.textContent = `Selected: ${selectedScreen.label}`;
     }
 
-    const select = document.getElementById("teddyHotspotSelect");
-    if (select) select.value = "arcade-gameplay";
+    const select = document.getElementById("teddyItemSelect");
+    if (select) select.value = id;
   }
 
-  updateTeddyEditorOutput();
+  updateEditorOutput();
 }
 
-function startTeddyHotspotDrag(event, spot, element) {
+function startHotspotDrag(event, spot, element) {
   if (!teddyEditMode) return;
 
   event.preventDefault();
@@ -231,7 +287,7 @@ function startTeddyHotspotDrag(event, spot, element) {
     element.style.left = spot.x + "%";
     element.style.top = spot.y + "%";
 
-    updateTeddyEditorOutput();
+    updateEditorOutput();
   }
 
   function stopSpot() {
@@ -243,7 +299,7 @@ function startTeddyHotspotDrag(event, spot, element) {
     element.removeEventListener("pointerup", stopSpot);
     element.removeEventListener("pointercancel", stopSpot);
 
-    updateTeddyEditorOutput();
+    updateEditorOutput();
   }
 
   element.addEventListener("pointermove", moveSpot);
@@ -251,76 +307,75 @@ function startTeddyHotspotDrag(event, spot, element) {
   element.addEventListener("pointercancel", stopSpot);
 }
 
-function startArcadeOverlayDrag(event) {
+function startScreenDrag(event, overlay, element) {
   if (!teddyEditMode) return;
 
   event.preventDefault();
   event.stopPropagation();
 
-  selectTeddyItem("arcade", "arcade-gameplay");
+  selectTeddyItem("screen", overlay.id);
 
-  const arcade = document.getElementById("arcadeScreenAnim");
-  arcade.setPointerCapture(event.pointerId);
+  element.setPointerCapture(event.pointerId);
 
   const stage = document.getElementById("teddyStage");
   const rect = stage.getBoundingClientRect();
 
   const startX = event.clientX;
   const startY = event.clientY;
-  const startOverlayX = arcadeGameplayOverlay.x;
-  const startOverlayY = arcadeGameplayOverlay.y;
+  const startOverlayX = overlay.x;
+  const startOverlayY = overlay.y;
 
-  function moveArcade(e) {
+  function moveScreen(e) {
     const dx = ((e.clientX - startX) / rect.width) * 100;
     const dy = ((e.clientY - startY) / rect.height) * 100;
 
-    arcadeGameplayOverlay.x = Number((startOverlayX + dx).toFixed(2));
-    arcadeGameplayOverlay.y = Number((startOverlayY + dy).toFixed(2));
+    overlay.x = Number((startOverlayX + dx).toFixed(2));
+    overlay.y = Number((startOverlayY + dy).toFixed(2));
 
-    applyArcadeGameplayOverlay();
-    updateTeddyEditorOutput();
+    applyScreenOverlay(overlay);
+    updateEditorOutput();
   }
 
-  function stopArcade() {
+  function stopScreen() {
     try {
-      arcade.releasePointerCapture(event.pointerId);
+      element.releasePointerCapture(event.pointerId);
     } catch {}
 
-    arcade.removeEventListener("pointermove", moveArcade);
-    arcade.removeEventListener("pointerup", stopArcade);
-    arcade.removeEventListener("pointercancel", stopArcade);
+    element.removeEventListener("pointermove", moveScreen);
+    element.removeEventListener("pointerup", stopScreen);
+    element.removeEventListener("pointercancel", stopScreen);
 
-    updateTeddyEditorOutput();
+    updateEditorOutput();
   }
 
-  arcade.addEventListener("pointermove", moveArcade);
-  arcade.addEventListener("pointerup", stopArcade);
-  arcade.addEventListener("pointercancel", stopArcade);
+  element.addEventListener("pointermove", moveScreen);
+  element.addEventListener("pointerup", stopScreen);
+  element.addEventListener("pointercancel", stopScreen);
 }
 
-function createTeddyHotspotEditor() {
+function createEditor() {
   if (!teddyEditMode) return;
 
   const editor = document.createElement("div");
-  editor.className = "teddy-hotspot-editor";
+  editor.className = "teddy-editor";
 
   const options = [
-    `<option value="arcade-gameplay">Arcade Gameplay</option>`,
-    ...teddyHotspots.map((spot) => `<option value="${spot.id}">${spot.label}</option>`)
+    ...screenOverlays.map((screen) => `<option value="${screen.id}" data-type="screen">${screen.label}</option>`),
+    ...teddyHotspots.map((spot) => `<option value="${spot.id}" data-type="hotspot">${spot.label}</option>`)
   ].join("");
 
   editor.innerHTML = `
-    <strong>$TEDDY Link + Arcade Editor</strong>
+    <strong>$TEDDY Page Editor</strong>
     <p>Select an item. Drag it on the image, or use buttons. Copy the full settings when done.</p>
 
-    <select id="teddyHotspotSelect">
+    <select id="teddyItemSelect">
       <option value="">Choose item...</option>
       ${options}
     </select>
 
-    <p id="teddySelectedHotspot">Selected: none</p>
+    <p id="teddySelectedItem">Selected: none</p>
 
-    <div class="hotspot-buttons">
+    <div class="editor-buttons">
       <button data-action="left">←</button>
       <button data-action="up">↑</button>
       <button data-action="down">↓</button>
@@ -328,8 +383,8 @@ function createTeddyHotspotEditor() {
 
       <button data-action="smaller" class="blue">Size -</button>
       <button data-action="bigger" class="blue">Size +</button>
-      <button data-action="tiny" class="blue">Tiny</button>
-      <button data-action="large" class="blue">Large</button>
+      <button data-action="wide" class="blue">Wide +</button>
+      <button data-action="tall" class="blue">Tall +</button>
 
       <button data-action="rot-minus" class="yellow">R-</button>
       <button data-action="rot-plus" class="yellow">R+</button>
@@ -337,33 +392,35 @@ function createTeddyHotspotEditor() {
       <button data-action="sx-plus" class="yellow">SX+</button>
     </div>
 
-    <button id="copyTeddyHotspots" class="copy" type="button">COPY SETTINGS</button>
-    <textarea id="teddyHotspotOutput" readonly></textarea>
+    <button id="copyTeddySettings" class="copy" type="button">COPY SETTINGS</button>
+    <textarea id="teddyEditorOutput" readonly></textarea>
   `;
 
   document.body.appendChild(editor);
 
-  document.getElementById("teddyHotspotSelect").addEventListener("change", (event) => {
-    if (event.target.value === "arcade-gameplay") {
-      selectTeddyItem("arcade", "arcade-gameplay");
+  document.getElementById("teddyItemSelect").addEventListener("change", (event) => {
+    const value = event.target.value;
+
+    if (!value) return;
+
+    if (screenOverlays.some((screen) => screen.id === value)) {
+      selectTeddyItem("screen", value);
       return;
     }
 
-    if (event.target.value) {
-      selectTeddyItem("hotspot", event.target.value);
-    }
+    selectTeddyItem("hotspot", value);
   });
 
   editor.querySelectorAll("[data-action]").forEach((button) => {
     button.addEventListener("click", () => {
-      adjustSelectedTeddyItem(button.dataset.action);
+      adjustSelectedItem(button.dataset.action);
     });
   });
 
-  document.getElementById("copyTeddyHotspots").addEventListener("click", async () => {
-    updateTeddyEditorOutput();
+  document.getElementById("copyTeddySettings").addEventListener("click", async () => {
+    updateEditorOutput();
 
-    const output = document.getElementById("teddyHotspotOutput");
+    const output = document.getElementById("teddyEditorOutput");
 
     output.focus();
     output.select();
@@ -371,10 +428,10 @@ function createTeddyHotspotEditor() {
 
     try {
       await navigator.clipboard.writeText(output.value);
-      document.getElementById("copyTeddyHotspots").textContent = "COPIED!";
+      document.getElementById("copyTeddySettings").textContent = "COPIED!";
 
       setTimeout(() => {
-        document.getElementById("copyTeddyHotspots").textContent = "COPY SETTINGS";
+        document.getElementById("copyTeddySettings").textContent = "COPY SETTINGS";
       }, 1200);
     } catch {
       alert("The code is selected. Press Command+C or Ctrl+C to copy it.");
@@ -382,84 +439,89 @@ function createTeddyHotspotEditor() {
   });
 
   setTimeout(() => {
-    selectTeddyItem("arcade", "arcade-gameplay");
+    selectTeddyItem("screen", "arcade-gameplay");
   }, 200);
 }
 
-function adjustSelectedTeddyItem(action) {
-  if (selectedTeddyItemType === "arcade") {
-    adjustArcadeOverlay(action);
+function adjustSelectedItem(action) {
+  if (selectedType === "screen" && selectedScreen) {
+    adjustScreenOverlay(action);
     return;
   }
 
-  if (selectedTeddyItemType === "hotspot" && selectedTeddyHotspot) {
-    adjustSelectedTeddyHotspot(action);
+  if (selectedType === "hotspot" && selectedHotspot) {
+    adjustHotspot(action);
   }
 }
 
-function adjustSelectedTeddyHotspot(action) {
-  if (!selectedTeddyHotspot) return;
+function adjustHotspot(action) {
+  if (!selectedHotspot) return;
 
-  if (action === "left") selectedTeddyHotspot.x = Number((selectedTeddyHotspot.x - 0.25).toFixed(2));
-  if (action === "right") selectedTeddyHotspot.x = Number((selectedTeddyHotspot.x + 0.25).toFixed(2));
-  if (action === "up") selectedTeddyHotspot.y = Number((selectedTeddyHotspot.y - 0.25).toFixed(2));
-  if (action === "down") selectedTeddyHotspot.y = Number((selectedTeddyHotspot.y + 0.25).toFixed(2));
+  if (action === "left") selectedHotspot.x = Number((selectedHotspot.x - 0.25).toFixed(2));
+  if (action === "right") selectedHotspot.x = Number((selectedHotspot.x + 0.25).toFixed(2));
+  if (action === "up") selectedHotspot.y = Number((selectedHotspot.y - 0.25).toFixed(2));
+  if (action === "down") selectedHotspot.y = Number((selectedHotspot.y + 0.25).toFixed(2));
 
-  if (action === "smaller") selectedTeddyHotspot.size = Math.max(20, selectedTeddyHotspot.size - 4);
-  if (action === "bigger") selectedTeddyHotspot.size = selectedTeddyHotspot.size + 4;
-  if (action === "tiny") selectedTeddyHotspot.size = 42;
-  if (action === "large") selectedTeddyHotspot.size = 90;
+  if (action === "smaller") selectedHotspot.size = Math.max(20, selectedHotspot.size - 4);
+  if (action === "bigger") selectedHotspot.size = selectedHotspot.size + 4;
+  if (action === "wide") selectedHotspot.size = selectedHotspot.size + 6;
+  if (action === "tall") selectedHotspot.size = selectedHotspot.size + 6;
 
-  const link = document.querySelector(`.teddy-hotspot[data-id="${selectedTeddyHotspot.id}"]`);
+  const link = document.querySelector(`.teddy-hotspot[data-id="${selectedHotspot.id}"]`);
 
   if (link) {
-    link.style.left = selectedTeddyHotspot.x + "%";
-    link.style.top = selectedTeddyHotspot.y + "%";
-    link.style.width = selectedTeddyHotspot.size + "px";
-    link.style.height = selectedTeddyHotspot.size + "px";
+    link.style.left = selectedHotspot.x + "%";
+    link.style.top = selectedHotspot.y + "%";
+    link.style.width = selectedHotspot.size + "px";
+    link.style.height = selectedHotspot.size + "px";
   }
 
-  updateTeddyEditorOutput();
+  updateEditorOutput();
 }
 
-function adjustArcadeOverlay(action) {
-  if (action === "left") arcadeGameplayOverlay.x = Number((arcadeGameplayOverlay.x - 0.25).toFixed(2));
-  if (action === "right") arcadeGameplayOverlay.x = Number((arcadeGameplayOverlay.x + 0.25).toFixed(2));
-  if (action === "up") arcadeGameplayOverlay.y = Number((arcadeGameplayOverlay.y - 0.25).toFixed(2));
-  if (action === "down") arcadeGameplayOverlay.y = Number((arcadeGameplayOverlay.y + 0.25).toFixed(2));
+function adjustScreenOverlay(action) {
+  if (!selectedScreen) return;
+
+  if (action === "left") selectedScreen.x = Number((selectedScreen.x - 0.25).toFixed(2));
+  if (action === "right") selectedScreen.x = Number((selectedScreen.x + 0.25).toFixed(2));
+  if (action === "up") selectedScreen.y = Number((selectedScreen.y - 0.25).toFixed(2));
+  if (action === "down") selectedScreen.y = Number((selectedScreen.y + 0.25).toFixed(2));
 
   if (action === "smaller") {
-    arcadeGameplayOverlay.w = Number((arcadeGameplayOverlay.w - 0.25).toFixed(2));
-    arcadeGameplayOverlay.h = Number((arcadeGameplayOverlay.h - 0.25).toFixed(2));
+    selectedScreen.w = Number((selectedScreen.w - 0.25).toFixed(2));
+    selectedScreen.h = Number((selectedScreen.h - 0.25).toFixed(2));
   }
 
   if (action === "bigger") {
-    arcadeGameplayOverlay.w = Number((arcadeGameplayOverlay.w + 0.25).toFixed(2));
-    arcadeGameplayOverlay.h = Number((arcadeGameplayOverlay.h + 0.25).toFixed(2));
+    selectedScreen.w = Number((selectedScreen.w + 0.25).toFixed(2));
+    selectedScreen.h = Number((selectedScreen.h + 0.25).toFixed(2));
   }
 
-  if (action === "rot-minus") arcadeGameplayOverlay.rotate = Number((arcadeGameplayOverlay.rotate - 0.25).toFixed(2));
-  if (action === "rot-plus") arcadeGameplayOverlay.rotate = Number((arcadeGameplayOverlay.rotate + 0.25).toFixed(2));
+  if (action === "wide") selectedScreen.w = Number((selectedScreen.w + 0.25).toFixed(2));
+  if (action === "tall") selectedScreen.h = Number((selectedScreen.h + 0.25).toFixed(2));
 
-  if (action === "sx-minus") arcadeGameplayOverlay.skewX = Number((arcadeGameplayOverlay.skewX - 0.25).toFixed(2));
-  if (action === "sx-plus") arcadeGameplayOverlay.skewX = Number((arcadeGameplayOverlay.skewX + 0.25).toFixed(2));
+  if (action === "rot-minus") selectedScreen.rotate = Number((selectedScreen.rotate - 0.25).toFixed(2));
+  if (action === "rot-plus") selectedScreen.rotate = Number((selectedScreen.rotate + 0.25).toFixed(2));
 
-  arcadeGameplayOverlay.w = Math.max(1, arcadeGameplayOverlay.w);
-  arcadeGameplayOverlay.h = Math.max(1, arcadeGameplayOverlay.h);
+  if (action === "sx-minus") selectedScreen.skewX = Number((selectedScreen.skewX - 0.25).toFixed(2));
+  if (action === "sx-plus") selectedScreen.skewX = Number((selectedScreen.skewX + 0.25).toFixed(2));
 
-  applyArcadeGameplayOverlay();
-  updateTeddyEditorOutput();
+  selectedScreen.w = Math.max(1, selectedScreen.w);
+  selectedScreen.h = Math.max(1, selectedScreen.h);
+
+  applyScreenOverlay(selectedScreen);
+  updateEditorOutput();
 }
 
-function updateTeddyEditorOutput() {
-  const output = document.getElementById("teddyHotspotOutput");
+function updateEditorOutput() {
+  const output = document.getElementById("teddyEditorOutput");
   if (!output) return;
 
   output.value =
 `const teddyHotspots = ${JSON.stringify(teddyHotspots, null, 2)};
 
-const arcadeGameplayOverlay = ${JSON.stringify(arcadeGameplayOverlay, null, 2)};`;
+const screenOverlays = ${JSON.stringify(screenOverlays, null, 2)};`;
 }
 
 renderTeddyHotspots();
-createTeddyHotspotEditor();
+createEditor();
