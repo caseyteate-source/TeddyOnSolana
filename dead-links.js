@@ -1,4 +1,3 @@
-
 /*
   $TEDDY global dead-link + hover-description cleaner
 
