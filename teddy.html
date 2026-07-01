@@ -15,7 +15,9 @@
       --dark: #020207;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     html,
     body {
@@ -40,11 +42,11 @@
       inset: 0;
       pointer-events: none;
       z-index: 9999;
-      opacity: .13;
+      opacity: .12;
       background: repeating-linear-gradient(
         to bottom,
-        rgba(255,255,255,.16) 0,
-        rgba(255,255,255,.16) 1px,
+        rgba(255,255,255,.15) 0,
+        rgba(255,255,255,.15) 1px,
         transparent 1px,
         transparent 4px
       );
@@ -83,7 +85,7 @@
       z-index: 9000;
       width: 100%;
       padding: 9px 10px;
-      background: rgba(0,0,0,.95);
+      background: rgba(0,0,0,.94);
       border-bottom: 2px solid rgba(255,42,163,.76);
       box-shadow:
         0 0 18px rgba(255,42,163,.45),
@@ -136,60 +138,10 @@
       flex: 0 0 auto;
     }
 
-    .site-nav {
-      position: sticky;
-      top: 68px;
-      z-index: 8500;
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      padding: 10px;
-      background: linear-gradient(180deg, rgba(0,0,0,.88), rgba(0,0,0,.38));
-      backdrop-filter: blur(6px);
-    }
-
-    .site-nav a,
-    .site-nav button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 38px;
-      padding: 9px 15px;
-      border: 1px solid rgba(0,245,255,.70);
-      border-radius: 999px;
-      background: rgba(0,0,0,.68);
-      color: white;
-      text-decoration: none;
-      font-size: 12px;
-      font-weight: 900;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      box-shadow: 0 0 10px rgba(0,245,255,.26);
-      cursor: pointer;
-      font-family: Arial, Helvetica, sans-serif;
-    }
-
-    .site-nav a:hover,
-    .site-nav a:focus,
-    .site-nav button:hover,
-    .site-nav button:focus {
-      color: #020207;
-      background: var(--cyan);
-      box-shadow: 0 0 18px rgba(0,245,255,.85);
-    }
-
-    .site-nav .buy-link {
-      color: #020207;
-      background: var(--yellow);
-      border-color: var(--yellow);
-      box-shadow: 0 0 14px rgba(255,234,0,.65);
-    }
-
     .mobile-hint {
       display: none;
       position: sticky;
-      top: 120px;
+      top: 58px;
       z-index: 8400;
       padding: 9px 12px;
       text-align: center;
@@ -212,8 +164,7 @@
 
     .teddy-stage {
       position: relative;
-      width: min(100vw, 1672px);
-      aspect-ratio: 1536 / 1042;
+      width: min(100vw, 1536px);
       margin: 0 auto;
       isolation: isolate;
       background: #020207;
@@ -221,16 +172,12 @@
     }
 
     .teddy-bg {
-      position: absolute;
-      left: 0;
-      top: -10.55%;
+      display: block;
       width: 100%;
-      height: 110.55%;
-      object-fit: cover;
+      height: auto;
       user-select: none;
       -webkit-user-drag: none;
       pointer-events: none;
-      z-index: 1;
     }
 
     #realRainCanvas {
@@ -243,38 +190,34 @@
       mix-blend-mode: screen;
     }
 
-    .dry-zone-softener {
+    .umbrella-dry-mask {
       position: absolute;
-      left: 43%;
-      top: 13%;
-      width: 45%;
-      height: 67%;
       z-index: 11;
       pointer-events: none;
-      border-radius: 44% 48% 40% 44%;
+      border-radius: 38px;
+      opacity: .55;
       background:
-        radial-gradient(ellipse at 50% 43%,
-          rgba(255,198,84,.16) 0%,
-          rgba(255,198,84,.10) 32%,
-          rgba(0,0,0,.10) 66%,
-          transparent 75%);
+        radial-gradient(circle at 50% 42%, rgba(255,184,56,.16), rgba(0,0,0,0) 56%),
+        linear-gradient(180deg, rgba(8,5,0,.14), rgba(8,5,0,.08));
+      backdrop-filter: blur(.7px);
+      -webkit-backdrop-filter: blur(.7px);
       mix-blend-mode: soft-light;
     }
 
     .umbrella-glow {
       position: absolute;
-      left: 43.8%;
-      top: 11.4%;
-      width: 45.5%;
-      height: 52%;
+      left: 39%;
+      top: 18%;
+      width: 43%;
+      height: 48%;
       z-index: 12;
       pointer-events: none;
       border-radius: 50%;
       background:
-        radial-gradient(circle at 50% 43%,
+        radial-gradient(circle at 50% 40%,
           rgba(255,226,112,.30) 0%,
-          rgba(255,194,50,.21) 25%,
-          rgba(255,126,0,.09) 48%,
+          rgba(255,194,50,.19) 26%,
+          rgba(255,126,0,.08) 48%,
           rgba(255,126,0,0) 72%);
       mix-blend-mode: screen;
       animation: umbrellaFlicker 3.6s ease-in-out infinite;
@@ -282,39 +225,205 @@
 
     .screen-overlay {
       position: absolute;
-      z-index: 31;
+      z-index: 32;
       overflow: hidden;
       pointer-events: none;
       background: #010801;
+      box-shadow:
+        inset 0 0 18px rgba(124,255,79,.42),
+        0 0 12px rgba(124,255,79,.20);
       mix-blend-mode: screen;
-      border: 0 !important;
-      outline: 0 !important;
     }
 
-    .screen-overlay canvas,
-    .screen-overlay video,
-    .screen-overlay iframe {
-      width: 100%;
-      height: 100%;
+    #tvScreenAnim {
+      background: #050507;
+      box-shadow:
+        inset 0 0 20px rgba(0,245,255,.22),
+        0 0 12px rgba(0,245,255,.18);
+    }
+
+    #tvScreenAnim::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,.10), transparent 55%),
+        repeating-linear-gradient(
+          to bottom,
+          rgba(0,245,255,.12) 0,
+          rgba(0,245,255,.12) 1px,
+          transparent 1px,
+          transparent 5px
+        );
+      opacity: .46;
+      animation: tvFlicker 1.1s steps(2, end) infinite;
+    }
+
+    #tvScreenAnim.easter-on::after {
+      content: "FOLLOW THE RABBIT";
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #00f5ff;
+      font-size: clamp(7px, 1vw, 16px);
+      font-family: monospace;
+      font-weight: 900;
+      text-align: center;
+      letter-spacing: .05em;
+      text-shadow: 0 0 8px #00f5ff;
+      opacity: .78;
+      animation: tvTextBlink 2s steps(2, end) infinite;
+      padding: 8px;
+    }
+
+
+
+    .tv-static-layer {
+      position: absolute;
+      inset: 0;
       display: block;
-      object-fit: cover;
-      image-rendering: pixelated;
-      border: 0;
-      outline: 0;
+      pointer-events: none;
+      background:
+        repeating-radial-gradient(circle at 20% 30%, rgba(255,255,255,.24) 0 1px, transparent 1px 3px),
+        repeating-radial-gradient(circle at 70% 60%, rgba(0,245,255,.18) 0 1px, transparent 1px 4px),
+        repeating-linear-gradient(
+          to bottom,
+          rgba(255,255,255,.12) 0,
+          rgba(255,255,255,.12) 1px,
+          transparent 1px,
+          transparent 5px
+        ),
+        #030306;
+      background-size: 55px 55px, 79px 79px, 100% 5px, 100% 100%;
+      opacity: .92;
+      animation: tvStaticJitter .24s steps(2, end) infinite;
+      filter: contrast(1.45) brightness(.82);
     }
 
-    .tv-youtube-frame {
+    #tvScreenAnim.video-on .tv-static-layer {
+      display: none;
+    }
+
+    #tvScreenAnim.video-switching .tv-static-layer {
+      display: block;
+      opacity: 1;
+      filter: contrast(1.9) brightness(1.05);
+    }
+
+    #tvScreenAnim.video-switching .tv-video,
+    #tvScreenAnim.video-switching .tv-video-vhs {
+      display: none !important;
+    }
+
+    @keyframes tvStaticJitter {
+      0% {
+        background-position: 0 0, 0 0, 0 0, 0 0;
+        transform: translate(0, 0);
+      }
+      25% {
+        background-position: 18px 6px, -11px 17px, 0 1px, 0 0;
+        transform: translate(.5px, -.5px);
+      }
+      50% {
+        background-position: -9px 13px, 15px -8px, 0 2px, 0 0;
+        transform: translate(-.5px, .5px);
+      }
+      75% {
+        background-position: 21px -14px, 8px 19px, 0 3px, 0 0;
+        transform: translate(.5px, .5px);
+      }
+      100% {
+        background-position: -14px 8px, -17px -10px, 0 4px, 0 0;
+        transform: translate(0, 0);
+      }
+    }
+
+    .tv-video {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
-      pointer-events: none;
-      transform: scale(1.18);
-      transform-origin: center center;
-      filter: contrast(1.08) brightness(.86) saturate(1.15);
+      display: none;
+      object-fit: cover;
+      background: #000;
+      filter:
+        contrast(1.08)
+        saturate(1.05)
+        brightness(.88);
+      transform: scale(1.045);
     }
 
-    .screen-scan {
+    .tv-video.is-playing {
+      display: block;
+    }
+
+    #tvScreenAnim.video-on::before,
+    #tvScreenAnim.video-on::after {
+      display: none;
+    }
+
+    .tv-video-vhs {
+      position: absolute;
+      inset: 0;
+      display: none;
+      pointer-events: none;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          rgba(255,255,255,.12) 0,
+          rgba(255,255,255,.12) 1px,
+          transparent 1px,
+          transparent 5px
+        ),
+        radial-gradient(circle at 50% 50%, transparent 52%, rgba(0,0,0,.35) 100%);
+      opacity: .36;
+      mix-blend-mode: screen;
+    }
+
+    #tvScreenAnim.video-on .tv-video-vhs {
+      display: block;
+    }
+
+    .tv-click-hint {
+      position: absolute;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+      color: #00f5ff;
+      font-family: monospace;
+      font-weight: 900;
+      font-size: clamp(7px, .9vw, 14px);
+      text-align: center;
+      letter-spacing: .06em;
+      text-shadow:
+        0 0 8px #00f5ff,
+        0 0 16px rgba(0,245,255,.65);
+      background: rgba(0,0,0,.16);
+      pointer-events: none;
+      animation: tvTextBlink 1.8s steps(2, end) infinite;
+    }
+
+    #tvScreenAnim.ready-to-play .tv-click-hint {
+      display: flex;
+    }
+
+    #tvScreenAnim.video-on .tv-click-hint,
+    #tvScreenAnim.video-switching .tv-click-hint {
+      display: none;
+    }
+
+    #arcadeGameCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      image-rendering: pixelated;
+    }
+
+    .arcade-glass-scan {
       position: absolute;
       inset: 0;
       pointer-events: none;
@@ -326,74 +435,38 @@
           transparent 1px,
           transparent 4px
         );
-      opacity: .55;
-      animation: screenLines .9s linear infinite;
-      mix-blend-mode: screen;
+      opacity: .65;
+      animation: arcadeLines .9s linear infinite;
     }
 
-    .tv-screen-anim .screen-scan {
-      background:
-        repeating-linear-gradient(
-          to bottom,
-          rgba(0,245,255,.11) 0,
-          rgba(0,245,255,.11) 1px,
-          transparent 1px,
-          transparent 4px
-        );
-    }
-
-    .video-fallback-label {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      color: #00f5ff;
-      font-size: clamp(8px, 1.1vw, 18px);
-      font-weight: 900;
-      letter-spacing: .08em;
-      text-align: center;
-      text-shadow: 0 0 8px rgba(0,245,255,.9);
-      pointer-events: none;
-      opacity: .0;
-    }
-
-    .tv-screen-anim.video-missing .video-fallback-label {
-      opacity: .88;
-    }
-
-    .teddy-edit-mode .screen-overlay {
+    .edit-mode .screen-overlay {
+      outline: 3px solid rgba(255,234,0,.95);
+      outline-offset: 2px;
       pointer-events: auto;
       cursor: move;
-      outline: 0 !important;
-      border: 0 !important;
-      box-shadow: none !important;
+      mix-blend-mode: normal;
     }
 
-    .screen-corner-handle {
-      display: none;
+    .edit-mode .screen-overlay.selected-screen {
+      outline: 3px solid rgba(0,245,255,.95);
+      box-shadow:
+        inset 0 0 18px rgba(124,255,79,.50),
+        0 0 20px rgba(0,245,255,.8);
+    }
+
+    #teddyHotspotRoot,
+    #editorVisualRoot {
       position: absolute;
-      z-index: 140;
-      width: 16px;
-      height: 16px;
-      border: 2px solid #00f5ff;
-      border-radius: 50%;
-      background: rgba(0,0,0,.75);
-      box-shadow: 0 0 12px rgba(0,245,255,.85);
-      transform: translate(-50%, -50%);
-      cursor: grab;
-      pointer-events: auto;
-      touch-action: none;
-    }
-
-    .teddy-edit-mode .screen-corner-handle {
-      display: block;
+      inset: 0;
+      pointer-events: none;
     }
 
     #teddyHotspotRoot {
-      position: absolute;
-      inset: 0;
       z-index: 70;
-      pointer-events: none;
+    }
+
+    #editorVisualRoot {
+      z-index: 140;
     }
 
     .teddy-hotspot {
@@ -411,34 +484,20 @@
 
     .teddy-hotspot:hover,
     .teddy-hotspot:focus-visible {
-      background: rgba(0,245,255,.13);
+      background: rgba(0,245,255,.12);
       box-shadow:
         0 0 18px rgba(0,245,255,.9),
         inset 0 0 22px rgba(255,42,163,.32);
       outline: none;
     }
 
-    .secret-hotspot,
-    .secret-hotspot:hover,
-    .secret-hotspot:focus-visible {
-      background: transparent !important;
-      box-shadow: none !important;
-      outline: none !important;
-    }
-
-    .teddy-edit-mode .secret-hotspot {
-      background: rgba(255,234,0,.25) !important;
-      border: 2px dashed #ffea00 !important;
-      box-shadow: 0 0 18px rgba(255,234,0,.78) !important;
-    }
-
-    .teddy-edit-mode .teddy-hotspot {
+    .edit-mode .teddy-hotspot {
       background: rgba(0,245,255,.28) !important;
       border: 2px solid #00f5ff !important;
       box-shadow: 0 0 18px rgba(0,245,255,.9) !important;
     }
 
-    .teddy-edit-mode .teddy-hotspot::after {
+    .edit-mode .teddy-hotspot::after {
       content: attr(data-label);
       position: absolute;
       left: 50%;
@@ -455,13 +514,67 @@
       font-weight: 900;
     }
 
-    .teddy-editor {
+    .corner-handle {
+      position: absolute;
+      z-index: 150;
+      width: 18px;
+      height: 18px;
+      border: 2px solid #020207;
+      border-radius: 50%;
+      background: #ffea00;
+      box-shadow: 0 0 10px rgba(255,234,0,.9);
+      transform: translate(-50%, -50%);
+      cursor: grab;
+      pointer-events: auto;
+    }
+
+    .corner-handle::after {
+      content: attr(data-corner);
+      position: absolute;
+      left: 50%;
+      top: 115%;
+      transform: translateX(-50%);
+      font-size: 9px;
+      color: white;
+      font-weight: 900;
+      background: rgba(0,0,0,.75);
+      padding: 2px 4px;
+      border-radius: 5px;
+    }
+
+    .dry-zone-outline {
+      position: absolute;
+      z-index: 145;
+      pointer-events: auto;
+      border: 3px dashed rgba(0,245,255,.8);
+      border-radius: 28px;
+      background: rgba(0,245,255,.06);
+      cursor: move;
+    }
+
+    .dry-zone-outline::after {
+      content: "RAIN DRY ZONE";
+      position: absolute;
+      left: 50%;
+      top: -28px;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      font-size: 11px;
+      font-weight: 900;
+      color: white;
+      background: rgba(0,0,0,.78);
+      padding: 5px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,245,255,.7);
+    }
+
+    .edit-panel {
       position: fixed;
       right: 12px;
       bottom: 12px;
       z-index: 12000;
-      width: min(585px, calc(100vw - 24px));
-      max-height: 70vh;
+      width: min(590px, calc(100vw - 24px));
+      max-height: 72vh;
       overflow-y: auto;
       background: rgba(0,0,0,.94);
       border: 2px solid #00f5ff;
@@ -472,7 +585,7 @@
       font-family: Arial, Helvetica, sans-serif;
     }
 
-    .editor-drag-handle {
+    .panel-drag-handle {
       display: block;
       width: 100%;
       box-sizing: border-box;
@@ -481,7 +594,6 @@
       border-radius: 10px;
       background: linear-gradient(90deg, #ff2aa3, #00aaff);
       color: white;
-      font-family: Arial, sans-serif;
       font-size: 12px;
       font-weight: 900;
       letter-spacing: .08em;
@@ -491,29 +603,20 @@
       touch-action: none;
     }
 
-    .editor-drag-handle:active {
-      cursor: grabbing;
-    }
-
-    .teddy-editor.is-dragging {
-      opacity: .84;
-      user-select: none;
-    }
-
-    .teddy-editor strong {
+    .edit-panel strong {
       color: #00f5ff;
       display: block;
       margin-bottom: 6px;
     }
 
-    .teddy-editor p {
+    .edit-panel p {
       margin: 6px 0 10px;
       color: #dffcff;
       font-size: 13px;
       line-height: 1.35;
     }
 
-    .teddy-editor select {
+    .edit-panel select {
       width: 100%;
       padding: 10px;
       margin-bottom: 8px;
@@ -524,14 +627,14 @@
       font-weight: 900;
     }
 
-    .teddy-editor .editor-buttons {
+    .edit-panel .button-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 6px;
       margin-bottom: 8px;
     }
 
-    .teddy-editor button {
+    .edit-panel button {
       border: 0;
       border-radius: 9px;
       padding: 9px 6px;
@@ -542,23 +645,23 @@
       font-size: 11px;
     }
 
-    .teddy-editor button.blue {
+    .edit-panel button.blue {
       background: #00aaff;
     }
 
-    .teddy-editor button.yellow {
+    .edit-panel button.yellow {
       background: #c49b00;
     }
 
-    .teddy-editor button.copy {
+    .edit-panel button.copy {
       width: 100%;
       background: #00aaff;
       margin-bottom: 8px;
     }
 
-    .teddy-editor textarea {
+    .edit-panel textarea {
       width: 100%;
-      height: 185px;
+      height: 190px;
       background: #050510;
       color: #dffcff;
       border: 1px solid #00f5ff;
@@ -567,6 +670,14 @@
       font-family: monospace;
       font-size: 11px;
       box-sizing: border-box;
+    }
+
+    .copy-status {
+      min-height: 16px;
+      color: #ffea00;
+      font-size: 12px;
+      font-weight: 900;
+      margin: 6px 0;
     }
 
     .about-modal {
@@ -648,9 +759,19 @@
       66% { opacity: .68; filter: brightness(.96); }
     }
 
-    @keyframes screenLines {
+    @keyframes arcadeLines {
       from { transform: translateY(0); }
       to { transform: translateY(8px); }
+    }
+
+    @keyframes tvFlicker {
+      0%, 100% { opacity: .38; }
+      50% { opacity: .72; }
+    }
+
+    @keyframes tvTextBlink {
+      0%, 58% { opacity: .78; }
+      59%, 100% { opacity: .18; }
     }
 
     @media (max-width: 760px) {
@@ -661,14 +782,8 @@
         font-size: 13px;
       }
 
-      .site-nav {
-        top: 58px;
-        justify-content: center;
-      }
-
       .mobile-hint {
         display: block;
-        top: 112px;
       }
 
       .teddy-stage {
@@ -677,7 +792,7 @@
         margin: 0;
       }
 
-      .teddy-editor {
+      .edit-panel {
         left: 10px;
         right: auto;
         bottom: 10px;
@@ -698,42 +813,38 @@
     </button>
   </header>
 
-  <nav class="site-nav" aria-label="$TEDDY site navigation">
-    <button id="aboutButton" type="button">About</button>
-    <a class="buy-link" href="https://pump.fun/coin/8KJEWtuq1c1699nAup7WatZfgodS3YFnadBq46FDpump" target="_blank" rel="noopener">Buy $TEDDY</a>
-  </nav>
-
-  <div class="mobile-hint">← SWIPE THE ART • TAP THE $TEDDY TITLE, ARCADE, WHITE RABBIT, OR GMEBAY →</div>
+  <div class="mobile-hint">← SWIPE THE ART • TAP THE BOTTOM ICONS, $TEDDY TITLE, ABOUT, OR BUY $TEDDY →</div>
 
   <div class="teddy-scroll-wrap" id="teddyScrollWrap">
     <main class="teddy-stage" id="teddyStage">
       <img src="teddy-umbrella-bg.png" alt="$TEDDY teddy bear under umbrella neon 80s crypto project graphic" class="teddy-bg" />
 
       <canvas id="realRainCanvas"></canvas>
-      <div class="dry-zone-softener"></div>
+      <div id="umbrellaDryMask" class="umbrella-dry-mask"></div>
       <div class="umbrella-glow"></div>
 
-      <div id="arcadeScreenAnim" class="screen-overlay arcade-screen-anim">
+      <div id="arcadeScreenAnim" class="screen-overlay">
         <canvas id="arcadeGameCanvas" width="160" height="120"></canvas>
-        <div class="screen-scan"></div>
+        <div class="arcade-glass-scan"></div>
       </div>
 
-      <div id="tvScreenAnim" class="screen-overlay tv-screen-anim">
-        <iframe
-          id="tvYoutubeFrame"
-          class="tv-youtube-frame"
-          src="https://www.youtube.com/embed/W9Tdw5nG4dQ?si=49KYo2DYZdmPQrT-&autoplay=1&mute=1&loop=1&playlist=W9Tdw5nG4dQ&controls=0&rel=0&modestbranding=1&playsinline=1"
-          title="TV video"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          referrerpolicy="strict-origin-when-cross-origin"
-          allowfullscreen>
-        </iframe>
-        <div class="screen-scan"></div>
+      <div id="tvScreenAnim" class="screen-overlay ready-to-play">
+        <div class="tv-static-layer"></div>
+        <video id="perfectStormVideo" class="tv-video" preload="auto" playsinline>
+          <source src="perfect-storm.mp4" type="video/mp4">
+        </video>
+        <video id="angryReporterVideo" class="tv-video" preload="auto" playsinline>
+          <source src="angry-reporter.mp4" type="video/mp4">
+        </video>
+        <video id="secretVideo" class="tv-video" preload="auto" playsinline>
+          <source src="secret-video.mp4" type="video/mp4">
+        </video>
+        <div class="tv-video-vhs"></div>
+        <div class="tv-click-hint">CLICK TV<br>FOR PERFECT STORM</div>
       </div>
 
-      <div id="screenHandleRoot"></div>
       <div id="teddyHotspotRoot"></div>
+      <div id="editorVisualRoot"></div>
     </main>
   </div>
 
@@ -762,376 +873,5 @@
   </div>
 
   <script src="teddy-hotspots.js"></script>
-
-  <script>
-    const TEDDY_CONTRACT = "8KJEWtuq1c1699nAup7WatZfgodS3YFnadBq46FDpump";
-
-    const copyToast = document.getElementById("copyToast");
-    const contractCopyButton = document.getElementById("contractCopyButton");
-    const contractText = document.getElementById("contractText");
-
-    async function copyContract() {
-      let copied = false;
-
-      try {
-        await navigator.clipboard.writeText(TEDDY_CONTRACT);
-        copied = true;
-      } catch {
-        copied = fallbackCopyContract();
-      }
-
-      showCopiedState(copied);
-    }
-
-    function fallbackCopyContract() {
-      const textarea = document.createElement("textarea");
-      textarea.value = TEDDY_CONTRACT;
-      textarea.setAttribute("readonly", "");
-      textarea.style.position = "fixed";
-      textarea.style.left = "-9999px";
-      textarea.style.top = "0";
-      document.body.appendChild(textarea);
-      textarea.focus();
-      textarea.select();
-
-      let copied = false;
-
-      try {
-        copied = document.execCommand("copy");
-      } catch {
-        copied = false;
-      }
-
-      document.body.removeChild(textarea);
-      return copied;
-    }
-
-    function showCopiedState(copied) {
-      if (contractCopyButton && contractText) {
-        contractCopyButton.classList.add("copied");
-        contractText.textContent = copied ? "COPIED" : TEDDY_CONTRACT;
-
-        setTimeout(() => {
-          contractCopyButton.classList.remove("copied");
-          contractText.textContent = TEDDY_CONTRACT;
-        }, 1300);
-      }
-
-      if (copyToast) {
-        copyToast.textContent = copied ? "CONTRACT COPIED" : "COPY FAILED — LONG PRESS ADDRESS";
-        copyToast.classList.add("show");
-
-        setTimeout(() => {
-          copyToast.classList.remove("show");
-        }, 1400);
-      }
-    }
-
-    if (contractCopyButton) {
-      contractCopyButton.addEventListener("click", copyContract);
-    }
-
-    const aboutButton = document.getElementById("aboutButton");
-    const aboutModal = document.getElementById("aboutModal");
-    const aboutClose = document.getElementById("aboutClose");
-
-    function openAbout() {
-      aboutModal.classList.add("active");
-      aboutModal.setAttribute("aria-hidden", "false");
-    }
-
-    function closeAbout() {
-      aboutModal.classList.remove("active");
-      aboutModal.setAttribute("aria-hidden", "true");
-    }
-
-    aboutButton?.addEventListener("click", openAbout);
-    aboutClose?.addEventListener("click", closeAbout);
-
-    aboutModal?.addEventListener("click", (event) => {
-      if (event.target === aboutModal) closeAbout();
-    });
-
-    window.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") closeAbout();
-    });
-
-    window.addEventListener("load", () => {
-      const wrap = document.getElementById("teddyScrollWrap");
-
-      if (window.innerWidth <= 760 && wrap) {
-        wrap.scrollLeft = 360;
-      }
-    });
-
-    /* ======================================================
-       HIDDEN TV EASTER EGG
-       Called from an invisible hotspot in teddy-hotspots.js.
-    ====================================================== */
-
-    const DEFAULT_TV_VIDEO =
-      "https://www.youtube.com/embed/W9Tdw5nG4dQ?si=49KYo2DYZdmPQrT-&autoplay=1&mute=1&loop=1&playlist=W9Tdw5nG4dQ&controls=0&rel=0&modestbranding=1&playsinline=1";
-
-    const SECRET_TV_VIDEO =
-      "https://www.youtube.com/embed/WaxCWFUmEiY?si=MPwe-8QgNCFdaGhM&autoplay=1&mute=1&loop=1&playlist=WaxCWFUmEiY&controls=0&rel=0&modestbranding=1&playsinline=1";
-
-    let secretTvUnlocked = false;
-
-    window.switchTeddyTvVideo = function switchTeddyTvVideo() {
-      const frame = document.getElementById("tvYoutubeFrame");
-      const tvBox = document.getElementById("tvScreenAnim");
-
-      if (!frame) return;
-
-      secretTvUnlocked = !secretTvUnlocked;
-      frame.src = secretTvUnlocked ? SECRET_TV_VIDEO : DEFAULT_TV_VIDEO;
-
-      if (tvBox) {
-        tvBox.style.filter = "brightness(1.35) saturate(1.25)";
-        setTimeout(() => {
-          tvBox.style.filter = "";
-        }, 450);
-      }
-    };
-
-    /* ======================================================
-       REALISTIC RAIN CANVAS
-       Code rain skips the umbrella/teddy dry zone.
-    ====================================================== */
-
-    const rainCanvas = document.getElementById("realRainCanvas");
-    const rainCtx = rainCanvas ? rainCanvas.getContext("2d") : null;
-    const rainDrops = [];
-    let rainW = 0;
-    let rainH = 0;
-
-    function resizeRainCanvas() {
-      if (!rainCanvas || !rainCtx) return;
-
-      const stage = document.getElementById("teddyStage");
-      const rect = stage.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-
-      rainW = rect.width;
-      rainH = rect.height;
-
-      rainCanvas.width = Math.floor(rainW * dpr);
-      rainCanvas.height = Math.floor(rainH * dpr);
-      rainCanvas.style.width = rainW + "px";
-      rainCanvas.style.height = rainH + "px";
-
-      rainCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-      if (rainDrops.length === 0) {
-        for (let i = 0; i < 230; i++) {
-          rainDrops.push(createRainDrop(true));
-        }
-      }
-    }
-
-    function createRainDrop(randomY = false) {
-      return {
-        x: Math.random() * rainW,
-        y: randomY ? Math.random() * rainH : -30 - Math.random() * 150,
-        len: 18 + Math.random() * 48,
-        speed: 8 + Math.random() * 14,
-        drift: -3.9 - Math.random() * 3.8,
-        width: Math.random() > .82 ? 1.25 : .72,
-        opacity: .16 + Math.random() * .34
-      };
-    }
-
-    function isUnderUmbrellaDryZone(x, y) {
-      if (!rainW || !rainH) return false;
-
-      const px = x / rainW;
-      const py = y / rainH;
-
-      const umbrellaInterior =
-        py > 0.145 &&
-        py < 0.565 &&
-        Math.pow((px - 0.655) / 0.285, 2) + Math.pow((py - 0.333) / 0.215, 2) < 1;
-
-      const teddyAndFloor =
-        px > 0.492 &&
-        px < 0.777 &&
-        py > 0.275 &&
-        py < 0.875;
-
-      const wallUnderUmbrella =
-        px > 0.425 &&
-        px < 0.895 &&
-        py > 0.265 &&
-        py < 0.705;
-
-      return umbrellaInterior || teddyAndFloor || wallUnderUmbrella;
-    }
-
-    function drawRainSplashes() {
-      if (!rainCtx) return;
-
-      rainCtx.save();
-      rainCtx.globalCompositeOperation = "lighter";
-
-      for (let i = 0; i < 14; i++) {
-        const side = i % 2 === 0 ? "left" : "right";
-        const x = side === "left"
-          ? Math.random() * rainW * 0.40
-          : rainW * (0.88 + Math.random() * 0.11);
-        const y = rainH * (0.72 + Math.random() * 0.22);
-
-        if (isUnderUmbrellaDryZone(x, y)) continue;
-
-        rainCtx.strokeStyle = "rgba(180,230,255,.11)";
-        rainCtx.lineWidth = 1;
-        rainCtx.beginPath();
-        rainCtx.moveTo(x - 4, y);
-        rainCtx.lineTo(x + 4, y - 2);
-        rainCtx.stroke();
-      }
-
-      rainCtx.restore();
-    }
-
-    function animateRealRain() {
-      if (!rainCtx || !rainCanvas) return;
-
-      rainCtx.clearRect(0, 0, rainW, rainH);
-      rainCtx.save();
-      rainCtx.globalCompositeOperation = "lighter";
-
-      for (let i = 0; i < rainDrops.length; i++) {
-        const drop = rainDrops[i];
-
-        const x2 = drop.x + drop.drift;
-        const y2 = drop.y + drop.len;
-
-        if (!isUnderUmbrellaDryZone(drop.x, drop.y) && !isUnderUmbrellaDryZone(x2, y2)) {
-          const grad = rainCtx.createLinearGradient(drop.x, drop.y, x2, y2);
-          grad.addColorStop(0, `rgba(255,255,255,0)`);
-          grad.addColorStop(.35, `rgba(205,235,255,${drop.opacity})`);
-          grad.addColorStop(1, `rgba(120,190,255,0)`);
-
-          rainCtx.strokeStyle = grad;
-          rainCtx.lineWidth = drop.width;
-          rainCtx.beginPath();
-          rainCtx.moveTo(drop.x, drop.y);
-          rainCtx.lineTo(x2, y2);
-          rainCtx.stroke();
-        }
-
-        drop.x += drop.drift;
-        drop.y += drop.speed;
-
-        if (drop.y > rainH + 70 || drop.x < -90) {
-          Object.assign(drop, createRainDrop(false));
-          drop.x = Math.random() * (rainW + 140);
-        }
-      }
-
-      rainCtx.restore();
-
-      if (Math.random() > .72) {
-        drawRainSplashes();
-      }
-
-      requestAnimationFrame(animateRealRain);
-    }
-
-    window.addEventListener("resize", resizeRainCanvas);
-    window.addEventListener("load", () => {
-      resizeRainCanvas();
-      animateRealRain();
-    });
-
-    /* ======================================================
-       ARCADE GAMEPLAY OVERLAY
-    ====================================================== */
-
-    const arcadeCanvas = document.getElementById("arcadeGameCanvas");
-    const arcadeCtx = arcadeCanvas ? arcadeCanvas.getContext("2d") : null;
-    let arcadeTick = 0;
-
-    function drawArcadeGame() {
-      if (!arcadeCtx) return;
-
-      const w = arcadeCanvas.width;
-      const h = arcadeCanvas.height;
-
-      arcadeTick += 1;
-
-      arcadeCtx.fillStyle = "#020802";
-      arcadeCtx.fillRect(0, 0, w, h);
-
-      arcadeCtx.strokeStyle = "rgba(124,255,79,.22)";
-      arcadeCtx.lineWidth = 1;
-
-      for (let x = 0; x < w; x += 16) {
-        arcadeCtx.beginPath();
-        arcadeCtx.moveTo(x, 0);
-        arcadeCtx.lineTo(x, h);
-        arcadeCtx.stroke();
-      }
-
-      for (let y = 0; y < h; y += 16) {
-        arcadeCtx.beginPath();
-        arcadeCtx.moveTo(0, y);
-        arcadeCtx.lineTo(w, y);
-        arcadeCtx.stroke();
-      }
-
-      const bearX = 22 + Math.sin(arcadeTick * 0.06) * 8;
-      const bearY = 80 + Math.sin(arcadeTick * 0.12) * 4;
-
-      for (let i = 0; i < 11; i++) {
-        const rx = (i * 23 + arcadeTick * 2) % (w + 20) - 10;
-        const ry = (i * 31 + arcadeTick * 3) % (h + 20) - 10;
-
-        arcadeCtx.fillStyle = i % 2 ? "#00f5ff" : "#ff2aa3";
-        arcadeCtx.fillRect(rx, ry, 2, 9);
-      }
-
-      arcadeCtx.fillStyle = "#ffea00";
-      arcadeCtx.beginPath();
-      arcadeCtx.arc(bearX + 10, bearY - 10, 18, Math.PI, Math.PI * 2);
-      arcadeCtx.fill();
-
-      arcadeCtx.fillStyle = "#7cff4f";
-      arcadeCtx.fillRect(bearX + 8, bearY - 10, 3, 25);
-
-      arcadeCtx.fillStyle = "#d08a48";
-      arcadeCtx.fillRect(bearX, bearY, 18, 18);
-      arcadeCtx.fillRect(bearX - 4, bearY - 3, 7, 7);
-      arcadeCtx.fillRect(bearX + 15, bearY - 3, 7, 7);
-
-      arcadeCtx.fillStyle = "#020207";
-      arcadeCtx.fillRect(bearX + 4, bearY + 6, 3, 3);
-      arcadeCtx.fillRect(bearX + 12, bearY + 6, 3, 3);
-
-      const rocketY = 82 - ((arcadeTick * 1.35) % 110);
-
-      arcadeCtx.fillStyle = "#00f5ff";
-      arcadeCtx.fillRect(120, rocketY, 10, 22);
-      arcadeCtx.fillStyle = "#ff2aa3";
-      arcadeCtx.fillRect(117, rocketY + 14, 16, 8);
-      arcadeCtx.fillStyle = "#ffea00";
-      arcadeCtx.fillRect(122, rocketY + 22, 6, 10);
-
-      arcadeCtx.fillStyle = "#7cff4f";
-      arcadeCtx.font = "bold 12px monospace";
-      arcadeCtx.fillText("$TEDDY", 48, 18);
-
-      if (Math.floor(arcadeTick / 24) % 2 === 0) {
-        arcadeCtx.fillStyle = "#ffea00";
-        arcadeCtx.font = "bold 10px monospace";
-        arcadeCtx.fillText("LEVEL UP", 50, 34);
-      }
-
-      requestAnimationFrame(drawArcadeGame);
-    }
-
-    drawArcadeGame();
-
-  </script>
 </body>
 </html>
