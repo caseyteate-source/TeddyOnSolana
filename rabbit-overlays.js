@@ -1,18 +1,15 @@
 /* ======================================================
-   $TEDDY RABBIT HOLE TV STATIC + FIXED BLINK PLAQUE
+   $TEDDY RABBIT HOLE TV STATIC + STAGE-LOCKED BLINK PLAQUE
 
    Overlay editor:
    hq.html?overlays=1
 
-   Do not touch rabbit-hole.js.
+   Replace this whole file.
    Do not touch hq.html.
+   Do not touch rabbit-hole.js.
 ====================================================== */
 
 const isOverlayEditMode = new URLSearchParams(window.location.search).has("overlays");
-
-/* ======================================================
-   TV STATIC SETTINGS
-====================================================== */
 
 const rabbitOverlaySettings = [
   {
@@ -29,83 +26,61 @@ const rabbitOverlaySettings = [
     skewY: -0.25,
     opacity: 1,
     clipCorners: {
-      tl: {
-        x: 6.06,
-        y: 3.66
-      },
-      tr: {
-        x: 100,
-        y: 7.76
-      },
-      br: {
-        x: 99.77,
-        y: 96.41
-      },
-      bl: {
-        x: 6.75,
-        y: 86.32
-      }
+      tl: { x: 6.06, y: 3.66 },
+      tr: { x: 100, y: 7.76 },
+      br: { x: 99.77, y: 96.41 },
+      bl: { x: 6.75, y: 86.32 }
     }
+  },
+  {
+    id: "black-blink-plaque",
+    label: "Black Blink Box",
+    type: "plaque",
+    className: "rabbit-overlay stage-blink-plaque",
+
+    /* These are image/stage percentages, so the box stays locked to the room image */
+    x: 76.35,
+    y: 55.25,
+    w: 6.3,
+    h: 3.35,
+
+    rotate: 0,
+    skewX: 0,
+    skewY: 0,
+
+    opacityHigh: 0.94,
+    opacityLow: 0.08,
+    blinkSpeed: 1.15,
+
+    text: "",
+    background: "rgba(0,0,0,.96)",
+    borderRadius: 7,
+    border: "1px solid rgba(255,0,0,.22)",
+    boxShadow: "0 0 14px rgba(255,0,0,.32)"
   }
 ];
 
-/* ======================================================
-   FIXED BLACK BLINK PLAQUE SETTINGS
-
-   This is fixed to the browser window, not the room image.
-   It will not move when the page/image scrolls.
-====================================================== */
-
-const fixedBlinkPlaqueSettings = {
-  id: "fixed-blink-plaque",
-  label: "Fixed Black Blink Box",
-  enabled: true,
-
-  /* x and y are viewport percentages */
-  x: 80.5,
-  y: 57.5,
-
-  /* width and height are pixels */
-  w: 86,
-  h: 34,
-
-  rotate: 0,
-  opacityHigh: 0.92,
-  opacityLow: 0.12,
-  blinkSpeed: 1.15,
-
-  background: "rgba(0,0,0,.94)",
-  borderRadius: 7,
-  border: "1px solid rgba(255,0,0,.28)",
-  boxShadow: "0 0 14px rgba(255,0,0,.35)",
-
-  /* Keep blank for a plain black blinking box */
-  text: ""
-};
-
 const overlayRoot = document.getElementById("rabbitOverlayRoot");
-let selectedType = null;
 let selectedOverlay = null;
 
 if (isOverlayEditMode) {
   document.body.classList.add("overlay-edit-mode");
 }
 
-/* ======================================================
-   STYLE INJECTION FOR FIXED PLAQUE
-====================================================== */
+function injectStagePlaqueStyles() {
+  const oldStyle = document.getElementById("stagePlaqueStyles");
+  if (oldStyle) oldStyle.remove();
 
-function injectPlaqueStyles() {
   const style = document.createElement("style");
+  style.id = "stagePlaqueStyles";
+
   style.textContent = `
-    .fixed-blink-plaque {
-      position: fixed;
-      z-index: 6800;
-      pointer-events: none;
-      transform: translate(-50%, -50%) rotate(0deg);
+    .stage-blink-plaque {
+      box-sizing: border-box;
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
       color: #ff1717;
       font-family: Arial, sans-serif;
       font-weight: 900;
@@ -113,76 +88,36 @@ function injectPlaqueStyles() {
       text-shadow:
         0 0 4px rgba(255,0,0,.95),
         0 0 10px rgba(255,0,0,.75);
-      animation-name: fixedPlaqueBlink;
+      animation-name: stagePlaqueBlink;
       animation-timing-function: steps(1, end);
       animation-iteration-count: infinite;
     }
 
-    @keyframes fixedPlaqueBlink {
+    @keyframes stagePlaqueBlink {
       0%, 48% {
-        opacity: var(--plaque-opacity-high);
+        opacity: var(--plaque-opacity-high, .94);
       }
 
       49%, 100% {
-        opacity: var(--plaque-opacity-low);
+        opacity: var(--plaque-opacity-low, .08);
       }
     }
 
-    .overlay-edit-mode .fixed-blink-plaque {
-      pointer-events: auto;
-      cursor: move;
+    .overlay-edit-mode .stage-blink-plaque {
       outline: 3px solid #ffea00;
       outline-offset: 2px;
     }
 
-    .overlay-edit-mode .fixed-blink-plaque.selected-fixed-plaque {
+    .overlay-edit-mode .stage-blink-plaque.selected-overlay {
       outline: 3px solid #00f5ff;
       box-shadow:
         0 0 18px rgba(0,245,255,.85),
         0 0 28px rgba(255,42,163,.45) !important;
     }
-
-    .fixed-plaque-label {
-      display: none;
-      position: fixed;
-      z-index: 6900;
-      transform: translate(-50%, -50%);
-      border: 1px solid rgba(255,255,255,.55);
-      border-radius: 999px;
-      padding: 5px 8px;
-      background: rgba(0,0,0,.9);
-      color: #ffea00;
-      font-family: Arial, sans-serif;
-      font-size: 12px;
-      font-weight: 900;
-      letter-spacing: .03em;
-      white-space: nowrap;
-      pointer-events: auto;
-      cursor: pointer;
-      box-shadow:
-        0 0 10px rgba(255,234,0,.55),
-        0 0 18px rgba(0,245,255,.25);
-    }
-
-    .overlay-edit-mode .fixed-plaque-label {
-      display: block;
-    }
-
-    .fixed-plaque-label.selected {
-      color: #00f5ff;
-      border-color: #00f5ff;
-      box-shadow:
-        0 0 14px rgba(0,245,255,.9),
-        0 0 24px rgba(255,42,163,.35);
-    }
   `;
 
   document.head.appendChild(style);
 }
-
-/* ======================================================
-   RENDER TV STATIC OVERLAY
-====================================================== */
 
 function renderRabbitOverlays() {
   if (!overlayRoot) return;
@@ -195,7 +130,7 @@ function renderRabbitOverlays() {
 
     if (isOverlayEditMode) {
       el.addEventListener("pointerdown", (event) => {
-        selectThing("overlay", overlay.id);
+        selectOverlay(overlay.id);
         startOverlayDrag(event, overlay, el);
       });
     }
@@ -224,6 +159,10 @@ function createOverlayElement(overlay) {
     `;
   }
 
+  if (overlay.type === "plaque") {
+    el.textContent = overlay.text || "";
+  }
+
   return el;
 }
 
@@ -231,7 +170,6 @@ function getClipPath(overlay) {
   if (!overlay.clipCorners) return "";
 
   const c = overlay.clipCorners;
-
   return `polygon(${c.tl.x}% ${c.tl.y}%, ${c.tr.x}% ${c.tr.y}%, ${c.br.x}% ${c.br.y}%, ${c.bl.x}% ${c.bl.y}%)`;
 }
 
@@ -240,11 +178,23 @@ function applyOverlayStyle(el, overlay) {
   el.style.top = overlay.y + "%";
   el.style.width = overlay.w + "%";
   el.style.height = overlay.h + "%";
-  el.style.opacity = overlay.opacity;
   el.style.transform = `rotate(${overlay.rotate}deg) skewX(${overlay.skewX}deg) skewY(${overlay.skewY}deg)`;
 
   const clipPath = getClipPath(overlay);
   el.style.clipPath = clipPath || "";
+
+  if (overlay.type === "plaque") {
+    el.style.background = overlay.background || "rgba(0,0,0,.96)";
+    el.style.borderRadius = (overlay.borderRadius ?? 7) + "px";
+    el.style.border = overlay.border || "1px solid rgba(255,0,0,.22)";
+    el.style.boxShadow = overlay.boxShadow || "0 0 14px rgba(255,0,0,.32)";
+    el.style.animationDuration = (overlay.blinkSpeed || 1.15) + "s";
+    el.style.setProperty("--plaque-opacity-high", overlay.opacityHigh ?? 0.94);
+    el.style.setProperty("--plaque-opacity-low", overlay.opacityLow ?? 0.08);
+    return;
+  }
+
+  el.style.opacity = overlay.opacity;
 }
 
 function renderOverlayLabels() {
@@ -260,7 +210,7 @@ function renderOverlayLabels() {
     label.addEventListener("click", (event) => {
       event.preventDefault();
       event.stopPropagation();
-      selectThing("overlay", overlay.id);
+      selectOverlay(overlay.id);
     });
 
     overlayRoot.appendChild(label);
@@ -278,134 +228,15 @@ function positionOverlayLabel(overlay) {
   label.style.left = x + "%";
   label.style.top = y + "%";
 
-  if (selectedType === "overlay" && selectedOverlay && selectedOverlay.id === overlay.id) {
+  if (selectedOverlay && selectedOverlay.id === overlay.id) {
     label.classList.add("selected");
   } else {
     label.classList.remove("selected");
   }
 }
 
-/* ======================================================
-   FIXED BLINKING PLAQUE
-====================================================== */
-
-function renderFixedBlinkPlaque() {
-  document.getElementById(fixedBlinkPlaqueSettings.id)?.remove();
-  document.getElementById(`${fixedBlinkPlaqueSettings.id}-label`)?.remove();
-
-  if (!fixedBlinkPlaqueSettings.enabled) return;
-
-  const plaque = document.createElement("div");
-  plaque.id = fixedBlinkPlaqueSettings.id;
-  plaque.className = "fixed-blink-plaque";
-  plaque.textContent = fixedBlinkPlaqueSettings.text || "";
-
-  applyPlaqueStyle(plaque);
-
-  if (isOverlayEditMode) {
-    plaque.addEventListener("pointerdown", (event) => {
-      selectThing("plaque", fixedBlinkPlaqueSettings.id);
-      startPlaqueDrag(event, plaque);
-    });
-  }
-
-  document.body.appendChild(plaque);
-
-  if (isOverlayEditMode) {
-    const label = document.createElement("button");
-    label.type = "button";
-    label.id = `${fixedBlinkPlaqueSettings.id}-label`;
-    label.className = "fixed-plaque-label";
-    label.textContent = fixedBlinkPlaqueSettings.label;
-
-    label.addEventListener("click", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      selectThing("plaque", fixedBlinkPlaqueSettings.id);
-    });
-
-    document.body.appendChild(label);
-    positionPlaqueLabel();
-  }
-}
-
-function applyPlaqueStyle(plaque) {
-  plaque.style.left = fixedBlinkPlaqueSettings.x + "vw";
-  plaque.style.top = fixedBlinkPlaqueSettings.y + "vh";
-  plaque.style.width = fixedBlinkPlaqueSettings.w + "px";
-  plaque.style.height = fixedBlinkPlaqueSettings.h + "px";
-  plaque.style.background = fixedBlinkPlaqueSettings.background;
-  plaque.style.borderRadius = fixedBlinkPlaqueSettings.borderRadius + "px";
-  plaque.style.border = fixedBlinkPlaqueSettings.border;
-  plaque.style.boxShadow = fixedBlinkPlaqueSettings.boxShadow;
-  plaque.style.animationDuration = fixedBlinkPlaqueSettings.blinkSpeed + "s";
-  plaque.style.setProperty("--plaque-opacity-high", fixedBlinkPlaqueSettings.opacityHigh);
-  plaque.style.setProperty("--plaque-opacity-low", fixedBlinkPlaqueSettings.opacityLow);
-  plaque.style.transform = `translate(-50%, -50%) rotate(${fixedBlinkPlaqueSettings.rotate}deg)`;
-}
-
-function positionPlaqueLabel() {
-  const label = document.getElementById(`${fixedBlinkPlaqueSettings.id}-label`);
-  if (!label) return;
-
-  label.style.left = fixedBlinkPlaqueSettings.x + "vw";
-  label.style.top = `calc(${fixedBlinkPlaqueSettings.y}vh - 32px)`;
-
-  if (selectedType === "plaque") {
-    label.classList.add("selected");
-  } else {
-    label.classList.remove("selected");
-  }
-}
-
-function startPlaqueDrag(event, plaque) {
-  if (!isOverlayEditMode) return;
-
-  event.preventDefault();
-  event.stopPropagation();
-
-  plaque.setPointerCapture(event.pointerId);
-
-  const startX = event.clientX;
-  const startY = event.clientY;
-  const startPlaqueX = fixedBlinkPlaqueSettings.x;
-  const startPlaqueY = fixedBlinkPlaqueSettings.y;
-
-  function movePlaque(e) {
-    const dx = ((e.clientX - startX) / window.innerWidth) * 100;
-    const dy = ((e.clientY - startY) / window.innerHeight) * 100;
-
-    fixedBlinkPlaqueSettings.x = Number((startPlaqueX + dx).toFixed(2));
-    fixedBlinkPlaqueSettings.y = Number((startPlaqueY + dy).toFixed(2));
-
-    applyPlaqueStyle(plaque);
-    positionPlaqueLabel();
-    updateEditorOutput();
-  }
-
-  function stopPlaque() {
-    try {
-      plaque.releasePointerCapture(event.pointerId);
-    } catch {}
-
-    plaque.removeEventListener("pointermove", movePlaque);
-    plaque.removeEventListener("pointerup", stopPlaque);
-    plaque.removeEventListener("pointercancel", stopPlaque);
-
-    updateEditorOutput();
-  }
-
-  plaque.addEventListener("pointermove", movePlaque);
-  plaque.addEventListener("pointerup", stopPlaque);
-  plaque.addEventListener("pointercancel", stopPlaque);
-}
-
-/* ======================================================
-   SELECT / DRAG / EDIT
-====================================================== */
-
-function selectThing(type, id) {
-  selectedType = type;
+function selectOverlay(overlayId) {
+  selectedOverlay = rabbitOverlaySettings.find((overlay) => overlay.id === overlayId);
 
   document.querySelectorAll(".rabbit-overlay").forEach((item) => {
     item.classList.remove("selected-overlay");
@@ -415,41 +246,25 @@ function selectThing(type, id) {
     item.classList.remove("selected");
   });
 
-  document.getElementById(fixedBlinkPlaqueSettings.id)?.classList.remove("selected-fixed-plaque");
-  document.getElementById(`${fixedBlinkPlaqueSettings.id}-label`)?.classList.remove("selected");
+  if (!selectedOverlay) return;
 
-  if (type === "overlay") {
-    selectedOverlay = rabbitOverlaySettings.find((overlay) => overlay.id === id);
+  const el = document.getElementById(selectedOverlay.id);
+  const label = document.getElementById(`overlay-label-${selectedOverlay.id}`);
 
-    if (!selectedOverlay) return;
+  if (el) el.classList.add("selected-overlay");
+  if (label) label.classList.add("selected");
 
-    document.getElementById(selectedOverlay.id)?.classList.add("selected-overlay");
-    document.getElementById(`overlay-label-${selectedOverlay.id}`)?.classList.add("selected");
-
-    const selectedName = document.getElementById("overlaySelectedName");
-    if (selectedName) selectedName.textContent = `Selected: ${selectedOverlay.label}`;
-
-    const selectBox = document.getElementById("overlaySelect");
-    if (selectBox) selectBox.value = selectedOverlay.id;
-
-    drawCornerHandles();
+  const selectedName = document.getElementById("overlaySelectedName");
+  if (selectedName) {
+    selectedName.textContent = `Selected: ${selectedOverlay.label}`;
   }
 
-  if (type === "plaque") {
-    selectedOverlay = null;
-
-    document.getElementById(fixedBlinkPlaqueSettings.id)?.classList.add("selected-fixed-plaque");
-    document.getElementById(`${fixedBlinkPlaqueSettings.id}-label`)?.classList.add("selected");
-
-    const selectedName = document.getElementById("overlaySelectedName");
-    if (selectedName) selectedName.textContent = `Selected: ${fixedBlinkPlaqueSettings.label}`;
-
-    const selectBox = document.getElementById("overlaySelect");
-    if (selectBox) selectBox.value = fixedBlinkPlaqueSettings.id;
-
-    drawCornerHandles();
+  const selectBox = document.getElementById("overlaySelect");
+  if (selectBox) {
+    selectBox.value = selectedOverlay.id;
   }
 
+  drawCornerHandles();
   updateEditorOutput();
 }
 
@@ -505,17 +320,13 @@ function createOverlayEditorPanel() {
   const panel = document.createElement("div");
   panel.className = "overlay-editor-panel";
 
-  const overlayOptions = `
-    <option value="tv-static">TV Static</option>
-    <option value="fixed-blink-plaque">Fixed Black Blink Box</option>
-  `;
+  const overlayOptions = rabbitOverlaySettings
+    .map((overlay) => `<option value="${overlay.id}">${overlay.label}</option>`)
+    .join("");
 
   panel.innerHTML = `
     <strong>Overlay Editor</strong>
-    <p>
-      TV Static sticks to the TV image.
-      Fixed Black Blink Box sticks to the screen/window and will not move when the page moves.
-    </p>
+    <p>Black Blink Box is now locked to the room image, not the browser window. Its x/y/w/h coordinates copy with the rest of the overlay settings.</p>
 
     <select id="overlaySelect">
       <option value="">Choose item...</option>
@@ -553,19 +364,14 @@ function createOverlayEditorPanel() {
   document.body.appendChild(panel);
 
   document.getElementById("overlaySelect").addEventListener("change", (event) => {
-    if (event.target.value === "fixed-blink-plaque") {
-      selectThing("plaque", fixedBlinkPlaqueSettings.id);
-      return;
-    }
-
     if (event.target.value) {
-      selectThing("overlay", event.target.value);
+      selectOverlay(event.target.value);
     }
   });
 
   panel.querySelectorAll("[data-action]").forEach((button) => {
     button.addEventListener("click", () => {
-      adjustSelectedThing(button.dataset.action);
+      adjustSelectedOverlay(button.dataset.action);
     });
   });
 
@@ -587,18 +393,9 @@ function createOverlayEditorPanel() {
   });
 }
 
-function adjustSelectedThing(action) {
-  if (selectedType === "overlay" && selectedOverlay) {
-    adjustSelectedOverlay(action);
-    return;
-  }
-
-  if (selectedType === "plaque") {
-    adjustFixedPlaque(action);
-  }
-}
-
 function adjustSelectedOverlay(action) {
+  if (!selectedOverlay) return;
+
   const el = document.getElementById(selectedOverlay.id);
   if (!el) return;
 
@@ -621,8 +418,13 @@ function adjustSelectedOverlay(action) {
   if (action === "sy-minus") selectedOverlay.skewY = Number((selectedOverlay.skewY - 0.25).toFixed(2));
   if (action === "sy-plus") selectedOverlay.skewY = Number((selectedOverlay.skewY + 0.25).toFixed(2));
 
-  if (action === "op-minus") selectedOverlay.opacity = Math.max(0, Number((selectedOverlay.opacity - 0.05).toFixed(2)));
-  if (action === "op-plus") selectedOverlay.opacity = Math.min(1, Number((selectedOverlay.opacity + 0.05).toFixed(2)));
+  if (selectedOverlay.type === "plaque") {
+    if (action === "op-minus") selectedOverlay.opacityHigh = Math.max(0, Number((selectedOverlay.opacityHigh - 0.05).toFixed(2)));
+    if (action === "op-plus") selectedOverlay.opacityHigh = Math.min(1, Number((selectedOverlay.opacityHigh + 0.05).toFixed(2)));
+  } else {
+    if (action === "op-minus") selectedOverlay.opacity = Math.max(0, Number((selectedOverlay.opacity - 0.05).toFixed(2)));
+    if (action === "op-plus") selectedOverlay.opacity = Math.min(1, Number((selectedOverlay.opacity + 0.05).toFixed(2)));
+  }
 
   selectedOverlay.w = Math.max(0.1, selectedOverlay.w);
   selectedOverlay.h = Math.max(0.1, selectedOverlay.h);
@@ -633,44 +435,10 @@ function adjustSelectedOverlay(action) {
   updateEditorOutput();
 }
 
-function adjustFixedPlaque(action) {
-  const plaque = document.getElementById(fixedBlinkPlaqueSettings.id);
-  if (!plaque) return;
-
-  if (action === "left") fixedBlinkPlaqueSettings.x = Number((fixedBlinkPlaqueSettings.x - 0.4).toFixed(2));
-  if (action === "right") fixedBlinkPlaqueSettings.x = Number((fixedBlinkPlaqueSettings.x + 0.4).toFixed(2));
-  if (action === "up") fixedBlinkPlaqueSettings.y = Number((fixedBlinkPlaqueSettings.y - 0.4).toFixed(2));
-  if (action === "down") fixedBlinkPlaqueSettings.y = Number((fixedBlinkPlaqueSettings.y + 0.4).toFixed(2));
-
-  if (action === "w-minus") fixedBlinkPlaqueSettings.w = Math.max(8, fixedBlinkPlaqueSettings.w - 4);
-  if (action === "w-plus") fixedBlinkPlaqueSettings.w = fixedBlinkPlaqueSettings.w + 4;
-  if (action === "h-minus") fixedBlinkPlaqueSettings.h = Math.max(8, fixedBlinkPlaqueSettings.h - 3);
-  if (action === "h-plus") fixedBlinkPlaqueSettings.h = fixedBlinkPlaqueSettings.h + 3;
-
-  if (action === "rot-minus") fixedBlinkPlaqueSettings.rotate = Number((fixedBlinkPlaqueSettings.rotate - 0.25).toFixed(2));
-  if (action === "rot-plus") fixedBlinkPlaqueSettings.rotate = Number((fixedBlinkPlaqueSettings.rotate + 0.25).toFixed(2));
-
-  if (action === "op-minus") {
-    fixedBlinkPlaqueSettings.opacityHigh = Math.max(0, Number((fixedBlinkPlaqueSettings.opacityHigh - 0.05).toFixed(2)));
-  }
-
-  if (action === "op-plus") {
-    fixedBlinkPlaqueSettings.opacityHigh = Math.min(1, Number((fixedBlinkPlaqueSettings.opacityHigh + 0.05).toFixed(2)));
-  }
-
-  applyPlaqueStyle(plaque);
-  positionPlaqueLabel();
-  updateEditorOutput();
-}
-
-/* ======================================================
-   TV CORNER HANDLES
-====================================================== */
-
 function drawCornerHandles() {
   document.querySelectorAll(".overlay-corner-handle").forEach((handle) => handle.remove());
 
-  if (!isOverlayEditMode || selectedType !== "overlay" || !selectedOverlay || !selectedOverlay.clipCorners) return;
+  if (!isOverlayEditMode || !selectedOverlay || !selectedOverlay.clipCorners) return;
 
   Object.entries(selectedOverlay.clipCorners).forEach(([cornerKey, point]) => {
     const handle = document.createElement("button");
@@ -739,23 +507,12 @@ function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
 
-/* ======================================================
-   OUTPUT
-====================================================== */
-
 function updateEditorOutput() {
   const output = document.getElementById("overlayOutput");
   if (!output) return;
 
-  output.value =
-`const rabbitOverlaySettings = ${JSON.stringify(rabbitOverlaySettings, null, 2)};
-
-const fixedBlinkPlaqueSettings = ${JSON.stringify(fixedBlinkPlaqueSettings, null, 2)};`;
+  output.value = `const rabbitOverlaySettings = ${JSON.stringify(rabbitOverlaySettings, null, 2)};`;
 }
-
-/* ======================================================
-   TV STATIC ANIMATION
-====================================================== */
 
 function setupTvStatic() {
   const tvCanvas = document.getElementById("tvStaticCanvas");
@@ -797,10 +554,6 @@ function setupTvStatic() {
 
   drawTvStatic();
 }
-
-/* ======================================================
-   OPTIONAL TV STATIC SOUND
-====================================================== */
 
 const staticSoundToggle = document.getElementById("staticSoundToggle");
 let audioContext = null;
@@ -869,10 +622,6 @@ if (staticSoundToggle) {
   });
 }
 
-/* ======================================================
-   MOBILE START POSITION
-====================================================== */
-
 window.addEventListener("load", () => {
   const wrap = document.getElementById("rabbitScrollWrap");
 
@@ -881,11 +630,6 @@ window.addEventListener("load", () => {
   }
 });
 
-/* ======================================================
-   START
-====================================================== */
-
-injectPlaqueStyles();
+injectStagePlaqueStyles();
 renderRabbitOverlays();
-renderFixedBlinkPlaque();
 createOverlayEditorPanel();
