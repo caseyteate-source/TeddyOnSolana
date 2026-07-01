@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>$TEDDY | Neon Rain</title>
+  <title>$TEDDY | Neon Rain v16</title>
 
   <style>
     * {
@@ -110,6 +110,32 @@
       display: none;
       background: #000;
       z-index: 2;
+    }
+
+    #tvSoundToggle {
+      position: absolute;
+      right: 6px;
+      bottom: 6px;
+      z-index: 6;
+      width: 28px;
+      height: 28px;
+      border: 1px solid rgba(255,255,255,0.55);
+      border-radius: 999px;
+      background: rgba(0,0,0,0.62);
+      color: #fff;
+      font-size: 15px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      box-shadow: 0 0 10px rgba(0,0,0,0.45);
+    }
+
+    #tvSoundToggle.sound-on {
+      background: rgba(0, 190, 120, 0.78);
+      border-color: rgba(180,255,220,0.9);
     }
 
     .hotspot {
@@ -336,8 +362,10 @@
           <canvas id="tvIdleCanvas" width="320" height="240"></canvas>
 
           <video class="tv-video" id="perfectStormVideo" src="perfect-storm.mp4" playsinline webkit-playsinline preload="auto"></video>
-          <video class="tv-video" id="angryReporterVideo" src="angry-reporter.mp4" playsinline webkit-playsinline preload="auto"></video>
-          <video class="tv-video" id="secretVideo" src="secret-video.mp4" playsinline webkit-playsinline preload="auto"></video>
+          <video class="tv-video" id="angryReporterVideo" src="angry-reporter.mp4" playsinline webkit-playsinline preload="metadata"></video>
+          <video class="tv-video" id="secretVideo" src="secret-video.mp4" playsinline webkit-playsinline preload="metadata"></video>
+
+          <button id="tvSoundToggle" type="button" aria-label="Turn TV sound on">🔇</button>
         </div>
       </div>
     </main>
@@ -567,6 +595,7 @@
     const tvScreen = document.getElementById("tvScreenAnim");
     const tvIdleCanvas = document.getElementById("tvIdleCanvas");
     const tvCtx = tvIdleCanvas.getContext("2d");
+    const tvSoundToggle = document.getElementById("tvSoundToggle");
 
     const perfectStormVideo = document.getElementById("perfectStormVideo");
     const angryReporterVideo = document.getElementById("angryReporterVideo");
@@ -678,10 +707,12 @@
       }
 
       if (action === "switch-angry-reporter") {
+        setTvSound(true);
         playTvVideo("angryReporterVideo", false);
       }
 
       if (action === "switch-secret-video") {
+        setTvSound(true);
         playTvVideo("secretVideo", false);
       }
     }
@@ -784,7 +815,9 @@
 
     function resizeRainCanvas() {
       const rect = stage.getBoundingClientRect();
-      const dpr = window.devicePixelRatio || 1;
+      const rawDpr = window.devicePixelRatio || 1;
+      const rainRenderScale = window.innerWidth < 700 ? 0.52 : 0.72;
+      const dpr = Math.max(0.5, Math.min(rawDpr, 1.25) * rainRenderScale);
 
       if (!rect.width || !rect.height) return;
 
@@ -797,12 +830,12 @@
 
       const area = rect.width * rect.height;
 
-      farRain = Array.from({ length: Math.floor(area / 7200) }, () => makeRainDrop("far", rect));
-      midRain = Array.from({ length: Math.floor(area / 4300) }, () => makeRainDrop("mid", rect));
-      nearRain = Array.from({ length: Math.floor(area / 7600) }, () => makeRainDrop("near", rect));
+      farRain = Array.from({ length: Math.floor(area / 15500) }, () => makeRainDrop("far", rect));
+      midRain = Array.from({ length: Math.floor(area / 9500) }, () => makeRainDrop("mid", rect));
+      nearRain = Array.from({ length: Math.floor(area / 16500) }, () => makeRainDrop("near", rect));
 
-      splashFlecks = Array.from({ length: Math.floor(area / 18000) }, () => makeSplash(rect));
-      mistPuffs = Array.from({ length: Math.floor(area / 26000) }, () => makeMist(rect));
+      splashFlecks = Array.from({ length: Math.floor(area / 45000) }, () => makeSplash(rect));
+      mistPuffs = Array.from({ length: Math.floor(area / 80000) }, () => makeMist(rect));
     }
 
     function drawMistLayer(w, h) {
@@ -939,7 +972,15 @@
       speed: 1.6 + Math.random() * 2.1
     }));
 
-    function drawArcadeScene() {
+    let lastArcadeDraw = 0;
+
+    function drawArcadeScene(timestamp = 0) {
+      if (timestamp - lastArcadeDraw < 33) {
+        requestAnimationFrame(drawArcadeScene);
+        return;
+      }
+
+      lastArcadeDraw = timestamp;
       arcadeFrame++;
 
       const W = arcadeCanvas.width;
@@ -1035,6 +1076,26 @@
 
     let tvBurstUntil = 0;
     let perfectStormAutoTried = false;
+    let tvSoundOn = false;
+
+    function setTvSound(on) {
+      tvSoundOn = !!on;
+
+      tvVideos.forEach(v => {
+        v.muted = !tvSoundOn;
+        v.defaultMuted = !tvSoundOn;
+        v.volume = tvSoundOn ? 1 : 0;
+      });
+
+      if (tvSoundToggle) {
+        tvSoundToggle.textContent = tvSoundOn ? "🔊" : "🔇";
+        tvSoundToggle.classList.toggle("sound-on", tvSoundOn);
+        tvSoundToggle.setAttribute(
+          "aria-label",
+          tvSoundOn ? "Turn TV sound off" : "Turn TV sound on"
+        );
+      }
+    }
 
     function returnToTvIdle() {
       tvVideos.forEach(v => {
@@ -1070,9 +1131,10 @@
       tvBurstUntil = performance.now() + 420;
       tvIdleCanvas.style.display = "block";
 
-      video.muted = !!mutedForAutoplay;
-      video.defaultMuted = !!mutedForAutoplay;
-      video.volume = mutedForAutoplay ? 0 : 1;
+      const shouldMute = !!mutedForAutoplay || !tvSoundOn;
+      video.muted = shouldMute;
+      video.defaultMuted = shouldMute;
+      video.volume = shouldMute ? 0 : 1;
       video.controls = false;
       video.style.display = "block";
       video.style.opacity = "0";
@@ -1163,8 +1225,15 @@
       }
     }
 
-    function animateTvIdle() {
-      const now = performance.now();
+    let lastTvIdleDraw = 0;
+
+    function animateTvIdle(now = performance.now()) {
+      if (now - lastTvIdleDraw < 120) {
+        requestAnimationFrame(animateTvIdle);
+        return;
+      }
+
+      lastTvIdleDraw = now;
 
       const anyVideoVisible = tvVideos.some(v => {
         return v.style.display === "block" && v.style.opacity === "1";
@@ -1402,8 +1471,17 @@ const rainDryMasks = ${JSON.stringify(rainDryMasks, null, 2)};`;
 
       tvScreen.addEventListener("click", () => {
         if (editMode) return;
+        setTvSound(true);
         playTvVideo("perfectStormVideo", false);
       });
+
+      tvSoundToggle.addEventListener("click", e => {
+        e.preventDefault();
+        e.stopPropagation();
+        setTvSound(!tvSoundOn);
+      });
+
+      setTvSound(false);
 
       tvVideos.forEach(v => {
         v.addEventListener("ended", returnToTvIdle);
