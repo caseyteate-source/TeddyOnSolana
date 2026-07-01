@@ -38,25 +38,25 @@ const rabbitOverlaySettings = [
     type: "plaque",
     className: "rabbit-overlay stage-blink-plaque",
 
-    /* These are image/stage percentages, so the box stays locked to the room image */
-    x: 76.35,
-    y: 55.25,
-    w: 6.3,
-    h: 3.35,
+    /* These are image/stage percentages, so it stays locked to the room image */
+    x: 76.9,
+    y: 56.68,
+    w: 6.6,
+    h: 3.4,
 
     rotate: 0,
     skewX: 0,
     skewY: 0,
 
-    opacityHigh: 0.94,
+    opacityHigh: 0.96,
     opacityLow: 0.08,
-    blinkSpeed: 1.15,
+    blinkSpeed: 1.1,
 
     text: "",
-    background: "rgba(0,0,0,.96)",
+    background: "rgba(0,0,0,.98)",
     borderRadius: 7,
-    border: "1px solid rgba(255,0,0,.22)",
-    boxShadow: "0 0 14px rgba(255,0,0,.32)"
+    border: "2px solid rgba(255,0,0,.52)",
+    boxShadow: "0 0 18px rgba(255,0,0,.55)"
   }
 ];
 
@@ -66,6 +66,10 @@ let selectedOverlay = null;
 if (isOverlayEditMode) {
   document.body.classList.add("overlay-edit-mode");
 }
+
+/* ======================================================
+   EXTRA PLAQUE + EDITOR STYLES
+====================================================== */
 
 function injectStagePlaqueStyles() {
   const oldStyle = document.getElementById("stagePlaqueStyles");
@@ -95,7 +99,7 @@ function injectStagePlaqueStyles() {
 
     @keyframes stagePlaqueBlink {
       0%, 48% {
-        opacity: var(--plaque-opacity-high, .94);
+        opacity: var(--plaque-opacity-high, .96);
       }
 
       49%, 100% {
@@ -104,20 +108,70 @@ function injectStagePlaqueStyles() {
     }
 
     .overlay-edit-mode .stage-blink-plaque {
-      outline: 3px solid #ffea00;
+      opacity: 1 !important;
+      animation: none !important;
+      outline: 4px solid #ffea00 !important;
       outline-offset: 2px;
+      border: 2px solid rgba(255,0,0,.9) !important;
+      box-shadow:
+        0 0 18px rgba(255,234,0,.95),
+        0 0 30px rgba(255,0,0,.85) !important;
+      background: rgba(0,0,0,.98) !important;
     }
 
     .overlay-edit-mode .stage-blink-plaque.selected-overlay {
-      outline: 3px solid #00f5ff;
+      outline: 4px solid #00f5ff !important;
       box-shadow:
-        0 0 18px rgba(0,245,255,.85),
-        0 0 28px rgba(255,42,163,.45) !important;
+        0 0 20px rgba(0,245,255,.95),
+        0 0 32px rgba(255,42,163,.65) !important;
+    }
+
+    .overlay-panel-drag-handle {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      margin: -4px 0 8px;
+      padding: 9px 10px;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #ff2aa3, #00aaff);
+      color: white;
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-align: center;
+      cursor: grab;
+      user-select: none;
+      touch-action: none;
+    }
+
+    .overlay-panel-drag-handle:active {
+      cursor: grabbing;
+    }
+
+    .overlay-editor-panel.is-dragging {
+      opacity: .84;
+      user-select: none;
+    }
+
+    .overlay-edit-mode .overlay-editor-panel {
+      max-height: 72vh;
+      overflow-y: auto;
+    }
+
+    @media (max-width: 760px) {
+      .overlay-edit-mode .overlay-editor-panel {
+        max-height: 52vh;
+      }
     }
   `;
 
   document.head.appendChild(style);
 }
+
+/* ======================================================
+   RENDER OVERLAYS
+====================================================== */
 
 function renderRabbitOverlays() {
   if (!overlayRoot) return;
@@ -184,18 +238,22 @@ function applyOverlayStyle(el, overlay) {
   el.style.clipPath = clipPath || "";
 
   if (overlay.type === "plaque") {
-    el.style.background = overlay.background || "rgba(0,0,0,.96)";
+    el.style.background = overlay.background || "rgba(0,0,0,.98)";
     el.style.borderRadius = (overlay.borderRadius ?? 7) + "px";
-    el.style.border = overlay.border || "1px solid rgba(255,0,0,.22)";
-    el.style.boxShadow = overlay.boxShadow || "0 0 14px rgba(255,0,0,.32)";
-    el.style.animationDuration = (overlay.blinkSpeed || 1.15) + "s";
-    el.style.setProperty("--plaque-opacity-high", overlay.opacityHigh ?? 0.94);
+    el.style.border = overlay.border || "2px solid rgba(255,0,0,.52)";
+    el.style.boxShadow = overlay.boxShadow || "0 0 18px rgba(255,0,0,.55)";
+    el.style.animationDuration = (overlay.blinkSpeed || 1.1) + "s";
+    el.style.setProperty("--plaque-opacity-high", overlay.opacityHigh ?? 0.96);
     el.style.setProperty("--plaque-opacity-low", overlay.opacityLow ?? 0.08);
     return;
   }
 
   el.style.opacity = overlay.opacity;
 }
+
+/* ======================================================
+   LABELS
+====================================================== */
 
 function renderOverlayLabels() {
   document.querySelectorAll(".overlay-floating-label").forEach((label) => label.remove());
@@ -234,6 +292,10 @@ function positionOverlayLabel(overlay) {
     label.classList.remove("selected");
   }
 }
+
+/* ======================================================
+   SELECT + DRAG
+====================================================== */
 
 function selectOverlay(overlayId) {
   selectedOverlay = rabbitOverlaySettings.find((overlay) => overlay.id === overlayId);
@@ -314,6 +376,10 @@ function startOverlayDrag(event, overlay, el) {
   el.addEventListener("pointercancel", stopOverlay);
 }
 
+/* ======================================================
+   EDITOR PANEL
+====================================================== */
+
 function createOverlayEditorPanel() {
   if (!isOverlayEditMode) return;
 
@@ -325,8 +391,15 @@ function createOverlayEditorPanel() {
     .join("");
 
   panel.innerHTML = `
+    <div id="overlayPanelDragHandle" class="overlay-panel-drag-handle">
+      DRAG THIS EDIT BOX
+    </div>
+
     <strong>Overlay Editor</strong>
-    <p>Black Blink Box is now locked to the room image, not the browser window. Its x/y/w/h coordinates copy with the rest of the overlay settings.</p>
+    <p>
+      Black Blink Box is locked to the room image. It should show with a yellow outline in editor mode.
+      Move this editor box by dragging the top bar.
+    </p>
 
     <select id="overlaySelect">
       <option value="">Choose item...</option>
@@ -363,6 +436,9 @@ function createOverlayEditorPanel() {
 
   document.body.appendChild(panel);
 
+  restoreEditorPanelPosition(panel);
+  makeEditorPanelMoveable(panel);
+
   document.getElementById("overlaySelect").addEventListener("change", (event) => {
     if (event.target.value) {
       selectOverlay(event.target.value);
@@ -391,7 +467,87 @@ function createOverlayEditorPanel() {
       alert("Could not auto-copy. Select the text box and copy manually.");
     }
   });
+
+  setTimeout(() => {
+    selectOverlay("black-blink-plaque");
+  }, 150);
 }
+
+function restoreEditorPanelPosition(panel) {
+  const saved = localStorage.getItem("teddyOverlayEditorPanelPosition");
+
+  if (!saved) return;
+
+  try {
+    const position = JSON.parse(saved);
+
+    if (typeof position.left === "number" && typeof position.top === "number") {
+      panel.style.left = position.left + "px";
+      panel.style.top = position.top + "px";
+      panel.style.right = "auto";
+      panel.style.bottom = "auto";
+    }
+  } catch {}
+}
+
+function makeEditorPanelMoveable(panel) {
+  const handle = document.getElementById("overlayPanelDragHandle");
+  if (!handle) return;
+
+  handle.addEventListener("pointerdown", (event) => {
+    event.preventDefault();
+
+    panel.classList.add("is-dragging");
+
+    const rect = panel.getBoundingClientRect();
+    const startX = event.clientX;
+    const startY = event.clientY;
+    const startLeft = rect.left;
+    const startTop = rect.top;
+
+    panel.style.left = startLeft + "px";
+    panel.style.top = startTop + "px";
+    panel.style.right = "auto";
+    panel.style.bottom = "auto";
+
+    function movePanel(e) {
+      const newLeft = startLeft + (e.clientX - startX);
+      const newTop = startTop + (e.clientY - startY);
+
+      const maxLeft = window.innerWidth - panel.offsetWidth - 8;
+      const maxTop = window.innerHeight - panel.offsetHeight - 8;
+
+      const clampedLeft = clamp(newLeft, 8, Math.max(8, maxLeft));
+      const clampedTop = clamp(newTop, 8, Math.max(8, maxTop));
+
+      panel.style.left = clampedLeft + "px";
+      panel.style.top = clampedTop + "px";
+
+      localStorage.setItem(
+        "teddyOverlayEditorPanelPosition",
+        JSON.stringify({
+          left: clampedLeft,
+          top: clampedTop
+        })
+      );
+    }
+
+    function stopPanel() {
+      panel.classList.remove("is-dragging");
+      window.removeEventListener("pointermove", movePanel);
+      window.removeEventListener("pointerup", stopPanel);
+      window.removeEventListener("pointercancel", stopPanel);
+    }
+
+    window.addEventListener("pointermove", movePanel);
+    window.addEventListener("pointerup", stopPanel);
+    window.addEventListener("pointercancel", stopPanel);
+  });
+}
+
+/* ======================================================
+   BUTTON ADJUSTMENTS
+====================================================== */
 
 function adjustSelectedOverlay(action) {
   if (!selectedOverlay) return;
@@ -434,6 +590,10 @@ function adjustSelectedOverlay(action) {
   drawCornerHandles();
   updateEditorOutput();
 }
+
+/* ======================================================
+   TV CORNER HANDLES
+====================================================== */
 
 function drawCornerHandles() {
   document.querySelectorAll(".overlay-corner-handle").forEach((handle) => handle.remove());
@@ -503,6 +663,10 @@ function startCornerDrag(event, overlay, cornerKey) {
   window.addEventListener("pointercancel", stopCorner);
 }
 
+/* ======================================================
+   UTILITIES + OUTPUT
+====================================================== */
+
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
@@ -513,6 +677,10 @@ function updateEditorOutput() {
 
   output.value = `const rabbitOverlaySettings = ${JSON.stringify(rabbitOverlaySettings, null, 2)};`;
 }
+
+/* ======================================================
+   TV STATIC ANIMATION
+====================================================== */
 
 function setupTvStatic() {
   const tvCanvas = document.getElementById("tvStaticCanvas");
@@ -554,6 +722,10 @@ function setupTvStatic() {
 
   drawTvStatic();
 }
+
+/* ======================================================
+   OPTIONAL TV STATIC SOUND
+====================================================== */
 
 const staticSoundToggle = document.getElementById("staticSoundToggle");
 let audioContext = null;
@@ -622,6 +794,10 @@ if (staticSoundToggle) {
   });
 }
 
+/* ======================================================
+   MOBILE START POSITION
+====================================================== */
+
 window.addEventListener("load", () => {
   const wrap = document.getElementById("rabbitScrollWrap");
 
@@ -629,6 +805,10 @@ window.addEventListener("load", () => {
     wrap.scrollLeft = 360;
   }
 });
+
+/* ======================================================
+   START
+====================================================== */
 
 injectStagePlaqueStyles();
 renderRabbitOverlays();
