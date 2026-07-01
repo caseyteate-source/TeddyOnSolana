@@ -1,5 +1,5 @@
 /* ======================================================
-   $TEDDY RABBIT HOLE TV STATIC + BLINKING BLACK BOX
+   $TEDDY RABBIT HOLE TV STATIC + PLAIN BLACK BLINK BOX
 
    Replace this whole file:
    rabbit-overlays.js
@@ -37,7 +37,6 @@ const rabbitOverlaySettings = [
     type: "plaque",
     className: "rabbit-overlay stage-blink-plaque",
 
-    /* These are locked to the room image, not the browser window */
     x: 77.14,
     y: 57.07,
     w: 3.35,
@@ -53,9 +52,9 @@ const rabbitOverlaySettings = [
 
     text: "",
     background: "rgba(0,0,0,.98)",
-    borderRadius: 7,
-    border: "2px solid rgba(255,0,0,.52)",
-    boxShadow: "0 0 18px rgba(255,0,0,.55)"
+    borderRadius: 5,
+    border: "0",
+    boxShadow: "none"
   }
 ];
 
@@ -80,17 +79,8 @@ function injectExtraOverlayStyles() {
   style.textContent = `
     .stage-blink-plaque {
       box-sizing: border-box;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: block;
       overflow: hidden;
-      color: #ff1717;
-      font-family: Arial, sans-serif;
-      font-weight: 900;
-      letter-spacing: .12em;
-      text-shadow:
-        0 0 4px rgba(255,0,0,.95),
-        0 0 10px rgba(255,0,0,.75);
       animation-name: stagePlaqueBlink;
       animation-timing-function: steps(1, end);
       animation-iteration-count: infinite;
@@ -107,19 +97,16 @@ function injectExtraOverlayStyles() {
     }
 
     .overlay-edit-mode .stage-blink-plaque {
-      outline: 4px solid #ffea00 !important;
+      border: 0 !important;
+      box-shadow: none !important;
+      outline: 1px dashed rgba(255,255,255,.45) !important;
       outline-offset: 2px;
-      border: 2px solid rgba(255,0,0,.9) !important;
-      box-shadow:
-        0 0 18px rgba(255,234,0,.95),
-        0 0 30px rgba(255,0,0,.85) !important;
     }
 
     .overlay-edit-mode .stage-blink-plaque.selected-overlay {
-      outline: 4px solid #00f5ff !important;
-      box-shadow:
-        0 0 20px rgba(0,245,255,.95),
-        0 0 32px rgba(255,42,163,.65) !important;
+      border: 0 !important;
+      box-shadow: none !important;
+      outline: 1px dashed rgba(0,245,255,.75) !important;
     }
 
     .overlay-panel-drag-handle {
@@ -257,9 +244,9 @@ function applyOverlayStyle(el, overlay) {
 
   if (overlay.type === "plaque") {
     el.style.background = overlay.background || "rgba(0,0,0,.98)";
-    el.style.borderRadius = (overlay.borderRadius ?? 7) + "px";
-    el.style.border = overlay.border || "2px solid rgba(255,0,0,.52)";
-    el.style.boxShadow = overlay.boxShadow || "0 0 18px rgba(255,0,0,.55)";
+    el.style.borderRadius = (overlay.borderRadius ?? 5) + "px";
+    el.style.border = overlay.border || "0";
+    el.style.boxShadow = overlay.boxShadow || "none";
     el.style.animationDuration = (overlay.blinkSpeed || 1.1) + "s";
     el.style.setProperty("--plaque-opacity-high", overlay.opacityHigh ?? 0.96);
     el.style.setProperty("--plaque-opacity-low", overlay.opacityLow ?? 0.08);
