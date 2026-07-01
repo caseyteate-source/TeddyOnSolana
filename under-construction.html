@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>$TEDDY | Under Construction</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: #03030b;
+      color: white;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow-x: hidden;
+    }
+
+    body {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 22px;
+      background:
+        radial-gradient(circle at 50% 12%, rgba(255, 42, 163, 0.26), transparent 34%),
+        radial-gradient(circle at 18% 82%, rgba(0, 245, 255, 0.16), transparent 32%),
+        radial-gradient(circle at 82% 76%, rgba(255, 230, 0, 0.12), transparent 30%),
+        linear-gradient(180deg, #080018 0%, #03030b 50%, #010105 100%);
+    }
+
+    .scanlines {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.045) 0,
+        rgba(255,255,255,0.045) 1px,
+        transparent 2px,
+        transparent 5px
+      );
+      mix-blend-mode: overlay;
+      opacity: 0.55;
+    }
+
+    .stars {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,0.9) 0 1px, transparent 1.5px),
+        radial-gradient(circle, rgba(0,245,255,0.75) 0 1px, transparent 1.5px),
+        radial-gradient(circle, rgba(255,42,163,0.8) 0 1px, transparent 1.5px);
+      background-size: 90px 90px, 130px 130px, 170px 170px;
+      background-position: 0 0, 35px 55px, 80px 20px;
+      animation: starDrift 18s linear infinite;
+      opacity: 0.34;
+    }
+
+    @keyframes starDrift {
+      to {
+        background-position: 90px 90px, 165px 185px, 250px 190px;
+      }
+    }
+
+    .card {
+      position: relative;
+      z-index: 5;
+      width: min(860px, 96vw);
+      padding: clamp(20px, 4vw, 42px);
+      border-radius: 30px;
+      border: 3px solid rgba(0,245,255,0.68);
+      background:
+        linear-gradient(145deg, rgba(255,42,163,0.22), transparent 24%),
+        linear-gradient(315deg, rgba(0,245,255,0.20), transparent 28%),
+        linear-gradient(180deg, rgba(12, 4, 42, 0.96), rgba(3, 3, 18, 0.96));
+      box-shadow:
+        0 0 30px rgba(0,245,255,0.30),
+        0 0 80px rgba(255,42,163,0.18),
+        inset 0 0 34px rgba(255,255,255,0.06);
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 12px;
+      border-radius: 22px;
+      border: 1px dashed rgba(255, 230, 0, 0.42);
+      pointer-events: none;
+    }
+
+    .sign {
+      display: inline-block;
+      padding: 10px 16px;
+      margin-bottom: 20px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,230,0,0.78);
+      background: rgba(0,0,0,0.42);
+      color: #ffe600;
+      font-weight: 1000;
+      letter-spacing: 0.16em;
+      text-shadow: 0 0 10px rgba(255,230,0,0.82);
+      box-shadow:
+        0 0 18px rgba(255,230,0,0.28),
+        inset 0 0 18px rgba(255,230,0,0.08);
+      animation: blink 1.3s steps(2, end) infinite;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0.52; }
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(38px, 7vw, 86px);
+      line-height: 0.95;
+      letter-spacing: 0.06em;
+      color: #fff;
+      text-shadow:
+        0 0 8px #fff,
+        0 0 16px #00f5ff,
+        0 0 30px #ff2aa3;
+    }
+
+    .sub {
+      margin: 14px auto 26px;
+      max-width: 640px;
+      color: rgba(255,255,255,0.88);
+      font-size: clamp(15px, 2vw, 19px);
+      line-height: 1.55;
+    }
+
+    .bear {
+      font-size: clamp(86px, 18vw, 148px);
+      filter: drop-shadow(0 0 16px rgba(255,230,0,0.38));
+      animation: bob 1.6s ease-in-out infinite;
+    }
+
+    @keyframes bob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-7px); }
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 12px 18px;
+      border-radius: 999px;
+      border: 0;
+      color: #050510;
+      background: #ffe600;
+      font-weight: 1000;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow: 0 0 16px rgba(255,230,0,0.44);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn.primary {
+      background: linear-gradient(90deg, #00f5ff, #ff2aa3);
+      color: white;
+      box-shadow: 0 0 20px rgba(0,245,255,0.38), 0 0 28px rgba(255,42,163,0.22);
+    }
+
+    .btn:hover,
+    .btn:focus {
+      outline: none;
+      transform: translateY(-1px);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="stars"></div>
+  <div class="scanlines"></div>
+
+  <main class="card">
+    <div class="sign">UNDER CONSTRUCTION</div>
+
+    <h1>$TEDDY BUILDING</h1>
+
+    <p class="sub">
+      This part of the rabbit hole is still being wired up. The arcade cabinet is humming, the corkboard strings are tightening, and Teddy is working behind the neon caution tape.
+    </p>
+
+    <div class="bear">🧸🚧</div>
+
+    <div class="actions">
+      <a class="btn primary" href="/teddy.html">BACK TO TEDDY</a>
+      <a class="btn" href="/index.html">ARCADE</a>
+      <a class="btn" href="/kitty.html">KITTY FILES</a>
+      <a class="btn" href="/emoji.html">EMOJI TIMELINE</a>
+    </div>
+  </main>
+
+  <script src="dead-links.js"></script>
+</body>
+</html>
