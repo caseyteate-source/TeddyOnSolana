@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>$TEDDY | Neon Rain v16</title>
+  <title>$TEDDY | Neon Rain</title>
 
   <style>
     * {
@@ -112,6 +112,83 @@
       z-index: 2;
     }
 
+
+    .ca-copy-bar {
+      position: absolute;
+      top: 1.4%;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 35;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      max-width: min(620px, 76vw);
+      padding: 7px 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(0, 255, 255, 0.76);
+      background: rgba(3, 0, 14, 0.68);
+      box-shadow:
+        0 0 12px rgba(0, 255, 255, 0.26),
+        0 0 24px rgba(255, 61, 242, 0.18),
+        inset 0 0 10px rgba(0, 255, 255, 0.12);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      color: #9cfffb;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: clamp(9px, 1vw, 13px);
+      line-height: 1;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .ca-copy-bar:hover,
+    .ca-copy-bar:focus,
+    .ca-copy-bar:active {
+      outline: none;
+      color: #ffffff;
+      border-color: rgba(255, 61, 242, 0.9);
+      box-shadow:
+        0 0 14px rgba(255, 61, 242, 0.28),
+        0 0 28px rgba(0, 255, 255, 0.22),
+        inset 0 0 10px rgba(255, 61, 242, 0.14);
+    }
+
+    .ca-copy-label {
+      color: #ff3df2;
+      font-weight: 900;
+      text-shadow: 0 0 8px rgba(255, 61, 242, 0.7);
+    }
+
+    .ca-copy-address {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      text-shadow: 0 0 8px rgba(0, 255, 255, 0.6);
+    }
+
+    .ca-copy-action {
+      flex: 0 0 auto;
+      color: #ffe600;
+      font-weight: 900;
+      text-shadow: 0 0 8px rgba(255, 230, 0, 0.7);
+    }
+
+    @media (max-width: 700px) {
+      .ca-copy-bar {
+        top: 1.1%;
+        max-width: 82vw;
+        padding: 6px 8px;
+        gap: 5px;
+      }
+
+      .ca-copy-action {
+        display: none;
+      }
+    }
+
+
     #tvSoundToggle {
       position: absolute;
       right: 6px;
@@ -159,6 +236,23 @@
       outline: none;
       box-shadow: none;
       background: transparent;
+    }
+
+
+    body:not(.edit-mode) .hotspot,
+    body:not(.edit-mode) .hotspot:hover,
+    body:not(.edit-mode) .hotspot:focus,
+    body:not(.edit-mode) .hotspot:active {
+      color: transparent !important;
+      font-size: 0 !important;
+      line-height: 0 !important;
+      text-shadow: none !important;
+    }
+
+    body:not(.edit-mode) .hotspot::before,
+    body:not(.edit-mode) .hotspot::after {
+      content: none !important;
+      display: none !important;
     }
 
     .hotspot.secret {
@@ -347,6 +441,12 @@
     <main class="stage" id="stage">
       <img src="teddy-umbrella-bg.png" alt="$TEDDY neon rain scene" class="bg-image" id="bgImage" />
 
+      <button id="copyCaButton" class="ca-copy-bar" type="button">
+        <span class="ca-copy-label">CA</span>
+        <span class="ca-copy-address">8KJEWtuq1c1699nAup7WatZfgodS3YFnadBq46FDpump</span>
+        <span class="ca-copy-action" id="copyCaStatus">COPY</span>
+      </button>
+
       <canvas id="rainCanvas"></canvas>
 
       <div class="screen-overlay" id="overlay-arcade-gameplay">
@@ -365,7 +465,7 @@
           <video class="tv-video" id="angryReporterVideo" src="angry-reporter.mp4" playsinline webkit-playsinline preload="metadata"></video>
           <video class="tv-video" id="secretVideo" src="secret-video.mp4" playsinline webkit-playsinline preload="metadata"></video>
 
-          <button id="tvSoundToggle" type="button" aria-label="Turn TV sound on">🔇</button>
+          <button id="tvSoundToggle" type="button">🔇</button>
         </div>
       </div>
     </main>
@@ -375,12 +475,22 @@
     <div class="about-card">
       <h2>About $TEDDY</h2>
       <p>
-        $TEDDY is a meme-token rabbit hole built around nostalgia, arcade chaos,
-        tinfoil clues, and community lore.
+        <strong>The bedtime story Wall Street wasn’t ready for.</strong>
       </p>
       <p>
-        Nothing here implies endorsement by Ryan Cohen, Teddy Holdings, GameStop,
-        Roaring Kitty, or any referenced brand/person. This is community-made meme culture.
+        $TEDDY is a Solana meme-token rabbit hole built around teddy-bear nostalgia,
+        arcade energy, children’s-book mystery, GameStop-era tinfoil, Roaring Kitty-style
+        clue hunting, emoji timelines, and community lore.
+      </p>
+      <p>
+        This is where bedtime-story innocence crashes into neon rain, old TVs,
+        arcade cabinets, market memes, and the internet’s favorite question:
+        what if the clues were connected?
+      </p>
+      <p>
+        Nothing here implies endorsement, sponsorship, or affiliation with Ryan Cohen,
+        Teddy Holdings, GameStop, Roaring Kitty, or any referenced brand/person.
+        This is community-made meme culture.
       </p>
       <button id="closeAbout">Close</button>
     </div>
@@ -575,6 +685,7 @@
       }
     ];
 
+    const TOKEN_CA = "8KJEWtuq1c1699nAup7WatZfgodS3YFnadBq46FDpump";
     const BASE_WIDTH = 1536;
     const params = new URLSearchParams(window.location.search);
     const editMode = params.get("edit") === "1";
@@ -596,6 +707,8 @@
     const tvIdleCanvas = document.getElementById("tvIdleCanvas");
     const tvCtx = tvIdleCanvas.getContext("2d");
     const tvSoundToggle = document.getElementById("tvSoundToggle");
+    const copyCaButton = document.getElementById("copyCaButton");
+    const copyCaStatus = document.getElementById("copyCaStatus");
 
     const perfectStormVideo = document.getElementById("perfectStormVideo");
     const angryReporterVideo = document.getElementById("angryReporterVideo");
@@ -675,7 +788,8 @@
         a.className = `hotspot ${h.kind || "circle"}`;
         a.id = h.id;
         a.href = h.url || "#";
-        a.title = h.title || h.label || "";
+        a.removeAttribute("title");
+        a.removeAttribute("aria-label");
         a.textContent = editMode ? h.label : "";
         a.dataset.id = h.id;
 
@@ -1090,10 +1204,6 @@
       if (tvSoundToggle) {
         tvSoundToggle.textContent = tvSoundOn ? "🔊" : "🔇";
         tvSoundToggle.classList.toggle("sound-on", tvSoundOn);
-        tvSoundToggle.setAttribute(
-          "aria-label",
-          tvSoundOn ? "Turn TV sound off" : "Turn TV sound on"
-        );
       }
     }
 
@@ -1452,12 +1562,45 @@ const rainDryMasks = ${JSON.stringify(rainDryMasks, null, 2)};`;
       });
 
       document.getElementById("closeEditor").addEventListener("click", () => {
-        window.location.href = window.location.pathname + "?v=teddy15";
+        window.location.href = window.location.pathname + "?v=teddy20";
       });
+    }
+
+
+    async function copyContractAddress() {
+      try {
+        await navigator.clipboard.writeText(TOKEN_CA);
+      } catch (e) {
+        const temp = document.createElement("textarea");
+        temp.value = TOKEN_CA;
+        temp.setAttribute("readonly", "");
+        temp.style.position = "fixed";
+        temp.style.left = "-9999px";
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand("copy");
+        document.body.removeChild(temp);
+      }
+
+      if (copyCaStatus) {
+        const original = copyCaStatus.textContent;
+        copyCaStatus.textContent = "COPIED";
+        setTimeout(() => {
+          copyCaStatus.textContent = original || "COPY";
+        }, 1100);
+      }
     }
 
     function initPage() {
       buildHotspots();
+
+      if (copyCaButton) {
+        copyCaButton.addEventListener("click", e => {
+          e.preventDefault();
+          e.stopPropagation();
+          copyContractAddress();
+        });
+      }
 
       document.getElementById("closeAbout").addEventListener("click", () => {
         document.getElementById("aboutModal").classList.remove("open");
