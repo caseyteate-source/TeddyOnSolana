@@ -2,26 +2,20 @@
    $TEDDY RABBIT HOLE HOTSPOTS
    Full replacement rabbit-hole.js
 
-   This file controls the clickable circles + popup modal on hq.html.
-
-   Current behavior:
-   - Arcade / Kitty / Emoji / GMEBAY links still work.
-   - Memory / Greg / Ryan Cohen / Xtra / TV / Wonka / etc. say COMING SOON.
-   - COMING SOON buttons go to /under-construction.html.
-   - Mr. T / MOASS now plays the local MP4 on the Rabbit Hole TV.
-   - Lamp / Norm Macdonald moth joke now plays the local MP4 on the Rabbit Hole TV.
-   - Any hotspot with a .mp4 URL or video property plays on the TV.
-   - TV video starts with volume ON from the user click.
-   - TV returns to static when the video ends.
-   - A TV volume toggle is added automatically.
-   - No normal browser hover descriptions.
-   - Edit mode still shows draggable labels with ?edit=1.
+   Rebuilt from the later Rabbit Hole hotspot set:
+   - keeps Callin' Oates phone
+   - keeps the added coffee mug, $TEDDY marquee, magnifying glass,
+     Hang In There, rocket, eBay book, controller, camcorder,
+     lava lamp, stock chart, and Xtra circle
+   - keeps Mr. T / MOASS TV video
+   - all unfinished/dead pages say COMING SOON and route to /under-construction.html
+   - no browser hover descriptions on the live page
+   - edit mode still works with ?edit=1
 ====================================================== */
 
 const isEditMode = new URLSearchParams(window.location.search).has("edit");
 
 const UNDER_CONSTRUCTION_URL = "/under-construction.html";
-const NORM_MOTH_VIDEO_URL = "/norm-moth-joke.mp4";
 const MR_T_MOTHER_VIDEO_URL = "/mr-t-mother.mp4";
 
 /*
@@ -38,16 +32,18 @@ const RABBIT_TV_FALLBACK_PLACEMENT = {
 };
 
 let rabbitTvSoundOn = true;
-let rabbitTvReady = false;
 let rabbitTvWrap = null;
 let rabbitTvVideo = null;
 let rabbitTvVolumeToggle = null;
 
 /*
-  Any hotspot with one of these IDs will show COMING SOON
-  even if the old URL still says greg.html, ryan.html, memory-room.html, etc.
+  Anything in this set is treated like a dead/unfinished page:
+  modal tag = COMING SOON
+  button text = COMING SOON
+  button URL = /under-construction.html
 */
 const comingSoonIds = new Set([
+  "coffee-mug",
   "memory",
   "memory-room",
   "tv",
@@ -61,10 +57,6 @@ const comingSoonIds = new Set([
   "ryan-cohen",
   "ryan-cohen-files",
   "greg",
-  "xtra",
-  "xtra-circle",
-  "extra",
-  "extra-circle",
   "keith",
   "keith-gill",
   "kitty-bio",
@@ -79,20 +71,26 @@ const comingSoonIds = new Set([
   "nintendo-controller",
   "camcorder",
   "video-archive",
-  "lava-lamp"
+  "lava-lamp",
+  "desk-lamp",
+  "xtra",
+  "xtra-circle",
+  "extra",
+  "extra-circle"
 ]);
 
-const comingSoonUrlParts = [
-  "imagination-room",
+const deadUrlParts = [
+  "coffee.html",
+  "imagination-room.html",
   "memory",
-  "ryan",
-  "greg",
-  "kitty-bio",
-  "buck",
-  "secret",
-  "rocket",
-  "retro-room",
-  "video-archive",
+  "ryan.html",
+  "greg.html",
+  "kitty-bio.html",
+  "buck.html",
+  "secret.html",
+  "rocket.html",
+  "retro-room.html",
+  "video-archive.html",
   "xtra",
   "extra"
 ];
@@ -110,6 +108,40 @@ const rabbitHotspots = [
     size: 64
   },
   {
+    id: "arcade-marquee",
+    title: "$TEDDY Marquee",
+    tag: "Insert Coin",
+    text: "The glowing $TEDDY sign pulls you back to the arcade.",
+    url: "/index.html",
+    sameTab: true,
+    x: 8.91,
+    y: 19.77,
+    size: 58
+  },
+  {
+    id: "coffee-mug",
+    title: "Coffee Mug",
+    tag: "Coming Soon",
+    text: "Every rabbit hole needs caffeine. This clue page is coming soon.",
+    url: UNDER_CONSTRUCTION_URL,
+    sameTab: true,
+    comingSoon: true,
+    x: 69.5,
+    y: 74.26,
+    size: 48
+  },
+  {
+    id: "magnifying-glass",
+    title: "Magnifying Glass",
+    tag: "Investigate",
+    text: "A closer look always reveals another thread.",
+    url: "/kitty.html",
+    sameTab: true,
+    x: 61.36,
+    y: 83.14,
+    size: 50
+  },
+  {
     id: "kitty-files",
     title: "Kitty Files",
     tag: "Case File",
@@ -124,7 +156,7 @@ const rabbitHotspots = [
     id: "emoji",
     title: "Emoji Timeline",
     tag: "VHS Tape",
-    text: "Follow the emoji timeline.",
+    text: "Follow the Roaring Kitty emoji timeline.",
     url: "/emoji.html",
     sameTab: true,
     x: 25,
@@ -170,13 +202,12 @@ const rabbitHotspots = [
   },
   {
     id: "desk-lamp",
-    title: "The Lamp",
-    tag: "Video File",
-    text: "Norm Macdonald's famous moth joke plays on the Rabbit Hole TV.",
-    url: NORM_MOTH_VIDEO_URL,
+    title: "The Desk Lamp",
+    tag: "Coming Soon",
+    text: "The Norm Macdonald moth joke file is parked for now. This lamp clue is coming soon.",
+    url: UNDER_CONSTRUCTION_URL,
     sameTab: true,
-    video: NORM_MOTH_VIDEO_URL,
-    buttonText: "PLAY ON TV",
+    comingSoon: true,
     x: 97.38,
     y: 59.29,
     size: 58
@@ -188,8 +219,8 @@ const rabbitHotspots = [
     text: "Sometimes the rabbit hole calls you back.",
     url: "tel:7192662837",
     sameTab: true,
-    x: 13,
-    y: 80,
+    x: 18.84,
+    y: 81.26,
     size: 62
   },
   {
@@ -199,27 +230,27 @@ const rabbitHotspots = [
     text: "Open GameStop's official investor relations page.",
     url: "https://investor.gamestop.com/",
     sameTab: false,
-    x: 52,
-    y: 9,
+    x: 57.72,
+    y: 7.39,
     size: 58
   },
   {
     id: "teddy",
     title: "The Teddy Files",
     tag: "Coming Soon",
-    text: "The Teddy Files page is coming soon.",
+    text: "A future page for Teddy, Ryan Cohen's books, and community theories.",
     url: UNDER_CONSTRUCTION_URL,
     sameTab: true,
     comingSoon: true,
     x: 21.26,
-    y: 28.3,
+    y: 28.81,
     size: 60
   },
   {
     id: "ryan",
     title: "Ryan Cohen Files",
     tag: "Coming Soon",
-    text: "The Ryan Cohen Files page is coming soon.",
+    text: "Ryan Cohen biography, timeline, Teddy theories, and GameStop connections. Coming soon.",
     url: UNDER_CONSTRUCTION_URL,
     sameTab: true,
     comingSoon: true,
@@ -267,7 +298,7 @@ const rabbitHotspots = [
     id: "gmebay",
     title: "GMEBAY",
     tag: "Theory Tape",
-    text: "Open the GMEBAY theory page.",
+    text: "What could GMEBAY become?",
     url: "/gmebay.html",
     sameTab: true,
     x: 62.87,
@@ -305,8 +336,8 @@ const rabbitHotspots = [
     url: UNDER_CONSTRUCTION_URL,
     sameTab: true,
     comingSoon: true,
-    x: 32,
-    y: 86,
+    x: 31.04,
+    y: 88.16,
     size: 48
   },
   {
@@ -324,7 +355,7 @@ const rabbitHotspots = [
     id: "rocket",
     title: "Rocket Blueprint",
     tag: "Coming Soon",
-    text: "The launch-plan page is coming soon.",
+    text: "The future launch-plan page is coming soon.",
     url: UNDER_CONSTRUCTION_URL,
     sameTab: true,
     comingSoon: true,
@@ -359,7 +390,7 @@ const rabbitHotspots = [
     id: "camcorder",
     title: "Camcorder",
     tag: "Coming Soon",
-    text: "The video archive is coming soon.",
+    text: "The video archive side of the rabbit hole is coming soon.",
     url: UNDER_CONSTRUCTION_URL,
     sameTab: true,
     comingSoon: true,
@@ -371,12 +402,23 @@ const rabbitHotspots = [
     id: "lava-lamp",
     title: "Lava Lamp",
     tag: "Coming Soon",
-    text: "The lava lamp clue is coming soon.",
+    text: "A glowing clue from the old room. Coming soon.",
     url: UNDER_CONSTRUCTION_URL,
     sameTab: true,
     comingSoon: true,
-    x: 74.5,
-    y: 66.5,
+    x: 20.66,
+    y: 16.18,
+    size: 50
+  },
+  {
+    id: "stock-chart",
+    title: "Stock Chart",
+    tag: "Market Clue",
+    text: "Open the GME stock chart.",
+    url: "https://finance.yahoo.com/quote/GME/",
+    sameTab: false,
+    x: 69.63,
+    y: 8.97,
     size: 54
   },
   {
@@ -508,11 +550,11 @@ function injectRabbitTvStyles() {
       top: 18px;
       transform: translateX(-50%);
       z-index: 7002;
-      max-width: min(520px, 88vw);
+      max-width: min(620px, 90vw);
       padding: 10px 14px;
       border-radius: 999px;
       border: 1px solid rgba(0,245,255,.72);
-      background: rgba(0,0,0,.82);
+      background: rgba(0,0,0,.84);
       color: #fff;
       font-weight: 900;
       text-align: center;
@@ -592,7 +634,7 @@ function createRabbitTvToast() {
   return toast;
 }
 
-function showRabbitTvToast(message) {
+function showRabbitTvToast(message, duration = 1800) {
   const toast = createRabbitTvToast();
   toast.textContent = message;
   toast.classList.add("active");
@@ -600,32 +642,22 @@ function showRabbitTvToast(message) {
   clearTimeout(showRabbitTvToast.timer);
   showRabbitTvToast.timer = setTimeout(() => {
     toast.classList.remove("active");
-  }, 1600);
+  }, duration);
 }
 
 function ensureRabbitTv() {
-  if (rabbitTvReady && rabbitTvWrap && rabbitTvVideo) return true;
-
   injectRabbitTvStyles();
   createRabbitTvVolumeToggle();
 
   const overlayRoot = document.getElementById("rabbitOverlayRoot");
-  const stage = document.getElementById("rabbitStage") || document.querySelector(".rabbit-stage");
 
-  /*
-    Preferred path:
-    use the exact existing TV static overlay from rabbit-overlays.js.
-  */
   rabbitTvWrap =
     document.querySelector(".tv-static-wrap") ||
     document.getElementById("tvStaticWrap") ||
-    document.getElementById("rabbitTvStaticWrap");
+    document.getElementById("rabbitTvStaticWrap") ||
+    rabbitTvWrap;
 
-  /*
-    Fallback:
-    if the static overlay is missing, create a screen roughly over the TV.
-  */
-  if (!rabbitTvWrap && overlayRoot && stage) {
+  if (!rabbitTvWrap && overlayRoot) {
     rabbitTvWrap = document.createElement("div");
     rabbitTvWrap.id = "rabbitTvFallbackWrap";
     rabbitTvWrap.className = "rabbit-tv-video-fallback";
@@ -648,7 +680,7 @@ function ensureRabbitTv() {
     rabbitTvVideo.id = "rabbitTvVideo";
     rabbitTvVideo.className = "rabbit-tv-video";
     rabbitTvVideo.playsInline = true;
-    rabbitTvVideo.preload = "metadata";
+    rabbitTvVideo.preload = "auto";
     rabbitTvVideo.controls = false;
 
     const glass = document.createElement("div");
@@ -659,10 +691,12 @@ function ensureRabbitTv() {
     rabbitTvWrap.appendChild(glass);
 
     rabbitTvVideo.addEventListener("ended", resetRabbitTvToStatic);
-    rabbitTvVideo.addEventListener("error", resetRabbitTvToStatic);
+    rabbitTvVideo.addEventListener("error", () => {
+      resetRabbitTvToStatic();
+      showRabbitTvToast("MP4 file missing or still deploying. Upload the MP4 files to the site root.", 3200);
+    });
   }
 
-  rabbitTvReady = true;
   return true;
 }
 
@@ -672,6 +706,7 @@ function resetRabbitTvToStatic() {
   try {
     rabbitTvVideo.pause();
     rabbitTvVideo.classList.remove("active");
+    rabbitTvVideo.controls = false;
     rabbitTvVideo.removeAttribute("src");
     rabbitTvVideo.load();
   } catch {}
@@ -681,18 +716,30 @@ function resetRabbitTvToStatic() {
   }
 }
 
+async function checkVideoFileExists(videoUrl) {
+  try {
+    const response = await fetch(videoUrl, { method: "HEAD", cache: "no-store" });
+    return response.ok;
+  } catch {
+    return true;
+  }
+}
+
 async function playRabbitTvVideo(videoUrl, label = "Video") {
   if (!ensureRabbitTv()) {
-    showRabbitTvToast("TV video screen is not ready yet.");
+    showRabbitTvToast("TV video screen is not ready yet.", 2600);
     return;
   }
 
-  /*
-    If the normal modal is open, close it before playing on the TV.
-  */
   if (modal) {
     modal.classList.remove("active");
     modal.setAttribute("aria-hidden", "true");
+  }
+
+  const exists = await checkVideoFileExists(videoUrl);
+  if (!exists) {
+    showRabbitTvToast(`Missing file: ${videoUrl}. Upload it as a separate root file.`, 3800);
+    return;
   }
 
   resetRabbitTvToStatic();
@@ -701,6 +748,7 @@ async function playRabbitTvVideo(videoUrl, label = "Video") {
   rabbitTvVideo.currentTime = 0;
   rabbitTvVideo.muted = !rabbitTvSoundOn;
   rabbitTvVideo.volume = rabbitTvSoundOn ? 1 : 0;
+  rabbitTvVideo.controls = false;
 
   if (rabbitTvWrap) {
     rabbitTvWrap.classList.add("rabbit-video-playing");
@@ -712,18 +760,14 @@ async function playRabbitTvVideo(videoUrl, label = "Video") {
   try {
     await rabbitTvVideo.play();
   } catch {
-    /*
-      On rare mobile/browser cases, audio autoplay can still be blocked.
-      Because the video controls are hidden for the TV effect, we fall back
-      to muted playback rather than doing nothing. The volume toggle remains.
-    */
     try {
       rabbitTvVideo.muted = true;
+      rabbitTvVideo.controls = true;
       await rabbitTvVideo.play();
-      showRabbitTvToast("Browser blocked sound. Tap TV volume and try again.");
+      showRabbitTvToast("Browser blocked sound. Use the TV controls or toggle volume.", 3300);
     } catch {
-      resetRabbitTvToStatic();
-      showRabbitTvToast("Video could not play.");
+      rabbitTvVideo.controls = true;
+      showRabbitTvToast("Tap the video screen or confirm the MP4 file uploaded separately.", 3600);
     }
   }
 }
@@ -743,7 +787,7 @@ function isComingSoonSpot(spot) {
   if (spot.comingSoon) return true;
   if (comingSoonIds.has(id)) return true;
 
-  return comingSoonUrlParts.some(part => url.includes(part));
+  return deadUrlParts.some(part => url.includes(part));
 }
 
 function getSafeSpot(spot) {
@@ -776,11 +820,12 @@ function renderHotspots() {
     button.style.top = spot.y + "%";
     button.style.width = spot.size + "px";
     button.style.height = spot.size + "px";
+    button.dataset.index = index;
     button.dataset.label = spot.title;
 
     /*
       No browser hover popups on the live page.
-      Edit mode still shows the CSS label from data-label.
+      Edit mode still shows CSS labels from data-label.
     */
     button.removeAttribute("title");
 
@@ -823,10 +868,9 @@ function openRabbitModal(spot) {
 
   link.target = safeSpot.sameTab ? "_self" : "_blank";
   link.rel = safeSpot.sameTab ? "" : "noopener noreferrer";
-
+  link.onclick = null;
   link.removeAttribute("title");
   link.removeAttribute("aria-label");
-  link.onclick = null;
 
   modal.classList.add("active");
   modal.setAttribute("aria-hidden", "false");
@@ -840,7 +884,10 @@ function makeDraggable(button, spot) {
 
   button.addEventListener("pointerdown", (event) => {
     event.preventDefault();
-    button.setPointerCapture(event.pointerId);
+
+    try {
+      button.setPointerCapture(event.pointerId);
+    } catch {}
 
     const stage = document.querySelector(".rabbit-stage");
     if (!stage) return;
@@ -949,17 +996,16 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
-/*
-  Run after the page and rabbit-overlays.js have had a chance to build
-  the TV static overlay.
-*/
 function initRabbitHole() {
   renderHotspots();
   updateEditorOutput();
 
-  requestAnimationFrame(() => {
-    ensureRabbitTv();
-  });
+  /*
+    Give rabbit-overlays.js a moment to create the actual static TV overlay.
+    If it does not exist, ensureRabbitTv() creates a fallback.
+  */
+  setTimeout(ensureRabbitTv, 80);
+  setTimeout(ensureRabbitTv, 450);
 }
 
 if (document.readyState === "loading") {
