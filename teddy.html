@@ -144,10 +144,10 @@
       z-index: 8500;
       display: flex;
       justify-content: center;
-      gap: 8px;
+      gap: 10px;
       flex-wrap: wrap;
       padding: 10px;
-      background: linear-gradient(180deg, rgba(0,0,0,.88), rgba(0,0,0,.45));
+      background: linear-gradient(180deg, rgba(0,0,0,.88), rgba(0,0,0,.38));
       backdrop-filter: blur(6px);
     }
 
@@ -157,7 +157,7 @@
       align-items: center;
       justify-content: center;
       min-height: 38px;
-      padding: 9px 12px;
+      padding: 9px 15px;
       border: 1px solid rgba(0,245,255,.70);
       border-radius: 999px;
       background: rgba(0,0,0,.68);
@@ -230,44 +230,29 @@
       pointer-events: none;
     }
 
-    /*
-      Temporary cover for the baked-in CA strip on the current image.
-      Once the clean background image is edited, this can be removed.
-    */
     .baked-ca-mask {
       position: absolute;
       left: 0;
       right: 0;
       top: 0;
-      height: 9.6%;
+      height: 9.4%;
       z-index: 8;
       pointer-events: none;
       background:
-        radial-gradient(circle at 62% 40%, rgba(0,245,255,.13), transparent 32%),
-        radial-gradient(circle at 18% 50%, rgba(255,42,163,.16), transparent 34%),
-        linear-gradient(180deg, rgba(1,1,8,.98), rgba(1,1,8,.86) 70%, rgba(1,1,8,.08));
+        radial-gradient(circle at 18% 50%, rgba(255,42,163,.18), transparent 34%),
+        radial-gradient(circle at 62% 42%, rgba(0,245,255,.14), transparent 32%),
+        linear-gradient(180deg, rgba(1,1,8,1) 0%, rgba(1,1,8,.99) 84%, rgba(1,1,8,.78) 100%);
+      border-bottom: 1px solid rgba(255,42,163,.30);
     }
 
-    .rain-layer {
+    #realRainCanvas {
       position: absolute;
-      inset: -20% 0;
+      inset: 0;
       z-index: 10;
+      width: 100%;
+      height: 100%;
       pointer-events: none;
-      opacity: .42;
-      background-image:
-        repeating-linear-gradient(
-          105deg,
-          rgba(255,255,255,0) 0px,
-          rgba(255,255,255,0) 12px,
-          rgba(255,255,255,.50) 13px,
-          rgba(255,255,255,0) 15px
-        );
-      background-size: 220px 220px;
-      animation: rainMove .58s linear infinite;
       mix-blend-mode: screen;
-
-      -webkit-mask-image: radial-gradient(ellipse 33% 32% at 69% 38%, transparent 0 58%, black 68%);
-      mask-image: radial-gradient(ellipse 33% 32% at 69% 38%, transparent 0 58%, black 68%);
     }
 
     .umbrella-glow {
@@ -291,20 +276,14 @@
 
     .arcade-screen-anim {
       position: absolute;
-      left: 42.58%;
-      top: 56.35%;
-      width: 7.22%;
-      height: 8.38%;
       z-index: 31;
       overflow: hidden;
       border-radius: 8px;
-      transform: rotate(-2deg) skewX(-1deg);
       pointer-events: none;
       background: #010801;
       box-shadow:
         inset 0 0 18px rgba(124,255,79,.50),
         0 0 12px rgba(124,255,79,.22);
-      opacity: .92;
       mix-blend-mode: screen;
     }
 
@@ -329,6 +308,20 @@
         );
       opacity: .65;
       animation: arcadeLines .9s linear infinite;
+    }
+
+    .teddy-edit-mode .arcade-screen-anim {
+      outline: 3px solid rgba(255,234,0,.95);
+      outline-offset: 2px;
+      pointer-events: auto;
+      cursor: move;
+    }
+
+    .teddy-edit-mode .arcade-screen-anim.selected-arcade {
+      outline: 3px solid rgba(0,245,255,.95);
+      box-shadow:
+        inset 0 0 18px rgba(124,255,79,.50),
+        0 0 20px rgba(0,245,255,.8);
     }
 
     #teddyHotspotRoot {
@@ -383,12 +376,32 @@
       font-weight: 900;
     }
 
+    .teddy-hotspot.bunny-hotspot {
+      background: transparent;
+      overflow: visible;
+    }
+
+    .teddy-hotspot.bunny-hotspot:hover,
+    .teddy-hotspot.bunny-hotspot:focus-visible {
+      background: rgba(255,255,255,.08);
+    }
+
+    .pixel-bunny-svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      image-rendering: pixelated;
+      filter:
+        drop-shadow(0 0 4px rgba(255,255,255,.9))
+        drop-shadow(0 0 10px rgba(0,245,255,.65));
+    }
+
     .teddy-hotspot-editor {
       position: fixed;
       right: 12px;
       bottom: 12px;
       z-index: 12000;
-      width: min(540px, calc(100vw - 24px));
+      width: min(560px, calc(100vw - 24px));
       max-height: 70vh;
       overflow-y: auto;
       background: rgba(0,0,0,.94);
@@ -446,6 +459,10 @@
       background: #00aaff;
     }
 
+    .teddy-hotspot-editor button.yellow {
+      background: #c49b00;
+    }
+
     .teddy-hotspot-editor button.copy {
       width: 100%;
       background: #00aaff;
@@ -454,7 +471,7 @@
 
     .teddy-hotspot-editor textarea {
       width: 100%;
-      height: 160px;
+      height: 170px;
       background: #050510;
       color: #dffcff;
       border: 1px solid #00f5ff;
@@ -533,11 +550,6 @@
       100% { color: #00f5ff; }
     }
 
-    @keyframes rainMove {
-      from { transform: translate3d(0, -80px, 0); }
-      to { transform: translate3d(-60px, 80px, 0); }
-    }
-
     @keyframes umbrellaFlicker {
       0%, 100% { opacity: .72; filter: brightness(1); }
       9% { opacity: .62; filter: brightness(.92); }
@@ -564,14 +576,7 @@
 
       .site-nav {
         top: 58px;
-        justify-content: flex-start;
-        overflow-x: auto;
-        flex-wrap: nowrap;
-      }
-
-      .site-nav a,
-      .site-nav button {
-        flex: 0 0 auto;
+        justify-content: center;
       }
 
       .mobile-hint {
@@ -608,22 +613,21 @@
 
   <nav class="site-nav" aria-label="$TEDDY site navigation">
     <button id="aboutButton" type="button">About</button>
-    <a href="hq.html">Rabbit Hole</a>
-    <a href="imagination-room.html">Memory Room</a>
     <a class="buy-link" href="https://pump.fun/coin/8KJEWtuq1c1699nAup7WatZfgodS3YFnadBq46FDpump" target="_blank" rel="noopener">Buy $TEDDY</a>
   </nav>
 
-  <div class="mobile-hint">← SWIPE THE ART • TAP THE $TEDDY TITLE, ARCADE, KITTY, EMOJI, OR TV →</div>
+  <div class="mobile-hint">← SWIPE THE ART • TAP THE $TEDDY TITLE, ARCADE, WHITE RABBIT, OR GMEBAY →</div>
 
   <div class="teddy-scroll-wrap" id="teddyScrollWrap">
     <main class="teddy-stage" id="teddyStage">
       <img src="teddy-umbrella-bg.png" alt="$TEDDY teddy bear under umbrella neon 80s crypto project graphic" class="teddy-bg" />
 
       <div class="baked-ca-mask"></div>
-      <div class="rain-layer"></div>
+      <canvas id="realRainCanvas"></canvas>
+
       <div class="umbrella-glow"></div>
 
-      <div class="arcade-screen-anim">
+      <div id="arcadeScreenAnim" class="arcade-screen-anim">
         <canvas id="arcadeGameCanvas" width="160" height="120"></canvas>
         <div class="arcade-glass-scan"></div>
       </div>
@@ -760,12 +764,161 @@
     });
 
     /* ======================================================
-       BETTER ARCADE GAMEPLAY OVERLAY
+       REALISTIC RAIN CANVAS
+       Does not draw inside the umbrella protected zone.
+    ====================================================== */
+
+    const rainCanvas = document.getElementById("realRainCanvas");
+    const rainCtx = rainCanvas ? rainCanvas.getContext("2d") : null;
+    const rainDrops = [];
+    let rainW = 0;
+    let rainH = 0;
+
+    function resizeRainCanvas() {
+      if (!rainCanvas || !rainCtx) return;
+
+      const stage = document.getElementById("teddyStage");
+      const rect = stage.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+      rainW = rect.width;
+      rainH = rect.height;
+
+      rainCanvas.width = Math.floor(rainW * dpr);
+      rainCanvas.height = Math.floor(rainH * dpr);
+      rainCanvas.style.width = rainW + "px";
+      rainCanvas.style.height = rainH + "px";
+
+      rainCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      if (rainDrops.length === 0) {
+        for (let i = 0; i < 185; i++) {
+          rainDrops.push(createRainDrop(true));
+        }
+      }
+    }
+
+    function createRainDrop(randomY = false) {
+      return {
+        x: Math.random() * rainW,
+        y: randomY ? Math.random() * rainH : -30 - Math.random() * 150,
+        len: 16 + Math.random() * 38,
+        speed: 8 + Math.random() * 11,
+        drift: -3.8 - Math.random() * 3.2,
+        width: Math.random() > .82 ? 1.35 : .75,
+        opacity: .20 + Math.random() * .38
+      };
+    }
+
+    function isUnderUmbrellaDryZone(x, y) {
+      if (!rainW || !rainH) return false;
+
+      const px = x / rainW;
+      const py = y / rainH;
+
+      /*
+        Dry protected zone:
+        wall + teddy + floor under the umbrella.
+        Rain still appears left/right/top outside this area.
+      */
+      const mainDry =
+        px > 0.435 &&
+        px < 0.885 &&
+        py > 0.265 &&
+        py < 0.825;
+
+      const teddyBody =
+        px > 0.515 &&
+        px < 0.735 &&
+        py > 0.345 &&
+        py < 0.900;
+
+      const umbrellaUnderCurve =
+        py > 0.215 &&
+        py < 0.470 &&
+        Math.pow((px - 0.665) / 0.255, 2) + Math.pow((py - 0.345) / 0.155, 2) < 1;
+
+      return mainDry || teddyBody || umbrellaUnderCurve;
+    }
+
+    function drawRainSplashes() {
+      if (!rainCtx) return;
+
+      rainCtx.save();
+      rainCtx.globalCompositeOperation = "lighter";
+
+      for (let i = 0; i < 18; i++) {
+        const side = i % 2 === 0 ? "left" : "right";
+        const x = side === "left"
+          ? Math.random() * rainW * 0.42
+          : rainW * (0.89 + Math.random() * 0.10);
+        const y = rainH * (0.74 + Math.random() * 0.20);
+
+        if (isUnderUmbrellaDryZone(x, y)) continue;
+
+        rainCtx.strokeStyle = "rgba(180,230,255,.10)";
+        rainCtx.lineWidth = 1;
+        rainCtx.beginPath();
+        rainCtx.moveTo(x - 4, y);
+        rainCtx.lineTo(x + 4, y - 2);
+        rainCtx.stroke();
+      }
+
+      rainCtx.restore();
+    }
+
+    function animateRealRain() {
+      if (!rainCtx || !rainCanvas) return;
+
+      rainCtx.clearRect(0, 0, rainW, rainH);
+      rainCtx.save();
+      rainCtx.globalCompositeOperation = "lighter";
+
+      for (let i = 0; i < rainDrops.length; i++) {
+        const drop = rainDrops[i];
+
+        const x2 = drop.x + drop.drift;
+        const y2 = drop.y + drop.len;
+
+        if (!isUnderUmbrellaDryZone(drop.x, drop.y) && !isUnderUmbrellaDryZone(x2, y2)) {
+          rainCtx.strokeStyle = `rgba(205,235,255,${drop.opacity})`;
+          rainCtx.lineWidth = drop.width;
+          rainCtx.beginPath();
+          rainCtx.moveTo(drop.x, drop.y);
+          rainCtx.lineTo(x2, y2);
+          rainCtx.stroke();
+        }
+
+        drop.x += drop.drift;
+        drop.y += drop.speed;
+
+        if (drop.y > rainH + 60 || drop.x < -80) {
+          Object.assign(drop, createRainDrop(false));
+          drop.x = Math.random() * (rainW + 120);
+        }
+      }
+
+      rainCtx.restore();
+
+      if (Math.random() > .72) {
+        drawRainSplashes();
+      }
+
+      requestAnimationFrame(animateRealRain);
+    }
+
+    window.addEventListener("resize", resizeRainCanvas);
+    window.addEventListener("load", () => {
+      resizeRainCanvas();
+      animateRealRain();
+    });
+
+    /* ======================================================
+       ARCADE GAMEPLAY OVERLAY
     ====================================================== */
 
     const arcadeCanvas = document.getElementById("arcadeGameCanvas");
     const arcadeCtx = arcadeCanvas ? arcadeCanvas.getContext("2d") : null;
-
     let arcadeTick = 0;
 
     function drawArcadeGame() {
@@ -799,7 +952,6 @@
       const bearX = 24 + Math.sin(arcadeTick * 0.06) * 8;
       const bearY = 78 + Math.sin(arcadeTick * 0.12) * 4;
 
-      // rain/fud falling outside mini umbrella
       for (let i = 0; i < 9; i++) {
         const rx = (i * 23 + arcadeTick * 2) % (w + 20) - 10;
         const ry = (i * 31 + arcadeTick * 3) % (h + 20) - 10;
@@ -808,7 +960,6 @@
         arcadeCtx.fillRect(rx, ry, 2, 9);
       }
 
-      // tiny umbrella
       arcadeCtx.fillStyle = "#ffea00";
       arcadeCtx.beginPath();
       arcadeCtx.arc(bearX + 10, bearY - 10, 18, Math.PI, Math.PI * 2);
@@ -817,7 +968,6 @@
       arcadeCtx.fillStyle = "#7cff4f";
       arcadeCtx.fillRect(bearX + 8, bearY - 10, 3, 25);
 
-      // tiny teddy/player
       arcadeCtx.fillStyle = "#d08a48";
       arcadeCtx.fillRect(bearX, bearY, 18, 18);
       arcadeCtx.fillRect(bearX - 4, bearY - 3, 7, 7);
@@ -827,7 +977,6 @@
       arcadeCtx.fillRect(bearX + 4, bearY + 6, 3, 3);
       arcadeCtx.fillRect(bearX + 12, bearY + 6, 3, 3);
 
-      // rocket / level up animation
       const rocketY = 78 - ((arcadeTick * 1.25) % 100);
 
       arcadeCtx.fillStyle = "#00f5ff";
