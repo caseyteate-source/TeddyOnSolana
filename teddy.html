@@ -518,6 +518,38 @@
       }
     }
 
+  
+    /* Small TV sound button moved outside the TV click zone */
+    #tvSoundToggle.tv-sound-floating {
+      right: auto !important;
+      bottom: auto !important;
+      transform: translate(-50%, -50%);
+      z-index: 46;
+      width: 34px;
+      height: 34px;
+      background: rgba(0,0,0,0.82);
+      border-color: rgba(255,255,255,0.72);
+      box-shadow:
+        0 0 12px rgba(0,245,255,.45),
+        inset 0 0 8px rgba(255,255,255,.08);
+    }
+
+    #tvSoundToggle.tv-sound-floating.sound-on {
+      background: rgba(0, 150, 100, .88);
+      border-color: rgba(180,255,220,0.95);
+      box-shadow:
+        0 0 14px rgba(0,255,170,.45),
+        inset 0 0 8px rgba(255,255,255,.08);
+    }
+
+    @media (max-width: 760px) {
+      #tvSoundToggle.tv-sound-floating {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+      }
+    }
+
   </style>
 </head>
 
@@ -550,7 +582,7 @@
           <video class="tv-video" id="angryReporterVideo" src="angry-reporter.mp4" playsinline webkit-playsinline preload="metadata"></video>
           <video class="tv-video" id="secretVideo" src="secret-video.mp4" playsinline webkit-playsinline preload="metadata"></video>
 
-          <button id="tvSoundToggle" type="button">🔇</button>
+          <button id="tvSoundToggle" class="tv-sound-toggle" data-no-tv-popout="true" type="button" aria-label="Toggle TV sound">🔇</button>
         </div>
       </div>
     </main>
@@ -805,6 +837,19 @@
       secretVideo
     ];
 
+    /*
+      Move the small sound button outside the TV screen overlay so tapping it
+      toggles sound instead of expanding the TV.
+    */
+    if (tvSoundToggle) {
+      tvSoundToggle.dataset.noTvPopout = "true";
+      tvSoundToggle.classList.add("tv-sound-floating");
+
+      if (stage && tvSoundToggle.parentElement !== stage) {
+        stage.appendChild(tvSoundToggle);
+      }
+    }
+
     function clamp(n, min, max) {
       return Math.max(min, Math.min(max, n));
     }
@@ -848,8 +893,29 @@
       el.style.height = `${size}px`;
     }
 
+
+    function positionTvSoundToggle() {
+      if (!tvSoundToggle) return;
+
+      const tvOverlay = screenOverlays.find(o => o.id === "tv-screen");
+      if (!tvOverlay) return;
+
+      /*
+        Place just outside the lower-right of the TV graphic.
+        Since it now lives on the stage, it is no longer inside the
+        TV click/expand target.
+      */
+      const isMobile = window.matchMedia("(max-width: 760px)").matches;
+      const xOffset = isMobile ? 3.15 : 2.45;
+      const yOffset = isMobile ? -0.10 : 0.15;
+
+      tvSoundToggle.style.left = `${tvOverlay.x + tvOverlay.w + xOffset}%`;
+      tvSoundToggle.style.top = `${tvOverlay.y + (tvOverlay.h * 0.78) + yOffset}%`;
+    }
+
     function layoutEverything() {
       screenOverlays.forEach(applyOverlayPosition);
+      positionTvSoundToggle();
 
       teddyHotspots.forEach(h => {
         const el = document.getElementById(h.id);
@@ -1310,8 +1376,11 @@
       if (tvSoundToggle) {
         tvSoundToggle.textContent = tvSoundOn ? "🔊" : "🔇";
         tvSoundToggle.classList.toggle("sound-on", tvSoundOn);
+        tvSoundToggle.setAttribute("aria-label", tvSoundOn ? "Turn TV sound off" : "Turn TV sound on");
       }
     }
+
+    window.__teddySetTvSound = setTvSound;
 
     function returnToTvIdle() {
       tvVideos.forEach(v => {
@@ -1729,6 +1798,7 @@ const rainDryMasks = ${JSON.stringify(rainDryMasks, null, 2)};`;
       tvSoundToggle.addEventListener("click", e => {
         e.preventDefault();
         e.stopPropagation();
+        e.stopImmediatePropagation();
         setTvSound(!tvSoundOn);
       });
 
