@@ -26,6 +26,7 @@ const isEditMode = new URLSearchParams(window.location.search).has("edit");
 
 const UNDER_CONSTRUCTION_URL = "/under-construction.html";
 const MR_T_MOTHER_VIDEO_URL = "/mr-t-mother.mp4";
+const NORM_MOTH_VIDEO_URL = "/norm-moth-joke.mp4";
 
 const RABBIT_TV_FALLBACK_PLACEMENT = {
   left: 84.35,
@@ -74,7 +75,6 @@ const comingSoonIds = new Set([
   "camcorder",
   "video-archive",
   "lava-lamp",
-  "desk-lamp",
   "xtra",
   "xtra-circle",
   "extra",
@@ -205,11 +205,12 @@ const rabbitHotspots = [
   {
     id: "desk-lamp",
     title: "The Desk Lamp",
-    tag: "Coming Soon",
-    text: "The Norm Macdonald moth-joke file is parked for now. This lamp clue is coming soon.",
-    url: UNDER_CONSTRUCTION_URL,
+    tag: "Video File",
+    text: "Norm Macdonald's moth joke plays on the Rabbit Hole TV.",
+    url: NORM_MOTH_VIDEO_URL,
     sameTab: true,
-    comingSoon: true,
+    video: NORM_MOTH_VIDEO_URL,
+    buttonText: "PLAY ON TV",
     x: 96.8,
     y: 58.34,
     size: 58
