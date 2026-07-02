@@ -173,6 +173,46 @@
         100% { filter: brightness(.94) contrast(1.38); transform: translateX(-.26%); }
       }
 
+
+      .teddy-tv-popout-sound {
+        position: absolute;
+        left: clamp(18px, 3vw, 42px);
+        bottom: clamp(-48px, -4.6vw, -34px);
+        z-index: 7;
+        min-width: 132px;
+        height: 38px;
+        border: 1px solid rgba(255,255,255,.62);
+        border-radius: 999px;
+        background: rgba(0,0,0,.78);
+        color: #fff;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: .08em;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        cursor: pointer;
+        box-shadow:
+          0 0 16px rgba(0,245,255,.38),
+          inset 0 0 10px rgba(255,255,255,.08);
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .teddy-tv-popout-sound.sound-on {
+        background: rgba(0, 150, 100, .88);
+        border-color: rgba(180,255,220,.95);
+        box-shadow:
+          0 0 18px rgba(0,255,170,.45),
+          inset 0 0 10px rgba(255,255,255,.08);
+      }
+
+      .teddy-tv-popout-sound:hover {
+        background: rgba(255,42,163,.82);
+        box-shadow: 0 0 18px rgba(255,42,163,.66);
+      }
+
       .teddy-tv-popout-close {
         position: absolute;
         right: -13px;
@@ -239,6 +279,15 @@
           border-radius: 16px;
         }
 
+
+        .teddy-tv-popout-sound {
+          left: 14px;
+          bottom: -44px;
+          height: 36px;
+          min-width: 126px;
+          font-size: 11px;
+        }
+
         .teddy-tv-popout-close {
           right: -7px;
           top: -7px;
@@ -268,6 +317,7 @@
       <div class="teddy-tv-popout-tv" role="dialog" aria-label="Expanded TV">
         <div class="teddy-tv-popout-label">CLICK OUTSIDE OR × TO CLOSE</div>
         <button class="teddy-tv-popout-close" type="button" aria-label="Close expanded TV">×</button>
+        <button class="teddy-tv-popout-sound" type="button" aria-label="Toggle expanded TV sound">🔇 SOUND OFF</button>
         <div class="teddy-tv-popout-screen">
           <div class="teddy-tv-popout-static">TV SIGNAL<br>CLICK A PLAYING VIDEO</div>
           <video
@@ -291,6 +341,26 @@
       }
     });
 
+    const soundButton = backdrop.querySelector(".teddy-tv-popout-sound");
+    if (soundButton) {
+      soundButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const els = getPopoutEls();
+        const popVideo = els.video;
+        const turnSoundOn = popVideo ? (popVideo.muted || popVideo.volume === 0) : true;
+        setPopoutSound(turnSoundOn);
+      });
+    }
+
+    const popoutVideo = backdrop.querySelector(".teddy-tv-popout-video");
+    if (popoutVideo) {
+      popoutVideo.addEventListener("volumechange", updatePopoutSoundButton);
+      popoutVideo.addEventListener("play", updatePopoutSoundButton);
+      popoutVideo.addEventListener("pause", updatePopoutSoundButton);
+    }
+
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape") closeTvPopout();
     });
@@ -300,7 +370,8 @@
     return {
       backdrop: document.getElementById("teddyTvPopout"),
       video: document.querySelector("#teddyTvPopout .teddy-tv-popout-video"),
-      staticBox: document.querySelector("#teddyTvPopout .teddy-tv-popout-static")
+      staticBox: document.querySelector("#teddyTvPopout .teddy-tv-popout-static"),
+      soundButton: document.querySelector("#teddyTvPopout .teddy-tv-popout-sound")
     };
   }
 
@@ -365,11 +436,75 @@
     );
   }
 
+
+  function updatePopoutSoundButton() {
+    const { video, soundButton } = getPopoutEls();
+    if (!soundButton) return;
+
+    const hasVideo =
+      video &&
+      video.classList.contains("active") &&
+      (video.currentSrc || video.src);
+
+    soundButton.style.display = hasVideo ? "inline-flex" : "none";
+
+    const soundOn = !!(
+      hasVideo &&
+      !video.muted &&
+      Number(video.volume || 0) > 0
+    );
+
+    soundButton.textContent = soundOn ? "🔊 SOUND ON" : "🔇 SOUND OFF";
+    soundButton.classList.toggle("sound-on", soundOn);
+    soundButton.setAttribute("aria-label", soundOn ? "Turn expanded TV sound off" : "Turn expanded TV sound on");
+  }
+
+  function setPopoutSound(soundOn) {
+    const { video } = getPopoutEls();
+    const on = !!soundOn;
+
+    if (video) {
+      video.muted = !on;
+      video.defaultMuted = !on;
+      video.volume = on ? 1 : 0;
+    }
+
+    if (sourceVideo) {
+      try {
+        sourceVideo.muted = !on;
+        sourceVideo.defaultMuted = !on;
+        sourceVideo.volume = on ? 1 : 0;
+      } catch {}
+    }
+
+    sourceWasMuted = !on;
+
+    /*
+      Teddy page exposes its own sound setter so the little TV sound icon
+      stays in sync after using the expanded TV button.
+    */
+    if (typeof window.__teddySetTvSound === "function") {
+      try {
+        window.__teddySetTvSound(on);
+      } catch {}
+    }
+
+    updatePopoutSoundButton();
+  }
+
+  function isNoTvPopoutTarget(target) {
+    return Boolean(
+      target.closest?.(
+        "#tvSoundToggle, .tv-sound-toggle, .teddy-tv-popout-sound, [data-no-tv-popout]"
+      )
+    );
+  }
+
   async function openTvPopout(clickedTarget) {
     installTvPopoutStyles();
     createTvPopout();
 
-    const { backdrop, video, staticBox } = getPopoutEls();
+    const { backdrop, video, staticBox, soundButton } = getPopoutEls();
     if (!backdrop || !video || !staticBox) return;
 
     sourceVideo = findBestSourceVideo(clickedTarget);
@@ -397,6 +532,7 @@
       video.volume = sourceVideo.volume ?? 1;
       video.classList.add("active");
       staticBox.style.display = "none";
+      updatePopoutSoundButton();
 
       try {
         sourceVideo.pause();
@@ -412,6 +548,7 @@
     } else {
       staticBox.style.display = "grid";
       staticBox.innerHTML = "TV STATIC<br>NO VIDEO PLAYING";
+      if (soundButton) soundButton.style.display = "none";
     }
 
     backdrop.classList.add("active");
@@ -426,6 +563,8 @@
     const popoutTime = Number.isFinite(video.currentTime) ? video.currentTime : 0;
 
     video.pause();
+    video.classList.remove("active");
+    updatePopoutSoundButton();
     backdrop.classList.remove("active");
     backdrop.setAttribute("aria-hidden", "true");
     document.body.classList.remove("teddy-tv-popout-open");
@@ -445,6 +584,8 @@
   }
 
   function isTvClickTarget(target) {
+    if (isNoTvPopoutTarget(target)) return false;
+
     return Boolean(
       target.closest?.(
         "#tvScreenAnim, #overlay-tv-screen, #tvStaticBox, #tv-static, .tv-static-wrap, .rabbit-hotspot.tv, .rabbit-hotspot.crt-tv, [data-tv-popout]"
@@ -454,6 +595,7 @@
 
   function handleTvClick(event) {
     const target = event.target;
+    if (isNoTvPopoutTarget(target)) return;
     if (!isTvClickTarget(target)) return;
 
     if (target.closest("#teddyTvPopout")) return;
