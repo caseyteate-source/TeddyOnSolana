@@ -743,6 +743,7 @@
       }
     }
 
+      /* GAMEPLAY TUNING V14: skull/enemy movement is about 10% slower. */
   </style>
 </head>
 
@@ -929,7 +930,7 @@
       function makeEnemy() {
         const w = gameWidth();
         const h = gameHeight();
-        const speed = 1.2 + Math.random() * 1.8;
+        const speed = (1.2 + Math.random() * 1.8) * 0.9; // v14: skulls about 10% slower
         return {
           x: 60 + Math.random() * Math.max(40, w - 120),
           y: 70 + Math.random() * Math.max(40, h - 120),
