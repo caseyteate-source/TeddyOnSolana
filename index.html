@@ -434,6 +434,83 @@
         justify-content: flex-start;
       }
     }
+  
+    /* ======================================================
+       MOBILE DESKTOP-MODE ESCAPE + DEEP FALLBACK LINKS V11
+    ====================================================== */
+
+    .mobile-fit-return {
+      display: none;
+      position: fixed;
+      right: max(10px, env(safe-area-inset-right));
+      bottom: max(10px, env(safe-area-inset-bottom));
+      z-index: 6500;
+      border: 0;
+      border-radius: 999px;
+      padding: 10px 13px;
+      background: #00aaff;
+      color: white;
+      font-weight: 900;
+      font-size: 11px;
+      letter-spacing: .08em;
+      box-shadow:
+        0 0 16px rgba(0,245,255,.86),
+        inset 0 -3px 0 rgba(0,0,0,.25);
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .mobile-fit-return:active {
+      transform: translateY(2px);
+      background: #ff2aa3;
+      box-shadow:
+        0 0 18px rgba(255,42,163,.9),
+        inset 0 -1px 0 rgba(0,0,0,.25);
+    }
+
+    /*
+      Fallback links stay available, but they are intentionally pushed
+      far below the arcade so ENTER SITE is the obvious path.
+    */
+    .footer-links {
+      margin-top: 95vh !important;
+      opacity: .45;
+      transform: scale(.94);
+      transform-origin: center top;
+    }
+
+    .footer-links:hover,
+    .footer-links:focus-within {
+      opacity: .92;
+    }
+
+    @media (max-width: 760px) {
+      body.arcade-desktop-mode .mobile-fit-return {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /*
+        In desktop/wide mode, keep the little escape button visible and
+        move the arrow pad slightly left so the two controls do not overlap.
+      */
+      body.arcade-desktop-mode .mobile-gamepad {
+        left: 42%;
+      }
+
+      body.arcade-desktop-mode .arcade-page {
+        padding-bottom: 90px;
+      }
+
+      .footer-links {
+        margin-top: 125vh !important;
+        padding-bottom: 140px !important;
+        opacity: .34;
+      }
+    }
+
   </style>
 </head>
 
@@ -484,6 +561,11 @@
       </div>
     </div>
 
+
+    <button id="mobileFitReturn" class="mobile-fit-return" type="button" aria-label="Return to mobile fit screen">
+      FIT SCREEN
+    </button>
+
     <nav class="footer-links" aria-label="Site links">
       <a href="teddy.html">Rainy Teddy</a>
       <a href="hq.html">Rabbit Hole</a>
@@ -509,6 +591,7 @@
       const enterSite = document.getElementById("enterSite");
       const cabinetStart = document.getElementById("cabinetStart");
       const cabinetSelect = document.getElementById("cabinetSelect");
+      const mobileFitReturn = document.getElementById("mobileFitReturn");
       const mobilePads = document.querySelectorAll("[data-key]");
 
       const isiPhoneLike =
@@ -959,13 +1042,43 @@
         document.dispatchEvent(event);
       }
 
+      function setFitMode(event) {
+        if (event) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+
+        document.body.classList.remove("arcade-desktop-mode");
+
+        /*
+          Return to the top-left/normal phone position so the user is not
+          stranded inside the wide desktop cabinet view.
+        */
+        requestAnimationFrame(() => {
+          window.scrollTo({ left: 0, top: 0, behavior: "smooth" });
+        });
+
+        setTimeout(resizeCanvas, 80);
+        setTimeout(resizeCanvas, 260);
+      }
+
       function toggleView(event) {
         if (event) {
           event.preventDefault();
           event.stopPropagation();
         }
 
+        const goingDesktop = !document.body.classList.contains("arcade-desktop-mode");
         document.body.classList.toggle("arcade-desktop-mode");
+
+        /*
+          If SELECT opens desktop/wide mode on a phone, keep the page at the
+          top and give the user a fixed FIT SCREEN button to escape back.
+        */
+        requestAnimationFrame(() => {
+          window.scrollTo({ left: 0, top: 0, behavior: "smooth" });
+        });
+
         setTimeout(resizeCanvas, 80);
         setTimeout(resizeCanvas, 260);
       }
@@ -974,6 +1087,7 @@
       cabinetStart.addEventListener("click", resetGame);
 
       cabinetSelect.addEventListener("click", toggleView);
+      if (mobileFitReturn) mobileFitReturn.addEventListener("click", setFitMode);
 
       enterSite.addEventListener("click", function (event) {
         event.preventDefault();
