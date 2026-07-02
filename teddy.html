@@ -550,6 +550,55 @@
       }
     }
 
+  
+    /* V4: force small TV sound button below the TV expansion zone */
+    #tvSoundToggle.tv-sound-floating {
+      position: absolute !important;
+      transform: translate(-50%, -50%) !important;
+      z-index: 900 !important;
+      width: 40px !important;
+      height: 40px !important;
+      border-radius: 999px !important;
+      pointer-events: auto !important;
+      cursor: pointer !important;
+      background: rgba(0,0,0,0.88) !important;
+      border: 2px solid rgba(255,255,255,0.78) !important;
+      box-shadow:
+        0 0 16px rgba(0,245,255,.62),
+        0 0 24px rgba(255,42,163,.22),
+        inset 0 0 8px rgba(255,255,255,.10) !important;
+    }
+
+    #tvSoundToggle.tv-sound-floating::after {
+      content: "SOUND";
+      position: absolute;
+      left: 50%;
+      top: 112%;
+      transform: translateX(-50%);
+      font-size: 7px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      color: #dffcff;
+      text-shadow: 0 0 8px rgba(0,245,255,.85);
+      pointer-events: none;
+    }
+
+    #tvSoundToggle.tv-sound-floating.sound-on::after {
+      color: #baffdf;
+    }
+
+    @media (max-width: 760px) {
+      #tvSoundToggle.tv-sound-floating {
+        width: 36px !important;
+        height: 36px !important;
+        font-size: 14px !important;
+      }
+
+      #tvSoundToggle.tv-sound-floating::after {
+        font-size: 6px;
+      }
+    }
+
   </style>
 </head>
 
@@ -901,16 +950,22 @@
       if (!tvOverlay) return;
 
       /*
-        Place just outside the lower-right of the TV graphic.
-        Since it now lives on the stage, it is no longer inside the
-        TV click/expand target.
+        V4: keep the small volume icon OUTSIDE the clickable TV screen.
+        It lives on the stage, not inside the TV overlay, and sits below
+        the TV screen area so tapping it cannot feel like a TV click.
       */
       const isMobile = window.matchMedia("(max-width: 760px)").matches;
-      const xOffset = isMobile ? 3.15 : 2.45;
-      const yOffset = isMobile ? -0.10 : 0.15;
 
-      tvSoundToggle.style.left = `${tvOverlay.x + tvOverlay.w + xOffset}%`;
-      tvSoundToggle.style.top = `${tvOverlay.y + (tvOverlay.h * 0.78) + yOffset}%`;
+      const left = isMobile
+        ? tvOverlay.x + (tvOverlay.w * 0.50)
+        : tvOverlay.x + (tvOverlay.w * 0.50);
+
+      const top = isMobile
+        ? tvOverlay.y + tvOverlay.h + 4.35
+        : tvOverlay.y + tvOverlay.h + 3.25;
+
+      tvSoundToggle.style.left = `${left}%`;
+      tvSoundToggle.style.top = `${top}%`;
     }
 
     function layoutEverything() {
@@ -966,25 +1021,6 @@
       });
     }
 
-    function openExpandedTvAfterSwitch(videoId) {
-      const video = document.getElementById(videoId);
-      if (!video) return;
-
-      window.__teddyActiveTvVideo = video;
-
-      /*
-        Give the TV static burst a beat, then open the larger CRT.
-        This makes the hidden reporter/robot switches behave like TV clicks.
-      */
-      setTimeout(() => {
-        if (window.openTeddyTvPopoutVideo) {
-          window.openTeddyTvPopoutVideo(video);
-        } else if (window.openTeddyTvPopout) {
-          window.openTeddyTvPopout(document.getElementById("tvScreenAnim"));
-        }
-      }, 560);
-    }
-
     function runAction(action) {
       if (action === "open-about") {
         document.getElementById("aboutModal").classList.add("open");
@@ -993,13 +1029,11 @@
       if (action === "switch-angry-reporter") {
         setTvSound(true);
         playTvVideo("angryReporterVideo", false);
-        openExpandedTvAfterSwitch("angryReporterVideo");
       }
 
       if (action === "switch-secret-video") {
         setTvSound(true);
         playTvVideo("secretVideo", false);
-        openExpandedTvAfterSwitch("secretVideo");
       }
     }
 
@@ -1836,6 +1870,26 @@ const rainDryMasks = ${JSON.stringify(rainDryMasks, null, 2)};`;
       document.addEventListener("DOMContentLoaded", tryAutoplayPerfectStorm);
       setTimeout(tryAutoplayPerfectStorm, 1000);
     }
+
+
+    /*
+      V4 guard: this runs before tv-popout.js loads.
+      It prevents the small sound button from ever being interpreted as
+      a TV click/expand target.
+    */
+    document.addEventListener("click", function guardSmallTvSoundButton(event) {
+      if (event.target && event.target.closest && event.target.closest("#tvSoundToggle")) {
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+      }
+    }, true);
+
+    document.addEventListener("pointerup", function guardSmallTvSoundPointer(event) {
+      if (event.target && event.target.closest && event.target.closest("#tvSoundToggle")) {
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+      }
+    }, true);
 
     initPage();
   </script>
