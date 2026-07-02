@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
   <title>$TEDDY | The Rabbit Hole</title>
   <link rel="stylesheet" href="style.css" />
 
@@ -12,6 +12,7 @@
       margin: 0;
       padding: 0;
       background: #020207;
+      touch-action: pan-x pan-y pinch-zoom;
     }
 
     body.rabbit-page {
@@ -20,11 +21,23 @@
       color: white;
       overflow-x: hidden !important;
       min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
     }
 
     .scanlines {
+      position: fixed;
+      inset: 0;
       pointer-events: none !important;
       z-index: 9999;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,.035) 0,
+        rgba(255,255,255,.035) 1px,
+        transparent 2px,
+        transparent 5px
+      );
+      mix-blend-mode: overlay;
+      opacity: .42;
     }
 
     .rabbit-page-shell {
@@ -43,13 +56,39 @@
       z-index: 5000;
       padding: 10px 12px;
       text-align: center;
-      font-family: Arial, sans-serif;
       font-size: 12px;
       font-weight: 900;
       letter-spacing: .08em;
       color: #fff;
       background: linear-gradient(90deg, rgba(255,42,163,.94), rgba(0,245,255,.88));
       text-shadow: 0 1px 2px rgba(0,0,0,.6);
+    }
+
+    .static-sound-toggle {
+      position: fixed;
+      right: 14px;
+      top: 14px;
+      z-index: 6000;
+      border: 1px solid rgba(0,245,255,.65);
+      border-radius: 999px;
+      padding: 10px 13px;
+      background: rgba(0,0,0,.76);
+      color: #dffcff;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .06em;
+      cursor: pointer;
+      box-shadow:
+        0 0 16px rgba(0,245,255,.34),
+        inset 0 0 12px rgba(255,42,163,.12);
+    }
+
+    .static-sound-toggle.sound-on {
+      color: #fff;
+      border-color: rgba(255,234,0,.9);
+      box-shadow:
+        0 0 18px rgba(255,234,0,.44),
+        inset 0 0 12px rgba(255,42,163,.18);
     }
 
     .rabbit-scroll-wrap {
@@ -70,7 +109,7 @@
       background: #050510 !important;
       overflow: hidden !important;
       isolation: isolate !important;
-      touch-action: pan-x pan-y;
+      touch-action: pan-x pan-y pinch-zoom;
       transform: translateZ(0);
     }
 
@@ -136,6 +175,7 @@
       box-shadow:
         inset 0 0 18px rgba(255,255,255,.12),
         0 0 12px rgba(80,210,255,.15) !important;
+      cursor: zoom-in !important;
     }
 
     .tv-static-canvas {
@@ -231,7 +271,6 @@
       padding: 5px 8px;
       background: rgba(0,0,0,.9);
       color: #ffea00;
-      font-family: Arial, sans-serif;
       font-size: 12px;
       font-weight: 900;
       letter-spacing: .03em;
@@ -285,7 +324,6 @@
       color: white;
       font-size: 8px;
       font-weight: 900;
-      font-family: Arial, sans-serif;
     }
 
     .overlay-editor-panel {
@@ -300,7 +338,6 @@
       padding: 12px;
       color: white;
       box-shadow: 0 0 24px rgba(255,234,0,.55);
-      font-family: Arial, sans-serif;
     }
 
     .overlay-editor-panel strong {
@@ -401,40 +438,46 @@
       background: rgba(0,245,255,.10);
       box-shadow:
         0 0 22px rgba(0,245,255,.9),
-        inset 0 0 18px rgba(255,42,163,.35);
+        inset 0 0 18px rgba(255,42,163,.25);
     }
 
-    .rabbit-edit-mode .rabbit-hotspot {
-      background: rgba(0,245,255,.34) !important;
-      border: 2px solid #00f5ff !important;
-      box-shadow: 0 0 18px rgba(0,245,255,.95) !important;
+    .rabbit-hotspot.tv,
+    .rabbit-hotspot.crt-tv {
+      cursor: zoom-in !important;
     }
 
-    .rabbit-edit-mode .rabbit-hotspot::after {
+    body:not(.edit-mode) .rabbit-hotspot::after {
+      content: none !important;
+      display: none !important;
+    }
+
+    .edit-mode .rabbit-hotspot::after {
       content: attr(data-label);
       position: absolute;
       left: 50%;
-      top: 115%;
+      bottom: 110%;
       transform: translateX(-50%);
       white-space: nowrap;
-      font-size: 10px;
-      color: white;
-      background: rgba(0,0,0,.78);
-      border: 1px solid rgba(255,255,255,.35);
+      background: rgba(0,0,0,.88);
+      color: #ffea00;
+      border: 1px solid rgba(255,234,0,.6);
       border-radius: 999px;
       padding: 4px 7px;
+      font-size: 10px;
+      font-weight: 900;
       pointer-events: none;
     }
 
     .rabbit-modal {
-      position: fixed !important;
-      inset: 0 !important;
+      position: fixed;
+      inset: 0;
+      z-index: 9000;
       display: none;
       align-items: center;
       justify-content: center;
-      background: rgba(0,0,0,.82);
-      z-index: 9000 !important;
-      padding: 20px;
+      padding: 24px;
+      background: rgba(0,0,0,.74);
+      backdrop-filter: blur(4px);
     }
 
     .rabbit-modal.active {
@@ -442,117 +485,109 @@
     }
 
     .rabbit-modal-box {
+      width: min(560px, 94vw);
       position: relative;
-      width: min(620px, 94vw);
-      border: 3px solid #ff2aa3;
-      border-radius: 24px;
-      padding: 30px;
-      background: linear-gradient(180deg, rgba(19,0,31,.97), rgba(5,5,16,.98));
+      padding: 30px 26px 24px;
+      border: 2px solid rgba(0,245,255,.68);
+      border-radius: 22px;
+      background:
+        radial-gradient(circle at top left, rgba(255,42,163,.18), transparent 34%),
+        linear-gradient(180deg, rgba(4,7,20,.98), rgba(0,0,0,.96));
+      color: #fff;
       box-shadow:
-        0 0 32px rgba(255,42,163,.9),
-        0 0 60px rgba(0,245,255,.6);
+        0 0 34px rgba(0,245,255,.38),
+        0 0 58px rgba(255,42,163,.24),
+        inset 0 0 22px rgba(255,255,255,.06);
     }
 
     .rabbit-close {
       position: absolute;
-      top: 10px;
-      right: 16px;
+      right: 14px;
+      top: 12px;
+      width: 34px;
+      height: 34px;
       border: 0;
-      background: transparent;
-      color: white;
-      font-size: 34px;
+      border-radius: 999px;
+      background: #ff2aa3;
+      color: #fff;
+      font-size: 25px;
+      font-weight: 900;
+      line-height: 1;
       cursor: pointer;
     }
 
     .rabbit-tag {
+      display: inline-block;
+      margin-bottom: 12px;
       color: #ffea00;
+      font-size: 12px;
       font-weight: 900;
-      text-transform: uppercase;
-      margin-bottom: 8px;
-      letter-spacing: .08em;
+      letter-spacing: .16em;
+      text-shadow: 0 0 12px rgba(255,234,0,.65);
     }
 
     .rabbit-modal-box h2 {
-      color: #00f5ff;
       margin: 0 0 12px;
-      font-size: clamp(26px, 4vw, 42px);
-      text-shadow: 0 0 14px rgba(0,245,255,.75);
+      color: #fff;
+      font-size: clamp(28px, 5vw, 44px);
+      line-height: 1;
+      text-shadow:
+        0 0 14px rgba(0,245,255,.72),
+        0 0 24px rgba(255,42,163,.38);
     }
 
     .rabbit-modal-box p {
-      color: #eee;
-      line-height: 1.6;
-      font-size: 18px;
+      margin: 0 0 20px;
+      color: #dffcff;
+      font-size: 17px;
+      line-height: 1.5;
     }
 
     .rabbit-link {
-      display: block;
-      margin-top: 18px;
-      padding: 14px 18px;
-      border-radius: 14px;
-      background: #ff2aa3;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 0 18px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #ff2aa3, #00aaff);
       color: white;
       text-decoration: none;
-      text-align: center;
       font-weight: 900;
-      box-shadow: 0 0 18px rgba(255,42,163,.85);
-    }
-
-    .rabbit-link:hover {
-      background: #00aaff;
-      box-shadow: 0 0 22px rgba(0,245,255,.9);
-    }
-
-    .static-sound-toggle {
-      position: fixed;
-      right: 18px;
-      top: 18px;
-      z-index: 7000;
-      border: 2px solid #00f5ff;
-      border-radius: 999px;
-      background: rgba(0,0,0,.78);
-      color: white;
-      padding: 11px 14px;
-      font-weight: 900;
-      cursor: pointer;
-      box-shadow: 0 0 16px rgba(0,245,255,.7);
-    }
-
-    .static-sound-toggle.on,
-    .static-sound-toggle.active {
-      border-color: #ff2aa3;
-      box-shadow: 0 0 18px rgba(255,42,163,.85);
+      letter-spacing: .08em;
+      box-shadow: 0 0 18px rgba(0,245,255,.35);
     }
 
     .rabbit-editor-panel {
       position: fixed;
-      left: 12px;
-      bottom: 12px;
+      right: 12px;
+      top: 12px;
       z-index: 10000;
-      width: min(520px, calc(100vw - 24px));
-      background: rgba(0,0,0,.92);
+      width: min(440px, calc(100vw - 24px));
+      background: rgba(0,0,0,.94);
       border: 2px solid #00f5ff;
       border-radius: 14px;
       padding: 12px;
       color: white;
-      box-shadow: 0 0 24px rgba(0,245,255,.65);
+      box-shadow: 0 0 24px rgba(0,245,255,.48);
     }
 
     .rabbit-editor-panel strong {
       color: #00f5ff;
+      display: block;
+      margin-bottom: 6px;
     }
 
     .rabbit-editor-panel p {
-      margin: 8px 0;
-      color: #dffcff;
       font-size: 13px;
+      color: #dffcff;
     }
 
     .rabbit-editor-panel button {
       width: 100%;
       border: 0;
-      border-radius: 10px;
-      padding: 11px;
+      border-radius: 9px;
+      padding: 10px;
       color: white;
       font-weight: 900;
       cursor: pointer;
@@ -562,14 +597,14 @@
 
     .rabbit-editor-panel textarea {
       width: 100%;
-      height: 150px;
+      height: 180px;
       background: #050510;
       color: #dffcff;
       border: 1px solid #00f5ff;
       border-radius: 10px;
       padding: 10px;
       font-family: monospace;
-      font-size: 11px;
+      font-size: 10px;
       box-sizing: border-box;
     }
 
@@ -596,6 +631,10 @@
     @media (max-width: 760px) {
       .mobile-rabbit-hint {
         display: block;
+      }
+
+      .rabbit-scroll-wrap {
+        overflow-x: auto;
       }
 
       .rabbit-stage {
@@ -674,5 +713,6 @@
 
   <script src="rabbit-overlays.js"></script>
   <script src="rabbit-hole.js"></script>
+  <script src="tv-popout.js"></script>
 </body>
 </html>
