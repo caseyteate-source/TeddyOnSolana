@@ -520,6 +520,190 @@
         0 0 34px rgba(255,42,163,.45);
     }
 
+  
+    /* ======================================================
+       FINAL MOBILE FIRST-LOOK POLISH V8
+       Bigger playable screen, tighter controls, cleaner first impression.
+    ====================================================== */
+
+    @media (max-width: 760px) {
+      html,
+      body {
+        min-height: 100%;
+        background: #030306;
+      }
+
+      body {
+        overflow-x: hidden;
+        overscroll-behavior: none;
+      }
+
+      .scanlines {
+        opacity: .72;
+      }
+
+      .arcade-page {
+        min-height: 100svh;
+        padding: 5px 3px 78px;
+        display: block;
+        overflow-x: hidden;
+      }
+
+      .arcade-top-panel {
+        width: min(100%, 500px);
+        max-width: 100%;
+        margin: 0 auto 4px;
+        padding: 7px 8px;
+        border-radius: 14px;
+        gap: 7px;
+      }
+
+      .arcade-instructions {
+        flex-basis: 100%;
+        font-size: 9.5px;
+        line-height: 1.22;
+        text-align: center;
+      }
+
+      .arcade-controls {
+        width: 100%;
+        justify-content: center;
+        gap: 7px;
+      }
+
+      .arcade-btn {
+        padding: 9px 11px;
+        font-size: 10.5px;
+        border-radius: 999px;
+      }
+
+      /*
+        Mobile fit mode deliberately lets the cabinet extend past the sides.
+        This maximizes the actual game screen so Teddy/emojis are readable.
+      */
+      .arcade-shell {
+        width: min(148vw, 690px) !important;
+        max-width: none !important;
+        margin-left: 50% !important;
+        margin-right: 0 !important;
+        transform: translateX(-50%) !important;
+      }
+
+      .arcade-cabinet-img {
+        filter:
+          drop-shadow(0 0 18px rgba(255,42,163,.68))
+          drop-shadow(0 0 28px rgba(0,245,255,.36));
+      }
+
+      .arcade-screen {
+        border-radius: 8px;
+        box-shadow:
+          inset 0 0 14px rgba(0,245,255,.54),
+          0 0 13px rgba(0,245,255,.50);
+        background: #050510;
+      }
+
+      #gameCanvas {
+        width: 100% !important;
+        height: 100% !important;
+        display: block !important;
+      }
+
+      .mobile-gamepad {
+        width: min(214px, calc(100vw - 16px)) !important;
+        padding: 5px !important;
+        border-radius: 14px !important;
+        bottom: max(6px, env(safe-area-inset-bottom)) !important;
+        background:
+          linear-gradient(180deg, rgba(255,42,163,.12), rgba(0,245,255,.08)),
+          rgba(0,0,0,.78) !important;
+      }
+
+      .mobile-gamepad-title {
+        display: none;
+      }
+
+      .mobile-gamepad-grid {
+        grid-template-columns: 34px 34px 34px !important;
+        grid-template-rows: 31px 31px 31px !important;
+        gap: 4px !important;
+      }
+
+      .mobile-pad-btn {
+        font-size: 15px !important;
+        border-radius: 9px !important;
+        box-shadow:
+          0 0 8px rgba(255,42,163,.62),
+          inset 0 -2px 0 rgba(0,0,0,.26) !important;
+      }
+
+      .mobile-pad-center {
+        font-size: 7px !important;
+        line-height: 1.05 !important;
+        padding: 2px !important;
+      }
+
+      .mobile-gamepad-hint {
+        display: none;
+      }
+
+      /*
+        Desktop mode is still available through the cabinet SELECT button.
+      */
+      body.arcade-desktop-mode {
+        overflow-x: auto;
+      }
+
+      body.arcade-desktop-mode .arcade-page {
+        overflow-x: auto;
+        padding-bottom: 78px;
+      }
+
+      body.arcade-desktop-mode .arcade-shell {
+        width: 1180px !important;
+        max-width: none !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        transform: none !important;
+      }
+
+      body.arcade-desktop-mode .arcade-top-panel {
+        width: 1180px !important;
+        max-width: none !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .arcade-shell {
+        width: min(154vw, 690px) !important;
+      }
+
+      .arcade-page {
+        padding-bottom: 74px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .arcade-shell {
+        width: min(160vw, 690px) !important;
+      }
+
+      .arcade-top-panel {
+        padding: 6px;
+      }
+
+      .arcade-instructions {
+        font-size: 9px;
+      }
+
+      .arcade-btn {
+        padding: 8px 10px;
+        font-size: 10px;
+      }
+    }
+
   </style>
 
   <script>
@@ -706,11 +890,11 @@
 
       const zones = {
         /*
-          Defaults can be changed in edit mode. These are just starting points.
-          START and SELECT are intentionally separated far enough to avoid overlap.
+          Final cabinet button positions copied from edit mode.
+          START and SELECT are positioned over the actual cabinet graphics.
         */
-        start: { left: 45.7, top: 82.2, width: 8.2, height: 5.6 },
-        select: { left: 56.2, top: 82.2, width: 8.2, height: 5.6 }
+        start: { left: 43.24, top: 84.91, width: 5.2, height: 5.6 },
+        select: { left: 50.38, top: 85.01, width: 5.2, height: 5.6 }
       };
 
       if (showButtons || editButtons) {
@@ -1112,6 +1296,81 @@
       setTimeout(makePanelMoveable, 100);
       setTimeout(makePanelMoveable, 500);
       setTimeout(makePanelMoveable, 1000);
+    })();
+  </script>
+
+
+  <script>
+    /*
+      Mobile first-look polish v8:
+      Extra resize/redraw nudges after START, SELECT, orientation change,
+      and first touch so iPhone canvas emojis/game objects appear reliably.
+    */
+    (function () {
+      const params = new URLSearchParams(window.location.search);
+      const startBtn = document.getElementById("startGame");
+      const canvas = document.getElementById("gameCanvas");
+      const cabinetStartBtn = document.getElementById("cabinetStartBtn");
+      const cabinetSelectBtn = document.getElementById("cabinetSelectBtn");
+
+      function refreshArcadeCanvas() {
+        requestAnimationFrame(function () {
+          window.dispatchEvent(new Event("resize"));
+        });
+
+        setTimeout(function () {
+          window.dispatchEvent(new Event("resize"));
+        }, 80);
+
+        setTimeout(function () {
+          window.dispatchEvent(new Event("resize"));
+        }, 220);
+
+        setTimeout(function () {
+          window.dispatchEvent(new Event("resize"));
+        }, 520);
+      }
+
+      function setMobileViewportClass() {
+        document.body.classList.toggle(
+          "arcade-phone-view",
+          window.matchMedia("(max-width: 760px)").matches
+        );
+      }
+
+      [startBtn, cabinetStartBtn, cabinetSelectBtn].forEach(function (btn) {
+        if (!btn) return;
+        btn.addEventListener("click", refreshArcadeCanvas, true);
+        btn.addEventListener("pointerdown", refreshArcadeCanvas, true);
+      });
+
+      if (canvas) {
+        canvas.addEventListener("pointerdown", refreshArcadeCanvas, true);
+        canvas.addEventListener("touchstart", refreshArcadeCanvas, { passive: true });
+      }
+
+      setMobileViewportClass();
+      refreshArcadeCanvas();
+
+      window.addEventListener("resize", function () {
+        setMobileViewportClass();
+        refreshArcadeCanvas();
+      });
+
+      window.addEventListener("orientationchange", function () {
+        setTimeout(function () {
+          setMobileViewportClass();
+          refreshArcadeCanvas();
+        }, 260);
+      });
+
+      /*
+        Helpful for testing: ?showbuttons=1 still displays zones,
+        ?editbuttons=1 still shows the movable editor.
+      */
+      if (params.has("showbuttons") || params.has("editbuttons")) {
+        setTimeout(refreshArcadeCanvas, 300);
+      }
     })();
   </script>
 
