@@ -2,13 +2,22 @@
    $TEDDY RABBIT HOLE HOTSPOTS
    Full replacement rabbit-hole.js
 
-   Rebuilt from the later Rabbit Hole hotspot set:
-   - keeps Callin' Oates phone
-   - keeps the added coffee mug, $TEDDY marquee, magnifying glass,
-     Hang In There, rocket, eBay book, controller, camcorder,
-     lava lamp, stock chart, and Xtra circle
-   - keeps Mr. T / MOASS TV video
+   Source restored from the later "morelinks / hubcoordsfinal" version:
+   - arcade-marquee
+   - coffee-mug
+   - magnifying-glass
+   - updated Callin' Oates phone position
+   - updated GameStop / GMEBAY / floppy / lamp coordinates
+   - Hang In There, rocket, eBay book, controller, camcorder,
+     lava lamp, stock chart
+
+   Current fixes layered in:
+   - Mr. T / MOASS plays /mr-t-mother.mp4 on the Rabbit Hole TV
+   - Lamp / Norm is COMING SOON because the Norm MP4 upload is failing
    - all unfinished/dead pages say COMING SOON and route to /under-construction.html
+   - working links stay working
+   - TV VOLUME toggle
+   - TV returns to static after video ends
    - no browser hover descriptions on the live page
    - edit mode still works with ?edit=1
 ====================================================== */
@@ -18,11 +27,6 @@ const isEditMode = new URLSearchParams(window.location.search).has("edit");
 const UNDER_CONSTRUCTION_URL = "/under-construction.html";
 const MR_T_MOTHER_VIDEO_URL = "/mr-t-mother.mp4";
 
-/*
-  Fallback TV placement only runs if rabbit-overlays.js does not create
-  the normal .tv-static-wrap. The preferred behavior is to place the video
-  inside the existing TV static overlay so alignment matches the static.
-*/
 const RABBIT_TV_FALLBACK_PLACEMENT = {
   left: 84.35,
   top: 27.6,
@@ -37,10 +41,8 @@ let rabbitTvVideo = null;
 let rabbitTvVolumeToggle = null;
 
 /*
-  Anything in this set is treated like a dead/unfinished page:
-  modal tag = COMING SOON
-  button text = COMING SOON
-  button URL = /under-construction.html
+  These are unfinished/dead Rabbit Hole items.
+  They all show COMING SOON and point to /under-construction.html.
 */
 const comingSoonIds = new Set([
   "coffee-mug",
@@ -204,12 +206,12 @@ const rabbitHotspots = [
     id: "desk-lamp",
     title: "The Desk Lamp",
     tag: "Coming Soon",
-    text: "The Norm Macdonald moth joke file is parked for now. This lamp clue is coming soon.",
+    text: "The Norm Macdonald moth-joke file is parked for now. This lamp clue is coming soon.",
     url: UNDER_CONSTRUCTION_URL,
     sameTab: true,
     comingSoon: true,
-    x: 97.38,
-    y: 59.29,
+    x: 96.8,
+    y: 58.34,
     size: 58
   },
   {
@@ -301,8 +303,8 @@ const rabbitHotspots = [
     text: "What could GMEBAY become?",
     url: "/gmebay.html",
     sameTab: true,
-    x: 62.87,
-    y: 56.76,
+    x: 62.04,
+    y: 56.37,
     size: 58
   },
   {
@@ -693,7 +695,7 @@ function ensureRabbitTv() {
     rabbitTvVideo.addEventListener("ended", resetRabbitTvToStatic);
     rabbitTvVideo.addEventListener("error", () => {
       resetRabbitTvToStatic();
-      showRabbitTvToast("MP4 file missing or still deploying. Upload the MP4 files to the site root.", 3200);
+      showRabbitTvToast("MP4 file missing or still deploying. Upload the MP4 file to the site root.", 3200);
     });
   }
 
@@ -1001,7 +1003,7 @@ function initRabbitHole() {
   updateEditorOutput();
 
   /*
-    Give rabbit-overlays.js a moment to create the actual static TV overlay.
+    Give rabbit-overlays.js time to create the actual TV static overlay.
     If it does not exist, ensureRabbitTv() creates a fallback.
   */
   setTimeout(ensureRabbitTv, 80);
