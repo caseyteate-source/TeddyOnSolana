@@ -495,7 +495,7 @@
   function isNoTvPopoutTarget(target) {
     return Boolean(
       target.closest?.(
-        "#tvSoundToggle, .tv-sound-toggle, .teddy-tv-popout-sound, [data-no-tv-popout]"
+        "#tvSoundToggle, .tv-sound-toggle, .teddy-tv-popout-sound, [data-no-tv-popout], button[aria-label='Toggle TV sound']"
       )
     );
   }
@@ -595,6 +595,9 @@
 
   function handleTvClick(event) {
     const target = event.target;
+
+    /* V4 sound-toggle hard ignore */
+    if (isNoTvPopoutTarget(target)) return;
     if (isNoTvPopoutTarget(target)) return;
     if (!isTvClickTarget(target)) return;
 
@@ -623,6 +626,7 @@
 
     document.addEventListener("pointerup", (event) => {
       if (event.pointerType === "mouse") return;
+      if (isNoTvPopoutTarget(event.target)) return;
       if (!isTvClickTarget(event.target)) return;
       handleTvClick(event);
     }, true);
