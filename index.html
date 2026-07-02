@@ -481,6 +481,45 @@
       }
     }
 
+  
+    /* ======================================================
+       MOVEABLE EDIT BOX
+       In ?editbuttons=1 mode, drag the panel by its title bar.
+    ====================================================== */
+
+    .cabinet-editor-drag-handle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      cursor: move;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: none;
+      margin-bottom: 6px;
+      padding: 4px 2px 6px;
+      border-bottom: 1px solid rgba(0,245,255,.28);
+    }
+
+    .cabinet-editor-drag-handle strong {
+      color: #00f5ff;
+    }
+
+    .cabinet-editor-drag-note {
+      color: #ffea00;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: .05em;
+      white-space: nowrap;
+    }
+
+    .cabinet-editor-panel.is-moving {
+      opacity: .92;
+      box-shadow:
+        0 0 26px rgba(0,245,255,.9),
+        0 0 34px rgba(255,42,163,.45);
+    }
+
   </style>
 
   <script>
@@ -865,8 +904,11 @@
         panel.id = "cabinetEditorPanel";
         panel.className = "cabinet-editor-panel";
         panel.innerHTML = `
-          <strong>Cabinet Button Editor</strong>
-          <p>Drag START and SELECT boxes, or use the nudge buttons. If the buttons are reversed, tap SWAP.</p>
+          <div id="cabinetEditorDragHandle" class="cabinet-editor-drag-handle">
+            <strong>Cabinet Button Editor</strong>
+            <span class="cabinet-editor-drag-note">DRAG BOX</span>
+          </div>
+          <p>Drag this edit box out of the way. Then drag START and SELECT boxes, or use the nudge buttons. If the buttons are reversed, tap SWAP.</p>
 
           <div class="cabinet-editor-grid">
             <button type="button" data-nudge="start:-1:0">START ←</button>
@@ -990,5 +1032,88 @@
       };
     })();
   </script>
+
+  <script>
+    /*
+      Moveable cabinet editor panel.
+      Works only in ?editbuttons=1 mode and lets you drag the edit box itself.
+    */
+    (function () {
+      if (!new URLSearchParams(window.location.search).has("editbuttons")) return;
+
+      function makePanelMoveable() {
+        const panel = document.getElementById("cabinetEditorPanel");
+        if (!panel || panel.dataset.moveable === "yes") return;
+
+        panel.dataset.moveable = "yes";
+
+        let handle = document.getElementById("cabinetEditorDragHandle");
+
+        if (!handle) {
+          handle = document.createElement("div");
+          handle.id = "cabinetEditorDragHandle";
+          handle.className = "cabinet-editor-drag-handle";
+          handle.innerHTML = '<strong>Cabinet Button Editor</strong><span class="cabinet-editor-drag-note">DRAG BOX</span>';
+          panel.insertBefore(handle, panel.firstChild);
+        }
+
+        function clamp(value, min, max) {
+          return Math.max(min, Math.min(max, value));
+        }
+
+        handle.addEventListener("pointerdown", function (event) {
+          event.preventDefault();
+          event.stopPropagation();
+
+          const rect = panel.getBoundingClientRect();
+          const startX = event.clientX;
+          const startY = event.clientY;
+          const startLeft = rect.left;
+          const startTop = rect.top;
+
+          panel.classList.add("is-moving");
+          panel.style.left = startLeft + "px";
+          panel.style.top = startTop + "px";
+          panel.style.right = "auto";
+          panel.style.bottom = "auto";
+          panel.style.margin = "0";
+
+          try {
+            handle.setPointerCapture(event.pointerId);
+          } catch {}
+
+          function movePanel(e) {
+            const nextLeft = clamp(startLeft + (e.clientX - startX), 4, window.innerWidth - panel.offsetWidth - 4);
+            const nextTop = clamp(startTop + (e.clientY - startY), 4, window.innerHeight - panel.offsetHeight - 4);
+
+            panel.style.left = nextLeft + "px";
+            panel.style.top = nextTop + "px";
+          }
+
+          function stopMove() {
+            panel.classList.remove("is-moving");
+
+            try {
+              handle.releasePointerCapture(event.pointerId);
+            } catch {}
+
+            handle.removeEventListener("pointermove", movePanel);
+            handle.removeEventListener("pointerup", stopMove);
+            handle.removeEventListener("pointercancel", stopMove);
+          }
+
+          handle.addEventListener("pointermove", movePanel);
+          handle.addEventListener("pointerup", stopMove);
+          handle.addEventListener("pointercancel", stopMove);
+        });
+      }
+
+      makePanelMoveable();
+      setTimeout(makePanelMoveable, 100);
+      setTimeout(makePanelMoveable, 500);
+      setTimeout(makePanelMoveable, 1000);
+    })();
+  </script>
+
 </body>
 </html>
