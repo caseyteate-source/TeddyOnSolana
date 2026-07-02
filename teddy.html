@@ -900,6 +900,25 @@
       });
     }
 
+    function openExpandedTvAfterSwitch(videoId) {
+      const video = document.getElementById(videoId);
+      if (!video) return;
+
+      window.__teddyActiveTvVideo = video;
+
+      /*
+        Give the TV static burst a beat, then open the larger CRT.
+        This makes the hidden reporter/robot switches behave like TV clicks.
+      */
+      setTimeout(() => {
+        if (window.openTeddyTvPopoutVideo) {
+          window.openTeddyTvPopoutVideo(video);
+        } else if (window.openTeddyTvPopout) {
+          window.openTeddyTvPopout(document.getElementById("tvScreenAnim"));
+        }
+      }, 560);
+    }
+
     function runAction(action) {
       if (action === "open-about") {
         document.getElementById("aboutModal").classList.add("open");
@@ -908,11 +927,13 @@
       if (action === "switch-angry-reporter") {
         setTvSound(true);
         playTvVideo("angryReporterVideo", false);
+        openExpandedTvAfterSwitch("angryReporterVideo");
       }
 
       if (action === "switch-secret-video") {
         setTvSound(true);
         playTvVideo("secretVideo", false);
+        openExpandedTvAfterSwitch("secretVideo");
       }
     }
 
@@ -1321,6 +1342,8 @@
       const video = document.getElementById(videoId);
       if (!video) return;
 
+      window.__teddyActiveTvVideo = video;
+
       stopAllVideos();
 
       tvBurstUntil = performance.now() + 420;
@@ -1712,6 +1735,12 @@ const rainDryMasks = ${JSON.stringify(rainDryMasks, null, 2)};`;
       setTvSound(false);
 
       tvVideos.forEach(v => {
+        v.addEventListener("play", () => {
+          window.__teddyActiveTvVideo = v;
+        });
+        v.addEventListener("loadedmetadata", () => {
+          if (v.style.display !== "none") window.__teddyActiveTvVideo = v;
+        });
         v.addEventListener("ended", returnToTvIdle);
         v.addEventListener("error", returnToTvIdle);
       });
