@@ -1,4 +1,3 @@
-
 /* ======================================================
    $TEDDY UNIVERSAL TV POP-OUT
    Full replacement file: tv-popout.js
@@ -323,6 +322,19 @@
   function findBestSourceVideo(clickedTarget) {
     if (clickedTarget && clickedTarget.tagName === "VIDEO") return clickedTarget;
 
+    /*
+      Teddy page sets this whenever a hidden TV switch changes the video.
+      This fixes the reporter/robot clips where the click target is the
+      hidden switch, not the TV screen itself.
+    */
+    if (
+      window.__teddyActiveTvVideo &&
+      window.__teddyActiveTvVideo.tagName === "VIDEO" &&
+      (window.__teddyActiveTvVideo.currentSrc || window.__teddyActiveTvVideo.src)
+    ) {
+      return window.__teddyActiveTvVideo;
+    }
+
     const localVideo = clickedTarget ? clickedTarget.querySelector?.("video") : null;
     if (localVideo) return localVideo;
 
@@ -482,4 +494,17 @@
 
   window.openTeddyTvPopout = openTvPopout;
   window.closeTeddyTvPopout = closeTvPopout;
+
+  window.openTeddyTvPopoutVideo = function (videoIdOrEl) {
+    const video = typeof videoIdOrEl === "string"
+      ? document.getElementById(videoIdOrEl)
+      : videoIdOrEl;
+
+    if (video && video.tagName === "VIDEO") {
+      window.__teddyActiveTvVideo = video;
+      openTvPopout(video);
+    } else {
+      openTvPopout(document.getElementById("tvScreenAnim") || document.body);
+    }
+  };
 })();
