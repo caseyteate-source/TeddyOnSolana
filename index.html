@@ -511,6 +511,94 @@
       }
     }
 
+  
+    /* ======================================================
+       MOBILE PLAYFIELD BOOST V12
+       Desktop stays untouched. Emoji/game drawing stays untouched.
+       This only makes the mobile cabinet/play screen larger.
+    ====================================================== */
+
+    @media (max-width: 760px) {
+      /*
+        v11 used about 122vw. This increases the phone playfield
+        without changing the screen's coordinates inside the cabinet art.
+      */
+      body:not(.arcade-desktop-mode) .arcade-shell {
+        width: min(138vw, 660px) !important;
+        max-width: none !important;
+        margin-left: 50% !important;
+        transform: translateX(-50%) !important;
+      }
+
+      /*
+        After START, give gameplay a little more breathing room.
+        The top panel remains available, but it becomes less dominant.
+      */
+      body.arcade-playing:not(.arcade-desktop-mode) .arcade-top-panel {
+        transform: scale(.94);
+        transform-origin: center top;
+        margin-bottom: 0;
+      }
+
+      body.arcade-playing:not(.arcade-desktop-mode) .arcade-instructions {
+        font-size: 8.8px;
+        line-height: 1.12;
+      }
+
+      body.arcade-playing:not(.arcade-desktop-mode) .arcade-btn {
+        padding: 7px 10px;
+        font-size: 9.5px;
+      }
+
+      body.arcade-playing:not(.arcade-desktop-mode) .arcade-shell {
+        width: min(144vw, 680px) !important;
+      }
+
+      /*
+        Keep the arrow pad compact and low so it doesn't cover the cabinet.
+      */
+      body.arcade-playing:not(.arcade-desktop-mode) .mobile-gamepad {
+        width: min(196px, calc(100vw - 16px));
+        padding: 4px;
+        opacity: .92;
+      }
+
+      body.arcade-playing:not(.arcade-desktop-mode) .mobile-grid {
+        grid-template-columns: 31px 31px 31px;
+        grid-template-rows: 28px 28px 28px;
+        gap: 4px;
+      }
+
+      body.arcade-playing:not(.arcade-desktop-mode) .mobile-pad {
+        font-size: 14px;
+        border-radius: 8px;
+      }
+
+      body.arcade-playing:not(.arcade-desktop-mode) .pad-center {
+        font-size: 6.5px;
+      }
+    }
+
+    @media (max-width: 430px) {
+      body:not(.arcade-desktop-mode) .arcade-shell {
+        width: min(146vw, 660px) !important;
+      }
+
+      body.arcade-playing:not(.arcade-desktop-mode) .arcade-shell {
+        width: min(152vw, 680px) !important;
+      }
+    }
+
+    @media (max-width: 380px) {
+      body:not(.arcade-desktop-mode) .arcade-shell {
+        width: min(152vw, 650px) !important;
+      }
+
+      body.arcade-playing:not(.arcade-desktop-mode) .arcade-shell {
+        width: min(158vw, 680px) !important;
+      }
+    }
+
   </style>
 </head>
 
@@ -713,6 +801,9 @@
           event.preventDefault();
           event.stopPropagation();
         }
+
+        document.body.classList.add("arcade-playing");
+        document.body.classList.remove("arcade-ended");
 
         resizeCanvas();
 
@@ -992,6 +1083,8 @@
         running = false;
         won = success;
         lost = !success;
+        document.body.classList.remove("arcade-playing");
+        document.body.classList.add("arcade-ended");
 
         if (animationFrame) {
           cancelAnimationFrame(animationFrame);
