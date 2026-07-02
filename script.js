@@ -1,6 +1,6 @@
 /* ======================================================
-   $TEDDY ARCADE GAME + OLD HUB MODALS
-   Full recovery gameplay version
+   $TEDDY ARCADE GAME
+   Clean working gameplay version
    RK emoji timeline + flashing SHORT skulls
 ====================================================== */
 
@@ -18,6 +18,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas ? canvas.getContext("2d") : null;
+
+  const isiPhoneLike =
+    /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
   let animationFrame = null;
   let gameRunning = false;
@@ -94,6 +98,35 @@ document.addEventListener("DOMContentLoaded", () => {
     el.classList.add("hidden");
   }
 
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+  }
+
+  function randomBetween(min, max) {
+    return min + Math.random() * (max - min);
+  }
+
+  function distance(ax, ay, bx, by) {
+    return Math.hypot(ax - bx, ay - by);
+  }
+
+  function emojiFont(size, weight = "") {
+    const prefix = weight ? `${weight} ` : "";
+    return `${prefix}${size}px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", Arial, sans-serif`;
+  }
+
+  function drawEmoji(text, x, y, size, glowColor, glow = 14) {
+    ctx.save();
+    ctx.font = emojiFont(size);
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = "#ffffff";
+    ctx.shadowColor = isiPhoneLike ? "transparent" : glowColor;
+    ctx.shadowBlur = isiPhoneLike ? 0 : glow;
+    ctx.fillText(text, x, y);
+    ctx.restore();
+  }
+
   function resizeCanvas() {
     if (!canvas) return;
 
@@ -108,18 +141,6 @@ document.addEventListener("DOMContentLoaded", () => {
     player.y = clamp(player.y, 60, canvas.height - 40);
     player.targetX = player.x;
     player.targetY = player.y;
-  }
-
-  function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, value));
-  }
-
-  function randomBetween(min, max) {
-    return min + Math.random() * (max - min);
-  }
-
-  function distance(ax, ay, bx, by) {
-    return Math.hypot(ax - bx, ay - by);
   }
 
   function safeRandomPosition() {
@@ -233,10 +254,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function startGame() {
-    if (!canvas || !ctx) {
-      enterSite();
-      return;
-    }
+    if (!canvas || !ctx) return;
 
     showElement(startScreen);
     hideElement(siteContent);
@@ -258,14 +276,7 @@ document.addEventListener("DOMContentLoaded", () => {
       animationFrame = null;
     }
 
-    hideElement(startScreen);
-
-    if (siteContent) {
-      showElement(siteContent);
-      window.scrollTo(0, 0);
-    } else {
-      window.location.href = "hq.html";
-    }
+    window.location.href = window.TEDDY_ENTER_SITE_URL || "teddy.html";
   }
 
   function drawBackground() {
@@ -341,20 +352,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function drawPlayer() {
-    ctx.save();
-
     const blink = player.invincible > 0 && Math.floor(frame / 5) % 2 === 0;
 
     if (!blink) {
-      ctx.font = `${player.size}px Arial, sans-serif`;
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.shadowColor = "#ff2aa3";
-      ctx.shadowBlur = 18;
-      ctx.fillText("🧸", player.x, player.y);
+      drawEmoji("🧸", player.x, player.y, player.size, "#ff2aa3", 18);
     }
-
-    ctx.restore();
   }
 
   function drawCollectibles() {
@@ -362,17 +364,9 @@ document.addEventListener("DOMContentLoaded", () => {
       if (item.collected) return;
 
       item.pulse += 0.08;
-
       const size = item.size + Math.sin(item.pulse) * 4;
 
-      ctx.save();
-      ctx.font = `${size}px Arial, sans-serif`;
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.shadowColor = "#00f5ff";
-      ctx.shadowBlur = 16;
-      ctx.fillText(item.emoji, item.x, item.y);
-      ctx.restore();
+      drawEmoji(item.emoji, item.x, item.y, size, "#00f5ff", 16);
     });
   }
 
@@ -380,24 +374,19 @@ document.addEventListener("DOMContentLoaded", () => {
     enemies.forEach((enemy) => {
       const flashShort = Math.floor(frame / 12) % 2 === 0;
 
-      ctx.save();
-
-      ctx.font = `${enemy.size}px Arial, sans-serif`;
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.shadowColor = "#ff1111";
-      ctx.shadowBlur = 18;
-      ctx.fillText("☠️", enemy.x, enemy.y);
+      drawEmoji("☠️", enemy.x, enemy.y, enemy.size, "#ff1111", 18);
 
       if (flashShort) {
+        ctx.save();
         ctx.font = "bold 11px Arial, sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
         ctx.fillStyle = "#ffea00";
         ctx.shadowColor = "#ffea00";
         ctx.shadowBlur = 12;
         ctx.fillText("SHORT", enemy.x, enemy.y + 28);
+        ctx.restore();
       }
-
-      ctx.restore();
     });
   }
 
@@ -568,7 +557,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.fillText("The shorts got you.", canvas.width / 2, canvas.height / 2 + 8);
 
     ctx.fillStyle = "#ffea00";
-    ctx.fillText("Click START GAME to try again.", canvas.width / 2, canvas.height / 2 + 42);
+    ctx.fillText("Click START to try again.", canvas.width / 2, canvas.height / 2 + 42);
 
     ctx.restore();
   }
@@ -586,8 +575,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.shadowBlur = 20;
     ctx.fillText("RABBIT HOLE UNLOCKED", canvas.width / 2, canvas.height / 2 - 50);
 
-    ctx.font = "48px Arial, sans-serif";
-    ctx.fillText("🧸 🚀 🌕", canvas.width / 2, canvas.height / 2 + 2);
+    drawEmoji("🧸 🚀 🌕", canvas.width / 2, canvas.height / 2 + 2, 48, "#00f5ff", 10);
 
     ctx.font = "18px Arial, sans-serif";
     ctx.fillStyle = "#ffea00";
@@ -613,8 +601,13 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.shadowBlur = 18;
     ctx.fillText("INSERT COIN", canvas.width / 2, canvas.height / 2 - 48);
 
-    ctx.font = "44px Arial, sans-serif";
-    ctx.fillText("🧸", canvas.width / 2, canvas.height / 2);
+    ctx.restore();
+
+    drawEmoji("🧸", canvas.width / 2, canvas.height / 2, 44, "#00f5ff", 10);
+
+    ctx.save();
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
 
     ctx.font = "16px Arial, sans-serif";
     ctx.fillStyle = "#ffffff";
@@ -622,7 +615,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.fillText("Collect RK's emoji timeline. Avoid the shorts.", canvas.width / 2, canvas.height / 2 + 48);
 
     ctx.fillStyle = "#ffea00";
-    ctx.fillText("Press START GAME", canvas.width / 2, canvas.height / 2 + 78);
+    ctx.fillText("Press START", canvas.width / 2, canvas.height / 2 + 78);
 
     ctx.restore();
   }
@@ -670,7 +663,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (enterSiteBtn) {
-    enterSiteBtn.addEventListener("click", enterSite);
+    enterSiteBtn.addEventListener("click", (event) => {
+      event.preventDefault();
+      enterSite();
+    });
   }
 
   window.addEventListener("keydown", (event) => {
@@ -704,7 +700,10 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       updatePointerFromEvent(event);
-      canvas.setPointerCapture(event.pointerId);
+
+      try {
+        canvas.setPointerCapture(event.pointerId);
+      } catch {}
     });
 
     canvas.addEventListener("pointermove", (event) => {
@@ -746,10 +745,7 @@ document.addEventListener("DOMContentLoaded", () => {
   resizeCanvas();
   drawStartScreen();
 
-  /* ======================================================
-     SIMPLE POPUP MODALS FOR OLD HUB BUTTONS
-  ====================================================== */
-
+  /* Optional old hub modal compatibility. Safe if unused. */
   const oldModal =
     document.getElementById("modal") ||
     document.getElementById("siteModal") ||
