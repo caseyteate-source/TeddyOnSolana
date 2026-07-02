@@ -8,19 +8,18 @@
 
   <style>
     :root {
-      --neon-pink: #ff2aa3;
-      --neon-blue: #00f5ff;
-      --neon-yellow: #ffea00;
-      --deep-bg: #030306;
+      --pink: #ff2aa3;
+      --blue: #00f5ff;
+      --yellow: #ffea00;
+      --bg: #030306;
 
-      /* Gameplay screen placement inside teddy-arcade-cabinet.png */
+      /* Original clean cabinet gameplay placement */
       --screen-left: 22.6%;
       --screen-top: 19.2%;
       --screen-width: 54.8%;
       --screen-height: 33.8%;
-      --screen-radius: 12px;
 
-      /* Final cabinet button positions copied from edit mode */
+      /* Your copied cabinet START / SELECT zones */
       --start-left: 43.24%;
       --start-top: 84.91%;
       --start-width: 5.2%;
@@ -32,9 +31,7 @@
       --select-height: 5.6%;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html,
     body {
@@ -43,23 +40,33 @@
       background:
         radial-gradient(circle at 50% 0%, rgba(0,245,255,.16), transparent 34%),
         radial-gradient(circle at 20% 20%, rgba(255,42,163,.18), transparent 28%),
-        var(--deep-bg);
+        var(--bg);
       color: white;
       overflow-x: hidden;
       overscroll-behavior: none;
-    }
-
-    body {
       font-family: Arial, Helvetica, sans-serif;
     }
 
     .scanlines {
+      position: fixed;
+      inset: 0;
       pointer-events: none;
+      z-index: 10000;
+      opacity: .5;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,.045) 0,
+        rgba(255,255,255,.045) 1px,
+        transparent 2px,
+        transparent 5px
+      );
+      mix-blend-mode: overlay;
     }
 
     .arcade-page {
       min-height: 100svh;
       padding: 14px 14px 28px;
+      overflow-x: hidden;
     }
 
     .arcade-top-panel {
@@ -89,29 +96,28 @@
       text-shadow: 0 0 8px rgba(0,0,0,.9);
     }
 
-    .arcade-instructions strong {
-      color: var(--neon-yellow);
-    }
+    .arcade-instructions strong { color: var(--yellow); }
 
     .arcade-controls {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
+      gap: 10px;
       flex-wrap: wrap;
     }
 
-    .arcade-btn {
+    .arcade-btn,
+    .footer-links a {
       border: 0;
       border-radius: 999px;
-      padding: 13px 22px;
+      padding: 13px 20px;
       color: white;
       font-weight: 900;
       letter-spacing: 1px;
       cursor: pointer;
-      background: var(--neon-pink);
+      background: var(--pink);
       box-shadow:
-        0 0 14px rgba(255,42,163,.95),
+        0 0 14px rgba(255,42,163,.88),
         inset 0 -3px 0 rgba(0,0,0,.25);
       font-size: clamp(12px, 1.1vw, 16px);
       text-transform: uppercase;
@@ -124,7 +130,8 @@
       touch-action: manipulation;
     }
 
-    .arcade-btn:hover {
+    .arcade-btn:hover,
+    .footer-links a:hover {
       transform: translateY(-2px);
       background: #00aaff;
       box-shadow: 0 0 18px rgba(0,245,255,.95);
@@ -133,12 +140,12 @@
     .arcade-btn.enter {
       background: #00aaff;
       box-shadow:
-        0 0 14px rgba(0,245,255,.95),
+        0 0 14px rgba(0,245,255,.92),
         inset 0 -3px 0 rgba(0,0,0,.25);
     }
 
     .arcade-btn.enter:hover {
-      background: var(--neon-pink);
+      background: var(--pink);
       box-shadow: 0 0 18px rgba(255,42,163,.95);
     }
 
@@ -146,7 +153,6 @@
       position: relative;
       width: min(99vw, 1180px);
       margin: 0 auto;
-      max-width: 1180px;
     }
 
     .arcade-cabinet-img {
@@ -167,7 +173,7 @@
       top: var(--screen-top);
       width: var(--screen-width);
       height: var(--screen-height);
-      border-radius: var(--screen-radius);
+      border-radius: 12px;
       overflow: hidden;
       background: #050510;
       box-shadow:
@@ -187,21 +193,21 @@
       user-select: none;
     }
 
-    .cabinet-button-hotspot {
+    .cabinet-hotspot {
       position: absolute;
       z-index: 90;
       border: 0;
-      padding: 0;
-      margin: 0;
       background: transparent;
       border-radius: 999px;
-      cursor: pointer;
       transform: translate(-50%, -50%);
+      padding: 0;
+      margin: 0;
+      cursor: pointer;
       touch-action: manipulation;
       -webkit-tap-highlight-color: transparent;
     }
 
-    .cabinet-button-hotspot span {
+    .cabinet-hotspot span {
       position: absolute;
       width: 1px;
       height: 1px;
@@ -210,40 +216,32 @@
       white-space: nowrap;
     }
 
-    #cabinetStartBtn {
+    #cabinetStart {
       left: var(--start-left);
       top: var(--start-top);
       width: var(--start-width);
       height: var(--start-height);
     }
 
-    #cabinetSelectBtn {
+    #cabinetSelect {
       left: var(--select-left);
       top: var(--select-top);
       width: var(--select-width);
       height: var(--select-height);
     }
 
-    body.show-layout .arcade-screen,
-    body.edit-screen .arcade-screen {
+    body.show-layout .arcade-screen {
       outline: 3px solid rgba(255,234,0,.95);
       outline-offset: 2px;
-      box-shadow:
-        inset 0 0 18px rgba(255,234,0,.6),
-        0 0 24px rgba(255,234,0,.8);
     }
 
-    body.show-layout .cabinet-button-hotspot,
-    body.edit-screen .cabinet-button-hotspot {
-      background: rgba(0,245,255,.22);
-      border: 2px solid rgba(0,245,255,.92);
-      box-shadow:
-        0 0 20px rgba(0,245,255,.75),
-        inset 0 0 14px rgba(255,42,163,.35);
+    body.show-layout .cabinet-hotspot {
+      background: rgba(0,245,255,.24);
+      border: 2px solid rgba(0,245,255,.95);
+      box-shadow: 0 0 18px rgba(0,245,255,.8);
     }
 
-    body.show-layout .cabinet-button-hotspot span,
-    body.edit-screen .cabinet-button-hotspot span {
+    body.show-layout .cabinet-hotspot span {
       position: static;
       width: auto;
       height: auto;
@@ -251,10 +249,9 @@
       display: grid;
       place-items: center;
       color: white;
-      font-size: 10px;
       font-weight: 900;
+      font-size: 10px;
       text-shadow: 0 2px 4px black;
-      pointer-events: none;
     }
 
     .mobile-gamepad {
@@ -275,7 +272,7 @@
       user-select: none;
     }
 
-    .mobile-gamepad-grid {
+    .mobile-grid {
       display: grid;
       grid-template-columns: 34px 34px 34px;
       grid-template-rows: 31px 31px 31px;
@@ -287,10 +284,10 @@
         ". down .";
     }
 
-    .mobile-pad-btn {
+    .mobile-pad {
       border: 0;
       border-radius: 9px;
-      background: var(--neon-pink);
+      background: var(--pink);
       color: white;
       font-size: 15px;
       font-weight: 900;
@@ -302,8 +299,8 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    .mobile-pad-btn:active,
-    .mobile-pad-btn.active {
+    .mobile-pad:active,
+    .mobile-pad.active {
       transform: translateY(2px);
       background: #00aaff;
       box-shadow:
@@ -311,12 +308,12 @@
         inset 0 -1px 0 rgba(0,0,0,.24);
     }
 
-    .mobile-pad-up { grid-area: up; }
-    .mobile-pad-left { grid-area: left; }
-    .mobile-pad-right { grid-area: right; }
-    .mobile-pad-down { grid-area: down; }
+    .pad-up { grid-area: up; }
+    .pad-left { grid-area: left; }
+    .pad-right { grid-area: right; }
+    .pad-down { grid-area: down; }
 
-    .mobile-pad-center {
+    .pad-center {
       grid-area: center;
       display: grid;
       place-items: center;
@@ -330,100 +327,26 @@
       background: rgba(0,0,0,.52);
     }
 
-    .editor-panel {
-      position: fixed;
-      left: 10px;
-      right: 10px;
-      bottom: 10px;
-      z-index: 9000;
-      max-width: 580px;
-      margin: 0 auto;
-      padding: 12px;
-      border: 2px solid var(--neon-blue);
-      border-radius: 14px;
-      background: rgba(0,0,0,.94);
-      color: white;
-      box-shadow: 0 0 22px rgba(0,245,255,.65);
-      font-family: Arial, Helvetica, sans-serif;
-    }
-
-    .editor-drag-handle {
+    .footer-links {
+      width: min(99vw, 1180px);
+      margin: 14px auto 0;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      cursor: move;
-      touch-action: none;
-      user-select: none;
-      -webkit-user-select: none;
-      margin-bottom: 6px;
-      padding: 4px 2px 6px;
-      border-bottom: 1px solid rgba(0,245,255,.28);
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 9px;
     }
 
-    .editor-drag-handle strong {
-      color: var(--neon-blue);
-    }
-
-    .editor-drag-handle span {
-      color: var(--neon-yellow);
-      font-size: 10px;
-      font-weight: 900;
-      letter-spacing: .05em;
-      white-space: nowrap;
-    }
-
-    .editor-panel p {
-      margin: 7px 0;
-      font-size: 12px;
-      line-height: 1.35;
-      color: #dffcff;
-    }
-
-    .editor-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 7px;
-      margin-top: 8px;
-    }
-
-    .editor-panel button {
-      border: 0;
-      border-radius: 10px;
-      background: var(--neon-pink);
-      color: white;
-      font-weight: 900;
-      cursor: pointer;
-      padding: 9px;
+    .footer-links a {
+      padding: 10px 14px;
       font-size: 11px;
-    }
-
-    .editor-panel button.secondary {
-      background: #00aaff;
-    }
-
-    .editor-panel textarea {
-      width: 100%;
-      height: 132px;
-      margin-top: 8px;
-      padding: 9px;
-      border: 1px solid var(--neon-blue);
-      border-radius: 10px;
-      background: #050510;
-      color: #dffcff;
-      font-family: monospace;
-      font-size: 11px;
-      box-sizing: border-box;
-    }
-
-    #siteContent {
-      display: none;
+      background: rgba(0,170,255,.92);
     }
 
     @media (max-width: 760px) {
+      body { overflow-x: hidden; }
+
       .arcade-page {
-        min-height: 100svh;
-        padding: 5px 3px 74px;
+        padding: 6px 4px 74px;
         overflow-x: hidden;
       }
 
@@ -452,18 +375,16 @@
       .arcade-btn {
         padding: 9px 11px;
         font-size: 10.5px;
-        border-radius: 999px;
       }
 
       /*
-        Bigger than the viewport, but not extreme.
-        This keeps the cabinet aligned while making the playfield readable.
+        Phone fit mode: modestly larger than viewport, not aggressive.
+        This keeps screen placement locked to the cabinet art.
       */
       .arcade-shell {
-        width: min(132vw, 620px);
+        width: min(122vw, 590px);
         max-width: none;
         margin-left: 50%;
-        margin-right: 0;
         transform: translateX(-50%);
       }
 
@@ -480,16 +401,28 @@
         z-index: 5000;
       }
 
+      .footer-links {
+        margin-top: 10px;
+        padding-bottom: 12px;
+        gap: 7px;
+      }
+
+      .footer-links a {
+        padding: 8px 10px;
+        font-size: 9px;
+      }
+
       body.arcade-desktop-mode {
         overflow-x: auto;
       }
 
       body.arcade-desktop-mode .arcade-page {
         overflow-x: auto;
-        padding-bottom: 78px;
       }
 
-      body.arcade-desktop-mode .arcade-shell {
+      body.arcade-desktop-mode .arcade-top-panel,
+      body.arcade-desktop-mode .arcade-shell,
+      body.arcade-desktop-mode .footer-links {
         width: 1180px;
         max-width: none;
         margin-left: 0;
@@ -497,26 +430,8 @@
         transform: none;
       }
 
-      body.arcade-desktop-mode .arcade-top-panel {
-        width: 1180px;
-        max-width: none;
-        margin-left: 0;
-        margin-right: 0;
-      }
-    }
-
-    @media (max-width: 390px) {
-      .arcade-shell {
-        width: min(138vw, 620px);
-      }
-
-      .arcade-instructions {
-        font-size: 9px;
-      }
-
-      .arcade-btn {
-        padding: 8px 10px;
-        font-size: 10px;
+      body.arcade-desktop-mode .footer-links {
+        justify-content: flex-start;
       }
     }
   </style>
@@ -525,179 +440,512 @@
 <body>
   <div class="scanlines"></div>
 
-  <main id="startScreen" class="arcade-page">
+  <main class="arcade-page">
     <div class="arcade-top-panel">
       <div class="arcade-instructions">
         <strong>HOW TO PLAY:</strong>
-        Move Teddy with arrows, WASD, the phone pad, or drag/touch.
+        Move Teddy with arrows, WASD, phone pad, or drag/touch.
         Collect RK’s emoji timeline. Avoid the flashing <strong>SHORT</strong> skulls.
       </div>
 
       <div class="arcade-controls">
         <button id="startGame" class="arcade-btn" type="button">START</button>
-
-        <a
-          id="enterSite"
-          class="arcade-btn enter"
-          href="teddy.html"
-        >
-          ENTER SITE
-        </a>
+        <a id="enterSite" class="arcade-btn enter" href="teddy.html">ENTER SITE</a>
       </div>
     </div>
 
-    <div class="arcade-shell" id="arcadeShell">
+    <div class="arcade-shell">
       <img
         src="teddy-arcade-cabinet.png"
         alt="$TEDDY Arcade Cabinet"
         class="arcade-cabinet-img"
       />
 
-      <div class="arcade-screen" id="arcadeScreen">
+      <div class="arcade-screen">
         <canvas id="gameCanvas"></canvas>
       </div>
 
-      <button id="cabinetStartBtn" class="cabinet-button-hotspot" type="button" aria-label="Start the arcade game">
+      <button id="cabinetStart" class="cabinet-hotspot" type="button" aria-label="Start arcade game">
         <span>START</span>
       </button>
 
-      <button id="cabinetSelectBtn" class="cabinet-button-hotspot" type="button" aria-label="Toggle fit and desktop view">
+      <button id="cabinetSelect" class="cabinet-hotspot" type="button" aria-label="Toggle mobile and desktop view">
         <span>SELECT</span>
       </button>
     </div>
 
-    <div id="mobileGamepad" class="mobile-gamepad" aria-label="Mobile arcade controls">
-      <div class="mobile-gamepad-grid">
-        <button class="mobile-pad-btn mobile-pad-up" type="button" data-arcade-key="ArrowUp" aria-label="Move up">▲</button>
-        <button class="mobile-pad-btn mobile-pad-left" type="button" data-arcade-key="ArrowLeft" aria-label="Move left">◀</button>
-        <div class="mobile-pad-center">HOLD<br>TO<br>MOVE</div>
-        <button class="mobile-pad-btn mobile-pad-right" type="button" data-arcade-key="ArrowRight" aria-label="Move right">▶</button>
-        <button class="mobile-pad-btn mobile-pad-down" type="button" data-arcade-key="ArrowDown" aria-label="Move down">▼</button>
+    <div class="mobile-gamepad" aria-label="Mobile Teddy controls">
+      <div class="mobile-grid">
+        <button class="mobile-pad pad-up" type="button" data-key="ArrowUp">▲</button>
+        <button class="mobile-pad pad-left" type="button" data-key="ArrowLeft">◀</button>
+        <div class="pad-center">HOLD<br>TO<br>MOVE</div>
+        <button class="mobile-pad pad-right" type="button" data-key="ArrowRight">▶</button>
+        <button class="mobile-pad pad-down" type="button" data-key="ArrowDown">▼</button>
       </div>
     </div>
+
+    <nav class="footer-links" aria-label="Site links">
+      <a href="teddy.html">Rainy Teddy</a>
+      <a href="hq.html">Rabbit Hole</a>
+      <a href="kitty.html">Kitty Files</a>
+      <a href="emoji.html">Emoji Timeline</a>
+      <a href="gmebay.html">GMEBAY</a>
+    </nav>
   </main>
 
-  <section id="siteContent" class="hidden"></section>
-
   <script>
-    window.TEDDY_ENTER_SITE_URL = "teddy.html";
-  </script>
-  <script src="script.js"></script>
+    /* ======================================================
+       SELF-CONTAINED $TEDDY ARCADE
+       This page does NOT depend on script.js.
+    ====================================================== */
 
-  <script>
-    /*
-      Cabinet/mobile helper:
-      - printed START starts game
-      - printed SELECT toggles Fit/Desktop
-      - phone arrows simulate keyboard input
-      - showlayout/edit modes for screen + button alignment
-    */
     (function () {
       const params = new URLSearchParams(window.location.search);
-      const root = document.documentElement;
-      const body = document.body;
+      if (params.has("showlayout")) document.body.classList.add("show-layout");
 
-      const startTop = document.getElementById("startGame");
-      const enterSite = document.getElementById("enterSite");
-      const startCab = document.getElementById("cabinetStartBtn");
-      const selectCab = document.getElementById("cabinetSelectBtn");
       const canvas = document.getElementById("gameCanvas");
-      const screen = document.getElementById("arcadeScreen");
-      const mobileButtons = document.querySelectorAll("[data-arcade-key]");
+      const ctx = canvas.getContext("2d");
+      const startBtn = document.getElementById("startGame");
+      const enterSite = document.getElementById("enterSite");
+      const cabinetStart = document.getElementById("cabinetStart");
+      const cabinetSelect = document.getElementById("cabinetSelect");
+      const mobilePads = document.querySelectorAll("[data-key]");
 
-      if (params.has("showlayout")) body.classList.add("show-layout");
-      if (params.has("editscreen") || params.has("editbuttons")) {
-        body.classList.add("show-layout", "edit-screen");
-      }
+      const isiPhoneLike =
+        /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+        (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
-      const values = {
-        screen: {
-          left: 22.6,
-          top: 19.2,
-          width: 54.8,
-          height: 33.8
-        },
-        start: {
-          left: 43.24,
-          top: 84.91,
-          width: 5.2,
-          height: 5.6
-        },
-        select: {
-          left: 50.38,
-          top: 85.01,
-          width: 5.2,
-          height: 5.6
-        }
+      const ENTER_URL = "teddy.html";
+
+      let animationFrame = null;
+      let running = false;
+      let won = false;
+      let lost = false;
+      let frame = 0;
+      let keys = {};
+      let pointerActive = false;
+      let score = 0;
+      let lives = 3;
+      let nextEmojiIndex = 0;
+      let collectibles = [];
+      let enemies = [];
+      let particles = [];
+
+      const player = {
+        x: 130,
+        y: 250,
+        targetX: 130,
+        targetY: 250,
+        size: 42,
+        speed: 5.2,
+        invincible: 0
       };
 
-      function applyValues() {
-        root.style.setProperty("--screen-left", values.screen.left + "%");
-        root.style.setProperty("--screen-top", values.screen.top + "%");
-        root.style.setProperty("--screen-width", values.screen.width + "%");
-        root.style.setProperty("--screen-height", values.screen.height + "%");
+      const emojiTimeline = [
+        "😳", "💩", "😿", "🥜", "🐸",
+        "🍦", "🤢", "👍", "👊", "💀",
+        "🤓", "👀", "🤩", "⚡", "🎮",
+        "🚀", "🍄", "💥", "🍏", "🤔",
+        "🥴", "💜", "👥", "👌", "🤝",
+        "⛺", "😿", "🎯", "👀", "🐶",
+        "🇺🇸🎤🎶", "👀", "🔥", "💥", "🍻"
+      ];
 
-        root.style.setProperty("--start-left", values.start.left + "%");
-        root.style.setProperty("--start-top", values.start.top + "%");
-        root.style.setProperty("--start-width", values.start.width + "%");
-        root.style.setProperty("--start-height", values.start.height + "%");
-
-        root.style.setProperty("--select-left", values.select.left + "%");
-        root.style.setProperty("--select-top", values.select.top + "%");
-        root.style.setProperty("--select-width", values.select.width + "%");
-        root.style.setProperty("--select-height", values.select.height + "%");
+      function clamp(value, min, max) {
+        return Math.max(min, Math.min(max, value));
       }
 
-      function refresh() {
-        requestAnimationFrame(function () {
-          window.dispatchEvent(new Event("resize"));
+      function gameWidth() {
+        return Math.max(320, canvas.clientWidth || 640);
+      }
+
+      function gameHeight() {
+        return Math.max(180, canvas.clientHeight || 360);
+      }
+
+      function resizeCanvas() {
+        const rect = canvas.getBoundingClientRect();
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const cssW = Math.max(320, Math.floor(rect.width || 900));
+        const cssH = Math.max(180, Math.floor(rect.height || cssW * 0.5625));
+
+        canvas.width = Math.floor(cssW * dpr);
+        canvas.height = Math.floor(cssH * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        player.x = clamp(player.x, 35, cssW - 35);
+        player.y = clamp(player.y, 54, cssH - 35);
+        player.targetX = clamp(player.targetX, 35, cssW - 35);
+        player.targetY = clamp(player.targetY, 54, cssH - 35);
+
+        if (!running && !won && !lost) drawStartScreen();
+      }
+
+      function emojiFont(size, weight = "") {
+        const prefix = weight ? weight + " " : "";
+        return prefix + size + 'px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", Arial, sans-serif';
+      }
+
+      function drawEmoji(text, x, y, size, shadow = "#00f5ff") {
+        ctx.save();
+        ctx.font = emojiFont(size);
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillStyle = "#fff";
+        ctx.shadowColor = isiPhoneLike ? "transparent" : shadow;
+        ctx.shadowBlur = isiPhoneLike ? 0 : 14;
+        ctx.fillText(text, x, y);
+        ctx.restore();
+      }
+
+      function makeCollectible(emoji, index) {
+        const w = gameWidth();
+        const h = gameHeight();
+        return {
+          emoji,
+          x: 80 + Math.random() * Math.max(40, w - 160),
+          y: 70 + Math.random() * Math.max(40, h - 120),
+          size: emoji.length > 3 ? 26 : 32,
+          pulse: index * 0.4,
+          collected: false
+        };
+      }
+
+      function makeEnemy() {
+        const w = gameWidth();
+        const h = gameHeight();
+        const speed = 1.2 + Math.random() * 1.8;
+        return {
+          x: 60 + Math.random() * Math.max(40, w - 120),
+          y: 70 + Math.random() * Math.max(40, h - 120),
+          vx: (Math.random() > 0.5 ? 1 : -1) * speed,
+          vy: (Math.random() > 0.5 ? 1 : -1) * speed,
+          size: 34,
+          wobble: Math.random() * Math.PI * 2
+        };
+      }
+
+      function resetGame(event) {
+        if (event) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+
+        resizeCanvas();
+
+        running = true;
+        won = false;
+        lost = false;
+        frame = 0;
+        score = 0;
+        lives = 3;
+        nextEmojiIndex = 0;
+        collectibles = emojiTimeline.map((emoji, index) => makeCollectible(emoji, index));
+        enemies = Array.from({ length: 5 }, makeEnemy);
+        particles = [];
+
+        player.x = gameWidth() * 0.15;
+        player.y = gameHeight() * 0.5;
+        player.targetX = player.x;
+        player.targetY = player.y;
+        player.invincible = 0;
+
+        if (animationFrame) cancelAnimationFrame(animationFrame);
+        animationFrame = requestAnimationFrame(loop);
+      }
+
+      function spawnParticles(x, y, color, amount = 16) {
+        for (let i = 0; i < amount; i++) {
+          particles.push({
+            x,
+            y,
+            vx: -2.5 + Math.random() * 5,
+            vy: -2.5 + Math.random() * 5,
+            life: 22 + Math.random() * 22,
+            color,
+            size: 1.5 + Math.random() * 3
+          });
+        }
+      }
+
+      function distance(a, b) {
+        return Math.hypot(a.x - b.x, a.y - b.y);
+      }
+
+      function updatePlayer() {
+        const w = gameWidth();
+        const h = gameHeight();
+
+        if (keys.ArrowLeft || keys.a || keys.A) player.targetX -= player.speed;
+        if (keys.ArrowRight || keys.d || keys.D) player.targetX += player.speed;
+        if (keys.ArrowUp || keys.w || keys.W) player.targetY -= player.speed;
+        if (keys.ArrowDown || keys.s || keys.S) player.targetY += player.speed;
+
+        player.targetX = clamp(player.targetX, 35, w - 35);
+        player.targetY = clamp(player.targetY, 54, h - 35);
+
+        player.x += (player.targetX - player.x) * (pointerActive ? 0.22 : 0.16);
+        player.y += (player.targetY - player.y) * (pointerActive ? 0.22 : 0.16);
+
+        if (player.invincible > 0) player.invincible--;
+      }
+
+      function updateEnemies() {
+        const w = gameWidth();
+        const h = gameHeight();
+
+        enemies.forEach((enemy) => {
+          enemy.x += enemy.vx;
+          enemy.y += enemy.vy;
+          enemy.wobble += 0.05;
+
+          if (enemy.x < 34 || enemy.x > w - 34) enemy.vx *= -1;
+          if (enemy.y < 58 || enemy.y > h - 34) enemy.vy *= -1;
+
+          if (player.invincible <= 0 && distance(player, enemy) < (player.size + enemy.size) * 0.46) {
+            lives--;
+            player.invincible = 115;
+            spawnParticles(player.x, player.y, "#ff2aa3", 22);
+
+            if (lives <= 0) endGame(false);
+          }
         });
-        setTimeout(function () { window.dispatchEvent(new Event("resize")); }, 100);
-        setTimeout(function () { window.dispatchEvent(new Event("resize")); }, 300);
       }
 
-      function startGameClean(event) {
-        if (event) {
-          event.preventDefault();
-          event.stopPropagation();
-        }
+      function updateParticles() {
+        particles.forEach((p) => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vx *= 0.96;
+          p.vy *= 0.96;
+          p.life -= 1;
+        });
 
-        refresh();
-
-        if (typeof window.startGame === "function") {
-          window.startGame();
-        } else if (startTop) {
-          startTop.click();
-        }
-
-        refresh();
+        particles = particles.filter((p) => p.life > 0);
       }
 
-      function toggleView(event) {
-        if (event) {
-          event.preventDefault();
-          event.stopPropagation();
-        }
+      function checkCollectibles() {
+        collectibles.forEach((item) => {
+          if (item.collected) return;
 
-        body.classList.toggle("arcade-desktop-mode");
-        localStorage.setItem(
-          "teddyArcadeViewMode",
-          body.classList.contains("arcade-desktop-mode") ? "desktop" : "fit"
-        );
-        refresh();
+          const itemPoint = { x: item.x, y: item.y };
+
+          if (distance(player, itemPoint) < (player.size + item.size) * 0.44) {
+            item.collected = true;
+            score++;
+            spawnParticles(item.x, item.y, "#00f5ff", 18);
+          }
+        });
+
+        if (score >= emojiTimeline.length) {
+          endGame(true);
+        }
       }
 
-      function loadViewMode() {
-        const small = window.matchMedia("(max-width: 760px)").matches;
-        const saved = localStorage.getItem("teddyArcadeViewMode");
+      function drawBackground() {
+        const w = gameWidth();
+        const h = gameHeight();
 
-        if (small && saved === "desktop") {
-          body.classList.add("arcade-desktop-mode");
-        } else {
-          body.classList.remove("arcade-desktop-mode");
+        ctx.clearRect(0, 0, w, h);
+
+        const grad = ctx.createLinearGradient(0, 0, 0, h);
+        grad.addColorStop(0, "#090024");
+        grad.addColorStop(0.52, "#150031");
+        grad.addColorStop(1, "#02020a");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.save();
+        ctx.strokeStyle = "rgba(0,255,255,0.18)";
+        ctx.lineWidth = 1;
+
+        for (let y = 40; y < h; y += 34) {
+          ctx.beginPath();
+          ctx.moveTo(0, y + Math.sin((frame + y) * 0.04) * 2);
+          ctx.lineTo(w, y + Math.sin((frame + y) * 0.04) * 2);
+          ctx.stroke();
         }
 
-        refresh();
+        for (let x = 0; x < w; x += 42) {
+          ctx.beginPath();
+          ctx.moveTo(x + Math.sin((frame + x) * 0.03) * 2, 0);
+          ctx.lineTo(x + Math.sin((frame + x) * 0.03) * 2, h);
+          ctx.stroke();
+        }
+
+        ctx.restore();
+      }
+
+      function drawPlayer() {
+        if (player.invincible > 0 && Math.floor(frame / 5) % 2 === 0) return;
+        drawEmoji("🧸", player.x, player.y, player.size, "#ff2aa3");
+      }
+
+      function drawCollectibles() {
+        collectibles.forEach((item) => {
+          if (item.collected) return;
+
+          item.pulse += 0.08;
+          const bob = Math.sin(item.pulse) * 3;
+          drawEmoji(item.emoji, item.x, item.y + bob, item.size, "#00f5ff");
+        });
+      }
+
+      function drawEnemies() {
+        enemies.forEach((enemy) => {
+          const wobble = Math.sin(enemy.wobble) * 3;
+          drawEmoji("☠️", enemy.x, enemy.y + wobble, enemy.size, "#ff2aa3");
+
+          if (Math.floor(frame / 14) % 2 === 0) {
+            ctx.save();
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.font = "900 11px Arial, sans-serif";
+            ctx.fillStyle = "#ffea00";
+            ctx.shadowColor = "#ffea00";
+            ctx.shadowBlur = 8;
+            ctx.fillText("SHORT", enemy.x, enemy.y + enemy.size * 0.78 + wobble);
+            ctx.restore();
+          }
+        });
+      }
+
+      function drawParticles() {
+        particles.forEach((p) => {
+          ctx.save();
+          ctx.globalAlpha = Math.max(0, p.life / 44);
+          ctx.fillStyle = p.color;
+          ctx.shadowColor = p.color;
+          ctx.shadowBlur = 10;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        });
+      }
+
+      function drawText() {
+        const w = gameWidth();
+        const h = gameHeight();
+
+        ctx.save();
+        ctx.font = "900 15px Arial, sans-serif";
+        ctx.textBaseline = "top";
+        ctx.textAlign = "left";
+        ctx.fillStyle = "#00f5ff";
+        ctx.shadowColor = "#00f5ff";
+        ctx.shadowBlur = 10;
+        ctx.fillText(`EMOJIS ${score}/${emojiTimeline.length}`, 16, 14);
+
+        ctx.textAlign = "right";
+        ctx.fillStyle = "#ffea00";
+        ctx.shadowColor = "#ffea00";
+        ctx.fillText(`LIVES ${"♥".repeat(lives)}`, w - 16, 14);
+
+        ctx.font = "900 12px Arial, sans-serif";
+        ctx.fillStyle = "rgba(255,255,255,.82)";
+        ctx.shadowBlur = 0;
+        ctx.textAlign = "center";
+        ctx.fillText("COLLECT THE TIMELINE. AVOID THE SHORTS.", w / 2, h - 22);
+        ctx.restore();
+      }
+
+      function drawStartScreen() {
+        const w = gameWidth();
+        const h = gameHeight();
+
+        drawBackground();
+
+        ctx.save();
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.font = "900 30px Arial, sans-serif";
+        ctx.fillStyle = "#00f5ff";
+        ctx.shadowColor = "#00f5ff";
+        ctx.shadowBlur = 18;
+        ctx.fillText("INSERT COIN", w / 2, h / 2 - 46);
+
+        drawEmoji("🧸", w / 2, h / 2 + 1, 46, "#ff2aa3");
+
+        ctx.font = "700 15px Arial, sans-serif";
+        ctx.fillStyle = "#fff";
+        ctx.shadowBlur = 0;
+        ctx.fillText("Collect emojis. Avoid the SHORT skulls.", w / 2, h / 2 + 52);
+
+        ctx.fillStyle = "#ffea00";
+        ctx.font = "900 15px Arial, sans-serif";
+        ctx.fillText("PRESS START", w / 2, h / 2 + 80);
+        ctx.restore();
+      }
+
+      function drawEndScreen(success) {
+        const w = gameWidth();
+        const h = gameHeight();
+
+        drawBackground();
+
+        ctx.save();
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        ctx.font = "900 28px Arial, sans-serif";
+        ctx.fillStyle = success ? "#00f5ff" : "#ff2aa3";
+        ctx.shadowColor = success ? "#00f5ff" : "#ff2aa3";
+        ctx.shadowBlur = 18;
+        ctx.fillText(success ? "TIMELINE COMPLETE" : "GAME OVER", w / 2, h / 2 - 36);
+
+        drawEmoji(success ? "🧸🚀" : "☠️", w / 2, h / 2 + 5, 45, success ? "#00f5ff" : "#ff2aa3");
+
+        ctx.font = "800 15px Arial, sans-serif";
+        ctx.fillStyle = "#ffea00";
+        ctx.shadowColor = "#ffea00";
+        ctx.shadowBlur = 10;
+        ctx.fillText(success ? "ENTER SITE unlocked." : "Press START to try again.", w / 2, h / 2 + 54);
+
+        ctx.restore();
+      }
+
+      function endGame(success) {
+        running = false;
+        won = success;
+        lost = !success;
+
+        if (animationFrame) {
+          cancelAnimationFrame(animationFrame);
+          animationFrame = null;
+        }
+
+        drawEndScreen(success);
+      }
+
+      function loop() {
+        if (!running) return;
+
+        frame++;
+
+        drawBackground();
+        updatePlayer();
+        updateEnemies();
+        updateParticles();
+        checkCollectibles();
+
+        drawCollectibles();
+        drawEnemies();
+        drawParticles();
+        drawPlayer();
+        drawText();
+
+        animationFrame = requestAnimationFrame(loop);
+      }
+
+      function pointerToCanvas(event) {
+        const rect = canvas.getBoundingClientRect();
+        const w = gameWidth();
+        const h = gameHeight();
+
+        player.targetX = clamp(((event.clientX - rect.left) / rect.width) * w, 35, w - 35);
+        player.targetY = clamp(((event.clientY - rect.top) / rect.height) * h, 54, h - 35);
+        pointerActive = true;
       }
 
       function fireKey(type, key) {
@@ -707,13 +955,84 @@
           bubbles: true,
           cancelable: true
         });
-
         window.dispatchEvent(event);
         document.dispatchEvent(event);
       }
 
-      mobileButtons.forEach(function (button) {
-        const key = button.dataset.arcadeKey;
+      function toggleView(event) {
+        if (event) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+
+        document.body.classList.toggle("arcade-desktop-mode");
+        setTimeout(resizeCanvas, 80);
+        setTimeout(resizeCanvas, 260);
+      }
+
+      startBtn.addEventListener("click", resetGame);
+      cabinetStart.addEventListener("click", resetGame);
+
+      cabinetSelect.addEventListener("click", toggleView);
+
+      enterSite.addEventListener("click", function (event) {
+        event.preventDefault();
+        window.location.href = ENTER_URL;
+      });
+
+      window.addEventListener("keydown", function (event) {
+        keys[event.key] = true;
+        if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", " "].includes(event.key)) {
+          event.preventDefault();
+        }
+
+        if (event.key === "Enter" && (won || lost)) {
+          if (won) window.location.href = ENTER_URL;
+          else resetGame();
+        }
+      });
+
+      window.addEventListener("keyup", function (event) {
+        keys[event.key] = false;
+      });
+
+      canvas.addEventListener("pointerdown", function (event) {
+        if (!running) {
+          if (lost) resetGame();
+          return;
+        }
+
+        event.preventDefault();
+        pointerToCanvas(event);
+        try { canvas.setPointerCapture(event.pointerId); } catch {}
+      });
+
+      canvas.addEventListener("pointermove", function (event) {
+        if (!running) return;
+        if (!pointerActive && event.pointerType === "mouse") return;
+        event.preventDefault();
+        pointerToCanvas(event);
+      });
+
+      canvas.addEventListener("pointerup", function (event) {
+        pointerActive = false;
+        try { canvas.releasePointerCapture(event.pointerId); } catch {}
+      });
+
+      canvas.addEventListener("pointercancel", function () {
+        pointerActive = false;
+      });
+
+      canvas.addEventListener("touchstart", function (event) {
+        event.preventDefault();
+      }, { passive: false });
+
+      canvas.addEventListener("touchmove", function (event) {
+        event.preventDefault();
+      }, { passive: false });
+
+      mobilePads.forEach((button) => {
+        const key = button.dataset.key;
 
         button.addEventListener("pointerdown", function (event) {
           event.preventDefault();
@@ -722,8 +1041,8 @@
           fireKey("keydown", key);
         });
 
-        ["pointerup", "pointercancel", "pointerleave"].forEach(function (eventName) {
-          button.addEventListener(eventName, function (event) {
+        ["pointerup", "pointercancel", "pointerleave"].forEach((name) => {
+          button.addEventListener(name, function (event) {
             event.preventDefault();
             button.classList.remove("active");
             fireKey("keyup", key);
@@ -731,189 +1050,16 @@
         });
       });
 
-      [canvas, screen].forEach(function (el) {
-        if (!el) return;
-
-        el.addEventListener("touchstart", function (event) {
-          event.preventDefault();
-        }, { passive: false });
-
-        el.addEventListener("touchmove", function (event) {
-          event.preventDefault();
-        }, { passive: false });
-      });
-
-      if (startCab) startCab.addEventListener("click", startGameClean);
-      if (selectCab) selectCab.addEventListener("click", toggleView);
-
-      if (enterSite) {
-        enterSite.addEventListener("click", function (event) {
-          event.preventDefault();
-          window.location.href = window.TEDDY_ENTER_SITE_URL || "teddy.html";
-        });
-      }
-
-      function createEditor() {
-        if (!(params.has("editscreen") || params.has("editbuttons"))) return;
-        if (document.getElementById("editorPanel")) return;
-
-        const panel = document.createElement("div");
-        panel.id = "editorPanel";
-        panel.className = "editor-panel";
-        panel.innerHTML = `
-          <div id="editorDragHandle" class="editor-drag-handle">
-            <strong>Arcade Layout Editor</strong>
-            <span>DRAG BOX</span>
-          </div>
-
-          <p>
-            Use SCREEN buttons to fit the gameplay box. Use START/SELECT buttons only if cabinet button zones need nudging.
-          </p>
-
-          <div class="editor-grid">
-            <button type="button" data-move="screen:-.25:0">SCREEN ←</button>
-            <button type="button" data-move="screen:.25:0">SCREEN →</button>
-            <button type="button" data-move="screen:0:-.25">SCREEN ↑</button>
-            <button type="button" data-move="screen:0:.25">SCREEN ↓</button>
-            <button type="button" data-size="screen:.25:0">SCREEN WIDER</button>
-            <button type="button" data-size="screen:-.25:0">SCREEN NARROWER</button>
-            <button type="button" data-size="screen:0:.25">SCREEN TALLER</button>
-            <button type="button" data-size="screen:0:-.25">SCREEN SHORTER</button>
-          </div>
-
-          <div class="editor-grid">
-            <button type="button" data-move="start:-.25:0">START ←</button>
-            <button type="button" data-move="select:-.25:0">SELECT ←</button>
-            <button type="button" data-move="start:.25:0">START →</button>
-            <button type="button" data-move="select:.25:0">SELECT →</button>
-            <button type="button" data-move="start:0:-.25">START ↑</button>
-            <button type="button" data-move="select:0:-.25">SELECT ↑</button>
-            <button type="button" data-move="start:0:.25">START ↓</button>
-            <button type="button" data-move="select:0:.25">SELECT ↓</button>
-          </div>
-
-          <div class="editor-grid">
-            <button type="button" id="swapButtons" class="secondary">SWAP START / SELECT</button>
-            <button type="button" id="copyLayout" class="secondary">COPY LAYOUT</button>
-          </div>
-
-          <textarea id="layoutOutput" readonly></textarea>
-        `;
-
-        document.body.appendChild(panel);
-
-        panel.querySelectorAll("[data-move]").forEach(function (btn) {
-          btn.addEventListener("click", function () {
-            const [target, dx, dy] = btn.dataset.move.split(":");
-            values[target].left = Number((values[target].left + Number(dx)).toFixed(2));
-            values[target].top = Number((values[target].top + Number(dy)).toFixed(2));
-            applyValues();
-            updateOutput();
-            refresh();
-          });
-        });
-
-        panel.querySelectorAll("[data-size]").forEach(function (btn) {
-          btn.addEventListener("click", function () {
-            const [target, dw, dh] = btn.dataset.size.split(":");
-            values[target].width = Number(Math.max(1, values[target].width + Number(dw)).toFixed(2));
-            values[target].height = Number(Math.max(1, values[target].height + Number(dh)).toFixed(2));
-            applyValues();
-            updateOutput();
-            refresh();
-          });
-        });
-
-        document.getElementById("swapButtons").addEventListener("click", function () {
-          const oldStart = { ...values.start };
-          values.start = { ...values.select };
-          values.select = oldStart;
-          applyValues();
-          updateOutput();
-        });
-
-        document.getElementById("copyLayout").addEventListener("click", async function () {
-          updateOutput();
-          const box = document.getElementById("layoutOutput");
-          try {
-            await navigator.clipboard.writeText(box.value);
-            this.textContent = "COPIED!";
-            setTimeout(() => { this.textContent = "COPY LAYOUT"; }, 1200);
-          } catch {
-            alert("Could not auto-copy. Select the text box and copy manually.");
-          }
-        });
-
-        makePanelMoveable(panel, document.getElementById("editorDragHandle"));
-        updateOutput();
-      }
-
-      function updateOutput() {
-        const box = document.getElementById("layoutOutput");
-        if (!box) return;
-
-        box.value =
-`const arcadeLayout = {
-  screen: { left: ${values.screen.left}, top: ${values.screen.top}, width: ${values.screen.width}, height: ${values.screen.height} },
-  start: { left: ${values.start.left}, top: ${values.start.top}, width: ${values.start.width}, height: ${values.start.height} },
-  select: { left: ${values.select.left}, top: ${values.select.top}, width: ${values.select.width}, height: ${values.select.height} }
-};`;
-      }
-
-      function makePanelMoveable(panel, handle) {
-        if (!panel || !handle) return;
-
-        handle.addEventListener("pointerdown", function (event) {
-          event.preventDefault();
-          event.stopPropagation();
-
-          const rect = panel.getBoundingClientRect();
-          const startX = event.clientX;
-          const startY = event.clientY;
-          const startLeft = rect.left;
-          const startTop = rect.top;
-
-          panel.style.left = startLeft + "px";
-          panel.style.top = startTop + "px";
-          panel.style.right = "auto";
-          panel.style.bottom = "auto";
-          panel.style.margin = "0";
-
-          try { handle.setPointerCapture(event.pointerId); } catch {}
-
-          function clamp(value, min, max) {
-            return Math.max(min, Math.min(max, value));
-          }
-
-          function move(e) {
-            panel.style.left = clamp(startLeft + e.clientX - startX, 4, window.innerWidth - panel.offsetWidth - 4) + "px";
-            panel.style.top = clamp(startTop + e.clientY - startY, 4, window.innerHeight - panel.offsetHeight - 4) + "px";
-          }
-
-          function stop() {
-            try { handle.releasePointerCapture(event.pointerId); } catch {}
-            handle.removeEventListener("pointermove", move);
-            handle.removeEventListener("pointerup", stop);
-            handle.removeEventListener("pointercancel", stop);
-          }
-
-          handle.addEventListener("pointermove", move);
-          handle.addEventListener("pointerup", stop);
-          handle.addEventListener("pointercancel", stop);
-        });
-      }
-
-      applyValues();
-      loadViewMode();
-      createEditor();
-
-      window.addEventListener("resize", refresh);
+      window.addEventListener("resize", resizeCanvas);
       window.addEventListener("orientationchange", function () {
-        setTimeout(refresh, 260);
+        setTimeout(resizeCanvas, 260);
       });
 
-      setTimeout(refresh, 80);
-      setTimeout(refresh, 400);
+      resizeCanvas();
+      drawStartScreen();
+
+      setTimeout(resizeCanvas, 100);
+      setTimeout(resizeCanvas, 500);
     })();
   </script>
 </body>
