@@ -182,15 +182,24 @@
       }
     }
   
+
     /* ======================================================
-       MOBILE ARCADE FIT MODE + PHONE GAME CONTROLS
+       MOBILE ARCADE FIT MODE + COMPACT PHONE CONTROLS
+       v2: larger mobile cabinet, smaller controls, stronger canvas sizing
     ====================================================== */
 
     #gameCanvas,
-    .arcade-screen {
+    .arcade-screen,
+    .mobile-gamepad,
+    .mobile-gamepad * {
       touch-action: none;
       -webkit-user-select: none;
       user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    #gameCanvas {
+      image-rendering: auto;
     }
 
     .arcade-view-toggle {
@@ -202,65 +211,90 @@
 
     .mobile-gamepad {
       display: none;
-      width: min(360px, calc(100vw - 24px));
-      margin: 14px auto 0;
-      padding: 12px;
-      border: 2px solid rgba(0,245,255,.55);
-      border-radius: 22px;
+      width: min(292px, calc(100vw - 20px));
+      margin: 10px auto 0;
+      padding: 8px;
+      border: 2px solid rgba(0,245,255,.5);
+      border-radius: 18px;
       background:
-        linear-gradient(180deg, rgba(255,42,163,.14), rgba(0,245,255,.10)),
-        rgba(0,0,0,.78);
+        linear-gradient(180deg, rgba(255,42,163,.13), rgba(0,245,255,.09)),
+        rgba(0,0,0,.80);
       box-shadow:
-        0 0 18px rgba(0,245,255,.28),
-        0 0 22px rgba(255,42,163,.22);
+        0 0 14px rgba(0,245,255,.25),
+        0 0 16px rgba(255,42,163,.20);
       touch-action: none;
-      -webkit-user-select: none;
-      user-select: none;
     }
 
     .mobile-gamepad-title {
       text-align: center;
       color: #ffea00;
       font-weight: 900;
-      font-size: 12px;
+      font-size: 10px;
       letter-spacing: .08em;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       text-transform: uppercase;
     }
 
     .mobile-gamepad-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      grid-template-rows: 58px 58px 58px;
-      gap: 8px;
+      grid-template-columns: 46px 46px 46px;
+      grid-template-rows: 42px 42px 42px;
+      gap: 6px;
+      justify-content: center;
       grid-template-areas:
         ". up ."
         "left center right"
         ". down .";
     }
 
-    .mobile-pad-btn {
+    .mobile-pad-btn,
+    .mobile-action-btn {
       border: 0;
-      border-radius: 16px;
+      border-radius: 12px;
       background: #ff2aa3;
       color: white;
-      font-size: 28px;
       font-weight: 900;
       cursor: pointer;
       box-shadow:
-        0 0 14px rgba(255,42,163,.75),
-        inset 0 -4px 0 rgba(0,0,0,.28);
+        0 0 10px rgba(255,42,163,.70),
+        inset 0 -3px 0 rgba(0,0,0,.28);
       touch-action: none;
-      -webkit-tap-highlight-color: transparent;
+    }
+
+    .mobile-pad-btn {
+      font-size: 21px;
+      line-height: 1;
+    }
+
+    .mobile-action-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .mobile-action-btn {
+      padding: 9px 8px;
+      font-size: 11px;
+      letter-spacing: .08em;
+      border-radius: 999px;
+    }
+
+    .mobile-action-btn.select {
+      background: #7b2cff;
+      box-shadow:
+        0 0 10px rgba(123,44,255,.80),
+        inset 0 -3px 0 rgba(0,0,0,.28);
     }
 
     .mobile-pad-btn:active,
-    .mobile-pad-btn.active {
+    .mobile-pad-btn.active,
+    .mobile-action-btn:active {
       transform: translateY(2px);
       background: #00aaff;
       box-shadow:
-        0 0 18px rgba(0,245,255,.9),
-        inset 0 -2px 0 rgba(0,0,0,.24);
+        0 0 16px rgba(0,245,255,.90),
+        inset 0 -1px 0 rgba(0,0,0,.24);
     }
 
     .mobile-pad-up { grid-area: up; }
@@ -273,77 +307,99 @@
       display: grid;
       place-items: center;
       color: #dffcff;
-      font-size: 11px;
+      font-size: 9px;
       text-align: center;
-      line-height: 1.25;
-      padding: 6px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.18);
+      line-height: 1.12;
+      padding: 4px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.16);
       background: rgba(0,0,0,.52);
     }
 
     .mobile-gamepad-hint {
       text-align: center;
-      margin-top: 9px;
-      font-size: 11px;
-      line-height: 1.35;
+      margin-top: 6px;
+      font-size: 9px;
+      line-height: 1.25;
       color: #dffcff;
     }
 
     @media (max-width: 760px) {
       body {
         overflow-x: hidden;
+        background: #030306;
       }
 
       .arcade-page {
-        padding: 8px 6px 118px;
+        padding: 6px 4px 86px;
         overflow-x: hidden;
+        min-height: 100svh;
       }
 
       .arcade-top-panel {
-        width: 100%;
+        width: min(100%, 520px);
         max-width: 100%;
-        margin-left: auto;
-        margin-right: auto;
-        padding: 10px;
-        border-radius: 16px;
+        margin: 0 auto 6px;
+        padding: 8px;
+        border-radius: 14px;
+        gap: 8px;
       }
 
-      .arcade-shell {
-        width: 100%;
-        max-width: 100%;
-        margin-left: auto;
-        margin-right: auto;
-      }
-
-      .arcade-screen {
-        border-radius: 7px;
+      .arcade-instructions {
+        flex-basis: 100%;
+        font-size: 10px;
+        line-height: 1.25;
       }
 
       .arcade-controls {
         width: 100%;
         justify-content: center;
-        gap: 8px;
+        gap: 7px;
       }
 
       .arcade-btn {
-        padding: 12px 14px;
-        font-size: 12px;
+        padding: 10px 12px;
+        font-size: 11px;
+        border-radius: 999px;
+      }
+
+      /*
+        Fit mode: cabinet is intentionally a little larger than the phone.
+        This makes the actual game screen big enough for Teddy/emojis to show.
+      */
+      .arcade-shell {
+        width: min(118vw, 560px);
+        max-width: none;
+        margin-left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .arcade-screen {
+        border-radius: 7px;
+        box-shadow:
+          inset 0 0 15px rgba(0,245,255,.54),
+          0 0 12px rgba(0,245,255,.50);
       }
 
       .mobile-gamepad {
         display: block;
-        position: sticky;
-        bottom: 8px;
+        position: fixed;
+        left: 50%;
+        bottom: max(8px, env(safe-area-inset-bottom));
+        transform: translateX(-50%);
         z-index: 5000;
       }
 
+      /*
+        SELECT / desktop mode: full wide cabinet with horizontal scrolling.
+      */
       body.arcade-desktop-mode {
         overflow-x: auto;
       }
 
       body.arcade-desktop-mode .arcade-page {
         overflow-x: auto;
+        align-items: flex-start;
       }
 
       body.arcade-desktop-mode .arcade-top-panel {
@@ -358,13 +414,7 @@
         max-width: none;
         margin-left: 0;
         margin-right: 0;
-      }
-
-      body.arcade-desktop-mode .mobile-gamepad {
-        position: fixed;
-        left: 50%;
-        transform: translateX(-50%);
-        bottom: 8px;
+        transform: none;
       }
     }
 
@@ -404,7 +454,7 @@
 
       <div class="arcade-controls">
         <button id="startGame" class="arcade-btn" type="button">
-          START GAME
+          START
         </button>
 
         <a
@@ -417,7 +467,7 @@
         </a>
 
         <button id="arcadeViewToggle" class="arcade-btn arcade-view-toggle" type="button">
-          DESKTOP VIEW
+          SELECT
         </button>
       </div>
     </div>
@@ -445,8 +495,13 @@
         <button class="mobile-pad-btn mobile-pad-down" type="button" data-arcade-key="ArrowDown" aria-label="Move down">▼</button>
       </div>
 
+      <div class="mobile-action-row">
+        <button id="mobileSelectBtn" class="mobile-action-btn select" type="button">SELECT</button>
+        <button id="mobileStartBtn" class="mobile-action-btn start" type="button">START</button>
+      </div>
+
       <div class="mobile-gamepad-hint">
-        You can also drag directly on the game screen. Use DESKTOP VIEW if the cabinet feels too small.
+        Drag screen or hold arrows. SELECT toggles Fit/Desktop.
       </div>
     </div>
 
@@ -458,15 +513,19 @@
 
   <script>
     /*
-      Mobile arcade helper:
-      - Adds Fit/Desktop view toggle on small screens.
-      - Makes the canvas accept touch/drag without the page stealing the gesture.
-      - Adds D-pad buttons that simulate keyboard movement for the existing game script.
-      This does not replace script.js or the game logic.
+      Mobile arcade helper v2:
+      - START button reliably starts the game.
+      - SELECT toggles Fit/Desktop mobile view.
+      - Compact D-pad simulates the existing keyboard controls.
+      - Canvas is refreshed/resized after START and after toggling view.
+      - Touch-drag on the game screen no longer scrolls the page.
     */
     (function () {
       const body = document.body;
       const viewToggle = document.getElementById("arcadeViewToggle");
+      const mobileSelectBtn = document.getElementById("mobileSelectBtn");
+      const mobileStartBtn = document.getElementById("mobileStartBtn");
+      const startBtn = document.getElementById("startGame");
       const canvas = document.getElementById("gameCanvas");
       const screen = document.querySelector(".arcade-screen");
       const mobileButtons = document.querySelectorAll("[data-arcade-key]");
@@ -475,16 +534,53 @@
         return window.matchMedia("(max-width: 760px)").matches;
       }
 
+      function forceCanvasRefresh() {
+        /*
+          The existing script.js already owns the game logic.
+          This simply nudges it to resize/redraw after mobile layout changes.
+        */
+        requestAnimationFrame(function () {
+          window.dispatchEvent(new Event("resize"));
+        });
+
+        setTimeout(function () {
+          window.dispatchEvent(new Event("resize"));
+        }, 120);
+
+        setTimeout(function () {
+          window.dispatchEvent(new Event("resize"));
+        }, 360);
+      }
+
+      function updateSelectLabels() {
+        const desktop = body.classList.contains("arcade-desktop-mode");
+        const label = desktop ? "FIT" : "SELECT";
+
+        if (viewToggle) {
+          viewToggle.textContent = desktop ? "FIT SCREEN" : "SELECT";
+        }
+
+        if (mobileSelectBtn) {
+          mobileSelectBtn.textContent = label;
+        }
+      }
+
       function setViewMode(mode) {
         if (mode === "desktop") {
           body.classList.add("arcade-desktop-mode");
           localStorage.setItem("teddyArcadeViewMode", "desktop");
-          if (viewToggle) viewToggle.textContent = "FIT SCREEN";
         } else {
           body.classList.remove("arcade-desktop-mode");
           localStorage.setItem("teddyArcadeViewMode", "fit");
-          if (viewToggle) viewToggle.textContent = "DESKTOP VIEW";
         }
+
+        updateSelectLabels();
+        forceCanvasRefresh();
+      }
+
+      function toggleViewMode() {
+        const isDesktop = body.classList.contains("arcade-desktop-mode");
+        setViewMode(isDesktop ? "fit" : "desktop");
       }
 
       function applyInitialViewMode() {
@@ -494,15 +590,60 @@
           setViewMode(saved === "desktop" ? "desktop" : "fit");
         } else {
           body.classList.remove("arcade-desktop-mode");
-          if (viewToggle) viewToggle.textContent = "DESKTOP VIEW";
+          updateSelectLabels();
+          forceCanvasRefresh();
         }
       }
 
+      function startArcadeGame() {
+        forceCanvasRefresh();
+
+        /*
+          Prefer the game's own public function if script.js exposes it.
+          Otherwise, trigger the real START button normally.
+        */
+        if (typeof window.startGame === "function") {
+          window.startGame();
+        } else if (startBtn) {
+          startBtn.click();
+        }
+
+        forceCanvasRefresh();
+      }
+
       if (viewToggle) {
-        viewToggle.addEventListener("click", function () {
-          const isDesktop = body.classList.contains("arcade-desktop-mode");
-          setViewMode(isDesktop ? "fit" : "desktop");
+        viewToggle.addEventListener("click", function (event) {
+          event.preventDefault();
+          event.stopPropagation();
+          toggleViewMode();
         });
+      }
+
+      if (mobileSelectBtn) {
+        mobileSelectBtn.addEventListener("click", function (event) {
+          event.preventDefault();
+          event.stopPropagation();
+          toggleViewMode();
+        });
+      }
+
+      if (mobileStartBtn) {
+        mobileStartBtn.addEventListener("click", function (event) {
+          event.preventDefault();
+          event.stopPropagation();
+          startArcadeGame();
+        });
+      }
+
+      if (startBtn) {
+        /*
+          Capture-phase listener makes START reliable even if another script
+          misses the first tap on mobile.
+        */
+        startBtn.addEventListener("click", function () {
+          forceCanvasRefresh();
+          setTimeout(forceCanvasRefresh, 200);
+        }, true);
       }
 
       function fireKey(type, key) {
@@ -520,18 +661,20 @@
       const activeKeys = new Set();
 
       function startKey(key, button) {
+        if (!key) return;
         activeKeys.add(key);
         button.classList.add("active");
         fireKey("keydown", key);
       }
 
       function stopKey(key, button) {
+        if (!key) return;
         activeKeys.delete(key);
         button.classList.remove("active");
         fireKey("keyup", key);
       }
 
-      mobileButtons.forEach((button) => {
+      mobileButtons.forEach(function (button) {
         const key = button.dataset.arcadeKey;
 
         button.addEventListener("pointerdown", function (event) {
@@ -540,7 +683,7 @@
           startKey(key, button);
         });
 
-        ["pointerup", "pointercancel", "pointerleave"].forEach((eventName) => {
+        ["pointerup", "pointercancel", "pointerleave"].forEach(function (eventName) {
           button.addEventListener(eventName, function (event) {
             event.preventDefault();
             stopKey(key, button);
@@ -553,16 +696,20 @@
       });
 
       window.addEventListener("blur", function () {
-        activeKeys.forEach((key) => fireKey("keyup", key));
+        activeKeys.forEach(function (key) {
+          fireKey("keyup", key);
+        });
+
         activeKeys.clear();
-        mobileButtons.forEach((button) => button.classList.remove("active"));
+        mobileButtons.forEach(function (button) {
+          button.classList.remove("active");
+        });
       });
 
       /*
-        Prevent touch scrolling while dragging the game screen.
-        The existing script.js pointer controls can then move Teddy.
+        Prevent the phone from scrolling while dragging Teddy.
       */
-      [canvas, screen].forEach((el) => {
+      [canvas, screen].forEach(function (el) {
         if (!el) return;
 
         el.addEventListener("touchstart", function (event) {
@@ -572,12 +719,23 @@
         el.addEventListener("touchmove", function (event) {
           event.preventDefault();
         }, { passive: false });
+
+        el.addEventListener("pointerdown", function () {
+          forceCanvasRefresh();
+        });
       });
 
       applyInitialViewMode();
-      window.addEventListener("resize", applyInitialViewMode);
+      window.addEventListener("resize", updateSelectLabels);
+      window.addEventListener("orientationchange", function () {
+        setTimeout(forceCanvasRefresh, 260);
+      });
+
+      setTimeout(forceCanvasRefresh, 80);
+      setTimeout(forceCanvasRefresh, 500);
     })();
   </script>
+
 
 
   <script>
