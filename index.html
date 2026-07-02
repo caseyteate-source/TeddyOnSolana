@@ -265,31 +265,8 @@
       font-size: 21px;
       line-height: 1;
     }
-
-    .mobile-action-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-top: 8px;
-    }
-
-    .mobile-action-btn {
-      padding: 9px 8px;
-      font-size: 11px;
-      letter-spacing: .08em;
-      border-radius: 999px;
-    }
-
-    .mobile-action-btn.select {
-      background: #7b2cff;
-      box-shadow:
-        0 0 10px rgba(123,44,255,.80),
-        inset 0 -3px 0 rgba(0,0,0,.28);
-    }
-
-    .mobile-pad-btn:active,
-    .mobile-pad-btn.active,
-    .mobile-action-btn:active {
+.mobile-pad-btn:active,
+    .mobile-pad-btn.active {
       transform: translateY(2px);
       background: #00aaff;
       box-shadow:
@@ -418,6 +395,167 @@
       }
     }
 
+  
+    /* ======================================================
+       ACTUAL CABINET START / SELECT HOTSPOTS
+       Invisible buttons placed over the printed cabinet graphics.
+    ====================================================== */
+
+    .arcade-shell {
+      position: relative;
+    }
+
+    .cabinet-button-hotspot {
+      position: absolute;
+      z-index: 85;
+      border: 0;
+      padding: 0;
+      margin: 0;
+      background: transparent;
+      border-radius: 999px;
+      cursor: pointer;
+      transform: translate(-50%, -50%);
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    .cabinet-button-hotspot span {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+
+    /*
+      These are percent positions relative to teddy-arcade-cabinet.png.
+      If they need a tiny nudge later, only adjust left/top here.
+    */
+    .cabinet-select-hotspot {
+      left: 45.7%;
+      top: 82.2%;
+      width: 8.2%;
+      height: 5.6%;
+    }
+
+    .cabinet-start-hotspot {
+      left: 56.2%;
+      top: 82.2%;
+      width: 8.2%;
+      height: 5.6%;
+    }
+
+    .cabinet-button-hotspot:active {
+      background: rgba(0,245,255,.16);
+      box-shadow:
+        0 0 18px rgba(0,245,255,.75),
+        inset 0 0 14px rgba(255,42,163,.35);
+    }
+
+    body.arcade-show-cabinet-buttons .cabinet-button-hotspot,
+    body.arcade-edit-buttons .cabinet-button-hotspot {
+      background: rgba(0,245,255,.18);
+      border: 2px solid rgba(0,245,255,.85);
+      box-shadow: 0 0 18px rgba(0,245,255,.55);
+    }
+
+    body.arcade-show-cabinet-buttons .cabinet-button-hotspot span,
+    body.arcade-edit-buttons .cabinet-button-hotspot span {
+      position: static;
+      width: auto;
+      height: auto;
+      clip: auto;
+      display: grid;
+      place-items: center;
+      color: white;
+      font-size: 11px;
+      font-weight: 900;
+      text-shadow: 0 2px 4px black;
+    }
+
+    @media (max-width: 760px) {
+      /*
+        Slightly bigger cabinet in phone fit mode.
+      */
+      .arcade-shell {
+        width: min(124vw, 590px);
+      }
+
+      /*
+        Smaller mobile arrows than v2.
+      */
+      .mobile-gamepad {
+        width: min(258px, calc(100vw - 18px));
+        padding: 7px;
+        border-radius: 16px;
+      }
+
+      .mobile-gamepad-grid {
+        grid-template-columns: 40px 40px 40px;
+        grid-template-rows: 36px 36px 36px;
+        gap: 5px;
+      }
+
+      .mobile-pad-btn {
+        font-size: 18px;
+        border-radius: 10px;
+      }
+
+      .mobile-pad-center {
+        font-size: 8px;
+        border-radius: 10px;
+      }
+
+      .mobile-gamepad-title {
+        font-size: 9px;
+        margin-bottom: 5px;
+      }
+
+      .mobile-gamepad-hint {
+        font-size: 8.5px;
+        margin-top: 5px;
+      }
+    }
+
+  
+    /* ======================================================
+       FINAL MOBILE CLEANUP: no extra START/SELECT row, smaller arrows
+    ====================================================== */
+
+    .mobile-action-row,
+    #mobileStartBtn,
+    #mobileSelectBtn {
+      display: none !important;
+    }
+
+    @media (max-width: 760px) {
+      .arcade-shell {
+        width: min(126vw, 600px);
+      }
+
+      .mobile-gamepad {
+        width: min(236px, calc(100vw - 18px));
+        padding: 6px;
+      }
+
+      .mobile-gamepad-grid {
+        grid-template-columns: 36px 36px 36px;
+        grid-template-rows: 33px 33px 33px;
+        gap: 5px;
+      }
+
+      .mobile-pad-btn {
+        font-size: 16px;
+        border-radius: 9px;
+      }
+
+      .mobile-pad-center {
+        font-size: 7.5px;
+        line-height: 1.08;
+      }
+    }
+
   </style>
 
   <script>
@@ -482,6 +620,25 @@
       <div class="arcade-screen">
         <canvas id="gameCanvas"></canvas>
       </div>
+
+      <!-- Transparent click targets over the actual cabinet START / SELECT graphics -->
+      <button
+        id="cabinetSelectBtn"
+        class="cabinet-button-hotspot cabinet-select-hotspot"
+        type="button"
+        aria-label="Select: toggle mobile and desktop arcade view"
+      >
+        <span>SELECT</span>
+      </button>
+
+      <button
+        id="cabinetStartBtn"
+        class="cabinet-button-hotspot cabinet-start-hotspot"
+        type="button"
+        aria-label="Start the arcade game"
+      >
+        <span>START</span>
+      </button>
     </div>
 
     <div id="mobileGamepad" class="mobile-gamepad" aria-label="Mobile arcade controls">
@@ -494,20 +651,129 @@
         <button class="mobile-pad-btn mobile-pad-right" type="button" data-arcade-key="ArrowRight" aria-label="Move right">▶</button>
         <button class="mobile-pad-btn mobile-pad-down" type="button" data-arcade-key="ArrowDown" aria-label="Move down">▼</button>
       </div>
-
-      <div class="mobile-action-row">
-        <button id="mobileSelectBtn" class="mobile-action-btn select" type="button">SELECT</button>
-        <button id="mobileStartBtn" class="mobile-action-btn start" type="button">START</button>
-      </div>
-
-      <div class="mobile-gamepad-hint">
-        Drag screen or hold arrows. SELECT toggles Fit/Desktop.
+<div class="mobile-gamepad-hint">
+        Drag screen or hold arrows. Use cabinet SELECT to toggle view.
       </div>
     </div>
 
   </main>
 
   <section id="siteContent" class="hidden"></section>
+
+
+  <script>
+    /*
+      iPhone canvas emoji fix:
+      Some iPhones render canvas emojis as dark shadows when the game uses
+      Arial + glow shadows. This patch keeps normal text alone, but when the
+      game draws a mostly-emoji item, it forces Apple Color Emoji and softens
+      the shadow so Teddy/emojis appear as real color emojis.
+    */
+    (function () {
+      if (!window.CanvasRenderingContext2D) return;
+
+      const proto = CanvasRenderingContext2D.prototype;
+      if (proto.__teddyEmojiPatchApplied) return;
+      proto.__teddyEmojiPatchApplied = true;
+
+      const originalFillText = proto.fillText;
+      const originalStrokeText = proto.strokeText;
+
+      const isiPhoneLike =
+        /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+        (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+      function hasEmoji(text) {
+        return /[\u2600-\u27BF]|\uD83C[\uD000-\uDFFF]|\uD83D[\uDC00-\uDFFF]|\uD83E[\uDD00-\uDFFF]/.test(String(text));
+      }
+
+      function mostlyEmoji(text) {
+        const value = String(text).trim();
+
+        /*
+          Single emoji collectibles/player/enemies are the ones that vanish.
+          Do not hijack longer HUD text like "AVOID THE FUD ☠️".
+        */
+        return hasEmoji(value) && value.length <= 8;
+      }
+
+      function emojiFontFrom(currentFont) {
+        const match = String(currentFont || "").match(/(\d+(?:\.\d+)?)px/i);
+        const px = match ? match[1] : "32";
+
+        return `${px}px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Twemoji Mozilla", sans-serif`;
+      }
+
+      proto.fillText = function patchedFillText(text, x, y, maxWidth) {
+        if (!mostlyEmoji(text)) {
+          return originalFillText.apply(this, arguments);
+        }
+
+        const oldFont = this.font;
+        const oldShadowBlur = this.shadowBlur;
+        const oldShadowColor = this.shadowColor;
+        const oldFillStyle = this.fillStyle;
+
+        this.font = emojiFontFrom(oldFont);
+
+        if (isiPhoneLike) {
+          this.shadowBlur = 0;
+          this.shadowColor = "transparent";
+        } else {
+          this.shadowBlur = Math.min(Number(oldShadowBlur) || 0, 6);
+        }
+
+        this.fillStyle = "#ffffff";
+
+        let result;
+        if (typeof maxWidth === "number") {
+          result = originalFillText.call(this, text, x, y, maxWidth);
+        } else {
+          result = originalFillText.call(this, text, x, y);
+        }
+
+        this.font = oldFont;
+        this.shadowBlur = oldShadowBlur;
+        this.shadowColor = oldShadowColor;
+        this.fillStyle = oldFillStyle;
+
+        return result;
+      };
+
+      if (originalStrokeText) {
+        proto.strokeText = function patchedStrokeText(text, x, y, maxWidth) {
+          if (!mostlyEmoji(text)) {
+            return originalStrokeText.apply(this, arguments);
+          }
+
+          const oldFont = this.font;
+          const oldShadowBlur = this.shadowBlur;
+          const oldShadowColor = this.shadowColor;
+
+          this.font = emojiFontFrom(oldFont);
+
+          if (isiPhoneLike) {
+            this.shadowBlur = 0;
+            this.shadowColor = "transparent";
+          }
+
+          let result;
+          if (typeof maxWidth === "number") {
+            result = originalStrokeText.call(this, text, x, y, maxWidth);
+          } else {
+            result = originalStrokeText.call(this, text, x, y);
+          }
+
+          this.font = oldFont;
+          this.shadowBlur = oldShadowBlur;
+          this.shadowColor = oldShadowColor;
+
+          return result;
+        };
+      }
+    })();
+  </script>
+
 
   <script src="script.js"></script>
 
@@ -523,8 +789,6 @@
     (function () {
       const body = document.body;
       const viewToggle = document.getElementById("arcadeViewToggle");
-      const mobileSelectBtn = document.getElementById("mobileSelectBtn");
-      const mobileStartBtn = document.getElementById("mobileStartBtn");
       const startBtn = document.getElementById("startGame");
       const canvas = document.getElementById("gameCanvas");
       const screen = document.querySelector(".arcade-screen");
@@ -559,11 +823,7 @@
         if (viewToggle) {
           viewToggle.textContent = desktop ? "FIT SCREEN" : "SELECT";
         }
-
-        if (mobileSelectBtn) {
-          mobileSelectBtn.textContent = label;
-        }
-      }
+}
 
       function setViewMode(mode) {
         if (mode === "desktop") {
@@ -618,24 +878,7 @@
           toggleViewMode();
         });
       }
-
-      if (mobileSelectBtn) {
-        mobileSelectBtn.addEventListener("click", function (event) {
-          event.preventDefault();
-          event.stopPropagation();
-          toggleViewMode();
-        });
-      }
-
-      if (mobileStartBtn) {
-        mobileStartBtn.addEventListener("click", function (event) {
-          event.preventDefault();
-          event.stopPropagation();
-          startArcadeGame();
-        });
-      }
-
-      if (startBtn) {
+if (startBtn) {
         /*
           Capture-phase listener makes START reliable even if another script
           misses the first tap on mobile.
@@ -756,5 +999,84 @@
       };
     })();
   </script>
+
+  <script>
+    /*
+      Actual cabinet START / SELECT hotspots.
+      START = start the game.
+      SELECT = toggle Fit/Desktop view.
+      Add ?showbuttons=1 to the URL if you ever want to see the invisible hit areas.
+    */
+    (function () {
+      const body = document.body;
+      const cabinetStartBtn = document.getElementById("cabinetStartBtn");
+      const cabinetSelectBtn = document.getElementById("cabinetSelectBtn");
+      const topStartBtn = document.getElementById("startGame");
+      const topSelectBtn = document.getElementById("arcadeViewToggle");
+
+      if (new URLSearchParams(window.location.search).has("showbuttons")) {
+        body.classList.add("arcade-show-cabinet-buttons");
+      }
+
+      function forceCanvasRefresh() {
+        requestAnimationFrame(function () {
+          window.dispatchEvent(new Event("resize"));
+        });
+        setTimeout(function () {
+          window.dispatchEvent(new Event("resize"));
+        }, 120);
+        setTimeout(function () {
+          window.dispatchEvent(new Event("resize"));
+        }, 360);
+      }
+
+      function startGameFromCabinet(event) {
+        if (event) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+
+        forceCanvasRefresh();
+
+        if (typeof window.startGame === "function") {
+          window.startGame();
+        } else if (topStartBtn) {
+          topStartBtn.click();
+        }
+
+        forceCanvasRefresh();
+      }
+
+      function toggleViewFromCabinet(event) {
+        if (event) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+
+        if (topSelectBtn) {
+          topSelectBtn.click();
+        } else {
+          body.classList.toggle("arcade-desktop-mode");
+        }
+
+        forceCanvasRefresh();
+      }
+
+      if (cabinetStartBtn) {
+        cabinetStartBtn.addEventListener("click", startGameFromCabinet);
+        cabinetStartBtn.addEventListener("pointerdown", function (event) {
+          event.preventDefault();
+        });
+      }
+
+      if (cabinetSelectBtn) {
+        cabinetSelectBtn.addEventListener("click", toggleViewFromCabinet);
+        cabinetSelectBtn.addEventListener("pointerdown", function (event) {
+          event.preventDefault();
+        });
+      }
+    })();
+  </script>
+
 </body>
 </html>
