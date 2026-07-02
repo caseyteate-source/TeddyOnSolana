@@ -2,32 +2,70 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>$TEDDY | Insert Coin</title>
   <link rel="stylesheet" href="style.css" />
 
   <style>
+    :root {
+      --neon-pink: #ff2aa3;
+      --neon-blue: #00f5ff;
+      --neon-yellow: #ffea00;
+      --deep-bg: #030306;
+
+      /* Gameplay screen placement inside teddy-arcade-cabinet.png */
+      --screen-left: 22.6%;
+      --screen-top: 19.2%;
+      --screen-width: 54.8%;
+      --screen-height: 33.8%;
+      --screen-radius: 12px;
+
+      /* Final cabinet button positions copied from edit mode */
+      --start-left: 43.24%;
+      --start-top: 84.91%;
+      --start-width: 5.2%;
+      --start-height: 5.6%;
+
+      --select-left: 50.38%;
+      --select-top: 85.01%;
+      --select-width: 5.2%;
+      --select-height: 5.6%;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
     body {
       margin: 0;
+      min-height: 100%;
       background:
         radial-gradient(circle at 50% 0%, rgba(0,245,255,.16), transparent 34%),
         radial-gradient(circle at 20% 20%, rgba(255,42,163,.18), transparent 28%),
-        #030306;
+        var(--deep-bg);
       color: white;
       overflow-x: hidden;
+      overscroll-behavior: none;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .scanlines {
+      pointer-events: none;
     }
 
     .arcade-page {
-      min-height: 100vh;
+      min-height: 100svh;
       padding: 14px 14px 28px;
-      box-sizing: border-box;
     }
 
     .arcade-top-panel {
       width: min(99vw, 1180px);
       margin: 0 auto 12px;
       padding: 12px 16px;
-      box-sizing: border-box;
       border: 2px solid rgba(0,245,255,.5);
       border-radius: 18px;
       background:
@@ -52,7 +90,7 @@
     }
 
     .arcade-instructions strong {
-      color: #ffea00;
+      color: var(--neon-yellow);
     }
 
     .arcade-controls {
@@ -71,7 +109,7 @@
       font-weight: 900;
       letter-spacing: 1px;
       cursor: pointer;
-      background: #ff2aa3;
+      background: var(--neon-pink);
       box-shadow:
         0 0 14px rgba(255,42,163,.95),
         inset 0 -3px 0 rgba(0,0,0,.25);
@@ -82,6 +120,8 @@
       align-items: center;
       justify-content: center;
       line-height: 1;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
     }
 
     .arcade-btn:hover {
@@ -98,7 +138,7 @@
     }
 
     .arcade-btn.enter:hover {
-      background: #ff2aa3;
+      background: var(--neon-pink);
       box-shadow: 0 0 18px rgba(255,42,163,.95);
     }
 
@@ -106,6 +146,7 @@
       position: relative;
       width: min(99vw, 1180px);
       margin: 0 auto;
+      max-width: 1180px;
     }
 
     .arcade-cabinet-img {
@@ -117,24 +158,22 @@
         drop-shadow(0 0 42px rgba(0,245,255,.45));
       user-select: none;
       -webkit-user-drag: none;
+      pointer-events: none;
     }
 
-    /*
-      Game screen placement inside the cabinet.
-      If the screen is slightly off later, only adjust these 4 values.
-    */
     .arcade-screen {
       position: absolute;
-      left: 22.6%;
-      top: 19.2%;
-      width: 54.8%;
-      height: 33.8%;
-      border-radius: 12px;
+      left: var(--screen-left);
+      top: var(--screen-top);
+      width: var(--screen-width);
+      height: var(--screen-height);
+      border-radius: var(--screen-radius);
       overflow: hidden;
       background: #050510;
       box-shadow:
         inset 0 0 22px rgba(0,245,255,.5),
         0 0 18px rgba(0,245,255,.55);
+      touch-action: none;
     }
 
     #gameCanvas {
@@ -143,57 +182,9 @@
       height: 100%;
       background: #050510;
       cursor: crosshair;
-    }
-
-    #siteContent {
-      display: none;
-    }
-
-    @media (max-width: 700px) {
-      .arcade-page {
-        padding: 10px 8px 30px;
-        overflow-x: auto;
-      }
-
-      .arcade-top-panel {
-        width: 1180px;
-        max-width: none;
-        margin-left: 0;
-        margin-right: 0;
-      }
-
-      .arcade-shell {
-        width: 1180px;
-        max-width: none;
-        margin-left: 0;
-        margin-right: 0;
-      }
-
-      body {
-        overflow-x: auto;
-      }
-
-      .arcade-top-panel {
-        justify-content: flex-start;
-      }
-
-      .arcade-instructions {
-        flex-basis: 100%;
-      }
-    }
-  
-    /* ======================================================
-       MOBILE ARCADE + REAL CABINET BUTTONS - CLEAN V6
-    ====================================================== */
-
-    #gameCanvas,
-    .arcade-screen,
-    .mobile-gamepad,
-    .mobile-gamepad * {
       touch-action: none;
       -webkit-user-select: none;
       user-select: none;
-      -webkit-tap-highlight-color: transparent;
     }
 
     .cabinet-button-hotspot {
@@ -206,7 +197,7 @@
       border-radius: 999px;
       cursor: pointer;
       transform: translate(-50%, -50%);
-      touch-action: none;
+      touch-action: manipulation;
       -webkit-tap-highlight-color: transparent;
     }
 
@@ -219,8 +210,31 @@
       white-space: nowrap;
     }
 
-    body.arcade-show-cabinet-buttons .cabinet-button-hotspot,
-    body.arcade-edit-buttons .cabinet-button-hotspot {
+    #cabinetStartBtn {
+      left: var(--start-left);
+      top: var(--start-top);
+      width: var(--start-width);
+      height: var(--start-height);
+    }
+
+    #cabinetSelectBtn {
+      left: var(--select-left);
+      top: var(--select-top);
+      width: var(--select-width);
+      height: var(--select-height);
+    }
+
+    body.show-layout .arcade-screen,
+    body.edit-screen .arcade-screen {
+      outline: 3px solid rgba(255,234,0,.95);
+      outline-offset: 2px;
+      box-shadow:
+        inset 0 0 18px rgba(255,234,0,.6),
+        0 0 24px rgba(255,234,0,.8);
+    }
+
+    body.show-layout .cabinet-button-hotspot,
+    body.edit-screen .cabinet-button-hotspot {
       background: rgba(0,245,255,.22);
       border: 2px solid rgba(0,245,255,.92);
       box-shadow:
@@ -228,8 +242,8 @@
         inset 0 0 14px rgba(255,42,163,.35);
     }
 
-    body.arcade-show-cabinet-buttons .cabinet-button-hotspot span,
-    body.arcade-edit-buttons .cabinet-button-hotspot span {
+    body.show-layout .cabinet-button-hotspot span,
+    body.edit-screen .cabinet-button-hotspot span {
       position: static;
       width: auto;
       height: auto;
@@ -237,7 +251,7 @@
       display: grid;
       place-items: center;
       color: white;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 900;
       text-shadow: 0 2px 4px black;
       pointer-events: none;
@@ -245,35 +259,27 @@
 
     .mobile-gamepad {
       display: none;
-      width: min(236px, calc(100vw - 18px));
+      width: min(214px, calc(100vw - 16px));
       margin: 8px auto 0;
-      padding: 6px;
+      padding: 5px;
       border: 2px solid rgba(0,245,255,.5);
-      border-radius: 16px;
+      border-radius: 14px;
       background:
-        linear-gradient(180deg, rgba(255,42,163,.13), rgba(0,245,255,.09)),
-        rgba(0,0,0,.80);
+        linear-gradient(180deg, rgba(255,42,163,.12), rgba(0,245,255,.08)),
+        rgba(0,0,0,.78);
       box-shadow:
-        0 0 14px rgba(0,245,255,.25),
-        0 0 16px rgba(255,42,163,.20);
+        0 0 12px rgba(0,245,255,.22),
+        0 0 14px rgba(255,42,163,.18);
       touch-action: none;
-    }
-
-    .mobile-gamepad-title {
-      text-align: center;
-      color: #ffea00;
-      font-weight: 900;
-      font-size: 9px;
-      letter-spacing: .08em;
-      margin-bottom: 5px;
-      text-transform: uppercase;
+      -webkit-user-select: none;
+      user-select: none;
     }
 
     .mobile-gamepad-grid {
       display: grid;
-      grid-template-columns: 36px 36px 36px;
-      grid-template-rows: 33px 33px 33px;
-      gap: 5px;
+      grid-template-columns: 34px 34px 34px;
+      grid-template-rows: 31px 31px 31px;
+      gap: 4px;
       justify-content: center;
       grid-template-areas:
         ". up ."
@@ -284,15 +290,16 @@
     .mobile-pad-btn {
       border: 0;
       border-radius: 9px;
-      background: #ff2aa3;
+      background: var(--neon-pink);
       color: white;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 900;
       cursor: pointer;
       box-shadow:
-        0 0 10px rgba(255,42,163,.70),
-        inset 0 -3px 0 rgba(0,0,0,.28);
+        0 0 8px rgba(255,42,163,.62),
+        inset 0 -2px 0 rgba(0,0,0,.26);
       touch-action: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .mobile-pad-btn:active,
@@ -300,7 +307,7 @@
       transform: translateY(2px);
       background: #00aaff;
       box-shadow:
-        0 0 16px rgba(0,245,255,.90),
+        0 0 14px rgba(0,245,255,.9),
         inset 0 -1px 0 rgba(0,0,0,.24);
     }
 
@@ -314,33 +321,25 @@
       display: grid;
       place-items: center;
       color: #dffcff;
-      font-size: 7.5px;
+      font-size: 7px;
       text-align: center;
-      line-height: 1.08;
-      padding: 3px;
+      line-height: 1.05;
+      padding: 2px;
       border-radius: 9px;
       border: 1px solid rgba(255,255,255,.16);
       background: rgba(0,0,0,.52);
     }
 
-    .mobile-gamepad-hint {
-      text-align: center;
-      margin-top: 5px;
-      font-size: 8.5px;
-      line-height: 1.25;
-      color: #dffcff;
-    }
-
-    .cabinet-editor-panel {
+    .editor-panel {
       position: fixed;
       left: 10px;
       right: 10px;
       bottom: 10px;
       z-index: 9000;
-      max-width: 560px;
+      max-width: 580px;
       margin: 0 auto;
       padding: 12px;
-      border: 2px solid #00f5ff;
+      border: 2px solid var(--neon-blue);
       border-radius: 14px;
       background: rgba(0,0,0,.94);
       color: white;
@@ -348,45 +347,67 @@
       font-family: Arial, Helvetica, sans-serif;
     }
 
-    .cabinet-editor-panel strong {
-      color: #00f5ff;
+    .editor-drag-handle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      cursor: move;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+      margin-bottom: 6px;
+      padding: 4px 2px 6px;
+      border-bottom: 1px solid rgba(0,245,255,.28);
     }
 
-    .cabinet-editor-panel p {
+    .editor-drag-handle strong {
+      color: var(--neon-blue);
+    }
+
+    .editor-drag-handle span {
+      color: var(--neon-yellow);
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: .05em;
+      white-space: nowrap;
+    }
+
+    .editor-panel p {
       margin: 7px 0;
       font-size: 12px;
       line-height: 1.35;
       color: #dffcff;
     }
 
-    .cabinet-editor-grid {
+    .editor-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 8px;
+      gap: 7px;
       margin-top: 8px;
     }
 
-    .cabinet-editor-panel button {
+    .editor-panel button {
       border: 0;
       border-radius: 10px;
-      background: #ff2aa3;
+      background: var(--neon-pink);
       color: white;
       font-weight: 900;
       cursor: pointer;
-      padding: 10px;
-      font-size: 12px;
+      padding: 9px;
+      font-size: 11px;
     }
 
-    .cabinet-editor-panel button.secondary {
+    .editor-panel button.secondary {
       background: #00aaff;
     }
 
-    .cabinet-editor-panel textarea {
+    .editor-panel textarea {
       width: 100%;
-      height: 120px;
+      height: 132px;
       margin-top: 8px;
       padding: 9px;
-      border: 1px solid #00f5ff;
+      border: 1px solid var(--neon-blue);
       border-radius: 10px;
       background: #050510;
       color: #dffcff;
@@ -395,157 +416,14 @@
       box-sizing: border-box;
     }
 
-    @media (max-width: 760px) {
-      body {
-        overflow-x: hidden;
-        background: #030306;
-      }
-
-      .arcade-page {
-        padding: 6px 4px 86px;
-        overflow-x: hidden;
-        min-height: 100svh;
-      }
-
-      .arcade-top-panel {
-        width: min(100%, 520px);
-        max-width: 100%;
-        margin: 0 auto 6px;
-        padding: 8px;
-        border-radius: 14px;
-        gap: 8px;
-      }
-
-      .arcade-instructions {
-        flex-basis: 100%;
-        font-size: 10px;
-        line-height: 1.25;
-      }
-
-      .arcade-controls {
-        width: 100%;
-        justify-content: center;
-        gap: 7px;
-      }
-
-      .arcade-btn {
-        padding: 10px 12px;
-        font-size: 11px;
-      }
-
-      /*
-        Mobile fit mode: cabinet is a little wider than the viewport
-        so the game screen, Teddy, and emojis are not microscopic.
-      */
-      .arcade-shell {
-        width: min(126vw, 600px);
-        max-width: none;
-        margin-left: 50%;
-        transform: translateX(-50%);
-      }
-
-      .arcade-screen {
-        border-radius: 7px;
-      }
-
-      .mobile-gamepad {
-        display: block;
-        position: fixed;
-        left: 50%;
-        bottom: max(8px, env(safe-area-inset-bottom));
-        transform: translateX(-50%);
-        z-index: 5000;
-      }
-
-      body.arcade-desktop-mode {
-        overflow-x: auto;
-      }
-
-      body.arcade-desktop-mode .arcade-page {
-        overflow-x: auto;
-      }
-
-      body.arcade-desktop-mode .arcade-top-panel {
-        width: 1180px;
-        max-width: none;
-        margin-left: 0;
-        margin-right: 0;
-      }
-
-      body.arcade-desktop-mode .arcade-shell {
-        width: 1180px;
-        max-width: none;
-        margin-left: 0;
-        margin-right: 0;
-        transform: none;
-      }
+    #siteContent {
+      display: none;
     }
-
-  
-    /* ======================================================
-       MOVEABLE EDIT BOX
-       In ?editbuttons=1 mode, drag the panel by its title bar.
-    ====================================================== */
-
-    .cabinet-editor-drag-handle {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      cursor: move;
-      user-select: none;
-      -webkit-user-select: none;
-      touch-action: none;
-      margin-bottom: 6px;
-      padding: 4px 2px 6px;
-      border-bottom: 1px solid rgba(0,245,255,.28);
-    }
-
-    .cabinet-editor-drag-handle strong {
-      color: #00f5ff;
-    }
-
-    .cabinet-editor-drag-note {
-      color: #ffea00;
-      font-size: 10px;
-      font-weight: 900;
-      letter-spacing: .05em;
-      white-space: nowrap;
-    }
-
-    .cabinet-editor-panel.is-moving {
-      opacity: .92;
-      box-shadow:
-        0 0 26px rgba(0,245,255,.9),
-        0 0 34px rgba(255,42,163,.45);
-    }
-
-  
-    /* ======================================================
-       FINAL MOBILE FIRST-LOOK POLISH V8
-       Bigger playable screen, tighter controls, cleaner first impression.
-    ====================================================== */
 
     @media (max-width: 760px) {
-      html,
-      body {
-        min-height: 100%;
-        background: #030306;
-      }
-
-      body {
-        overflow-x: hidden;
-        overscroll-behavior: none;
-      }
-
-      .scanlines {
-        opacity: .72;
-      }
-
       .arcade-page {
         min-height: 100svh;
-        padding: 5px 3px 78px;
-        display: block;
+        padding: 5px 3px 74px;
         overflow-x: hidden;
       }
 
@@ -578,78 +456,30 @@
       }
 
       /*
-        Mobile fit mode deliberately lets the cabinet extend past the sides.
-        This maximizes the actual game screen so Teddy/emojis are readable.
+        Bigger than the viewport, but not extreme.
+        This keeps the cabinet aligned while making the playfield readable.
       */
       .arcade-shell {
-        width: min(148vw, 690px) !important;
-        max-width: none !important;
-        margin-left: 50% !important;
-        margin-right: 0 !important;
-        transform: translateX(-50%) !important;
-      }
-
-      .arcade-cabinet-img {
-        filter:
-          drop-shadow(0 0 18px rgba(255,42,163,.68))
-          drop-shadow(0 0 28px rgba(0,245,255,.36));
+        width: min(132vw, 620px);
+        max-width: none;
+        margin-left: 50%;
+        margin-right: 0;
+        transform: translateX(-50%);
       }
 
       .arcade-screen {
         border-radius: 8px;
-        box-shadow:
-          inset 0 0 14px rgba(0,245,255,.54),
-          0 0 13px rgba(0,245,255,.50);
-        background: #050510;
-      }
-
-      #gameCanvas {
-        width: 100% !important;
-        height: 100% !important;
-        display: block !important;
       }
 
       .mobile-gamepad {
-        width: min(214px, calc(100vw - 16px)) !important;
-        padding: 5px !important;
-        border-radius: 14px !important;
-        bottom: max(6px, env(safe-area-inset-bottom)) !important;
-        background:
-          linear-gradient(180deg, rgba(255,42,163,.12), rgba(0,245,255,.08)),
-          rgba(0,0,0,.78) !important;
+        display: block;
+        position: fixed;
+        left: 50%;
+        bottom: max(6px, env(safe-area-inset-bottom));
+        transform: translateX(-50%);
+        z-index: 5000;
       }
 
-      .mobile-gamepad-title {
-        display: none;
-      }
-
-      .mobile-gamepad-grid {
-        grid-template-columns: 34px 34px 34px !important;
-        grid-template-rows: 31px 31px 31px !important;
-        gap: 4px !important;
-      }
-
-      .mobile-pad-btn {
-        font-size: 15px !important;
-        border-radius: 9px !important;
-        box-shadow:
-          0 0 8px rgba(255,42,163,.62),
-          inset 0 -2px 0 rgba(0,0,0,.26) !important;
-      }
-
-      .mobile-pad-center {
-        font-size: 7px !important;
-        line-height: 1.05 !important;
-        padding: 2px !important;
-      }
-
-      .mobile-gamepad-hint {
-        display: none;
-      }
-
-      /*
-        Desktop mode is still available through the cabinet SELECT button.
-      */
       body.arcade-desktop-mode {
         overflow-x: auto;
       }
@@ -660,38 +490,24 @@
       }
 
       body.arcade-desktop-mode .arcade-shell {
-        width: 1180px !important;
-        max-width: none !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
-        transform: none !important;
+        width: 1180px;
+        max-width: none;
+        margin-left: 0;
+        margin-right: 0;
+        transform: none;
       }
 
       body.arcade-desktop-mode .arcade-top-panel {
-        width: 1180px !important;
-        max-width: none !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
+        width: 1180px;
+        max-width: none;
+        margin-left: 0;
+        margin-right: 0;
       }
     }
 
-    @media (max-width: 430px) {
+    @media (max-width: 390px) {
       .arcade-shell {
-        width: min(154vw, 690px) !important;
-      }
-
-      .arcade-page {
-        padding-bottom: 74px;
-      }
-    }
-
-    @media (max-width: 380px) {
-      .arcade-shell {
-        width: min(160vw, 690px) !important;
-      }
-
-      .arcade-top-panel {
-        padding: 6px;
+        width: min(138vw, 620px);
       }
 
       .arcade-instructions {
@@ -703,28 +519,7 @@
         font-size: 10px;
       }
     }
-
   </style>
-
-  <script>
-    /*
-      Hard override:
-      Keeps the arcade page/game the same, but forces ENTER SITE to teddy.html
-      even if script.js still has older hq.html routing inside it.
-    */
-    document.addEventListener("click", function (event) {
-      const enterLink = event.target.closest(".arcade-btn.enter, #enterSite, #enterWebsite");
-      if (!enterLink) return;
-
-      event.preventDefault();
-      event.stopPropagation();
-      event.stopImmediatePropagation();
-
-      window.location.href = "teddy.html";
-    }, true);
-
-    window.TEDDY_ENTER_SITE_URL = "teddy.html";
-  </script>
 </head>
 
 <body>
@@ -734,51 +529,44 @@
     <div class="arcade-top-panel">
       <div class="arcade-instructions">
         <strong>HOW TO PLAY:</strong>
-        Move Teddy with arrows, WASD, or drag/touch.
+        Move Teddy with arrows, WASD, the phone pad, or drag/touch.
         Collect RK’s emoji timeline. Avoid the flashing <strong>SHORT</strong> skulls.
       </div>
 
       <div class="arcade-controls">
-        <button id="startGame" class="arcade-btn" type="button">
-          START
-        </button>
+        <button id="startGame" class="arcade-btn" type="button">START</button>
 
         <a
           id="enterSite"
           class="arcade-btn enter"
           href="teddy.html"
-          onclick="event.preventDefault(); event.stopPropagation(); window.location.href='teddy.html'; return false;"
         >
           ENTER SITE
         </a>
       </div>
     </div>
 
-    <div class="arcade-shell">
+    <div class="arcade-shell" id="arcadeShell">
       <img
         src="teddy-arcade-cabinet.png"
         alt="$TEDDY Arcade Cabinet"
         class="arcade-cabinet-img"
       />
 
-      <div class="arcade-screen">
+      <div class="arcade-screen" id="arcadeScreen">
         <canvas id="gameCanvas"></canvas>
       </div>
 
-      <!-- Invisible click targets over the printed cabinet START / SELECT graphics.
-           Use ?showbuttons=1 or ?editbuttons=1 to see them. -->
-      <button id="cabinetStartBtn" class="cabinet-button-hotspot" type="button" aria-label="Start arcade game">
+      <button id="cabinetStartBtn" class="cabinet-button-hotspot" type="button" aria-label="Start the arcade game">
         <span>START</span>
       </button>
 
-      <button id="cabinetSelectBtn" class="cabinet-button-hotspot" type="button" aria-label="Select: toggle fit and desktop view">
+      <button id="cabinetSelectBtn" class="cabinet-button-hotspot" type="button" aria-label="Toggle fit and desktop view">
         <span>SELECT</span>
       </button>
     </div>
 
     <div id="mobileGamepad" class="mobile-gamepad" aria-label="Mobile arcade controls">
-      <div class="mobile-gamepad-title">Mobile Teddy Controls</div>
-
       <div class="mobile-gamepad-grid">
         <button class="mobile-pad-btn mobile-pad-up" type="button" data-arcade-key="ArrowUp" aria-label="Move up">▲</button>
         <button class="mobile-pad-btn mobile-pad-left" type="button" data-arcade-key="ArrowLeft" aria-label="Move left">◀</button>
@@ -786,192 +574,130 @@
         <button class="mobile-pad-btn mobile-pad-right" type="button" data-arcade-key="ArrowRight" aria-label="Move right">▶</button>
         <button class="mobile-pad-btn mobile-pad-down" type="button" data-arcade-key="ArrowDown" aria-label="Move down">▼</button>
       </div>
-
-      <div class="mobile-gamepad-hint">
-        Drag screen or hold arrows. Use cabinet SELECT to toggle view.
-      </div>
     </div>
-
   </main>
 
   <section id="siteContent" class="hidden"></section>
 
-
   <script>
-    /*
-      iPhone canvas emoji fix:
-      Forces Apple Color Emoji for the game emojis/Teddy/skulls and removes
-      the heavy glow on iPhone so they do not render as dark shadows.
-    */
-    (function () {
-      if (!window.CanvasRenderingContext2D) return;
-
-      const proto = CanvasRenderingContext2D.prototype;
-      if (proto.__teddyEmojiPatchApplied) return;
-      proto.__teddyEmojiPatchApplied = true;
-
-      const originalFillText = proto.fillText;
-
-      const isiPhoneLike =
-        /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
-        (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-
-      function hasEmoji(text) {
-        return /[\u2600-\u27BF]|\uD83C[\uD000-\uDFFF]|\uD83D[\uDC00-\uDFFF]|\uD83E[\uDD00-\uDFFF]/.test(String(text));
-      }
-
-      function mostlyEmoji(text) {
-        const value = String(text).trim();
-        return hasEmoji(value) && value.length <= 8;
-      }
-
-      function emojiFontFrom(currentFont) {
-        const match = String(currentFont || "").match(/(\d+(?:\.\d+)?)px/i);
-        const px = match ? match[1] : "32";
-        return `${px}px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif`;
-      }
-
-      proto.fillText = function patchedFillText(text, x, y, maxWidth) {
-        if (!mostlyEmoji(text)) {
-          return originalFillText.apply(this, arguments);
-        }
-
-        const oldFont = this.font;
-        const oldShadowBlur = this.shadowBlur;
-        const oldShadowColor = this.shadowColor;
-        const oldFillStyle = this.fillStyle;
-
-        this.font = emojiFontFrom(oldFont);
-
-        if (isiPhoneLike) {
-          this.shadowBlur = 0;
-          this.shadowColor = "transparent";
-        } else {
-          this.shadowBlur = Math.min(Number(oldShadowBlur) || 0, 5);
-        }
-
-        this.fillStyle = "#ffffff";
-
-        const result = typeof maxWidth === "number"
-          ? originalFillText.call(this, text, x, y, maxWidth)
-          : originalFillText.call(this, text, x, y);
-
-        this.font = oldFont;
-        this.shadowBlur = oldShadowBlur;
-        this.shadowColor = oldShadowColor;
-        this.fillStyle = oldFillStyle;
-
-        return result;
-      };
-    })();
+    window.TEDDY_ENTER_SITE_URL = "teddy.html";
   </script>
-
-
   <script src="script.js"></script>
 
   <script>
     /*
-      Clean mobile + cabinet button helper v6.
-      No stacked old code. No extra START/SELECT row under the arrows.
+      Cabinet/mobile helper:
+      - printed START starts game
+      - printed SELECT toggles Fit/Desktop
+      - phone arrows simulate keyboard input
+      - showlayout/edit modes for screen + button alignment
     */
     (function () {
-      const body = document.body;
-      const startBtn = document.getElementById("startGame");
-      const canvas = document.getElementById("gameCanvas");
-      const screen = document.querySelector(".arcade-screen");
-      const shell = document.querySelector(".arcade-shell");
-      const cabinetStartBtn = document.getElementById("cabinetStartBtn");
-      const cabinetSelectBtn = document.getElementById("cabinetSelectBtn");
-      const mobileButtons = document.querySelectorAll("[data-arcade-key]");
       const params = new URLSearchParams(window.location.search);
+      const root = document.documentElement;
+      const body = document.body;
 
-      const showButtons = params.has("showbuttons");
-      const editButtons = params.has("editbuttons");
+      const startTop = document.getElementById("startGame");
+      const enterSite = document.getElementById("enterSite");
+      const startCab = document.getElementById("cabinetStartBtn");
+      const selectCab = document.getElementById("cabinetSelectBtn");
+      const canvas = document.getElementById("gameCanvas");
+      const screen = document.getElementById("arcadeScreen");
+      const mobileButtons = document.querySelectorAll("[data-arcade-key]");
 
-      const zones = {
-        /*
-          Final cabinet button positions copied from edit mode.
-          START and SELECT are positioned over the actual cabinet graphics.
-        */
-        start: { left: 43.24, top: 84.91, width: 5.2, height: 5.6 },
-        select: { left: 50.38, top: 85.01, width: 5.2, height: 5.6 }
+      if (params.has("showlayout")) body.classList.add("show-layout");
+      if (params.has("editscreen") || params.has("editbuttons")) {
+        body.classList.add("show-layout", "edit-screen");
+      }
+
+      const values = {
+        screen: {
+          left: 22.6,
+          top: 19.2,
+          width: 54.8,
+          height: 33.8
+        },
+        start: {
+          left: 43.24,
+          top: 84.91,
+          width: 5.2,
+          height: 5.6
+        },
+        select: {
+          left: 50.38,
+          top: 85.01,
+          width: 5.2,
+          height: 5.6
+        }
       };
 
-      if (showButtons || editButtons) {
-        body.classList.add("arcade-show-cabinet-buttons");
+      function applyValues() {
+        root.style.setProperty("--screen-left", values.screen.left + "%");
+        root.style.setProperty("--screen-top", values.screen.top + "%");
+        root.style.setProperty("--screen-width", values.screen.width + "%");
+        root.style.setProperty("--screen-height", values.screen.height + "%");
+
+        root.style.setProperty("--start-left", values.start.left + "%");
+        root.style.setProperty("--start-top", values.start.top + "%");
+        root.style.setProperty("--start-width", values.start.width + "%");
+        root.style.setProperty("--start-height", values.start.height + "%");
+
+        root.style.setProperty("--select-left", values.select.left + "%");
+        root.style.setProperty("--select-top", values.select.top + "%");
+        root.style.setProperty("--select-width", values.select.width + "%");
+        root.style.setProperty("--select-height", values.select.height + "%");
       }
 
-      if (editButtons) {
-        body.classList.add("arcade-edit-buttons");
-      }
-
-      function applyZone(button, zone) {
-        if (!button || !zone) return;
-
-        button.style.left = zone.left + "%";
-        button.style.top = zone.top + "%";
-        button.style.width = zone.width + "%";
-        button.style.height = zone.height + "%";
-      }
-
-      function applyAllZones() {
-        applyZone(cabinetStartBtn, zones.start);
-        applyZone(cabinetSelectBtn, zones.select);
-      }
-
-      function forceCanvasRefresh() {
+      function refresh() {
         requestAnimationFrame(function () {
           window.dispatchEvent(new Event("resize"));
         });
-
-        setTimeout(function () {
-          window.dispatchEvent(new Event("resize"));
-        }, 100);
-
-        setTimeout(function () {
-          window.dispatchEvent(new Event("resize"));
-        }, 320);
+        setTimeout(function () { window.dispatchEvent(new Event("resize")); }, 100);
+        setTimeout(function () { window.dispatchEvent(new Event("resize")); }, 300);
       }
 
-      function setViewMode(mode) {
-        if (mode === "desktop") {
-          body.classList.add("arcade-desktop-mode");
-          localStorage.setItem("teddyArcadeViewMode", "desktop");
-        } else {
-          body.classList.remove("arcade-desktop-mode");
-          localStorage.setItem("teddyArcadeViewMode", "fit");
+      function startGameClean(event) {
+        if (event) {
+          event.preventDefault();
+          event.stopPropagation();
         }
 
-        forceCanvasRefresh();
-      }
-
-      function toggleViewMode() {
-        const isDesktop = body.classList.contains("arcade-desktop-mode");
-        setViewMode(isDesktop ? "fit" : "desktop");
-      }
-
-      function applyInitialViewMode() {
-        const saved = localStorage.getItem("teddyArcadeViewMode");
-        const small = window.matchMedia("(max-width: 760px)").matches;
-
-        if (small) {
-          setViewMode(saved === "desktop" ? "desktop" : "fit");
-        } else {
-          body.classList.remove("arcade-desktop-mode");
-          forceCanvasRefresh();
-        }
-      }
-
-      function startArcadeGame() {
-        forceCanvasRefresh();
+        refresh();
 
         if (typeof window.startGame === "function") {
           window.startGame();
-        } else if (startBtn) {
-          startBtn.click();
+        } else if (startTop) {
+          startTop.click();
         }
 
-        forceCanvasRefresh();
+        refresh();
+      }
+
+      function toggleView(event) {
+        if (event) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+
+        body.classList.toggle("arcade-desktop-mode");
+        localStorage.setItem(
+          "teddyArcadeViewMode",
+          body.classList.contains("arcade-desktop-mode") ? "desktop" : "fit"
+        );
+        refresh();
+      }
+
+      function loadViewMode() {
+        const small = window.matchMedia("(max-width: 760px)").matches;
+        const saved = localStorage.getItem("teddyArcadeViewMode");
+
+        if (small && saved === "desktop") {
+          body.classList.add("arcade-desktop-mode");
+        } else {
+          body.classList.remove("arcade-desktop-mode");
+        }
+
+        refresh();
       }
 
       function fireKey(type, key) {
@@ -1003,10 +729,6 @@
             fireKey("keyup", key);
           });
         });
-
-        button.addEventListener("contextmenu", function (event) {
-          event.preventDefault();
-        });
       });
 
       [canvas, screen].forEach(function (el) {
@@ -1019,231 +741,127 @@
         el.addEventListener("touchmove", function (event) {
           event.preventDefault();
         }, { passive: false });
-
-        el.addEventListener("pointerdown", forceCanvasRefresh);
       });
 
-      function moveZone(which, dx, dy) {
-        zones[which].left = Number((zones[which].left + dx).toFixed(2));
-        zones[which].top = Number((zones[which].top + dy).toFixed(2));
-        applyAllZones();
-        updateEditorOutput();
-      }
+      if (startCab) startCab.addEventListener("click", startGameClean);
+      if (selectCab) selectCab.addEventListener("click", toggleView);
 
-      function resizeZone(which, dw, dh) {
-        zones[which].width = Number(Math.max(2, zones[which].width + dw).toFixed(2));
-        zones[which].height = Number(Math.max(2, zones[which].height + dh).toFixed(2));
-        applyAllZones();
-        updateEditorOutput();
-      }
-
-      function swapZones() {
-        const oldStart = { ...zones.start };
-        zones.start = { ...zones.select };
-        zones.select = oldStart;
-        applyAllZones();
-        updateEditorOutput();
-      }
-
-      function makeDraggable(button, which) {
-        if (!button || !editButtons) return;
-
-        button.addEventListener("pointerdown", function (event) {
+      if (enterSite) {
+        enterSite.addEventListener("click", function (event) {
           event.preventDefault();
-          event.stopPropagation();
-
-          try { button.setPointerCapture(event.pointerId); } catch {}
-
-          const rect = shell.getBoundingClientRect();
-          const startX = event.clientX;
-          const startY = event.clientY;
-          const startLeft = zones[which].left;
-          const startTop = zones[which].top;
-
-          function move(e) {
-            zones[which].left = Number((startLeft + ((e.clientX - startX) / rect.width) * 100).toFixed(2));
-            zones[which].top = Number((startTop + ((e.clientY - startY) / rect.height) * 100).toFixed(2));
-            applyAllZones();
-            updateEditorOutput();
-          }
-
-          function stop() {
-            try { button.releasePointerCapture(event.pointerId); } catch {}
-            button.removeEventListener("pointermove", move);
-            button.removeEventListener("pointerup", stop);
-            button.removeEventListener("pointercancel", stop);
-            updateEditorOutput();
-          }
-
-          button.addEventListener("pointermove", move);
-          button.addEventListener("pointerup", stop);
-          button.addEventListener("pointercancel", stop);
+          window.location.href = window.TEDDY_ENTER_SITE_URL || "teddy.html";
         });
       }
 
-      function createEditorPanel() {
-        if (!editButtons || document.getElementById("cabinetEditorPanel")) return;
+      function createEditor() {
+        if (!(params.has("editscreen") || params.has("editbuttons"))) return;
+        if (document.getElementById("editorPanel")) return;
 
         const panel = document.createElement("div");
-        panel.id = "cabinetEditorPanel";
-        panel.className = "cabinet-editor-panel";
+        panel.id = "editorPanel";
+        panel.className = "editor-panel";
         panel.innerHTML = `
-          <div id="cabinetEditorDragHandle" class="cabinet-editor-drag-handle">
-            <strong>Cabinet Button Editor</strong>
-            <span class="cabinet-editor-drag-note">DRAG BOX</span>
-          </div>
-          <p>Drag this edit box out of the way. Then drag START and SELECT boxes, or use the nudge buttons. If the buttons are reversed, tap SWAP.</p>
-
-          <div class="cabinet-editor-grid">
-            <button type="button" data-nudge="start:-1:0">START ←</button>
-            <button type="button" data-nudge="select:-1:0">SELECT ←</button>
-            <button type="button" data-nudge="start:1:0">START →</button>
-            <button type="button" data-nudge="select:1:0">SELECT →</button>
-            <button type="button" data-nudge="start:0:-1">START ↑</button>
-            <button type="button" data-nudge="select:0:-1">SELECT ↑</button>
-            <button type="button" data-nudge="start:0:1">START ↓</button>
-            <button type="button" data-nudge="select:0:1">SELECT ↓</button>
+          <div id="editorDragHandle" class="editor-drag-handle">
+            <strong>Arcade Layout Editor</strong>
+            <span>DRAG BOX</span>
           </div>
 
-          <div class="cabinet-editor-grid">
-            <button type="button" class="secondary" id="swapCabinetZones">SWAP START / SELECT</button>
-            <button type="button" class="secondary" id="copyCabinetZones">COPY POSITIONS</button>
-            <button type="button" data-size="start:1:0">START WIDER</button>
-            <button type="button" data-size="select:1:0">SELECT WIDER</button>
-            <button type="button" data-size="start:-1:0">START NARROWER</button>
-            <button type="button" data-size="select:-1:0">SELECT NARROWER</button>
+          <p>
+            Use SCREEN buttons to fit the gameplay box. Use START/SELECT buttons only if cabinet button zones need nudging.
+          </p>
+
+          <div class="editor-grid">
+            <button type="button" data-move="screen:-.25:0">SCREEN ←</button>
+            <button type="button" data-move="screen:.25:0">SCREEN →</button>
+            <button type="button" data-move="screen:0:-.25">SCREEN ↑</button>
+            <button type="button" data-move="screen:0:.25">SCREEN ↓</button>
+            <button type="button" data-size="screen:.25:0">SCREEN WIDER</button>
+            <button type="button" data-size="screen:-.25:0">SCREEN NARROWER</button>
+            <button type="button" data-size="screen:0:.25">SCREEN TALLER</button>
+            <button type="button" data-size="screen:0:-.25">SCREEN SHORTER</button>
           </div>
 
-          <textarea id="cabinetZonesOutput" readonly></textarea>
+          <div class="editor-grid">
+            <button type="button" data-move="start:-.25:0">START ←</button>
+            <button type="button" data-move="select:-.25:0">SELECT ←</button>
+            <button type="button" data-move="start:.25:0">START →</button>
+            <button type="button" data-move="select:.25:0">SELECT →</button>
+            <button type="button" data-move="start:0:-.25">START ↑</button>
+            <button type="button" data-move="select:0:-.25">SELECT ↑</button>
+            <button type="button" data-move="start:0:.25">START ↓</button>
+            <button type="button" data-move="select:0:.25">SELECT ↓</button>
+          </div>
+
+          <div class="editor-grid">
+            <button type="button" id="swapButtons" class="secondary">SWAP START / SELECT</button>
+            <button type="button" id="copyLayout" class="secondary">COPY LAYOUT</button>
+          </div>
+
+          <textarea id="layoutOutput" readonly></textarea>
         `;
 
         document.body.appendChild(panel);
 
-        panel.querySelectorAll("[data-nudge]").forEach(function (btn) {
+        panel.querySelectorAll("[data-move]").forEach(function (btn) {
           btn.addEventListener("click", function () {
-            const [which, dx, dy] = btn.dataset.nudge.split(":");
-            moveZone(which, Number(dx), Number(dy));
+            const [target, dx, dy] = btn.dataset.move.split(":");
+            values[target].left = Number((values[target].left + Number(dx)).toFixed(2));
+            values[target].top = Number((values[target].top + Number(dy)).toFixed(2));
+            applyValues();
+            updateOutput();
+            refresh();
           });
         });
 
         panel.querySelectorAll("[data-size]").forEach(function (btn) {
           btn.addEventListener("click", function () {
-            const [which, dw, dh] = btn.dataset.size.split(":");
-            resizeZone(which, Number(dw), Number(dh));
+            const [target, dw, dh] = btn.dataset.size.split(":");
+            values[target].width = Number(Math.max(1, values[target].width + Number(dw)).toFixed(2));
+            values[target].height = Number(Math.max(1, values[target].height + Number(dh)).toFixed(2));
+            applyValues();
+            updateOutput();
+            refresh();
           });
         });
 
-        document.getElementById("swapCabinetZones").addEventListener("click", swapZones);
+        document.getElementById("swapButtons").addEventListener("click", function () {
+          const oldStart = { ...values.start };
+          values.start = { ...values.select };
+          values.select = oldStart;
+          applyValues();
+          updateOutput();
+        });
 
-        document.getElementById("copyCabinetZones").addEventListener("click", async function () {
-          updateEditorOutput();
-          const output = document.getElementById("cabinetZonesOutput");
-          const value = output ? output.value : "";
-
+        document.getElementById("copyLayout").addEventListener("click", async function () {
+          updateOutput();
+          const box = document.getElementById("layoutOutput");
           try {
-            await navigator.clipboard.writeText(value);
+            await navigator.clipboard.writeText(box.value);
             this.textContent = "COPIED!";
-            setTimeout(() => { this.textContent = "COPY POSITIONS"; }, 1200);
+            setTimeout(() => { this.textContent = "COPY LAYOUT"; }, 1200);
           } catch {
             alert("Could not auto-copy. Select the text box and copy manually.");
           }
         });
 
-        updateEditorOutput();
+        makePanelMoveable(panel, document.getElementById("editorDragHandle"));
+        updateOutput();
       }
 
-      function updateEditorOutput() {
-        const output = document.getElementById("cabinetZonesOutput");
-        if (!output) return;
+      function updateOutput() {
+        const box = document.getElementById("layoutOutput");
+        if (!box) return;
 
-        output.value =
-`const zones = {
-  start: { left: ${zones.start.left}, top: ${zones.start.top}, width: ${zones.start.width}, height: ${zones.start.height} },
-  select: { left: ${zones.select.left}, top: ${zones.select.top}, width: ${zones.select.width}, height: ${zones.select.height} }
+        box.value =
+`const arcadeLayout = {
+  screen: { left: ${values.screen.left}, top: ${values.screen.top}, width: ${values.screen.width}, height: ${values.screen.height} },
+  start: { left: ${values.start.left}, top: ${values.start.top}, width: ${values.start.width}, height: ${values.start.height} },
+  select: { left: ${values.select.left}, top: ${values.select.top}, width: ${values.select.width}, height: ${values.select.height} }
 };`;
       }
 
-      applyAllZones();
-
-      if (!editButtons) {
-        if (cabinetStartBtn) {
-          cabinetStartBtn.addEventListener("click", function (event) {
-            event.preventDefault();
-            event.stopPropagation();
-            startArcadeGame();
-          });
-        }
-
-        if (cabinetSelectBtn) {
-          cabinetSelectBtn.addEventListener("click", function (event) {
-            event.preventDefault();
-            event.stopPropagation();
-            toggleViewMode();
-          });
-        }
-      } else {
-        makeDraggable(cabinetStartBtn, "start");
-        makeDraggable(cabinetSelectBtn, "select");
-        createEditorPanel();
-      }
-
-      applyInitialViewMode();
-      window.addEventListener("resize", forceCanvasRefresh);
-      window.addEventListener("orientationchange", function () {
-        setTimeout(forceCanvasRefresh, 260);
-      });
-      setTimeout(forceCanvasRefresh, 80);
-      setTimeout(forceCanvasRefresh, 500);
-    })();
-  </script>
-
-
-  <script>
-    /*
-      Second pass after script.js loads:
-      If script.js rewrites the href back to hq.html, this changes it back.
-    */
-    (function () {
-      const enterLink = document.querySelector(".arcade-btn.enter, #enterSite, #enterWebsite");
-      if (!enterLink) return;
-
-      enterLink.setAttribute("href", "teddy.html");
-      enterLink.onclick = function (event) {
-        event.preventDefault();
-        event.stopPropagation();
-        window.location.href = "teddy.html";
-        return false;
-      };
-    })();
-  </script>
-
-  <script>
-    /*
-      Moveable cabinet editor panel.
-      Works only in ?editbuttons=1 mode and lets you drag the edit box itself.
-    */
-    (function () {
-      if (!new URLSearchParams(window.location.search).has("editbuttons")) return;
-
-      function makePanelMoveable() {
-        const panel = document.getElementById("cabinetEditorPanel");
-        if (!panel || panel.dataset.moveable === "yes") return;
-
-        panel.dataset.moveable = "yes";
-
-        let handle = document.getElementById("cabinetEditorDragHandle");
-
-        if (!handle) {
-          handle = document.createElement("div");
-          handle.id = "cabinetEditorDragHandle";
-          handle.className = "cabinet-editor-drag-handle";
-          handle.innerHTML = '<strong>Cabinet Button Editor</strong><span class="cabinet-editor-drag-note">DRAG BOX</span>';
-          panel.insertBefore(handle, panel.firstChild);
-        }
-
-        function clamp(value, min, max) {
-          return Math.max(min, Math.min(max, value));
-        }
+      function makePanelMoveable(panel, handle) {
+        if (!panel || !handle) return;
 
         handle.addEventListener("pointerdown", function (event) {
           event.preventDefault();
@@ -1255,124 +873,48 @@
           const startLeft = rect.left;
           const startTop = rect.top;
 
-          panel.classList.add("is-moving");
           panel.style.left = startLeft + "px";
           panel.style.top = startTop + "px";
           panel.style.right = "auto";
           panel.style.bottom = "auto";
           panel.style.margin = "0";
 
-          try {
-            handle.setPointerCapture(event.pointerId);
-          } catch {}
+          try { handle.setPointerCapture(event.pointerId); } catch {}
 
-          function movePanel(e) {
-            const nextLeft = clamp(startLeft + (e.clientX - startX), 4, window.innerWidth - panel.offsetWidth - 4);
-            const nextTop = clamp(startTop + (e.clientY - startY), 4, window.innerHeight - panel.offsetHeight - 4);
-
-            panel.style.left = nextLeft + "px";
-            panel.style.top = nextTop + "px";
+          function clamp(value, min, max) {
+            return Math.max(min, Math.min(max, value));
           }
 
-          function stopMove() {
-            panel.classList.remove("is-moving");
-
-            try {
-              handle.releasePointerCapture(event.pointerId);
-            } catch {}
-
-            handle.removeEventListener("pointermove", movePanel);
-            handle.removeEventListener("pointerup", stopMove);
-            handle.removeEventListener("pointercancel", stopMove);
+          function move(e) {
+            panel.style.left = clamp(startLeft + e.clientX - startX, 4, window.innerWidth - panel.offsetWidth - 4) + "px";
+            panel.style.top = clamp(startTop + e.clientY - startY, 4, window.innerHeight - panel.offsetHeight - 4) + "px";
           }
 
-          handle.addEventListener("pointermove", movePanel);
-          handle.addEventListener("pointerup", stopMove);
-          handle.addEventListener("pointercancel", stopMove);
+          function stop() {
+            try { handle.releasePointerCapture(event.pointerId); } catch {}
+            handle.removeEventListener("pointermove", move);
+            handle.removeEventListener("pointerup", stop);
+            handle.removeEventListener("pointercancel", stop);
+          }
+
+          handle.addEventListener("pointermove", move);
+          handle.addEventListener("pointerup", stop);
+          handle.addEventListener("pointercancel", stop);
         });
       }
 
-      makePanelMoveable();
-      setTimeout(makePanelMoveable, 100);
-      setTimeout(makePanelMoveable, 500);
-      setTimeout(makePanelMoveable, 1000);
-    })();
-  </script>
+      applyValues();
+      loadViewMode();
+      createEditor();
 
-
-  <script>
-    /*
-      Mobile first-look polish v8:
-      Extra resize/redraw nudges after START, SELECT, orientation change,
-      and first touch so iPhone canvas emojis/game objects appear reliably.
-    */
-    (function () {
-      const params = new URLSearchParams(window.location.search);
-      const startBtn = document.getElementById("startGame");
-      const canvas = document.getElementById("gameCanvas");
-      const cabinetStartBtn = document.getElementById("cabinetStartBtn");
-      const cabinetSelectBtn = document.getElementById("cabinetSelectBtn");
-
-      function refreshArcadeCanvas() {
-        requestAnimationFrame(function () {
-          window.dispatchEvent(new Event("resize"));
-        });
-
-        setTimeout(function () {
-          window.dispatchEvent(new Event("resize"));
-        }, 80);
-
-        setTimeout(function () {
-          window.dispatchEvent(new Event("resize"));
-        }, 220);
-
-        setTimeout(function () {
-          window.dispatchEvent(new Event("resize"));
-        }, 520);
-      }
-
-      function setMobileViewportClass() {
-        document.body.classList.toggle(
-          "arcade-phone-view",
-          window.matchMedia("(max-width: 760px)").matches
-        );
-      }
-
-      [startBtn, cabinetStartBtn, cabinetSelectBtn].forEach(function (btn) {
-        if (!btn) return;
-        btn.addEventListener("click", refreshArcadeCanvas, true);
-        btn.addEventListener("pointerdown", refreshArcadeCanvas, true);
-      });
-
-      if (canvas) {
-        canvas.addEventListener("pointerdown", refreshArcadeCanvas, true);
-        canvas.addEventListener("touchstart", refreshArcadeCanvas, { passive: true });
-      }
-
-      setMobileViewportClass();
-      refreshArcadeCanvas();
-
-      window.addEventListener("resize", function () {
-        setMobileViewportClass();
-        refreshArcadeCanvas();
-      });
-
+      window.addEventListener("resize", refresh);
       window.addEventListener("orientationchange", function () {
-        setTimeout(function () {
-          setMobileViewportClass();
-          refreshArcadeCanvas();
-        }, 260);
+        setTimeout(refresh, 260);
       });
 
-      /*
-        Helpful for testing: ?showbuttons=1 still displays zones,
-        ?editbuttons=1 still shows the movable editor.
-      */
-      if (params.has("showbuttons") || params.has("editbuttons")) {
-        setTimeout(refreshArcadeCanvas, 300);
-      }
+      setTimeout(refresh, 80);
+      setTimeout(refresh, 400);
     })();
   </script>
-
 </body>
 </html>
