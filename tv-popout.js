@@ -596,8 +596,7 @@
   function handleTvClick(event) {
     const target = event.target;
 
-    /* V4 sound-toggle hard ignore */
-    if (isNoTvPopoutTarget(target)) return;
+    /* V5 sound-toggle hard ignore: return without stopping the button's own click */
     if (isNoTvPopoutTarget(target)) return;
     if (!isTvClickTarget(target)) return;
 
