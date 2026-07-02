@@ -1829,11 +1829,30 @@ const rainDryMasks = ${JSON.stringify(rainDryMasks, null, 2)};`;
         playTvVideo("perfectStormVideo", false);
       });
 
-      tvSoundToggle.addEventListener("click", e => {
+
+      let lastSmallSoundToggleAt = 0;
+
+      function toggleSmallTvSound(event) {
+        if (event) {
+          event.preventDefault();
+          event.stopPropagation();
+          event.stopImmediatePropagation();
+        }
+
+        const now = performance.now();
+        if (now - lastSmallSoundToggleAt < 350) return;
+        lastSmallSoundToggleAt = now;
+
+        setTvSound(!tvSoundOn);
+      }
+
+      tvSoundToggle.addEventListener("click", toggleSmallTvSound);
+      tvSoundToggle.addEventListener("touchend", toggleSmallTvSound, { passive: false });
+
+      tvSoundToggle.addEventListener("pointerup", e => {
         e.preventDefault();
         e.stopPropagation();
         e.stopImmediatePropagation();
-        setTvSound(!tvSoundOn);
       });
 
       setTvSound(false);
@@ -1872,24 +1891,6 @@ const rainDryMasks = ${JSON.stringify(rainDryMasks, null, 2)};`;
     }
 
 
-    /*
-      V4 guard: this runs before tv-popout.js loads.
-      It prevents the small sound button from ever being interpreted as
-      a TV click/expand target.
-    */
-    document.addEventListener("click", function guardSmallTvSoundButton(event) {
-      if (event.target && event.target.closest && event.target.closest("#tvSoundToggle")) {
-        event.stopPropagation();
-        event.stopImmediatePropagation();
-      }
-    }, true);
-
-    document.addEventListener("pointerup", function guardSmallTvSoundPointer(event) {
-      if (event.target && event.target.closest && event.target.closest("#tvSoundToggle")) {
-        event.stopPropagation();
-        event.stopImmediatePropagation();
-      }
-    }, true);
 
     initPage();
   </script>
