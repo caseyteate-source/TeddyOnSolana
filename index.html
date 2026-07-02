@@ -182,10 +182,8 @@
       }
     }
   
-
     /* ======================================================
-       MOBILE ARCADE FIT MODE + COMPACT PHONE CONTROLS
-       v2: larger mobile cabinet, smaller controls, stronger canvas sizing
+       MOBILE ARCADE + REAL CABINET BUTTONS - CLEAN V6
     ====================================================== */
 
     #gameCanvas,
@@ -198,24 +196,60 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    #gameCanvas {
-      image-rendering: auto;
+    .cabinet-button-hotspot {
+      position: absolute;
+      z-index: 90;
+      border: 0;
+      padding: 0;
+      margin: 0;
+      background: transparent;
+      border-radius: 999px;
+      cursor: pointer;
+      transform: translate(-50%, -50%);
+      touch-action: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    .arcade-view-toggle {
-      background: #7b2cff;
+    .cabinet-button-hotspot span {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+
+    body.arcade-show-cabinet-buttons .cabinet-button-hotspot,
+    body.arcade-edit-buttons .cabinet-button-hotspot {
+      background: rgba(0,245,255,.22);
+      border: 2px solid rgba(0,245,255,.92);
       box-shadow:
-        0 0 14px rgba(123,44,255,.92),
-        inset 0 -3px 0 rgba(0,0,0,.25);
+        0 0 20px rgba(0,245,255,.75),
+        inset 0 0 14px rgba(255,42,163,.35);
+    }
+
+    body.arcade-show-cabinet-buttons .cabinet-button-hotspot span,
+    body.arcade-edit-buttons .cabinet-button-hotspot span {
+      position: static;
+      width: auto;
+      height: auto;
+      clip: auto;
+      display: grid;
+      place-items: center;
+      color: white;
+      font-size: 11px;
+      font-weight: 900;
+      text-shadow: 0 2px 4px black;
+      pointer-events: none;
     }
 
     .mobile-gamepad {
       display: none;
-      width: min(292px, calc(100vw - 20px));
-      margin: 10px auto 0;
-      padding: 8px;
+      width: min(236px, calc(100vw - 18px));
+      margin: 8px auto 0;
+      padding: 6px;
       border: 2px solid rgba(0,245,255,.5);
-      border-radius: 18px;
+      border-radius: 16px;
       background:
         linear-gradient(180deg, rgba(255,42,163,.13), rgba(0,245,255,.09)),
         rgba(0,0,0,.80);
@@ -229,17 +263,17 @@
       text-align: center;
       color: #ffea00;
       font-weight: 900;
-      font-size: 10px;
+      font-size: 9px;
       letter-spacing: .08em;
-      margin-bottom: 6px;
+      margin-bottom: 5px;
       text-transform: uppercase;
     }
 
     .mobile-gamepad-grid {
       display: grid;
-      grid-template-columns: 46px 46px 46px;
-      grid-template-rows: 42px 42px 42px;
-      gap: 6px;
+      grid-template-columns: 36px 36px 36px;
+      grid-template-rows: 33px 33px 33px;
+      gap: 5px;
       justify-content: center;
       grid-template-areas:
         ". up ."
@@ -247,12 +281,12 @@
         ". down .";
     }
 
-    .mobile-pad-btn,
-    .mobile-action-btn {
+    .mobile-pad-btn {
       border: 0;
-      border-radius: 12px;
+      border-radius: 9px;
       background: #ff2aa3;
       color: white;
+      font-size: 16px;
       font-weight: 900;
       cursor: pointer;
       box-shadow:
@@ -261,11 +295,7 @@
       touch-action: none;
     }
 
-    .mobile-pad-btn {
-      font-size: 21px;
-      line-height: 1;
-    }
-.mobile-pad-btn:active,
+    .mobile-pad-btn:active,
     .mobile-pad-btn.active {
       transform: translateY(2px);
       background: #00aaff;
@@ -284,21 +314,85 @@
       display: grid;
       place-items: center;
       color: #dffcff;
-      font-size: 9px;
+      font-size: 7.5px;
       text-align: center;
-      line-height: 1.12;
-      padding: 4px;
-      border-radius: 12px;
+      line-height: 1.08;
+      padding: 3px;
+      border-radius: 9px;
       border: 1px solid rgba(255,255,255,.16);
       background: rgba(0,0,0,.52);
     }
 
     .mobile-gamepad-hint {
       text-align: center;
-      margin-top: 6px;
-      font-size: 9px;
+      margin-top: 5px;
+      font-size: 8.5px;
       line-height: 1.25;
       color: #dffcff;
+    }
+
+    .cabinet-editor-panel {
+      position: fixed;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      z-index: 9000;
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 12px;
+      border: 2px solid #00f5ff;
+      border-radius: 14px;
+      background: rgba(0,0,0,.94);
+      color: white;
+      box-shadow: 0 0 22px rgba(0,245,255,.65);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .cabinet-editor-panel strong {
+      color: #00f5ff;
+    }
+
+    .cabinet-editor-panel p {
+      margin: 7px 0;
+      font-size: 12px;
+      line-height: 1.35;
+      color: #dffcff;
+    }
+
+    .cabinet-editor-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .cabinet-editor-panel button {
+      border: 0;
+      border-radius: 10px;
+      background: #ff2aa3;
+      color: white;
+      font-weight: 900;
+      cursor: pointer;
+      padding: 10px;
+      font-size: 12px;
+    }
+
+    .cabinet-editor-panel button.secondary {
+      background: #00aaff;
+    }
+
+    .cabinet-editor-panel textarea {
+      width: 100%;
+      height: 120px;
+      margin-top: 8px;
+      padding: 9px;
+      border: 1px solid #00f5ff;
+      border-radius: 10px;
+      background: #050510;
+      color: #dffcff;
+      font-family: monospace;
+      font-size: 11px;
+      box-sizing: border-box;
     }
 
     @media (max-width: 760px) {
@@ -337,15 +431,14 @@
       .arcade-btn {
         padding: 10px 12px;
         font-size: 11px;
-        border-radius: 999px;
       }
 
       /*
-        Fit mode: cabinet is intentionally a little larger than the phone.
-        This makes the actual game screen big enough for Teddy/emojis to show.
+        Mobile fit mode: cabinet is a little wider than the viewport
+        so the game screen, Teddy, and emojis are not microscopic.
       */
       .arcade-shell {
-        width: min(118vw, 560px);
+        width: min(126vw, 600px);
         max-width: none;
         margin-left: 50%;
         transform: translateX(-50%);
@@ -353,9 +446,6 @@
 
       .arcade-screen {
         border-radius: 7px;
-        box-shadow:
-          inset 0 0 15px rgba(0,245,255,.54),
-          0 0 12px rgba(0,245,255,.50);
       }
 
       .mobile-gamepad {
@@ -367,16 +457,12 @@
         z-index: 5000;
       }
 
-      /*
-        SELECT / desktop mode: full wide cabinet with horizontal scrolling.
-      */
       body.arcade-desktop-mode {
         overflow-x: auto;
       }
 
       body.arcade-desktop-mode .arcade-page {
         overflow-x: auto;
-        align-items: flex-start;
       }
 
       body.arcade-desktop-mode .arcade-top-panel {
@@ -393,252 +479,6 @@
         margin-right: 0;
         transform: none;
       }
-    }
-
-  
-    /* ======================================================
-       ACTUAL CABINET START / SELECT HOTSPOTS
-       Invisible buttons placed over the printed cabinet graphics.
-    ====================================================== */
-
-    .arcade-shell {
-      position: relative;
-    }
-
-    .cabinet-button-hotspot {
-      position: absolute;
-      z-index: 85;
-      border: 0;
-      padding: 0;
-      margin: 0;
-      background: transparent;
-      border-radius: 999px;
-      cursor: pointer;
-      transform: translate(-50%, -50%);
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
-    }
-
-    .cabinet-button-hotspot span {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      clip: rect(0 0 0 0);
-      white-space: nowrap;
-    }
-
-    /*
-      These are percent positions relative to teddy-arcade-cabinet.png.
-      If they need a tiny nudge later, only adjust left/top here.
-    */
-    .cabinet-select-hotspot {
-      left: 56.2%;
-      top: 82.2%;
-      width: 8.2%;
-      height: 5.6%;
-    }
-
-    .cabinet-start-hotspot {
-      left: 45.7%;
-      top: 82.2%;
-      width: 8.2%;
-      height: 5.6%;
-    }
-
-    .cabinet-button-hotspot:active {
-      background: rgba(0,245,255,.16);
-      box-shadow:
-        0 0 18px rgba(0,245,255,.75),
-        inset 0 0 14px rgba(255,42,163,.35);
-    }
-
-    body.arcade-show-cabinet-buttons .cabinet-button-hotspot,
-    body.arcade-edit-buttons .cabinet-button-hotspot {
-      background: rgba(0,245,255,.18);
-      border: 2px solid rgba(0,245,255,.85);
-      box-shadow: 0 0 18px rgba(0,245,255,.55);
-    }
-
-    body.arcade-show-cabinet-buttons .cabinet-button-hotspot span,
-    body.arcade-edit-buttons .cabinet-button-hotspot span {
-      position: static;
-      width: auto;
-      height: auto;
-      clip: auto;
-      display: grid;
-      place-items: center;
-      color: white;
-      font-size: 11px;
-      font-weight: 900;
-      text-shadow: 0 2px 4px black;
-    }
-
-    @media (max-width: 760px) {
-      /*
-        Slightly bigger cabinet in phone fit mode.
-      */
-      .arcade-shell {
-        width: min(124vw, 590px);
-      }
-
-      /*
-        Smaller mobile arrows than v2.
-      */
-      .mobile-gamepad {
-        width: min(258px, calc(100vw - 18px));
-        padding: 7px;
-        border-radius: 16px;
-      }
-
-      .mobile-gamepad-grid {
-        grid-template-columns: 40px 40px 40px;
-        grid-template-rows: 36px 36px 36px;
-        gap: 5px;
-      }
-
-      .mobile-pad-btn {
-        font-size: 18px;
-        border-radius: 10px;
-      }
-
-      .mobile-pad-center {
-        font-size: 8px;
-        border-radius: 10px;
-      }
-
-      .mobile-gamepad-title {
-        font-size: 9px;
-        margin-bottom: 5px;
-      }
-
-      .mobile-gamepad-hint {
-        font-size: 8.5px;
-        margin-top: 5px;
-      }
-    }
-
-  
-    /* ======================================================
-       FINAL MOBILE CLEANUP: no extra START/SELECT row, smaller arrows
-    ====================================================== */
-
-    .mobile-action-row,
-    #mobileStartBtn,
-    #mobileSelectBtn {
-      display: none !important;
-    }
-
-    @media (max-width: 760px) {
-      .arcade-shell {
-        width: min(126vw, 600px);
-      }
-
-      .mobile-gamepad {
-        width: min(236px, calc(100vw - 18px));
-        padding: 6px;
-      }
-
-      .mobile-gamepad-grid {
-        grid-template-columns: 36px 36px 36px;
-        grid-template-rows: 33px 33px 33px;
-        gap: 5px;
-      }
-
-      .mobile-pad-btn {
-        font-size: 16px;
-        border-radius: 9px;
-      }
-
-      .mobile-pad-center {
-        font-size: 7.5px;
-        line-height: 1.08;
-      }
-    }
-
-  
-    /* ======================================================
-       CABINET BUTTON EDIT MODE
-       Use ?editbuttons=1 to drag START / SELECT hit zones.
-    ====================================================== */
-
-    .cabinet-button-editor-panel {
-      position: fixed;
-      left: 12px;
-      bottom: 12px;
-      z-index: 9000;
-      width: min(520px, calc(100vw - 24px));
-      padding: 12px;
-      border: 2px solid #00f5ff;
-      border-radius: 14px;
-      background: rgba(0,0,0,.92);
-      color: white;
-      box-shadow: 0 0 22px rgba(0,245,255,.65);
-      font-family: Arial, Helvetica, sans-serif;
-    }
-
-    .cabinet-button-editor-panel strong {
-      color: #00f5ff;
-    }
-
-    .cabinet-button-editor-panel p {
-      margin: 8px 0;
-      font-size: 12px;
-      line-height: 1.35;
-      color: #dffcff;
-    }
-
-    .cabinet-button-editor-panel button {
-      width: 100%;
-      margin-top: 7px;
-      padding: 10px;
-      border: 0;
-      border-radius: 10px;
-      background: #ff2aa3;
-      color: white;
-      font-weight: 900;
-      cursor: pointer;
-    }
-
-    .cabinet-button-editor-panel button.secondary {
-      background: #00aaff;
-    }
-
-    .cabinet-button-editor-panel textarea {
-      width: 100%;
-      height: 138px;
-      margin-top: 8px;
-      padding: 9px;
-      border: 1px solid #00f5ff;
-      border-radius: 10px;
-      background: #050510;
-      color: #dffcff;
-      font-family: monospace;
-      font-size: 11px;
-    }
-
-    body.arcade-edit-buttons .cabinet-button-hotspot {
-      pointer-events: auto;
-      background: rgba(0,245,255,.22) !important;
-      border: 2px solid #00f5ff !important;
-      box-shadow:
-        0 0 20px rgba(0,245,255,.82),
-        inset 0 0 14px rgba(255,42,163,.32) !important;
-      touch-action: none;
-    }
-
-    body.arcade-edit-buttons .cabinet-button-hotspot span {
-      position: static;
-      width: auto;
-      height: auto;
-      clip: auto;
-      display: grid;
-      place-items: center;
-      color: white;
-      font-size: 11px;
-      font-weight: 900;
-      text-shadow: 0 2px 4px black;
-      pointer-events: none;
     }
 
   </style>
@@ -688,10 +528,6 @@
         >
           ENTER SITE
         </a>
-
-        <button id="arcadeViewToggle" class="arcade-btn arcade-view-toggle" type="button">
-          SELECT
-        </button>
       </div>
     </div>
 
@@ -706,23 +542,14 @@
         <canvas id="gameCanvas"></canvas>
       </div>
 
-      <!-- Transparent click targets over the actual cabinet START / SELECT graphics -->
-      <button
-        id="cabinetSelectBtn"
-        class="cabinet-button-hotspot cabinet-select-hotspot"
-        type="button"
-        aria-label="Select: toggle mobile and desktop arcade view"
-      >
-        <span>SELECT</span>
+      <!-- Invisible click targets over the printed cabinet START / SELECT graphics.
+           Use ?showbuttons=1 or ?editbuttons=1 to see them. -->
+      <button id="cabinetStartBtn" class="cabinet-button-hotspot" type="button" aria-label="Start arcade game">
+        <span>START</span>
       </button>
 
-      <button
-        id="cabinetStartBtn"
-        class="cabinet-button-hotspot cabinet-start-hotspot"
-        type="button"
-        aria-label="Start the arcade game"
-      >
-        <span>START</span>
+      <button id="cabinetSelectBtn" class="cabinet-button-hotspot" type="button" aria-label="Select: toggle fit and desktop view">
+        <span>SELECT</span>
       </button>
     </div>
 
@@ -736,7 +563,8 @@
         <button class="mobile-pad-btn mobile-pad-right" type="button" data-arcade-key="ArrowRight" aria-label="Move right">▶</button>
         <button class="mobile-pad-btn mobile-pad-down" type="button" data-arcade-key="ArrowDown" aria-label="Move down">▼</button>
       </div>
-<div class="mobile-gamepad-hint">
+
+      <div class="mobile-gamepad-hint">
         Drag screen or hold arrows. Use cabinet SELECT to toggle view.
       </div>
     </div>
@@ -749,10 +577,8 @@
   <script>
     /*
       iPhone canvas emoji fix:
-      Some iPhones render canvas emojis as dark shadows when the game uses
-      Arial + glow shadows. This patch keeps normal text alone, but when the
-      game draws a mostly-emoji item, it forces Apple Color Emoji and softens
-      the shadow so Teddy/emojis appear as real color emojis.
+      Forces Apple Color Emoji for the game emojis/Teddy/skulls and removes
+      the heavy glow on iPhone so they do not render as dark shadows.
     */
     (function () {
       if (!window.CanvasRenderingContext2D) return;
@@ -762,7 +588,6 @@
       proto.__teddyEmojiPatchApplied = true;
 
       const originalFillText = proto.fillText;
-      const originalStrokeText = proto.strokeText;
 
       const isiPhoneLike =
         /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
@@ -774,19 +599,13 @@
 
       function mostlyEmoji(text) {
         const value = String(text).trim();
-
-        /*
-          Single emoji collectibles/player/enemies are the ones that vanish.
-          Do not hijack longer HUD text like "AVOID THE FUD ☠️".
-        */
         return hasEmoji(value) && value.length <= 8;
       }
 
       function emojiFontFrom(currentFont) {
         const match = String(currentFont || "").match(/(\d+(?:\.\d+)?)px/i);
         const px = match ? match[1] : "32";
-
-        return `${px}px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Twemoji Mozilla", sans-serif`;
+        return `${px}px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif`;
       }
 
       proto.fillText = function patchedFillText(text, x, y, maxWidth) {
@@ -805,17 +624,14 @@
           this.shadowBlur = 0;
           this.shadowColor = "transparent";
         } else {
-          this.shadowBlur = Math.min(Number(oldShadowBlur) || 0, 6);
+          this.shadowBlur = Math.min(Number(oldShadowBlur) || 0, 5);
         }
 
         this.fillStyle = "#ffffff";
 
-        let result;
-        if (typeof maxWidth === "number") {
-          result = originalFillText.call(this, text, x, y, maxWidth);
-        } else {
-          result = originalFillText.call(this, text, x, y);
-        }
+        const result = typeof maxWidth === "number"
+          ? originalFillText.call(this, text, x, y, maxWidth)
+          : originalFillText.call(this, text, x, y);
 
         this.font = oldFont;
         this.shadowBlur = oldShadowBlur;
@@ -824,38 +640,6 @@
 
         return result;
       };
-
-      if (originalStrokeText) {
-        proto.strokeText = function patchedStrokeText(text, x, y, maxWidth) {
-          if (!mostlyEmoji(text)) {
-            return originalStrokeText.apply(this, arguments);
-          }
-
-          const oldFont = this.font;
-          const oldShadowBlur = this.shadowBlur;
-          const oldShadowColor = this.shadowColor;
-
-          this.font = emojiFontFrom(oldFont);
-
-          if (isiPhoneLike) {
-            this.shadowBlur = 0;
-            this.shadowColor = "transparent";
-          }
-
-          let result;
-          if (typeof maxWidth === "number") {
-            result = originalStrokeText.call(this, text, x, y, maxWidth);
-          } else {
-            result = originalStrokeText.call(this, text, x, y);
-          }
-
-          this.font = oldFont;
-          this.shadowBlur = oldShadowBlur;
-          this.shadowColor = oldShadowColor;
-
-          return result;
-        };
-      }
     })();
   </script>
 
@@ -864,51 +648,67 @@
 
   <script>
     /*
-      Mobile arcade helper v2:
-      - START button reliably starts the game.
-      - SELECT toggles Fit/Desktop mobile view.
-      - Compact D-pad simulates the existing keyboard controls.
-      - Canvas is refreshed/resized after START and after toggling view.
-      - Touch-drag on the game screen no longer scrolls the page.
+      Clean mobile + cabinet button helper v6.
+      No stacked old code. No extra START/SELECT row under the arrows.
     */
     (function () {
       const body = document.body;
-      const viewToggle = document.getElementById("arcadeViewToggle");
       const startBtn = document.getElementById("startGame");
       const canvas = document.getElementById("gameCanvas");
       const screen = document.querySelector(".arcade-screen");
+      const shell = document.querySelector(".arcade-shell");
+      const cabinetStartBtn = document.getElementById("cabinetStartBtn");
+      const cabinetSelectBtn = document.getElementById("cabinetSelectBtn");
       const mobileButtons = document.querySelectorAll("[data-arcade-key]");
+      const params = new URLSearchParams(window.location.search);
 
-      function isSmallScreen() {
-        return window.matchMedia("(max-width: 760px)").matches;
+      const showButtons = params.has("showbuttons");
+      const editButtons = params.has("editbuttons");
+
+      const zones = {
+        /*
+          Defaults can be changed in edit mode. These are just starting points.
+          START and SELECT are intentionally separated far enough to avoid overlap.
+        */
+        start: { left: 45.7, top: 82.2, width: 8.2, height: 5.6 },
+        select: { left: 56.2, top: 82.2, width: 8.2, height: 5.6 }
+      };
+
+      if (showButtons || editButtons) {
+        body.classList.add("arcade-show-cabinet-buttons");
+      }
+
+      if (editButtons) {
+        body.classList.add("arcade-edit-buttons");
+      }
+
+      function applyZone(button, zone) {
+        if (!button || !zone) return;
+
+        button.style.left = zone.left + "%";
+        button.style.top = zone.top + "%";
+        button.style.width = zone.width + "%";
+        button.style.height = zone.height + "%";
+      }
+
+      function applyAllZones() {
+        applyZone(cabinetStartBtn, zones.start);
+        applyZone(cabinetSelectBtn, zones.select);
       }
 
       function forceCanvasRefresh() {
-        /*
-          The existing script.js already owns the game logic.
-          This simply nudges it to resize/redraw after mobile layout changes.
-        */
         requestAnimationFrame(function () {
           window.dispatchEvent(new Event("resize"));
         });
 
         setTimeout(function () {
           window.dispatchEvent(new Event("resize"));
-        }, 120);
+        }, 100);
 
         setTimeout(function () {
           window.dispatchEvent(new Event("resize"));
-        }, 360);
+        }, 320);
       }
-
-      function updateSelectLabels() {
-        const desktop = body.classList.contains("arcade-desktop-mode");
-        const label = desktop ? "FIT" : "SELECT";
-
-        if (viewToggle) {
-          viewToggle.textContent = desktop ? "FIT SCREEN" : "SELECT";
-        }
-}
 
       function setViewMode(mode) {
         if (mode === "desktop") {
@@ -919,7 +719,6 @@
           localStorage.setItem("teddyArcadeViewMode", "fit");
         }
 
-        updateSelectLabels();
         forceCanvasRefresh();
       }
 
@@ -930,12 +729,12 @@
 
       function applyInitialViewMode() {
         const saved = localStorage.getItem("teddyArcadeViewMode");
+        const small = window.matchMedia("(max-width: 760px)").matches;
 
-        if (isSmallScreen()) {
+        if (small) {
           setViewMode(saved === "desktop" ? "desktop" : "fit");
         } else {
           body.classList.remove("arcade-desktop-mode");
-          updateSelectLabels();
           forceCanvasRefresh();
         }
       }
@@ -943,10 +742,6 @@
       function startArcadeGame() {
         forceCanvasRefresh();
 
-        /*
-          Prefer the game's own public function if script.js exposes it.
-          Otherwise, trigger the real START button normally.
-        */
         if (typeof window.startGame === "function") {
           window.startGame();
         } else if (startBtn) {
@@ -954,24 +749,6 @@
         }
 
         forceCanvasRefresh();
-      }
-
-      if (viewToggle) {
-        viewToggle.addEventListener("click", function (event) {
-          event.preventDefault();
-          event.stopPropagation();
-          toggleViewMode();
-        });
-      }
-if (startBtn) {
-        /*
-          Capture-phase listener makes START reliable even if another script
-          misses the first tap on mobile.
-        */
-        startBtn.addEventListener("click", function () {
-          forceCanvasRefresh();
-          setTimeout(forceCanvasRefresh, 200);
-        }, true);
       }
 
       function fireKey(type, key) {
@@ -986,35 +763,21 @@ if (startBtn) {
         document.dispatchEvent(event);
       }
 
-      const activeKeys = new Set();
-
-      function startKey(key, button) {
-        if (!key) return;
-        activeKeys.add(key);
-        button.classList.add("active");
-        fireKey("keydown", key);
-      }
-
-      function stopKey(key, button) {
-        if (!key) return;
-        activeKeys.delete(key);
-        button.classList.remove("active");
-        fireKey("keyup", key);
-      }
-
       mobileButtons.forEach(function (button) {
         const key = button.dataset.arcadeKey;
 
         button.addEventListener("pointerdown", function (event) {
           event.preventDefault();
           try { button.setPointerCapture(event.pointerId); } catch {}
-          startKey(key, button);
+          button.classList.add("active");
+          fireKey("keydown", key);
         });
 
         ["pointerup", "pointercancel", "pointerleave"].forEach(function (eventName) {
           button.addEventListener(eventName, function (event) {
             event.preventDefault();
-            stopKey(key, button);
+            button.classList.remove("active");
+            fireKey("keyup", key);
           });
         });
 
@@ -1023,20 +786,6 @@ if (startBtn) {
         });
       });
 
-      window.addEventListener("blur", function () {
-        activeKeys.forEach(function (key) {
-          fireKey("keyup", key);
-        });
-
-        activeKeys.clear();
-        mobileButtons.forEach(function (button) {
-          button.classList.remove("active");
-        });
-      });
-
-      /*
-        Prevent the phone from scrolling while dragging Teddy.
-      */
       [canvas, screen].forEach(function (el) {
         if (!el) return;
 
@@ -1048,22 +797,179 @@ if (startBtn) {
           event.preventDefault();
         }, { passive: false });
 
-        el.addEventListener("pointerdown", function () {
-          forceCanvasRefresh();
-        });
+        el.addEventListener("pointerdown", forceCanvasRefresh);
       });
 
+      function moveZone(which, dx, dy) {
+        zones[which].left = Number((zones[which].left + dx).toFixed(2));
+        zones[which].top = Number((zones[which].top + dy).toFixed(2));
+        applyAllZones();
+        updateEditorOutput();
+      }
+
+      function resizeZone(which, dw, dh) {
+        zones[which].width = Number(Math.max(2, zones[which].width + dw).toFixed(2));
+        zones[which].height = Number(Math.max(2, zones[which].height + dh).toFixed(2));
+        applyAllZones();
+        updateEditorOutput();
+      }
+
+      function swapZones() {
+        const oldStart = { ...zones.start };
+        zones.start = { ...zones.select };
+        zones.select = oldStart;
+        applyAllZones();
+        updateEditorOutput();
+      }
+
+      function makeDraggable(button, which) {
+        if (!button || !editButtons) return;
+
+        button.addEventListener("pointerdown", function (event) {
+          event.preventDefault();
+          event.stopPropagation();
+
+          try { button.setPointerCapture(event.pointerId); } catch {}
+
+          const rect = shell.getBoundingClientRect();
+          const startX = event.clientX;
+          const startY = event.clientY;
+          const startLeft = zones[which].left;
+          const startTop = zones[which].top;
+
+          function move(e) {
+            zones[which].left = Number((startLeft + ((e.clientX - startX) / rect.width) * 100).toFixed(2));
+            zones[which].top = Number((startTop + ((e.clientY - startY) / rect.height) * 100).toFixed(2));
+            applyAllZones();
+            updateEditorOutput();
+          }
+
+          function stop() {
+            try { button.releasePointerCapture(event.pointerId); } catch {}
+            button.removeEventListener("pointermove", move);
+            button.removeEventListener("pointerup", stop);
+            button.removeEventListener("pointercancel", stop);
+            updateEditorOutput();
+          }
+
+          button.addEventListener("pointermove", move);
+          button.addEventListener("pointerup", stop);
+          button.addEventListener("pointercancel", stop);
+        });
+      }
+
+      function createEditorPanel() {
+        if (!editButtons || document.getElementById("cabinetEditorPanel")) return;
+
+        const panel = document.createElement("div");
+        panel.id = "cabinetEditorPanel";
+        panel.className = "cabinet-editor-panel";
+        panel.innerHTML = `
+          <strong>Cabinet Button Editor</strong>
+          <p>Drag START and SELECT boxes, or use the nudge buttons. If the buttons are reversed, tap SWAP.</p>
+
+          <div class="cabinet-editor-grid">
+            <button type="button" data-nudge="start:-1:0">START ←</button>
+            <button type="button" data-nudge="select:-1:0">SELECT ←</button>
+            <button type="button" data-nudge="start:1:0">START →</button>
+            <button type="button" data-nudge="select:1:0">SELECT →</button>
+            <button type="button" data-nudge="start:0:-1">START ↑</button>
+            <button type="button" data-nudge="select:0:-1">SELECT ↑</button>
+            <button type="button" data-nudge="start:0:1">START ↓</button>
+            <button type="button" data-nudge="select:0:1">SELECT ↓</button>
+          </div>
+
+          <div class="cabinet-editor-grid">
+            <button type="button" class="secondary" id="swapCabinetZones">SWAP START / SELECT</button>
+            <button type="button" class="secondary" id="copyCabinetZones">COPY POSITIONS</button>
+            <button type="button" data-size="start:1:0">START WIDER</button>
+            <button type="button" data-size="select:1:0">SELECT WIDER</button>
+            <button type="button" data-size="start:-1:0">START NARROWER</button>
+            <button type="button" data-size="select:-1:0">SELECT NARROWER</button>
+          </div>
+
+          <textarea id="cabinetZonesOutput" readonly></textarea>
+        `;
+
+        document.body.appendChild(panel);
+
+        panel.querySelectorAll("[data-nudge]").forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            const [which, dx, dy] = btn.dataset.nudge.split(":");
+            moveZone(which, Number(dx), Number(dy));
+          });
+        });
+
+        panel.querySelectorAll("[data-size]").forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            const [which, dw, dh] = btn.dataset.size.split(":");
+            resizeZone(which, Number(dw), Number(dh));
+          });
+        });
+
+        document.getElementById("swapCabinetZones").addEventListener("click", swapZones);
+
+        document.getElementById("copyCabinetZones").addEventListener("click", async function () {
+          updateEditorOutput();
+          const output = document.getElementById("cabinetZonesOutput");
+          const value = output ? output.value : "";
+
+          try {
+            await navigator.clipboard.writeText(value);
+            this.textContent = "COPIED!";
+            setTimeout(() => { this.textContent = "COPY POSITIONS"; }, 1200);
+          } catch {
+            alert("Could not auto-copy. Select the text box and copy manually.");
+          }
+        });
+
+        updateEditorOutput();
+      }
+
+      function updateEditorOutput() {
+        const output = document.getElementById("cabinetZonesOutput");
+        if (!output) return;
+
+        output.value =
+`const zones = {
+  start: { left: ${zones.start.left}, top: ${zones.start.top}, width: ${zones.start.width}, height: ${zones.start.height} },
+  select: { left: ${zones.select.left}, top: ${zones.select.top}, width: ${zones.select.width}, height: ${zones.select.height} }
+};`;
+      }
+
+      applyAllZones();
+
+      if (!editButtons) {
+        if (cabinetStartBtn) {
+          cabinetStartBtn.addEventListener("click", function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            startArcadeGame();
+          });
+        }
+
+        if (cabinetSelectBtn) {
+          cabinetSelectBtn.addEventListener("click", function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            toggleViewMode();
+          });
+        }
+      } else {
+        makeDraggable(cabinetStartBtn, "start");
+        makeDraggable(cabinetSelectBtn, "select");
+        createEditorPanel();
+      }
+
       applyInitialViewMode();
-      window.addEventListener("resize", updateSelectLabels);
+      window.addEventListener("resize", forceCanvasRefresh);
       window.addEventListener("orientationchange", function () {
         setTimeout(forceCanvasRefresh, 260);
       });
-
       setTimeout(forceCanvasRefresh, 80);
       setTimeout(forceCanvasRefresh, 500);
     })();
   </script>
-
 
 
   <script>
@@ -1084,259 +990,5 @@ if (startBtn) {
       };
     })();
   </script>
-  <script>
-    /*
-      Actual cabinet START / SELECT hotspots v5.
-      START = start the game.
-      SELECT = toggle Fit/Desktop view.
-      Add ?showbuttons=1 to show hit areas.
-      Add ?editbuttons=1 to drag START/SELECT hit areas and copy CSS.
-    */
-    (function () {
-      const body = document.body;
-      const cabinetStartBtn = document.getElementById("cabinetStartBtn");
-      const cabinetSelectBtn = document.getElementById("cabinetSelectBtn");
-      const topStartBtn = document.getElementById("startGame");
-      const topSelectBtn = document.getElementById("arcadeViewToggle");
-      const params = new URLSearchParams(window.location.search);
-
-      const editButtons = params.has("editbuttons");
-      const showButtons = params.has("showbuttons");
-
-      if (showButtons || editButtons) {
-        body.classList.add("arcade-show-cabinet-buttons");
-      }
-
-      if (editButtons) {
-        body.classList.add("arcade-edit-buttons");
-        createCabinetButtonEditor();
-      }
-
-      function forceCanvasRefresh() {
-        requestAnimationFrame(function () {
-          window.dispatchEvent(new Event("resize"));
-        });
-        setTimeout(function () {
-          window.dispatchEvent(new Event("resize"));
-        }, 120);
-        setTimeout(function () {
-          window.dispatchEvent(new Event("resize"));
-        }, 360);
-      }
-
-      function startGameFromCabinet(event) {
-        if (event) {
-          event.preventDefault();
-          event.stopPropagation();
-        }
-
-        if (editButtons) return;
-
-        forceCanvasRefresh();
-
-        if (typeof window.startGame === "function") {
-          window.startGame();
-        } else if (topStartBtn) {
-          topStartBtn.click();
-        }
-
-        forceCanvasRefresh();
-      }
-
-      function toggleViewFromCabinet(event) {
-        if (event) {
-          event.preventDefault();
-          event.stopPropagation();
-        }
-
-        if (editButtons) return;
-
-        if (topSelectBtn) {
-          topSelectBtn.click();
-        } else {
-          body.classList.toggle("arcade-desktop-mode");
-        }
-
-        forceCanvasRefresh();
-      }
-
-      if (cabinetStartBtn) {
-        cabinetStartBtn.addEventListener("click", startGameFromCabinet);
-        cabinetStartBtn.addEventListener("pointerdown", function (event) {
-          if (!editButtons) event.preventDefault();
-        });
-      }
-
-      if (cabinetSelectBtn) {
-        cabinetSelectBtn.addEventListener("click", toggleViewFromCabinet);
-        cabinetSelectBtn.addEventListener("pointerdown", function (event) {
-          if (!editButtons) event.preventDefault();
-        });
-      }
-
-      function getHotspotNumbers(button) {
-        return {
-          left: parseFloat(button.style.left || getComputedStyle(button).left),
-          top: parseFloat(button.style.top || getComputedStyle(button).top),
-          width: parseFloat(button.style.width || getComputedStyle(button).width),
-          height: parseFloat(button.style.height || getComputedStyle(button).height)
-        };
-      }
-
-      function percentFromComputed(button) {
-        const shell = document.querySelector(".arcade-shell");
-        if (!shell || !button) return null;
-
-        const shellRect = shell.getBoundingClientRect();
-        const btnRect = button.getBoundingClientRect();
-
-        return {
-          left: Number((((btnRect.left + btnRect.width / 2 - shellRect.left) / shellRect.width) * 100).toFixed(2)),
-          top: Number((((btnRect.top + btnRect.height / 2 - shellRect.top) / shellRect.height) * 100).toFixed(2)),
-          width: Number(((btnRect.width / shellRect.width) * 100).toFixed(2)),
-          height: Number(((btnRect.height / shellRect.height) * 100).toFixed(2))
-        };
-      }
-
-      function setHotspotPercent(button, values) {
-        if (!button || !values) return;
-
-        button.style.left = values.left + "%";
-        button.style.top = values.top + "%";
-        button.style.width = values.width + "%";
-        button.style.height = values.height + "%";
-      }
-
-      function makeButtonDraggable(button) {
-        if (!button) return;
-
-        button.addEventListener("pointerdown", function (event) {
-          if (!editButtons) return;
-
-          event.preventDefault();
-          event.stopPropagation();
-
-          try {
-            button.setPointerCapture(event.pointerId);
-          } catch {}
-
-          const shell = document.querySelector(".arcade-shell");
-          if (!shell) return;
-
-          const shellRect = shell.getBoundingClientRect();
-          const start = percentFromComputed(button);
-          const startX = event.clientX;
-          const startY = event.clientY;
-
-          function move(e) {
-            const dx = ((e.clientX - startX) / shellRect.width) * 100;
-            const dy = ((e.clientY - startY) / shellRect.height) * 100;
-
-            setHotspotPercent(button, {
-              left: Number((start.left + dx).toFixed(2)),
-              top: Number((start.top + dy).toFixed(2)),
-              width: start.width,
-              height: start.height
-            });
-
-            updateCabinetButtonOutput();
-          }
-
-          function stop() {
-            try {
-              button.releasePointerCapture(event.pointerId);
-            } catch {}
-
-            button.removeEventListener("pointermove", move);
-            button.removeEventListener("pointerup", stop);
-            button.removeEventListener("pointercancel", stop);
-            updateCabinetButtonOutput();
-          }
-
-          button.addEventListener("pointermove", move);
-          button.addEventListener("pointerup", stop);
-          button.addEventListener("pointercancel", stop);
-        });
-      }
-
-      function createCabinetButtonEditor() {
-        if (document.getElementById("cabinetButtonEditorPanel")) return;
-
-        makeButtonDraggable(cabinetStartBtn);
-        makeButtonDraggable(cabinetSelectBtn);
-
-        const panel = document.createElement("div");
-        panel.id = "cabinetButtonEditorPanel";
-        panel.className = "cabinet-button-editor-panel";
-
-        panel.innerHTML = `
-          <strong>Cabinet START / SELECT Editor</strong>
-          <p>Drag the START and SELECT boxes until they sit over the printed cabinet graphics. Then copy the CSS below.</p>
-          <button id="swapCabinetButtons" type="button" class="secondary">SWAP START / SELECT</button>
-          <button id="copyCabinetButtonCss" type="button">COPY UPDATED BUTTON CSS</button>
-          <textarea id="cabinetButtonOutput" readonly></textarea>
-        `;
-
-        document.body.appendChild(panel);
-
-        document.getElementById("swapCabinetButtons").addEventListener("click", function () {
-          const start = percentFromComputed(cabinetStartBtn);
-          const select = percentFromComputed(cabinetSelectBtn);
-
-          setHotspotPercent(cabinetStartBtn, select);
-          setHotspotPercent(cabinetSelectBtn, start);
-
-          updateCabinetButtonOutput();
-        });
-
-        document.getElementById("copyCabinetButtonCss").addEventListener("click", async function () {
-          updateCabinetButtonOutput();
-
-          const output = document.getElementById("cabinetButtonOutput");
-          const value = output ? output.value : "";
-
-          try {
-            await navigator.clipboard.writeText(value);
-            this.textContent = "COPIED!";
-            setTimeout(() => {
-              this.textContent = "COPY UPDATED BUTTON CSS";
-            }, 1200);
-          } catch {
-            alert("Could not auto-copy. Select the text box and copy manually.");
-          }
-        });
-
-        setTimeout(updateCabinetButtonOutput, 80);
-        setTimeout(updateCabinetButtonOutput, 400);
-      }
-
-      function updateCabinetButtonOutput() {
-        const output = document.getElementById("cabinetButtonOutput");
-        if (!output) return;
-
-        const start = percentFromComputed(cabinetStartBtn);
-        const select = percentFromComputed(cabinetSelectBtn);
-
-        if (!start || !select) return;
-
-        output.value =
-`.cabinet-start-hotspot {
-  left: ${start.left}%;
-  top: ${start.top}%;
-  width: ${start.width}%;
-  height: ${start.height}%;
-}
-
-.cabinet-select-hotspot {
-  left: ${select.left}%;
-  top: ${select.top}%;
-  width: ${select.width}%;
-  height: ${select.height}%;
-}`;
-      }
-    })();
-  </script>
-
-
 </body>
 </html>
